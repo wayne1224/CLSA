@@ -2,52 +2,31 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-
+from Mytable import Mytable
+from myform import Myform
 class TabDemo(QTabWidget):
     def __init__(self,parent=None):
         super(TabDemo, self).__init__(parent)
 
+        self.resize(1393, 815)
+    
         #创建3个选项卡小控件窗口
-        self.tab1=QWidget()
-        self.tab2=QWidget()
+        self.tab1=Mytable()
+        self.tab2=Myform()
         self.tab3=QWidget()
 
+
+
         #将三个选项卡添加到顶层窗口中
-        self.addTab(self.tab1, "Tab 1")
-        self.addTab(self.tab2, "Tab 2")
+        self.addTab(self.tab1, "CLSA 收錄表")
+        self.addTab(self.tab2, "CLSA 轉錄表")
         self.addTab(self.tab3, "Tab 3")
 
         #每个选项卡自定义的内容
-        self.tab1UI()
-        self.tab2UI()
+        self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
+
+   
         self.tab3UI()
-
-    def tab1UI(self):
-        #表单布局
-        layout=QFormLayout()
-        #添加姓名，地址的单行文本输入框
-        layout.addRow('姓名',QLineEdit())
-        layout.addRow('地址',QLineEdit())
-        #设置选项卡的小标题与布局方式
-        self.setTabText(0,'联系方式')
-        self.tab1.setLayout(layout)
-
-    def tab2UI(self):
-        #zhu表单布局，次水平布局
-        layout=QFormLayout()
-        sex=QHBoxLayout()
-
-        #水平布局添加单选按钮
-        sex.addWidget(QRadioButton('男'))
-        sex.addWidget(QRadioButton('女'))
-
-        #表单布局添加控件
-        layout.addRow(QLabel('性别'),sex)
-        layout.addRow('生日',QLineEdit())
-
-        #设置标题与布局
-        self.setTabText(1,'个人详细信息')
-        self.tab2.setLayout(layout)
 
     def tab3UI(self):
         #水平布局
