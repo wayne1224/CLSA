@@ -3,11 +3,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Mytable import Mytable
 from Tab2 import Tab2
-from myform import Myform
+from Tab1 import Myform
 class TabDemo(QtWidgets.QTabWidget):
     def __init__(self,parent=None):
         super(TabDemo, self).__init__(parent)
-        self.resize(1393, 815)
+        self.resize(1393, 870)
     
         #創建3個tab
         self.tab1=Myform()
