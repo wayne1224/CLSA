@@ -21,11 +21,11 @@ def upsertBasic(info): # info = [ObjectId , caseID , version , doctor , patientD
         query = dict()
         query["caseID"] = info[1]
         
-        version = db.count_documents(query) + 1
+        # version = db.count_documents(query) + 1
 
         data = {
             "caseID" : info[1],
-            "version" : version,
+            # "version" : version,
             "doctor" : info[3],
             "patientData" : info[4],
             "location" : info[5],
@@ -36,8 +36,6 @@ def upsertBasic(info): # info = [ObjectId , caseID , version , doctor , patientD
             "help" : info[10],
             "situation" : info[11],
             "others" : info[12],
-            "content" : "no content",
-            "analysis" : "no analysis"
         }
 
         db.insert_one(data)
@@ -47,7 +45,7 @@ def upsertBasic(info): # info = [ObjectId , caseID , version , doctor , patientD
 
         data = {
             "caseID" : info[1],
-            "version" : info[2],
+            # "version" : info[2],
             "doctor" : info[3],
             "patientData" : info[4],
             "location" : info[5],
@@ -62,6 +60,31 @@ def upsertBasic(info): # info = [ObjectId , caseID , version , doctor , patientD
 
         data = {"$set" : data} 
         db.update(query , data)
+
+def upsertContent(info): # info = [ObjectId , caseID , content] , content是一個list裡面的每個物件為dict
+    db = get_db()
+
+    if info[0] == "":  # insert new data
+        query = dict()
+        query["caseID"] = info[1]
+        
+        data = {
+            "caseID" : info[1],
+            "content" : info[2]
+        }
+
+        db.insert_one(data)
+    else:  # update data
+        query = dict()
+        query["_id"] = info[0]
+
+        data = {
+            "caseID" : info[1],
+            "content" : info[2]
+        }
+
+        data = {"$set" : data} 
+        db.update_one(query , data)
 
 def readByCaseID(ID): 
     db = get_db()
@@ -78,19 +101,32 @@ def readByCaseID(ID):
     for i in data:
         print(i)
 
-
 date = datetime.datetime.strptime("2018-01-31", "%Y-%m-%d")
-objID = ObjectId("60729d1fc791aec07244a7d9")
+objID = ObjectId("607455182078fa7d5e9d01f3")
 
-# # insert new data
+a1 = {"ID" : "a1" , "rule" : "adult" , "utterance" : "1234" , "scenario" : "123"}
+a2 = {"ID" : "1" , "rule" : "child" , "utterance" : "123" , "scenario" : "123"}
+a3 = {"ID" : "" , "rule" : "" , "utterance" : "" , "scenario" : "123"}
+
+content = [a1 , a2 , a3]
+
+# insert new basic
 # info1 = ["" , "001" , 1 , "doctor" , {"name" : "123"} , "location" , "form" , date , ["Dad" , "Mom"] , "recordType" , "help" , "situation" , "others"]
 # upsertBasic(info1)
 
-# # update data
-# info2 = [objID , "002" , "" , "doctor123" , {"name" : "123"} , "location" , "form" , date , ["Dad" , "Mom"] , "recordType" , "help" , "situation" , "others"]
+# update basic
+# info2 = [objID , "001" , "" , "doctor123" , {"name" : "123"} , "location" , "form" , date , ["Dad" , "Mom"] , "recordType" , "help" , "situation" , "others"]
 # upsertBasic(info2)
 
-readByCaseID("001")
+# insert new content
+# info3 = ["", "001" , content]
+# upsertContent(info3)
+
+# update content
+# info4 = [objID , "001" , content]
+# upsertContent(info4)
+
+# readByCaseID("001")
 
 
 
