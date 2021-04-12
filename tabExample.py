@@ -3,6 +3,7 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Mytable import Mytable
+from Tab2 import Tab2
 from myform import Myform
 class TabDemo(QtWidgets.QTabWidget):
     def __init__(self,parent=None):

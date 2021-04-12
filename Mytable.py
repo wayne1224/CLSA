@@ -1,3 +1,4 @@
+#把第一第二格綁在一起
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import re
@@ -49,6 +50,7 @@ class Mytable(QtWidgets.QWidget):
         self.tableWidget.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(4, item)
+
         #轉碼
         self.retranslateUi()
         #set column width
@@ -61,17 +63,19 @@ class Mytable(QtWidgets.QWidget):
         #觸發孩童編號
         self.tableWidget.cellClicked['int','int'].connect(self._setChildID)
 
-        #防無編號
-        self.tableWidget.cellClicked['int','int'].connect(self._checkAdultID)
+        #設成人編號
+        self.tableWidget.cellClicked['int','int'].connect(self._setAdultID)
+        
+        #防無編號或無語句
+        self.tableWidget.cellClicked['int','int'].connect(self._checkAdultClick)
 
         #防無編號
-        self.tableWidget.cellClicked['int','int'].connect(self._checkAdultUtter)
+        #self.tableWidget.cellClicked['int','int'].connect(self._checkAdultUtter)
 
         #防多餘孩童編號
         self.tableWidget.cellClicked['int','int'].connect(self._checkChildID)
 
-        #設成人編號
-        self.tableWidget.cellClicked['int','int'].connect(self._setAdultID)
+        
 
         #trigger mouse event
         self.tableWidget.viewport().installEventFilter(self)
@@ -105,55 +109,91 @@ class Mytable(QtWidgets.QWidget):
             self._addRow()
     
     def _addRow(self):
-        row_count = self.tableWidget.rowCount()
-        self.tableWidget.insertRow(row_count)
-        self.tableWidget.scrollToBottom()
+        if self._checkAdult():
+            row_count = self.tableWidget.rowCount()
+            self.tableWidget.insertRow(row_count)
+            self.tableWidget.scrollToBottom()
 
-    def _checkAdultUtter(self):
-        #被選到的格子
+    # def _checkAdultUtter(self):
+    #     #被選到的格子
+    #     selected = self.tableWidget.selectedIndexes()
+    #     x = selected[0].row()
+    #     y = selected[0].column()
+
+    #     print(self.last_x)
+    #     if ((self.last_x != -1) and
+    #         (x != self.last_x or y > 1) and #限定範圍
+    #         (self.tableWidget.item(self.last_x,0) and self.tableWidget.item(self.last_x,0).text() != '') and #若有編號
+    #         (self.tableWidget.item(self.last_x,1) is None or self.tableWidget.item(self.last_x,1).text() == '')): #若無語句
+    #         msgBox = QtWidgets.QMessageBox()
+    #         msgBox.setIcon(QtWidgets.QMessageBox.Warning)
+    #         msgBox.setText("若有編號就應有語句!!!")
+    #         msgBox.setWindowTitle("Warning")
+    #         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    #         msgBox.exec()
+    #         self.tableWidget.setCurrentCell(self.last_x,1)
+    #         self.edit = False
+
+    #     elif ((self.last_x != -1 and (x != self.last_x or y > 1) and self.tableWidget.item(self.last_x,0) and self.tableWidget.item(self.last_x,0).text() != '') and
+    #          (self.tableWidget.item(self.last_x,1).text() != '')): #若有語句
+    #         self.last_x = -1
+    #         self.edit = True
+
+    # def _checkAdultID(self):
+    #     #被選到的格子
+    #     selected = self.tableWidget.selectedIndexes()
+    #     x = selected[0].row()
+    #     y = selected[0].column()
+
+    #     if y == 1:
+    #         if ((self.tableWidget.item(x,0) is None) or
+    #             (self.tableWidget.item(x,0) and self.tableWidget.item(x,0).text() == '')):
+    #             msgBox = QtWidgets.QMessageBox()
+    #             msgBox.setIcon(QtWidgets.QMessageBox.Warning)
+    #             msgBox.setText("請先輸入編號再輸入語句!!!")
+    #             msgBox.setWindowTitle("Warning")
+    #             msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    #             msgBox.exec()
+    #             #self.tableWidget.setCurrentCell(x,0)
+    #             return
+
+    def _checkAdultClick(self):
         selected = self.tableWidget.selectedIndexes()
         x = selected[0].row()
         y = selected[0].column()
-
         print(self.last_x)
-        if ((self.last_x != -1) and
-            (x != self.last_x or y > 1) and #限定範圍
-            (self.tableWidget.item(self.last_x,0) and self.tableWidget.item(self.last_x,0).text() != '') and #若有編號
-            (self.tableWidget.item(self.last_x,1) is None or self.tableWidget.item(self.last_x,1).text() == '')): #若無語句
+        if ((y == 0 or y == 1) and self.last_x == -1):
+            self.last_x = x
+        elif ((y == 0 or y == 1) and self.last_x == x):
+            pass 
+        elif self.last_x != -1:
+            self._checkAdult()
+                
+    def _checkAdult(self):
+        if ((self.tableWidget.item(self.last_x,0) == None or self.tableWidget.item(self.last_x,0).text() == '') and
+            (self.tableWidget.item(self.last_x,1) and self.tableWidget.item(self.last_x,1).text() != '')):
+            if self.tableWidget.item(self.last_x,1).font().bold() == False:
+                msgBox = QtWidgets.QMessageBox()
+                msgBox.setIcon(QtWidgets.QMessageBox.Warning)
+                msgBox.setText("需要成人編號!!!")
+                msgBox.setWindowTitle("Warning")
+                msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+                msgBox.exec()
+                self.tableWidget.setCurrentCell(self.last_x,0)
+                return False
+
+        elif ((self.tableWidget.item(self.last_x,1) == None or self.tableWidget.item(self.last_x,1).text() == '') and
+            (self.tableWidget.item(self.last_x,0) and self.tableWidget.item(self.last_x,0).text() != '')):
             msgBox = QtWidgets.QMessageBox()
             msgBox.setIcon(QtWidgets.QMessageBox.Warning)
-            msgBox.setText("若有編號就應有語句!!!")
+            msgBox.setText("需要成人語句!!!")
             msgBox.setWindowTitle("Warning")
             msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
             msgBox.exec()
             self.tableWidget.setCurrentCell(self.last_x,1)
-            self.edit = False
-
-        elif ((self.last_x != -1 and (x != self.last_x or y > 1) and self.tableWidget.item(self.last_x,0) and self.tableWidget.item(self.last_x,0).text() != '') and
-             (self.tableWidget.item(self.last_x,1).text() != '')): #若有語句
-            self.last_x = -1
-            self.edit = True
-
-
-
-    def _checkAdultID(self):
-        #被選到的格子
-        selected = self.tableWidget.selectedIndexes()
-        x = selected[0].row()
-        y = selected[0].column()
-
-        if y == 1:
-            if (((self.tableWidget.item(x,0) is None) or
-                (self.tableWidget.item(x,0) and self.tableWidget.item(x,0).text() == '')) and
-                (self.tableWidget.cellWidget(x,0) is None)):
-                msgBox = QtWidgets.QMessageBox()
-                msgBox.setIcon(QtWidgets.QMessageBox.Warning)
-                msgBox.setText("請先輸入編號再輸入語句!!!")
-                msgBox.setWindowTitle("Warning")
-                msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                msgBox.exec()
-                self.tableWidget.setCurrentCell(x,0)
-                return
+            return False
+        self.last_x = -1
+        return True
 
     def _setAdultID(self):
         selected = self.tableWidget.selectedIndexes()
@@ -206,7 +246,7 @@ class Mytable(QtWidgets.QWidget):
                 
             self.tableWidget.setCellWidget(x, y, idBox)
             self.id_x = x
-            self.last_x = x
+            #self.last_x = x
 
             
 
