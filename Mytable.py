@@ -22,6 +22,7 @@ class Mytable(QtWidgets.QWidget):
 
         layout = QtWidgets.QGridLayout()
         self.setLayout(layout)
+        
         self.tableWidget = QtWidgets.QTableWidget()
         self.tableWidget.setMinimumSize(QtCore.QSize(0, 0))
         self.tableWidget.setObjectName("tableWidget")
