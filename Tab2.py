@@ -10,6 +10,7 @@
 
 import sys
 import Mytable
+import database.database2
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -34,12 +35,12 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_trans.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.lbl_trans.setObjectName("lbl_trans")
         self.gridLayout.addWidget(self.lbl_trans, 1, 0, 1, 1)
-        self.input_caseNum = QtWidgets.QLineEdit()
+        self.input_caseID = QtWidgets.QLineEdit()
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.input_caseNum.setFont(font)
-        self.input_caseNum.setObjectName("input_caseNum")
-        self.gridLayout.addWidget(self.input_caseNum, 1, 3, 1, 1)
+        self.input_caseID.setFont(font)
+        self.input_caseID.setObjectName("input_caseID")
+        self.gridLayout.addWidget(self.input_caseID, 1, 3, 1, 1)
         self.input_trans = QtWidgets.QLineEdit()
         font = QtGui.QFont()
         font.setPointSize(12)
@@ -97,10 +98,9 @@ class Tab2(QtWidgets.QWidget):
         self.gridLayout_2.addWidget(self.input_utterance, 0, 3, 1, 1)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setContentsMargins(-1, -1, -1, 0)
+        self.verticalLayout_3.setSpacing(10)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.cbx_notCount = QtWidgets.QCheckBox()
-        self.cbx_notCount.setMinimumSize(QtCore.QSize(131, 41))
-        self.cbx_notCount.setMaximumSize(QtCore.QSize(131, 41))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.cbx_notCount.setFont(font)
@@ -168,20 +168,26 @@ class Tab2(QtWidgets.QWidget):
         #按鈕事件
         self.btn_add.clicked.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
+        self.btn_save.clicked.connect(self._save)
 
         self.childNum = 0   #兒童編號
         self.adultNums = {}  #成人編號
 
         #未輸入語句提示視窗
-        self.noInpMsg = QtWidgets.QMessageBox()
-        self.noInpMsg.setWindowTitle("提示")
-        self.noInpMsg.setText("請輸入語句！")
-        self.noInpMsg.setIcon(QtWidgets.QMessageBox.Question)
+        self.msg_noInp = QtWidgets.QMessageBox()
+        self.msg_noInp.setWindowTitle("提示")
+        self.msg_noInp.setText("請輸入語句！")
+        self.msg_noInp.setIcon(QtWidgets.QMessageBox.Question)
         #成人、兒童同時輸入提示視窗
-        self.multiInpMsg = QtWidgets.QMessageBox()
-        self.multiInpMsg.setWindowTitle("提示")
-        self.multiInpMsg.setText("成人與兒童語句不能同時輸入！")
-        self.multiInpMsg.setIcon(QtWidgets.QMessageBox.Warning)
+        self.msg_multiInp = QtWidgets.QMessageBox()
+        self.msg_multiInp.setWindowTitle("提示")
+        self.msg_multiInp.setText("成人與兒童語句不能同時輸入！")
+        self.msg_multiInp.setIcon(QtWidgets.QMessageBox.Warning)
+        #未輸入個案編號
+        self.msg_noCaseID = QtWidgets.QMessageBox()
+        self.msg_noCaseID.setWindowTitle("提示")
+        self.msg_noCaseID.setText("未輸入個案編號！")
+        self.msg_noCaseID.setIcon(QtWidgets.QMessageBox.Warning)
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
@@ -221,8 +227,11 @@ class Tab2(QtWidgets.QWidget):
                 self.input_utterance.clear()
                 self.input_scenario.clear()
                 self.cbx_notCount.setChecked(False)
+                self.input_caseID.setStyleSheet("border: 1px solid initial;")
+                self.input_utterance.setStyleSheet("border: 1px solid initial;")
             else:   #沒輸入句子
-                self.noInpMsg.exec_()    #跳出提示視窗
+                self.msg_noInp.exec_()    #跳出提示視窗
+                self.input_utterance.setStyleSheet("border: 1px solid red;")
 
         elif self.cmb_role.currentText() == "語境":   #只新增語境
             rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
@@ -235,6 +244,8 @@ class Tab2(QtWidgets.QWidget):
             self.input_utterance.clear()
             self.input_scenario.clear()
             self.cbx_notCount.setChecked(False)
+            self.input_caseID.setStyleSheet("border: 1px solid initial;")
+            self.input_utterance.setStyleSheet("border: 1px solid initial;")
 
         else:   #新增成人語句
             if self.input_utterance.toPlainText():  #檢查有輸入句子
@@ -260,8 +271,11 @@ class Tab2(QtWidgets.QWidget):
                 self.input_utterance.clear()
                 self.input_scenario.clear()
                 self.cbx_notCount.setChecked(False)
+                self.input_caseID.setStyleSheet("border: 1px solid initial;")
+                self.input_utterance.setStyleSheet("border: 1px solid initial;")
             else:   #沒輸入句子
-                self.noInpMsg.exec_()    #跳出提示視窗
+                self.msg_noInp.exec_()    #跳出提示視窗
+                self.input_utterance.setStyleSheet("border: 1px solid red;")
 
     #刪除列
     def _deleteRow(self):
@@ -295,6 +309,34 @@ class Tab2(QtWidgets.QWidget):
                 if not self.tableWidget.tableWidget.item(index, 3).text() == checkChildNum.__str__():
                     currectNum = QtWidgets.QTableWidgetItem(checkChildNum.__str__())
                     self.tableWidget.tableWidget.setItem(index, 3, currectNum)
+
+    #儲存至資料庫
+    def _save(self):
+        if self.input_caseID.text():
+            content = []
+            for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
+                data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
+                if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
+                    data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
+                    data['role'] = 'adult'
+                    data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
+                elif self.tableWidget.tableWidget.item(rowIndex, 3):    #child
+                    data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
+                    data['role'] = 'child'
+                    data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 4).text()
+                data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
+                content.append(data)
+            info = ['', self.input_caseID.text(), content]
+            print(info)
+            database.database2.upsertContent(info)
+
+            self.input_caseID.setStyleSheet("border: 1px solid initial;")
+            self.input_utterance.setStyleSheet("border: 1px solid initial;")
+        else:
+            self.msg_noCaseID.exec_()
+            self.input_caseID.setStyleSheet("border: 1px solid red;")
+
+            
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
