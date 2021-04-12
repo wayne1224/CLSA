@@ -11,8 +11,8 @@ class TabDemo(QTabWidget):
         self.resize(1393, 815)
     
         #创建3个选项卡小控件窗口
-        self.tab1=Mytable()
-        self.tab2=Myform()
+        self.tab1=Myform()
+        self.tab2=Mytable()
         self.tab3=QWidget()
 
 
