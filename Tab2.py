@@ -276,10 +276,10 @@ class Tab2(QtWidgets.QWidget):
             elif self.tableWidget.tableWidget.takeItem(index.row(), 3):   #刪除兒童語句
                 self.childNum -= 1  #兒童編號-1
             self.tableWidget.tableWidget.removeRow(index.row())
-        self.checkRoleNum()
+        self._checkRoleNum()
 
     #檢查編號
-    def checkRoleNum(self):
+    def _checkRoleNum(self):
         checkAdultNum = {}
         checkChildNum = 0
         for index in range(self.tableWidget.tableWidget.rowCount()):
