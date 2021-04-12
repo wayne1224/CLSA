@@ -3,6 +3,7 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Mytable import Mytable
+from Tab2 import Tab2
 from myform import Myform
 class TabDemo(QtWidgets.QTabWidget):
     def __init__(self,parent=None):
@@ -12,9 +13,9 @@ class TabDemo(QtWidgets.QTabWidget):
     
         #创建3个选项卡小控件窗口
         self.tab1=Myform()
-        self.tab2=Mytable()
-        self.tab3=QtWidgets.QWidget()
 
+        self.tab2=Tab2()
+        self.tab3=QtWidgets.QWidget()
 
 
         #将三个选项卡添加到顶层窗口中
