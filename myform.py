@@ -10,6 +10,10 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+class DateEdit(QtWidgets.QDateEdit):
+    def __init__(self, parent=None):
+        super().__init__(parent, calendarPopup=True)
+        # self.setDateTime(QtCore.QDateTime.currentDateTime())
 
 class Myform(QtWidgets.QWidget):
     def __init__(self):
@@ -481,7 +485,10 @@ class Myform(QtWidgets.QWidget):
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_10)
         self.horizontalLayout_10.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.dateEdit_2 = QtWidgets.QDateEdit(self.horizontalLayoutWidget_10)
+        # self.dateEdit_2 = QtWidgets.QDateEdit(self.horizontalLayoutWidget_10)
+
+        self.dateEdit_2 =DateEdit()
+        self.dateEdit_2.setDateTime(QtCore.QDateTime.currentDateTime())
         font = QtGui.QFont()
         font.setFamily("Agency FB")
         font.setPointSize(14)
@@ -555,7 +562,8 @@ class Myform(QtWidgets.QWidget):
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
         self.horizontalLayout_6.addWidget(self.label_6)
-        self.dateEdit = QtWidgets.QDateEdit(self.horizontalLayoutWidget_6)
+        # self.dateEdit = QtWidgets.QDateEdit(self.horizontalLayoutWidget_6)
+        self.dateEdit = DateEdit()
         font = QtGui.QFont()
         font.setFamily("Agency FB")
         font.setPointSize(14)
