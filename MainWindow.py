@@ -1,5 +1,6 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 from Tab2 import Tab2
 from myform import Myform
 class MainTabWidget(QtWidgets.QTabWidget):
@@ -7,18 +8,17 @@ class MainTabWidget(QtWidgets.QTabWidget):
         super(MainTabWidget, self).__init__(parent)
         self.resize(1393, 815)
     
-        #创建3个选项卡小控件窗口
+        #創建3個tab
         self.tab1=Myform()
         self.tab2=Tab2()
         self.tab3=QtWidgets.QWidget()
 
-
-        #将三个选项卡添加到顶层窗口中
+        #將tab加入MainWindow中
         self.addTab(self.tab1, "收錄表")
         self.addTab(self.tab2, "轉錄表")
         self.addTab(self.tab3, "Tab 3")
 
-        #每个选项卡自定义的内容
+        #設定tab的css
         self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
 
    

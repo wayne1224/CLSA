@@ -617,6 +617,13 @@ class Myform(QtWidgets.QWidget):
         self.lineEdit_9.setText("")
         self.lineEdit_9.setObjectName("lineEdit_9")
         self.horizontalLayout_14.addWidget(self.lineEdit_9)
+        self.pushButton = QtWidgets.QPushButton(self)
+        self.pushButton.setGeometry(QtCore.QRect(1080, 750, 161, 41))
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(14)
+        self.pushButton.setFont(font)
+        self.pushButton.setObjectName("pushButton")
 
         self.retranslateUi()
         # QtCore.QMetaObject.connectSlotsByName(self)
@@ -666,6 +673,7 @@ class Myform(QtWidgets.QWidget):
         self.label_6.setText(_translate("self", "生日:"))
         self.label_11.setText(_translate("self", "結束時間:"))
         self.label_15.setText(_translate("self", "有效語句數:"))
+        self.pushButton.setText(_translate("Form", "儲存資料"))
 
 
 if __name__ == "__main__":
