@@ -17,7 +17,7 @@ class Tab2(QtWidgets.QWidget):
     def __init__(self):
         super(Tab2, self).__init__()
 
-        self.setGeometry(QtCore.QRect(-1, 0, 1121, 801))
+        #self.setGeometry(QtCore.QRect(-1, 0, 1121, 801))
 
         layout = QtWidgets.QVBoxLayout()
         self.setLayout(layout)
