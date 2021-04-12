@@ -3,9 +3,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Tab2 import Tab2
 from Tab1 import Myform
-class TabDemo(QtWidgets.QTabWidget):
+class MainTabWidget(QtWidgets.QTabWidget):
     def __init__(self,parent=None):
-        super(TabDemo, self).__init__(parent)
+        super(MainTabWidget, self).__init__(parent)
         self.resize(1393, 870)
     
         #創建3個tab
@@ -36,6 +36,7 @@ class TabDemo(QtWidgets.QTabWidget):
     #     #设置小标题与布局方式
     #     self.setTabText(2,'教育程度')
     #     self.tab3.setLayout(layout)
+    
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     demo = MainTabWidget()
