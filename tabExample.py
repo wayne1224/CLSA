@@ -3,6 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from Mytable import Mytable
+from Tab2 import Tab2
 from myform import Myform
 class TabDemo(QTabWidget):
     def __init__(self,parent=None):
@@ -12,7 +13,7 @@ class TabDemo(QTabWidget):
     
         #创建3个选项卡小控件窗口
         self.tab1=Myform()
-        self.tab2=Mytable()
+        self.tab2=Tab2()
         self.tab3=QWidget()
 
 
