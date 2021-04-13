@@ -205,8 +205,8 @@ class Tab2(QtWidgets.QWidget):
 
     #新增列
     def _addRow(self):
-        sentence = QtWidgets.QTableWidgetItem(self.input_utterance.toPlainText())
-        context = QtWidgets.QTableWidgetItem(self.input_scenario.toPlainText())
+        utterance = QtWidgets.QTableWidgetItem(self.input_utterance.toPlainText())
+        scenario = QtWidgets.QTableWidgetItem(self.input_scenario.toPlainText())
 
         if self.cmb_role.currentText() == "兒童":   #新增兒童語句
             if self.input_utterance.toPlainText():  #檢查有輸入句子
@@ -218,8 +218,8 @@ class Tab2(QtWidgets.QWidget):
                     role = QtWidgets.QTableWidgetItem(self.childNum.__str__())
                     self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                 
-                self.tableWidget.tableWidget.setItem(rowCount, 4, sentence)
-                self.tableWidget.tableWidget.setItem(rowCount, 2, context)
+                self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
+                self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
                 self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
                 #清空、復原輸入欄
@@ -236,7 +236,7 @@ class Tab2(QtWidgets.QWidget):
         elif self.cmb_role.currentText() == "語境":   #只新增語境
             rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
             self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
-            self.tableWidget.tableWidget.setItem(rowCount, 2, context)
+            self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
             self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
             #清空、復原輸入欄
@@ -262,8 +262,8 @@ class Tab2(QtWidgets.QWidget):
                     role = QtWidgets.QTableWidgetItem(roleNum)
                     self.tableWidget.tableWidget.setItem(rowCount, 0, role)
 
-                self.tableWidget.tableWidget.setItem(rowCount, 1, sentence)
-                self.tableWidget.tableWidget.setItem(rowCount, 2, context)
+                self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
+                self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
                 self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
                 #清空、復原輸入欄
@@ -324,7 +324,8 @@ class Tab2(QtWidgets.QWidget):
                     data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
                     data['role'] = 'child'
                     data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 4).text()
-                data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
+                if self.tableWidget.tableWidget.item(rowIndex, 2):
+                    data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                 content.append(data)
             info = ['', self.input_caseID.text(), content]
             print(info)
