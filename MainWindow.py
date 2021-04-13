@@ -20,22 +20,6 @@ class MainTabWidget(QtWidgets.QTabWidget):
 
         #設定tab的css
         self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
-
-   
-    #     self.tab3UI()
-
-    # def tab3UI(self):
-    #     #水平布局
-    #     layout=QHBoxLayout()
-
-    #     #添加控件到布局中
-    #     layout.addWidget(QLabel('科目'))
-    #     layout.addWidget(QCheckBox('物理'))
-    #     layout.addWidget(QCheckBox('高数'))
-
-    #     #设置小标题与布局方式
-    #     self.setTabText(2,'教育程度')
-    #     self.tab3.setLayout(layout)
     
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

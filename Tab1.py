@@ -9,6 +9,8 @@
 from datetime import datetime
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
+import win32api
+
 
 class DateEdit(QtWidgets.QDateEdit):
     def __init__(self, parent=None):
@@ -538,7 +540,6 @@ class Myform(QtWidgets.QWidget):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.lineEdit_3 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_4)
         self.lineEdit_3.setEnabled(True)
-        # self.lineEdit_3.setStyleSheet("border: 1px solid red;" ) 
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -627,7 +628,6 @@ class Myform(QtWidgets.QWidget):
         self.pushButton.setFont(font)
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.save)
-        print (type(self.dateEdit))
 
         self.retranslateUi()
         # QtCore.QMetaObject.connectSlotsByName(self)
@@ -679,10 +679,34 @@ class Myform(QtWidgets.QWidget):
         self.label_15.setText(_translate("self", "有效語句數:"))
         self.pushButton.setText(_translate("Form", "儲存資料"))
     def save (self):
+        error = 0
         date = str(self.dateEdit.date().toPyDate())
-        print (type(date))
         date2 = datetime.strptime(date, "%Y-%m-%d")
-        print (type(date2))
+        if not self.lineEdit.text():
+            error+=1
+            self.lineEdit.setStyleSheet("border: 1px solid red;" )
+        else :
+            self.lineEdit.setStyleSheet("border: 1px solid initial;" )
+        if not self.lineEdit_2.text():
+            error+=1
+            self.lineEdit_2.setStyleSheet("border: 1px solid red;" )
+        else :
+            self.lineEdit_2.setStyleSheet("border: 1px solid initial;" )
+        if not self.lineEdit_3.text():
+            error+=1
+            self.lineEdit_3.setStyleSheet("border: 1px solid red;" )
+        else:
+            self.lineEdit_3.setStyleSheet("border: 1px solid initial;" )
+        if not (self.radioButton.isChecked() and self.radioButton_2.isChecked()):
+            self.radioButton.setStyleSheet("color: red;" )
+            self.radioButton_2.setStyleSheet("color: red;" )
+        
+        if  error > 0:
+            win32api.MessageBox(0, '紅色框為必填欄位', '警告')
+
+        
+
+        
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     # self = QtWidgets.QWidget()
