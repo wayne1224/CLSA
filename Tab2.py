@@ -47,14 +47,20 @@ class Tab2(QtWidgets.QWidget):
         self.input_trans.setFont(font)
         self.input_trans.setObjectName("input_trans")
         self.gridLayout.addWidget(self.input_trans, 1, 1, 1, 1)
-        self.lbl_caseNum = QtWidgets.QLabel()
+        self.lbl_caseID = QtWidgets.QLabel()
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.lbl_caseNum.setFont(font)
-        self.lbl_caseNum.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.lbl_caseNum.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_caseNum.setObjectName("lbl_caseNum")
-        self.gridLayout.addWidget(self.lbl_caseNum, 1, 2, 1, 1)
+        self.lbl_caseID.setFont(font)
+        self.lbl_caseID.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.lbl_caseID.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.lbl_caseID.setObjectName("lbl_caseID")
+        self.gridLayout.addWidget(self.lbl_caseID, 1, 2, 1, 1)
+        self.cmb_caseDate = QtWidgets.QComboBox()
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.cmb_caseDate.setFont(font)
+        self.cmb_caseDate.setObjectName("cmb_caseDate")
+        self.gridLayout.addWidget(self.cmb_caseDate, 1, 4, 1, 1)
         layout.addLayout(self.gridLayout)
         self.line = QtWidgets.QFrame()
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
@@ -192,7 +198,7 @@ class Tab2(QtWidgets.QWidget):
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         self.lbl_trans.setText(_translate("", "轉錄者："))
-        self.lbl_caseNum.setText(_translate("", "個案編號："))
+        self.lbl_caseID.setText(_translate("", "個案編號："))
         self.lbl_role.setText(_translate("", "編號："))
         self.cmb_role.setItemText(0, _translate("Form", "兒童"))
         self.cmb_role.setItemText(1, _translate("Form", "語境"))
@@ -309,6 +315,12 @@ class Tab2(QtWidgets.QWidget):
                 if not self.tableWidget.tableWidget.item(index, 3).text() == checkChildNum.__str__():
                     currectNum = QtWidgets.QTableWidgetItem(checkChildNum.__str__())
                     self.tableWidget.tableWidget.setItem(index, 3, currectNum)
+
+    #從Tab1接收個案編號
+    @QtCore.pyqtSlot(str)
+    def _setCaseID(self, caseID):
+        self.input_caseID.setText(caseID)
+        self.raise_()
 
     #儲存至資料庫
     def _save(self):

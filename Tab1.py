@@ -18,6 +18,9 @@ class DateEdit(QtWidgets.QDateEdit):
         # self.setDateTime(QtCore.QDateTime.currentDateTime())
 
 class Myform(QtWidgets.QWidget):
+
+    procStart = QtCore.pyqtSignal(str)
+
     def __init__(self):
         super(Myform, self).__init__()
         self.setObjectName("self")
@@ -699,6 +702,8 @@ class Myform(QtWidgets.QWidget):
         self.label_11.setText(_translate("self", "結束時間:"))
         self.label_15.setText(_translate("self", "有效語句數:"))
         self.pushButton.setText(_translate("Form", "儲存資料"))
+
+    @QtCore.pyqtSlot()
     def save (self):
         error = 0
         date = str(self.dateEdit.date().toPyDate())
@@ -753,6 +758,8 @@ class Myform(QtWidgets.QWidget):
         
         if  error > 0:
             win32api.MessageBox(0, '紅色框為必填欄位', '警告')
+
+        self.procStart.emit(self.lineEdit_2.text())
 
         
 
