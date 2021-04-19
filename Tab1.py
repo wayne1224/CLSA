@@ -437,40 +437,61 @@ class Myform(QtWidgets.QWidget):
         self.radioButton_12.setFont(font)
         self.radioButton_12.setObjectName("radioButton_12")
         self.horizontalLayout_20.addWidget(self.radioButton_12)
-        self.horizontalLayoutWidget = QtWidgets.QWidget(self)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(201, 211, 1041, 51))
-        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.radioButton_3 = QtWidgets.QRadioButton(self.horizontalLayoutWidget)
+        # self.horizontalLayoutWidget = QtWidgets.QWidget(self)
+        # self.horizontalLayoutWidget.setGeometry(QtCore.QRect(201, 211, 1041, 51))
+        # self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
+        # self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
+        # self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        # self.horizontalLayout.setObjectName("horizontalLayout")
+        # self.radioButton_3 = QtWidgets.QRadioButton(self.horizontalLayoutWidget)
+        # font = QtGui.QFont()
+        # font.setFamily("Agency FB")
+        # font.setPointSize(14)
+        # self.radioButton_3.setFont(font)
+        # self.radioButton_3.setObjectName("radioButton_3")
+        # self.horizontalLayout.addWidget(self.radioButton_3)
+        # self.radioButton_4 = QtWidgets.QRadioButton(self.horizontalLayoutWidget)
+        # font = QtGui.QFont()
+        # font.setFamily("Agency FB")
+        # font.setPointSize(14)
+        # self.radioButton_4.setFont(font)
+        # self.radioButton_4.setObjectName("radioButton_4")
+        # self.horizontalLayout.addWidget(self.radioButton_4)
+        # self.radioButton_13 = QtWidgets.QRadioButton(self.horizontalLayoutWidget)
+        # font = QtGui.QFont()
+        # font.setFamily("Agency FB")
+        # font.setPointSize(14)
+        # self.radioButton_13.setFont(font)
+        # self.radioButton_13.setObjectName("radioButton_13")
+        # self.horizontalLayout.addWidget(self.radioButton_13)
+        # self.radioButton_5 = QtWidgets.QRadioButton(self.horizontalLayoutWidget)
+        # font = QtGui.QFont()
+        # font.setFamily("Agency FB")
+        # font.setPointSize(14)
+        # self.radioButton_5.setFont(font)
+        # self.radioButton_5.setObjectName("radioButton_5")
+        # self.horizontalLayout.addWidget(self.radioButton_5)
+        self.horizontalLayoutWidget_22 = QtWidgets.QWidget(self)
+        self.horizontalLayoutWidget_22.setGeometry(QtCore.QRect(200, 200, 331, 71))
+        self.horizontalLayoutWidget_22.setObjectName("horizontalLayoutWidget_22")
+        self.horizontalLayout_22 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_22)
+        self.horizontalLayout_22.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_22.setObjectName("horizontalLayout_22")
+        self.lineEdit_11 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_22)
+        self.lineEdit_11.setEnabled(True)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lineEdit_11.sizePolicy().hasHeightForWidth())
+        self.lineEdit_11.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Agency FB")
         font.setPointSize(14)
-        self.radioButton_3.setFont(font)
-        self.radioButton_3.setObjectName("radioButton_3")
-        self.horizontalLayout.addWidget(self.radioButton_3)
-        self.radioButton_4 = QtWidgets.QRadioButton(self.horizontalLayoutWidget)
-        font = QtGui.QFont()
-        font.setFamily("Agency FB")
-        font.setPointSize(14)
-        self.radioButton_4.setFont(font)
-        self.radioButton_4.setObjectName("radioButton_4")
-        self.horizontalLayout.addWidget(self.radioButton_4)
-        self.radioButton_13 = QtWidgets.QRadioButton(self.horizontalLayoutWidget)
-        font = QtGui.QFont()
-        font.setFamily("Agency FB")
-        font.setPointSize(14)
-        self.radioButton_13.setFont(font)
-        self.radioButton_13.setObjectName("radioButton_13")
-        self.horizontalLayout.addWidget(self.radioButton_13)
-        self.radioButton_5 = QtWidgets.QRadioButton(self.horizontalLayoutWidget)
-        font = QtGui.QFont()
-        font.setFamily("Agency FB")
-        font.setPointSize(14)
-        self.radioButton_5.setFont(font)
-        self.radioButton_5.setObjectName("radioButton_5")
-        self.horizontalLayout.addWidget(self.radioButton_5)
+        self.lineEdit_11.setFont(font)
+        self.lineEdit_11.setText("")
+        self.lineEdit_11.setObjectName("lineEdit_11")
+        self.horizontalLayout_22.addWidget(self.lineEdit_11)
+
         self.horizontalLayoutWidget_21 = QtWidgets.QWidget(self)
         self.horizontalLayoutWidget_21.setGeometry(QtCore.QRect(251, 671, 991, 56))
         self.horizontalLayoutWidget_21.setObjectName("horizontalLayoutWidget_21")
@@ -556,7 +577,7 @@ class Myform(QtWidgets.QWidget):
         self.lineEdit_3.setObjectName("lineEdit_3")
         self.horizontalLayout_4.addWidget(self.lineEdit_3)
         self.horizontalLayoutWidget_6 = QtWidgets.QWidget(self)
-        self.horizontalLayoutWidget_6.setGeometry(QtCore.QRect(870, 160, 281, 51))
+        self.horizontalLayoutWidget_6.setGeometry(QtCore.QRect(910, 160, 321, 51))
         self.horizontalLayoutWidget_6.setObjectName("horizontalLayoutWidget_6")
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_6)
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
@@ -669,10 +690,10 @@ class Myform(QtWidgets.QWidget):
         self.radioButton_11.setText(_translate("self", "其他錄音設備"))
         self.radioButton_10.setText(_translate("self", "錄音筆"))
         self.radioButton_12.setText(_translate("self", "攝影機"))
-        self.radioButton_3.setText(_translate("self", "情境1"))
-        self.radioButton_4.setText(_translate("self", "情境2"))
-        self.radioButton_13.setText(_translate("self", "情境3"))
-        self.radioButton_5.setText(_translate("self", "情境4"))
+        # self.radioButton_3.setText(_translate("self", "情境1"))
+        # self.radioButton_4.setText(_translate("self", "情境2"))
+        # self.radioButton_13.setText(_translate("self", "情境3"))
+        # self.radioButton_5.setText(_translate("self", "情境4"))
         self.radioButton_15.setText(_translate("self", "很少 (幾乎不需要引導)"))
         self.radioButton_17.setText(_translate("self", "有時 (2~5次)"))
         self.radioButton_16.setText(_translate("self", "經常 (6~9次)"))
@@ -687,24 +708,53 @@ class Myform(QtWidgets.QWidget):
         error = 0
         date = str(self.dateEdit.date().toPyDate())
         date2 = datetime.strptime(date, "%Y-%m-%d")
-        if not self.lineEdit.text():
+        if not self.lineEdit.text(): #收錄者
             error+=1
             self.lineEdit.setStyleSheet("border: 1px solid red;" )
         else :
             self.lineEdit.setStyleSheet("border: 1px solid initial;" )
-        if not self.lineEdit_2.text():
+        if not self.lineEdit_2.text(): #個案編號
             error+=1
             self.lineEdit_2.setStyleSheet("border: 1px solid red;" )
         else :
             self.lineEdit_2.setStyleSheet("border: 1px solid initial;" )
-        if not self.lineEdit_3.text():
+        if not self.lineEdit_3.text(): #個案姓名
             error+=1
-            self.lineEdit_3.setStyleSheet("border: 1px solid red;" )
+            self.lineEdit_3.setStyleSheet("border: 1px solid red;")
         else:
             self.lineEdit_3.setStyleSheet("border: 1px solid initial;" )
-        if not (self.radioButton.isChecked() and self.radioButton_2.isChecked()):
-            self.radioButton.setStyleSheet("color: red;" )
-            self.radioButton_2.setStyleSheet("color: red;" )
+        if not (self.radioButton.isChecked() or self.radioButton_2.isChecked()): #性別
+            error += 1
+            self.horizontalLayoutWidget_5.setStyleSheet("border: 1px solid red;")
+            self.radioButton.setStyleSheet("border: 1px;")
+            self.radioButton_2.setStyleSheet("border: 1px;")
+            self.label_5.setStyleSheet("border: 1px;")
+        else:
+            self.horizontalLayoutWidget_5.setStyleSheet("border: 1px;")
+        if not self.lineEdit_7.text(): #收錄地點
+            error +=1
+            self.lineEdit_7.setStyleSheet("border: 1px solid red;")
+        else:
+            self.lineEdit_7.setStyleSheet("border: 1px solid initial;")
+        if not self.lineEdit_11.text(): #收錄情境
+            error += 1
+            self.lineEdit_11.setStyleSheet("border: 1px solid red;")
+        else :
+            self.lineEdit_11.setStyleSheet("border: 1px solid initial;")
+        if not (self.radioButton_7.isChecked() or self.radioButton_8.isChecked() or self.radioButton_9.isChecked()):
+            error += 1
+            self.horizontalLayoutWidget_8.setStyleSheet("border: 1px solid red;")
+            self.radioButton_7.setStyleSheet("border: 1px;")
+            self.radioButton_8.setStyleSheet("border: 1px;")
+            self.radioButton_9.setStyleSheet("border: 1px;")
+            self.label_8.setStyleSheet("border: 1px;")
+        else :
+            self.horizontalLayoutWidget_8.setStyleSheet("border: 1px;")
+        if not self.lineEdit_12.text():
+            error += 1
+            self.lineEdit_12.setStyleSheet("border: 1px solid red;")
+        else :
+            self.lineEdit_12.setStyleSheet("border: 1px solid initial;")
         
         if  error > 0:
             win32api.MessageBox(0, '紅色框為必填欄位', '警告')

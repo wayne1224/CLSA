@@ -7,7 +7,8 @@ class MainTabWidget(QtWidgets.QTabWidget):
     def __init__(self,parent=None):
         super(MainTabWidget, self).__init__(parent)
         self.resize(1393, 870)
-    
+        self.setWindowTitle("CLSA")
+
         #創建3個tab
         self.tab1=Myform()
         self.tab2=Tab2()
