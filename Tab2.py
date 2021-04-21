@@ -15,6 +15,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Tab2(QtWidgets.QWidget):
+    procStart = QtCore.pyqtSignal(list)
     def __init__(self):
         super(Tab2, self).__init__()
 
@@ -318,9 +319,14 @@ class Tab2(QtWidgets.QWidget):
 
     #從Tab1接收個案編號
     @QtCore.pyqtSlot(str)
-    def _setCaseID(self, caseID):
+    def setCaseID(self, caseID):
         self.input_caseID.setText(caseID)
         self.raise_()
+
+    #送孩童語句給Tab3
+    @QtCore.pyqtSlot()
+    def emitChildUtterance(self, utterance):
+        self.procStart.emit(utterance)
 
     #儲存至資料庫
     def _save(self):

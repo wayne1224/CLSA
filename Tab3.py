@@ -178,6 +178,10 @@ class Analysis(QtWidgets.QWidget):
             else:
                 self.tableWidget.item(i,2).setTextAlignment(QtCore.Qt.AlignCenter)
 
+    @QtCore.pyqtSlot(list)
+    def getChildUtterance(self, utterance):
+        pass
+
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         #Form.setWindowTitle(_translate("Form", "Form"))

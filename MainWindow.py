@@ -23,7 +23,8 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #設定tab的css
         self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
 
-        self.tab1.procStart.connect(self.tab2._setCaseID)
+        self.tab1.procStart.connect(self.tab2.setCaseID)
+        self.tab2.procStart.connect(self.tab3.getChildUtterance)
     
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
