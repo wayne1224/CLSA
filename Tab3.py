@@ -167,6 +167,9 @@ class Analysis(QtWidgets.QWidget):
         self.tableWidget.setSpan(22,0,2,2)
         self.tableWidget.setSpan(3,2,2,2)
         self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        #self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        #self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         #QtCore.QMetaObject.connectSlotsByName(Form)
         # 設字置中
         for i in range(1,24):
