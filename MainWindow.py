@@ -15,7 +15,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab2=Tab2()
         self.tab3=Analysis()
 
-        self.tab1.procStart.connect(self.tab2.onprocStart)
+        #self.tab1.procStart.connect(self.tab2.onprocStart)
 
         #將tab加入MainWindow中
         self.addTab(self.tab1, "收錄表")
