@@ -12,10 +12,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import win32api
 
 
-class DateEdit(QtWidgets.QDateEdit):
+class DateEdit(QtWidgets.QDateTimeEdit):
     def __init__(self, parent=None):
         super().__init__(parent, calendarPopup=True)
         # self.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.setDisplayFormat("yyyy-MM-dd HH:mm:ss")
 
 class Myform(QtWidgets.QWidget):
     procStart = QtCore.pyqtSignal(str)
