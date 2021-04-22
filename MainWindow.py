@@ -14,6 +14,8 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab2=Tab2()
         self.tab3=QtWidgets.QWidget()
 
+        self.tab1.procStart.connect(self.tab2.onprocStart)
+
         #將tab加入MainWindow中
         self.addTab(self.tab1, "收錄表")
         self.addTab(self.tab2, "轉錄表")

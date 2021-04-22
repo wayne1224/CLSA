@@ -15,6 +15,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Tab2(QtWidgets.QWidget):
+
     def __init__(self):
         super(Tab2, self).__init__()
 
@@ -188,6 +189,10 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noCaseID.setWindowTitle("提示")
         self.msg_noCaseID.setText("未輸入個案編號！")
         self.msg_noCaseID.setIcon(QtWidgets.QMessageBox.Warning)
+
+    @QtCore.pyqtSlot(str)
+    def onprocStart(self, message):
+        self.input_caseID.setText(message)
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
