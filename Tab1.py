@@ -18,7 +18,6 @@ class DateEdit(QtWidgets.QDateEdit):
         # self.setDateTime(QtCore.QDateTime.currentDateTime())
 
 class Myform(QtWidgets.QWidget):
-
     procStart = QtCore.pyqtSignal(str)
 
     def __init__(self):
@@ -652,9 +651,13 @@ class Myform(QtWidgets.QWidget):
         self.pushButton.setFont(font)
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.save)
+        # self.pushButton.clicked.connect(self.on_button_clicked)
 
         self.retranslateUi()
         # QtCore.QMetaObject.connectSlotsByName(self)
+    @QtCore.pyqtSlot()
+    def on_button_clicked(self):
+        self.procStart.emit(self.lineEdit_2.text())
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -705,6 +708,7 @@ class Myform(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot()
     def save (self):
+        self.on_button_clicked()
         error = 0
         date = str(self.dateEdit.date().toPyDate())
         date2 = datetime.strptime(date, "%Y-%m-%d")
@@ -755,13 +759,16 @@ class Myform(QtWidgets.QWidget):
             self.lineEdit_12.setStyleSheet("border: 1px solid red;")
         else :
             self.lineEdit_12.setStyleSheet("border: 1px solid initial;")
+        # if not self.plainTextEdit.text():
+        #     error+=1
+        #     self.plainTextEdit.setStyleSheet("border: 1px solid red;")
+        # else :
+        #     self.plainTextEdit.setStyleSheet("border: 1px solid initial;")
         
         if  error > 0:
             win32api.MessageBox(0, '紅色框為必填欄位', '警告')
 
         self.procStart.emit(self.lineEdit_2.text())
-
-        
 
         
 if __name__ == "__main__":

@@ -196,6 +196,10 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noCaseID.setText("未輸入個案編號！")
         self.msg_noCaseID.setIcon(QtWidgets.QMessageBox.Warning)
 
+    @QtCore.pyqtSlot(str)
+    def onprocStart(self, message):
+        self.input_caseID.setText(message)
+
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         self.lbl_trans.setText(_translate("", "轉錄者："))
