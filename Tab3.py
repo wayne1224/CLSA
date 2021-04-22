@@ -12,7 +12,7 @@ class Analysis(QtWidgets.QWidget):
         font = QtGui.QFont()
         font.setBold(True)
         self.tableWidget = QtWidgets.QTableWidget(self)
-        self.tableWidget.setGeometry(QtCore.QRect(270, 30, 481, 761))
+        #self.tableWidget.setGeometry(QtCore.QRect(270, 30, 481, 761))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(4)
         self.tableWidget.setRowCount(24)
