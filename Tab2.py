@@ -15,7 +15,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Tab2(QtWidgets.QWidget):
-
+    procStart = QtCore.pyqtSignal(list)
     def __init__(self):
         super(Tab2, self).__init__()
 
@@ -48,14 +48,20 @@ class Tab2(QtWidgets.QWidget):
         self.input_trans.setFont(font)
         self.input_trans.setObjectName("input_trans")
         self.gridLayout.addWidget(self.input_trans, 1, 1, 1, 1)
-        self.lbl_caseNum = QtWidgets.QLabel()
+        self.lbl_caseID = QtWidgets.QLabel()
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.lbl_caseNum.setFont(font)
-        self.lbl_caseNum.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.lbl_caseNum.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.lbl_caseNum.setObjectName("lbl_caseNum")
-        self.gridLayout.addWidget(self.lbl_caseNum, 1, 2, 1, 1)
+        self.lbl_caseID.setFont(font)
+        self.lbl_caseID.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.lbl_caseID.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.lbl_caseID.setObjectName("lbl_caseID")
+        self.gridLayout.addWidget(self.lbl_caseID, 1, 2, 1, 1)
+        self.cmb_caseDate = QtWidgets.QComboBox()
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.cmb_caseDate.setFont(font)
+        self.cmb_caseDate.setObjectName("cmb_caseDate")
+        self.gridLayout.addWidget(self.cmb_caseDate, 1, 4, 1, 1)
         layout.addLayout(self.gridLayout)
         self.line = QtWidgets.QFrame()
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
@@ -197,7 +203,7 @@ class Tab2(QtWidgets.QWidget):
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         self.lbl_trans.setText(_translate("", "轉錄者："))
-        self.lbl_caseNum.setText(_translate("", "個案編號："))
+        self.lbl_caseID.setText(_translate("", "個案編號："))
         self.lbl_role.setText(_translate("", "編號："))
         self.cmb_role.setItemText(0, _translate("Form", "兒童"))
         self.cmb_role.setItemText(1, _translate("Form", "語境"))
@@ -210,8 +216,8 @@ class Tab2(QtWidgets.QWidget):
 
     #新增列
     def _addRow(self):
-        sentence = QtWidgets.QTableWidgetItem(self.input_utterance.toPlainText())
-        context = QtWidgets.QTableWidgetItem(self.input_scenario.toPlainText())
+        utterance = QtWidgets.QTableWidgetItem(self.input_utterance.toPlainText())
+        scenario = QtWidgets.QTableWidgetItem(self.input_scenario.toPlainText())
 
         if self.cmb_role.currentText() == "兒童":   #新增兒童語句
             if self.input_utterance.toPlainText():  #檢查有輸入句子
@@ -223,8 +229,8 @@ class Tab2(QtWidgets.QWidget):
                     role = QtWidgets.QTableWidgetItem(self.childNum.__str__())
                     self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                 
-                self.tableWidget.tableWidget.setItem(rowCount, 4, sentence)
-                self.tableWidget.tableWidget.setItem(rowCount, 2, context)
+                self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
+                self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
                 self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
                 #清空、復原輸入欄
@@ -241,7 +247,7 @@ class Tab2(QtWidgets.QWidget):
         elif self.cmb_role.currentText() == "語境":   #只新增語境
             rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
             self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
-            self.tableWidget.tableWidget.setItem(rowCount, 2, context)
+            self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
             self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
             #清空、復原輸入欄
@@ -267,8 +273,8 @@ class Tab2(QtWidgets.QWidget):
                     role = QtWidgets.QTableWidgetItem(roleNum)
                     self.tableWidget.tableWidget.setItem(rowCount, 0, role)
 
-                self.tableWidget.tableWidget.setItem(rowCount, 1, sentence)
-                self.tableWidget.tableWidget.setItem(rowCount, 2, context)
+                self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
+                self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
                 self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
                 #清空、復原輸入欄
@@ -315,6 +321,17 @@ class Tab2(QtWidgets.QWidget):
                     currectNum = QtWidgets.QTableWidgetItem(checkChildNum.__str__())
                     self.tableWidget.tableWidget.setItem(index, 3, currectNum)
 
+    #從Tab1接收個案編號
+    @QtCore.pyqtSlot(str)
+    def setCaseID(self, caseID):
+        self.input_caseID.setText(caseID)
+        self.raise_()
+
+    #送孩童語句給Tab3
+    @QtCore.pyqtSlot()
+    def emitChildUtterance(self, utterance):
+        self.procStart.emit(utterance)
+
     #儲存至資料庫
     def _save(self):
         if self.input_caseID.text():
@@ -329,7 +346,8 @@ class Tab2(QtWidgets.QWidget):
                     data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
                     data['role'] = 'child'
                     data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 4).text()
-                data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
+                if self.tableWidget.tableWidget.item(rowIndex, 2):
+                    data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                 content.append(data)
             info = ['', self.input_caseID.text(), content]
             print(info)

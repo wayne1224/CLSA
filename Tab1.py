@@ -705,6 +705,8 @@ class Myform(QtWidgets.QWidget):
         self.label_11.setText(_translate("self", "結束時間:"))
         self.label_15.setText(_translate("self", "有效語句數:"))
         self.pushButton.setText(_translate("Form", "儲存資料"))
+
+    @QtCore.pyqtSlot()
     def save (self):
         self.on_button_clicked()
         error = 0
@@ -765,6 +767,8 @@ class Myform(QtWidgets.QWidget):
         
         if  error > 0:
             win32api.MessageBox(0, '紅色框為必填欄位', '警告')
+
+        self.procStart.emit(self.lineEdit_2.text())
 
         
 if __name__ == "__main__":
