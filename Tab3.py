@@ -1,9 +1,11 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
+from DistilTag import DistilTag  
+from statistics import mean
 
-class Analysis(QtWidgets.QWidget):
+class AnalysisTab(QtWidgets.QWidget):
     def __init__(self):
-        super(Analysis, self).__init__()
+        super(AnalysisTab, self).__init__()
         # self.setObjectName("Form")
         # self.resize(1080, 868)
         layout = QtWidgets.QGridLayout()
@@ -151,6 +153,7 @@ class Analysis(QtWidgets.QWidget):
         self.tableWidget.setItem(22, 2, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setItem(23, 2, item)
+        
         self.tableWidget.horizontalHeader().setVisible(False)
         self.tableWidget.verticalHeader().setVisible(False)
         self.retranslateUi()
@@ -177,10 +180,134 @@ class Analysis(QtWidgets.QWidget):
                 continue
             else:
                 self.tableWidget.item(i,2).setTextAlignment(QtCore.Qt.AlignCenter)
+                #補上面的沒init的cell
+                item = QtWidgets.QTableWidgetItem()
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.tableWidget.setItem(i, 3, item)
+
+    @QtCore.pyqtSlot(dict)
+    def getKey(self, key):
+        pass
 
     @QtCore.pyqtSlot(list)
     def getChildUtterance(self, utterance):
-        pass
+        if utterance == None:
+            return 
+        utterance = list(sorted(utterance, key = len, reverse = True))
+        wordCount = [0]*len(utterance) #統計每句詞數
+        charCount = [len(i) for i in utterance]
+        utterStr = ""
+        Analysis = {
+            'charCount':0,
+            'wordCount':0,
+            'Content':{
+                'N':0,
+                'V':0,
+                'VH':0,
+                'Neu':0,
+                'Nf':0,
+                'Nh':0,
+                'D':0,
+                'percentage':0.0,
+                'sum':0
+            },
+            'Function':{
+                'P':0,
+                'C':0,
+                'T':0,
+                'I':0,
+                'percentage':0.0,
+                'sum':0
+            },
+            'VOCD-w':0.0,
+            'VOCD-c':0.0,
+            'MLU-w':0,
+            'MLU-c':0,
+            'MLU5-w':0,
+            'MLU5-c':0
+        }
+        #將句子合併
+        for i in utterance: 
+            utterStr += i
+
+        #開始進行斷詞
+        tagger = DistilTag()
+        tagged = tagger.tag(utterStr)
+        print(tagged)
+        i = 0 #每句話的index
+        for sent in tagged:
+            for pair in sent:
+                wordCount[i] += 1 #統計每句詞數
+                #統計實詞
+                if pair[1] == 'Neu':
+                    Analysis['Content']['Neu'] += 1
+                elif pair[1] == 'Nf' or pair[1] == 'Nequ':
+                    Analysis['Content']['Nf'] += 1
+                elif pair[1] == 'Nh' or pair[1] == 'Nep':
+                    Analysis['Content']['Nh'] += 1
+                elif pair[1].startswith('N'):
+                    Analysis['Content']['N'] += 1
+                elif pair[1] == 'VH' or pair[1] == 'A':
+                    Analysis['Content']['VH'] += 1
+                elif pair[1].startswith('V') or pair[1] == 'SHI':
+                    Analysis['Content']['V'] += 1
+                elif pair[1].startswith('D') and pair[1] != 'DASHCATEGORY':
+                    Analysis['Content']['D'] += 1
+                #統計虛詞
+                elif pair[1] == 'P':
+                    Analysis['Function']['P'] += 1
+                elif pair[1].startswith('Ca') or pair[1].startswith('Cb'):
+                    Analysis['Function']['C'] += 1
+                elif pair[1].startswith('T'):
+                    Analysis['Function']['T'] += 1
+                elif pair[1] == 'I':
+                    Analysis['Function']['I'] += 1
+                else:
+                    wordCount[i] -= 1
+                    charCount[i] -= 1
+                    
+        #設Dict值
+        Analysis['charCount'] = sum(charCount) #總字數
+        Analysis['wordCount'] = sum(wordCount) #總詞數
+        Analysis['Content']['percentage'] = round(sum(Analysis['Content'].values())/sum(wordCount),2) #實詞比例
+        Analysis['Function']['percentage'] = round(sum(Analysis['Function'].values())/sum(wordCount),2) #虛詞比例
+        Analysis['Content']['sum'] = int(sum(Analysis['Content'].values())) #總實詞
+        Analysis['Function']['sum'] = int(sum(Analysis['Function'].values())) #總虛詞
+        Analysis['MLU-w'] = round(mean(wordCount),2)
+        Analysis['MLU-c'] = round(mean(charCount),2)
+        Analysis['MLU5-w'] = round(mean(wordCount[:5]),2)
+        Analysis['MLU5-c'] = round(mean(charCount[:5]),2)
+
+        #呼叫資料庫
+
+        #顯示在Table
+        self.tableWidget.item(1,3).setText(str(Analysis['charCount'])) #總字數
+        self.tableWidget.item(2,3).setText(str(Analysis['wordCount'])) #總詞數
+        self.tableWidget.item(5,1).setText(str(Analysis['Content']['sum'])) #總實詞
+        self.tableWidget.item(13,1).setText(str(Analysis['Function']['sum'])) #總虛詞
+        self.tableWidget.item(5,3).setText(str(Analysis['Content']['N']))
+        self.tableWidget.item(6,3).setText(str(Analysis['Content']['V']))
+        self.tableWidget.item(7,3).setText(str(Analysis['Content']['VH']))
+        self.tableWidget.item(8,3).setText(str(Analysis['Content']['Neu']))
+        self.tableWidget.item(9,3).setText(str(Analysis['Content']['Nf']))
+        self.tableWidget.item(10,3).setText(str(Analysis['Content']['Nh']))
+        self.tableWidget.item(11,3).setText(str(Analysis['Content']['D']))
+        self.tableWidget.item(12,3).setText(str(Analysis['Content']['percentage']*100)+'%')
+        self.tableWidget.item(13,3).setText(str(Analysis['Function']['P']))
+        self.tableWidget.item(14,3).setText(str(Analysis['Function']['C']))
+        self.tableWidget.item(15,3).setText(str(Analysis['Function']['T']))
+        self.tableWidget.item(16,3).setText(str(Analysis['Function']['I']))
+        self.tableWidget.item(17,3).setText(str(Analysis['Function']['percentage']*100)+'%')
+        #VOCD-w
+        #VOCD-c
+        self.tableWidget.item(20,3).setText(str(Analysis['MLU-w']))
+        self.tableWidget.item(21,3).setText(str(Analysis['MLU-c']))
+        self.tableWidget.item(22,3).setText(str(Analysis['MLU5-w']))
+        self.tableWidget.item(23,3).setText(str(Analysis['MLU5-c']))
+
+        
+        
+        
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -200,7 +327,7 @@ class Analysis(QtWidgets.QWidget):
         item = self.tableWidget.item(3, 0)
         item.setText(_translate("Form", "3.計算實詞和虛詞"))
         item = self.tableWidget.item(3, 2)
-        item.setText(_translate("Form", "2.計算各類詞類數\n（200 個詞中之個數）"))
+        item.setText(_translate("Form", "2.計算各類詞類數"))
         item = self.tableWidget.item(5, 0)
         item.setText(_translate("Form", "實詞"))
         item = self.tableWidget.item(5, 2)
@@ -254,6 +381,6 @@ class Analysis(QtWidgets.QWidget):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    screen = Analysis()
+    screen = AnalysisTab()
     screen.show()
     sys.exit(app.exec_())
