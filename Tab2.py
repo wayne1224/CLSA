@@ -15,7 +15,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Tab2(QtWidgets.QWidget):
-    procStart = QtCore.pyqtSignal(list)
+    procUtter = QtCore.pyqtSignal(list)
+    procKey = QtCore.pyqtSignal(dict)
+
     def __init__(self):
         super(Tab2, self).__init__()
 
@@ -197,7 +199,7 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noCaseID.setIcon(QtWidgets.QMessageBox.Warning)
 
     @QtCore.pyqtSlot(str)
-    def onprocStart(self, message):
+    def onprocUtter(self, message):
         self.input_caseID.setText(message)
 
     def retranslateUi(self, ):
@@ -329,13 +331,19 @@ class Tab2(QtWidgets.QWidget):
 
     #送孩童語句給Tab3
     @QtCore.pyqtSlot()
-    def emitChildUtterance(self, utterance):
-        self.procStart.emit(utterance)
+    def emitUtter(self, utterance):
+        self.procUtter.emit(utterance)
+        
+    @QtCore.pyqtSlot()
+    def emitKey(self, key):
+        self.procKey.emit(key)
+    
 
     #儲存至資料庫
     def _save(self):
         if self.input_caseID.text():
             content = []
+            childUtterance = []
             for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
                 data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
                 if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
@@ -346,13 +354,15 @@ class Tab2(QtWidgets.QWidget):
                     data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
                     data['role'] = 'child'
                     data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 4).text()
+                    childUtterance.append(self.tableWidget.tableWidget.item(rowIndex, 4).text()) # 傳給Tab3
                 if self.tableWidget.tableWidget.item(rowIndex, 2):
                     data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                 content.append(data)
             info = ['', self.input_caseID.text(), content]
             print(info)
-            database.database2.upsertContent(info)
-
+            #database.database2.upsertContent(info)
+            self.emitUtter(childUtterance)
+            #TODO: emit key
             self.input_caseID.setStyleSheet("border: 1px solid initial;")
             self.input_utterance.setStyleSheet("border: 1px solid initial;")
         else:

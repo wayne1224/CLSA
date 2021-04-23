@@ -3,7 +3,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from Tab2 import Tab2
 from Tab1 import Myform
-from Tab3 import Analysis
+from Tab3 import AnalysisTab
 class MainTabWidget(QtWidgets.QTabWidget):
     def __init__(self,parent=None):
         super(MainTabWidget, self).__init__(parent)
@@ -13,7 +13,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #創建3個tab
         self.tab1=Myform()
         self.tab2=Tab2()
-        self.tab3=Analysis()
+        self.tab3=AnalysisTab()
 
         #self.tab1.procStart.connect(self.tab2.onprocStart)
 
@@ -26,7 +26,8 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
 
         self.tab1.procStart.connect(self.tab2.setCaseID)
-        self.tab2.procStart.connect(self.tab3.getChildUtterance)
+        self.tab2.procUtter.connect(self.tab3.getChildUtterance)
+        self.tab2.procKey.connect(self.tab3.getKey)
     
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
