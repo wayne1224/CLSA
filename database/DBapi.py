@@ -90,7 +90,7 @@ def findContent(caseID , date): # argument = caseID , date , if find return cont
 
     return db.find_one(query)["transcribe"]["content"]
 
-def updateContent(caseID , date , content): # argument = caseID , date , content , if succeed return True , else return False
+def updateContent(caseID , date , transcriber , content): # argument = caseID , date , transcriber , content , if succeed return True , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
@@ -100,11 +100,39 @@ def updateContent(caseID , date , content): # argument = caseID , date , content
         print("False")
         return False
 
-    db.update_one(query , {"$set" : {"transcribe.content" : content}})
+    db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content}})
 
     print("True")
     return True
 
+def updateAnaylsis(caseID , date , anaylsis): # argument = caseID , date , anaylsis , if succeed return True , else return False
+    db = get_db()
+    query = dict()
+    query["childData.caseID"] = caseID
+    query["include.date"] = date
+
+    if db.count_documents(query) == 0:
+        print("False")
+        return False
+
+    db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content}})
+
+    print("True")
+    return True
+
+    db = get_db()
+    query = dict()
+    query["childData.caseID"] = caseID
+    query["include.date"] = date
+
+    if db.count_documents(query) == 0:
+        print("False")
+        return False
+
+    db.update_one(query , {"$set" : {"transcribe.anaylsis" : anaylsis}})
+
+    print("True")
+    return True
 
 objID = ObjectId("607455182078fa7d5e9d01f3")
 
@@ -113,6 +141,36 @@ a2 = {"ID" : "1" , "rule" : "child" , "utterance" : "123" , "scenario" : "123"}
 a3 = {"ID" : "" , "rule" : "" , "utterance" : "" , "scenario" : "123"}
 
 content = [a1 , a2 , a3]
+
+analysis = {
+            'charCount':0,
+            'wordCount':0,
+            'Content':{
+                'N':0,
+                'V':0,
+                'VH':0,
+                'Neu':0,
+                'Nf':0,
+                'Nh':0,
+                'D':0,
+                'percentage':0.0,
+                'sum':0
+            },
+            'Function':{
+                'P':0,
+                'C':0,
+                'T':0,
+                'I':0,
+                'percentage':0.0,
+                'sum':0
+            },
+            'VOCD-w':0.0,
+            'VOCD-c':0.0,
+            'MLU-w':0,
+            'MLU-c':0,
+            'MLU5-w':0,
+            'MLU5-c':0
+        }
 
 date = datetime.datetime.strptime("2018-02-01", "%Y-%m-%d")
 birthday = datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")
@@ -124,4 +182,5 @@ include = {"SLP" : "doctor123123456" , "date" : date}
 # insertDoc(childData , include)
 # print(findDateAndFirstContent("001"))
 # print(findContent("001" , date))
-# updateContent("001" , date , content)
+# updateContent("001" , date , "transcriber" , content)
+# updateAnaylsis("001" , date , analysis)
