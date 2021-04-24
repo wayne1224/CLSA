@@ -115,20 +115,6 @@ def updateAnaylsis(caseID , date , anaylsis): # argument = caseID , date , anayl
         print("False")
         return False
 
-    db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content}})
-
-    print("True")
-    return True
-
-    db = get_db()
-    query = dict()
-    query["childData.caseID"] = caseID
-    query["include.date"] = date
-
-    if db.count_documents(query) == 0:
-        print("False")
-        return False
-
     db.update_one(query , {"$set" : {"transcribe.anaylsis" : anaylsis}})
 
     print("True")
