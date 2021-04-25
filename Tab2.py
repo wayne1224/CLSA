@@ -97,7 +97,11 @@ class Tab2(QtWidgets.QWidget):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_3.setSpacing(20)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_6.setSpacing(5)
+        self.verticalLayout_6.setObjectName("verticalLayout_6")
         self.lbl_searchResult = QtWidgets.QLabel()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
@@ -109,7 +113,7 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_searchResult.setFont(font)
         self.lbl_searchResult.setText("")
         self.lbl_searchResult.setObjectName("lbl_searchResult")
-        self.verticalLayout_3.addWidget(self.lbl_searchResult)
+        self.verticalLayout_6.addWidget(self.lbl_searchResult)
         self.cmb_caseDates = QtWidgets.QComboBox()
         #sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         #sizePolicy.setHorizontalStretch(0)
@@ -120,7 +124,15 @@ class Tab2(QtWidgets.QWidget):
         font.setPointSize(12)
         self.cmb_caseDates.setFont(font)
         self.cmb_caseDates.setObjectName("cmb_caseDates")
-        self.verticalLayout_3.addWidget(self.cmb_caseDates)
+        self.verticalLayout_6.addWidget(self.cmb_caseDates)
+        self.verticalLayout_3.addLayout(self.verticalLayout_6)
+        self.verticalLayout_5 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_5.setSpacing(1)
+        self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.lbl_rolePrompt = QtWidgets.QLabel()
+        self.lbl_rolePrompt.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
+        self.lbl_rolePrompt.setObjectName("lbl_rolePrompt")
+        self.verticalLayout_5.addWidget(self.lbl_rolePrompt)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.lbl_role = QtWidgets.QLabel()
@@ -148,8 +160,14 @@ class Tab2(QtWidgets.QWidget):
         self.cmb_role.addItem("")
         self.cmb_role.addItem("")
         self.horizontalLayout_3.addWidget(self.cmb_role)
-        self.verticalLayout_3.addLayout(self.horizontalLayout_3)
+        self.verticalLayout_5.addLayout(self.horizontalLayout_3)
+        self.verticalLayout_3.addLayout(self.verticalLayout_5)
         self.horizontalLayout_2.addLayout(self.verticalLayout_3)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_2.setSpacing(20)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         self.lbl_utterance = QtWidgets.QLabel()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -160,18 +178,23 @@ class Tab2(QtWidgets.QWidget):
         font.setPointSize(12)
         self.lbl_utterance.setFont(font)
         self.lbl_utterance.setObjectName("lbl_utterance")
-        self.horizontalLayout_2.addWidget(self.lbl_utterance)
+        self.horizontalLayout_5.addWidget(self.lbl_utterance)
         self.input_utterance = QtWidgets.QTextEdit()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.input_utterance.sizePolicy().hasHeightForWidth())
         self.input_utterance.setSizePolicy(sizePolicy)
+        self.input_utterance.setMinimumSize(QtCore.QSize(400, 40))
+        self.input_utterance.setMaximumSize(QtCore.QSize(400, 40))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.input_utterance.setFont(font)
         self.input_utterance.setObjectName("input_utterance")
-        self.horizontalLayout_2.addWidget(self.input_utterance)
+        self.horizontalLayout_5.addWidget(self.input_utterance)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_5)
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.lbl_scenario = QtWidgets.QLabel()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -182,18 +205,22 @@ class Tab2(QtWidgets.QWidget):
         font.setPointSize(12)
         self.lbl_scenario.setFont(font)
         self.lbl_scenario.setObjectName("lbl_scenario")
-        self.horizontalLayout_2.addWidget(self.lbl_scenario)
+        self.horizontalLayout_6.addWidget(self.lbl_scenario)
         self.input_scenario = QtWidgets.QTextEdit()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.input_scenario.sizePolicy().hasHeightForWidth())
         self.input_scenario.setSizePolicy(sizePolicy)
+        self.input_scenario.setMinimumSize(QtCore.QSize(400, 40))
+        self.input_scenario.setMaximumSize(QtCore.QSize(400, 40))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.input_scenario.setFont(font)
         self.input_scenario.setObjectName("input_scenario")
-        self.horizontalLayout_2.addWidget(self.input_scenario)
+        self.horizontalLayout_6.addWidget(self.input_scenario)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_6)
+        self.horizontalLayout_2.addLayout(self.verticalLayout_2)
         self.verticalLayout_4 = QtWidgets.QVBoxLayout()
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.cbx_notCount = QtWidgets.QCheckBox()
@@ -293,6 +320,7 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_caseID.setText(_translate("", "個案編號："))
         self.btn_searchCase.setText(_translate("", "查詢"))
         self.lbl_searchResult.setText(_translate("", "啥小啦幹"))
+        self.lbl_rolePrompt.setText(_translate("", "成人請自行輸入編號"))
         self.lbl_role.setText(_translate("", "編號："))
         self.cmb_role.setItemText(0, _translate("Form", "兒童"))
         self.cmb_role.setItemText(1, _translate("Form", "語境"))
@@ -382,7 +410,9 @@ class Tab2(QtWidgets.QWidget):
         indexes = self.tableWidget.tableWidget.selectionModel().selectedRows()
         for index in sorted(indexes, reverse = True):
             if self.tableWidget.tableWidget.item(index.row(), 0): #刪除成人語句
-                self.adultNums[self.tableWidget.item(index.row(), 0).text()[0]] -= 1   #成人編號-1
+                self.adultNums[self.tableWidget.tableWidget.item(index.row(), 0).text()[0]] -= 1   #成人編號-1
+                if self.adultNums[self.tableWidget.tableWidget.item(index.row(), 0).text()[0]] == 0:
+                    self.cmb_role.removeItem(self.cmb_role.findText(self.tableWidget.tableWidget.item(index.row(), 0).text()[0]))
             elif self.tableWidget.tableWidget.takeItem(index.row(), 3):   #刪除兒童語句
                 self.childNum -= 1  #兒童編號-1
             self.tableWidget.tableWidget.removeRow(index.row())
@@ -429,14 +459,44 @@ class Tab2(QtWidgets.QWidget):
     def _searchCase(self):
         caseData = database.DBapi.findDateAndFirstContent(self.input_caseID.text())
         print(caseData)
-        self.lbl_searchResult.setText("此個案總共有" + len(caseData["dates"]).__str__() + "筆資料")
-        for i in range(len(caseData['dates'])):
-            self.cmb_caseDates.addItem(caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
+        if caseData:
+            #清空、復原Tab2
+            self.cmb_caseDates.clear()
+            self.cmb_role.clear()
+            self.cmb_role.addItem("兒童")
+            self.cmb_role.addItem("語境")
+            self.tableWidget.tableWidget.setRowCount(0)
 
-        #for i in range(len(caseData["FirstContent"])):
-        #    if caseData["FirstContent"][i]["role"] == "adult":
-        #        rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
-        #        self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
+            self.lbl_searchResult.setText("此個案總共有" + len(caseData["dates"]).__str__() + "筆資料")
+            for i in range(len(caseData['dates'])):
+                self.cmb_caseDates.addItem(caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
+
+            for i in range(len(caseData["FirstContent"])):
+                rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
+                self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
+                utterance = QtWidgets.QTableWidgetItem(caseData["FirstContent"][i]["utterance"])
+                scenario = QtWidgets.QTableWidgetItem(caseData["FirstContent"][i]["scenario"])
+
+                if caseData["FirstContent"][i]["role"] == "adult":  #成人
+                    if caseData["FirstContent"][i]["ID"]:   #如果有編號(有採計)
+                        if not caseData["FirstContent"][i]["ID"][0] in self.adultNums:  #新的成人編號
+                            self.adultNums[caseData["FirstContent"][i]["ID"][0]] = 1
+                            self.cmb_role.addItem(caseData["FirstContent"][i]["ID"][0])  #在編號選單新增新的編號
+                        else:   #已有的成人編號
+                            self.adultNums[caseData["FirstContent"][i]["ID"][0]] += 1
+                    role = QtWidgets.QTableWidgetItem(caseData["FirstContent"][i]["ID"])
+                    self.tableWidget.tableWidget.setItem(rowCount, 0, role)
+                    self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
+                elif caseData["FirstContent"][i]["role"] == "child":    #兒童
+                    if caseData["FirstContent"][i]["ID"]:   #如果有編號(有採計)
+                        self.childNum += 1
+                    role = QtWidgets.QTableWidgetItem(caseData["FirstContent"][i]["ID"])
+                    self.tableWidget.tableWidget.setItem(rowCount, 3, role)
+                    self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
+                self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
+
+        else:
+            print("empty")
 
 
     #儲存至資料庫
@@ -449,18 +509,23 @@ class Tab2(QtWidgets.QWidget):
                 if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
                     data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
                     data['role'] = 'adult'
+                    if self.tableWidget.tableWidget.item(rowIndex, 1).text() == None:
+                        self.tableWidget.tableWidget.item(rowIndex, 1).setText('')
                     data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
                 elif self.tableWidget.tableWidget.item(rowIndex, 3):    #child
                     data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
                     data['role'] = 'child'
+                    if self.tableWidget.tableWidget.item(rowIndex, 4).text() == None:
+                        self.tableWidget.tableWidget.item(rowIndex, 4).setText('')
                     data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 4).text()
                     childUtterance.append(self.tableWidget.tableWidget.item(rowIndex, 4).text()) # 傳給Tab3
                 if self.tableWidget.tableWidget.item(rowIndex, 2):
+                    if self.tableWidget.tableWidget.item(rowIndex, 2).text() == None:
+                        self.tableWidget.tableWidget.item(rowIndex, 2).setText('')
                     data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                 content.append(data)
-            info = ['', self.input_caseID.text(), content]
-            print(info)
-            #database.database2.upsertContent(info)
+            date = datetime.strptime(self.cmb_caseDates.currentText(), "%Y-%m-%d %H:%M")
+            database.DBapi.updateContent(self.input_caseID.text(), self.input_trans.text(), date, content)
             self.emitUtter(childUtterance)
             #TODO: emit key
             self.input_caseID.setStyleSheet("border: 1px solid initial;")
