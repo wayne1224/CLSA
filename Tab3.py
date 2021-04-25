@@ -1,7 +1,9 @@
 import sys
+import database.DBapi
 from PyQt5 import QtCore, QtGui, QtWidgets
 from DistilTag import DistilTag  
 from statistics import mean
+from datetime import datetime
 
 class AnalysisTab(QtWidgets.QWidget):
     def __init__(self):
@@ -184,10 +186,14 @@ class AnalysisTab(QtWidgets.QWidget):
                 item = QtWidgets.QTableWidgetItem()
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.tableWidget.setItem(i, 3, item)
+        self.caseID = ''
+        self.date = None
 
-    @QtCore.pyqtSlot(dict)
+    @QtCore.pyqtSlot(list)
     def getKey(self, key):
-        pass
+        if not key: 
+            self.caseID = key[0]
+            self.date = key[1]
 
     @QtCore.pyqtSlot(list)
     def getChildUtterance(self, utterance):
@@ -279,6 +285,7 @@ class AnalysisTab(QtWidgets.QWidget):
         Analysis['MLU5-c'] = round(mean(charCount[:5]),2)
 
         #呼叫資料庫
+        database.DBapi.updateAnaylsis(self.caseID, self.date, Analysis)
 
         #顯示在Table
         self.tableWidget.item(1,3).setText(str(Analysis['charCount'])) #總字數
@@ -307,8 +314,6 @@ class AnalysisTab(QtWidgets.QWidget):
 
         
         
-        
-
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         #Form.setWindowTitle(_translate("Form", "Form"))
