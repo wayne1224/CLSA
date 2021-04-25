@@ -123,9 +123,9 @@ def updateAnaylsis(caseID , date , anaylsis): # argument = caseID , date , anayl
 
 objID = ObjectId("607455182078fa7d5e9d01f3")
 
-a1 = {"ID" : "a1" , "rule" : "adult" , "utterance" : "1234" , "scenario" : "123"}
-a2 = {"ID" : "1" , "rule" : "child" , "utterance" : "123" , "scenario" : "123"}
-a3 = {"ID" : "" , "rule" : "" , "utterance" : "" , "scenario" : "123"}
+a1 = {"ID" : "a1" , "role" : "adult" , "utterance" : "1234" , "scenario" : "123"}
+a2 = {"ID" : "1" , "role" : "child" , "utterance" : "123" , "scenario" : "123"}
+a3 = {"ID" : "" , "role" : "" , "utterance" : "" , "scenario" : "123"}
 
 content = [a1 , a2 , a3]
 
