@@ -13,10 +13,6 @@ class Mytable(QtWidgets.QWidget):
     def __init__(self):
         super(Mytable, self).__init__()
         #QtWidgets.QWidget.__init__(self)
-        '''
-        Todo: 自訂table位置和大小
-        self.setGeometry(300, 300, 250, 150) 
-        '''
         #trigger keyboard key
         self.keyPressed.connect(self.on_key)
 
