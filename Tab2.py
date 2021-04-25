@@ -17,7 +17,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Tab2(QtWidgets.QWidget):
     procUtter = QtCore.pyqtSignal(list)
-    procKey = QtCore.pyqtSignal(dict)
+    procKey = QtCore.pyqtSignal(list)
 
     def __init__(self):
         super(Tab2, self).__init__()
@@ -285,12 +285,15 @@ class Tab2(QtWidgets.QWidget):
         self.retranslateUi()
         #QtCore.QMetaObject.connectSlotsByName()
 
-        #按鈕事件
+        #事件
         self.btn_add.clicked.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
         self.btn_save.clicked.connect(self._save)
         self.btn_searchCase.clicked.connect(self._searchCase)
+        self.cmb_caseDates.activated.connect(self._dateSearch)
 
+        self.caseID = ''
+        self.caseData = {}  #個案紀錄
         self.childNum = 0   #兒童編號
         self.adultNums = {}  #成人編號
 
@@ -446,20 +449,23 @@ class Tab2(QtWidgets.QWidget):
         self.input_caseID.setText(caseID)
         self.raise_()
 
-    #送孩童語句給Tab3
+    #傳孩童語句給Tab3
     @QtCore.pyqtSlot()
     def emitUtter(self, utterance):
         self.procUtter.emit(utterance)
         
+    #傳個案編號、日期給Tab3
     @QtCore.pyqtSlot()
     def emitKey(self, key):
         self.procKey.emit(key)
     
     #查詢個案編號紀錄
     def _searchCase(self):
-        caseData = database.DBapi.findDateAndFirstContent(self.input_caseID.text())
-        print(caseData)
-        if caseData:
+        self.caseID = self.input_caseID.text()
+        self.caseData = database.DBapi.findDateAndFirstContent(self.input_caseID.text())
+        print(self.caseData)
+
+        if self.caseData:
             #清空、復原Tab2
             self.cmb_caseDates.clear()
             self.cmb_role.clear()
@@ -467,37 +473,71 @@ class Tab2(QtWidgets.QWidget):
             self.cmb_role.addItem("語境")
             self.tableWidget.tableWidget.setRowCount(0)
 
-            self.lbl_searchResult.setText("此個案總共有" + len(caseData["dates"]).__str__() + "筆資料")
-            for i in range(len(caseData['dates'])):
-                self.cmb_caseDates.addItem(caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
+            self.lbl_searchResult.setText("此個案總共有" + len(self.caseData["dates"]).__str__() + "筆資料")
+            for i in range(len(self.caseData['dates'])):
+                self.cmb_caseDates.addItem(self.caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
 
-            for i in range(len(caseData["FirstContent"])):
+            #set table
+            for i in range(len(self.caseData["FirstContent"])):
                 rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
                 self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
-                utterance = QtWidgets.QTableWidgetItem(caseData["FirstContent"][i]["utterance"])
-                scenario = QtWidgets.QTableWidgetItem(caseData["FirstContent"][i]["scenario"])
+                utterance = QtWidgets.QTableWidgetItem(self.caseData["FirstContent"][i]["utterance"])
+                scenario = QtWidgets.QTableWidgetItem(self.caseData["FirstContent"][i]["scenario"])
 
-                if caseData["FirstContent"][i]["role"] == "adult":  #成人
-                    if caseData["FirstContent"][i]["ID"]:   #如果有編號(有採計)
-                        if not caseData["FirstContent"][i]["ID"][0] in self.adultNums:  #新的成人編號
-                            self.adultNums[caseData["FirstContent"][i]["ID"][0]] = 1
-                            self.cmb_role.addItem(caseData["FirstContent"][i]["ID"][0])  #在編號選單新增新的編號
+                if self.caseData["FirstContent"][i]["role"] == "adult":  #成人
+                    if self.caseData["FirstContent"][i]["ID"]:   #如果有編號(有採計)
+                        if not self.caseData["FirstContent"][i]["ID"][0] in self.adultNums:  #新的成人編號
+                            self.adultNums[self.caseData["FirstContent"][i]["ID"][0]] = 1
+                            self.cmb_role.addItem(self.caseData["FirstContent"][i]["ID"][0])  #在編號選單新增新的編號
                         else:   #已有的成人編號
-                            self.adultNums[caseData["FirstContent"][i]["ID"][0]] += 1
-                    role = QtWidgets.QTableWidgetItem(caseData["FirstContent"][i]["ID"])
+                            self.adultNums[self.caseData["FirstContent"][i]["ID"][0]] += 1
+                    role = QtWidgets.QTableWidgetItem(self.caseData["FirstContent"][i]["ID"])
                     self.tableWidget.tableWidget.setItem(rowCount, 0, role)
                     self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
-                elif caseData["FirstContent"][i]["role"] == "child":    #兒童
-                    if caseData["FirstContent"][i]["ID"]:   #如果有編號(有採計)
+                elif self.caseData["FirstContent"][i]["role"] == "child":    #兒童
+                    if self.caseData["FirstContent"][i]["ID"]:   #如果有編號(有採計)
                         self.childNum += 1
-                    role = QtWidgets.QTableWidgetItem(caseData["FirstContent"][i]["ID"])
+                    role = QtWidgets.QTableWidgetItem(self.caseData["FirstContent"][i]["ID"])
                     self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                     self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
                 self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
-
         else:
             print("empty")
+    
+    #用日期選擇個案紀錄
+    def _dateSearch(self):
+        content = database.DBapi.findContent(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()])
+        print(content)
+        #清空、復原Tab2
+        self.cmb_role.clear()
+        self.cmb_role.addItem("兒童")
+        self.cmb_role.addItem("語境")
+        self.tableWidget.tableWidget.setRowCount(0)
 
+        #set table
+        for i in range(content.__len__()):
+                rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
+                self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
+                utterance = QtWidgets.QTableWidgetItem(content[i]["utterance"])
+                scenario = QtWidgets.QTableWidgetItem(content[i]["scenario"])
+
+                if content[i]["role"] == "adult":  #成人
+                    if content[i]["ID"]:   #如果有編號(有採計)
+                        if not content[i]["ID"][0] in self.adultNums:  #新的成人編號
+                            self.adultNums[content[i]["ID"][0]] = 1
+                            self.cmb_role.addItem(content[i]["ID"][0])  #在編號選單新增新的編號
+                        else:   #已有的成人編號
+                            self.adultNums[content[i]["ID"][0]] += 1
+                    role = QtWidgets.QTableWidgetItem(content[i]["ID"])
+                    self.tableWidget.tableWidget.setItem(rowCount, 0, role)
+                    self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
+                elif content[i]["role"] == "child":    #兒童
+                    if content[i]["ID"]:   #如果有編號(有採計)
+                        self.childNum += 1
+                    role = QtWidgets.QTableWidgetItem(content[i]["ID"])
+                    self.tableWidget.tableWidget.setItem(rowCount, 3, role)
+                    self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
+                self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
 
     #儲存至資料庫
     def _save(self):
@@ -524,10 +564,11 @@ class Tab2(QtWidgets.QWidget):
                         self.tableWidget.tableWidget.item(rowIndex, 2).setText('')
                     data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                 content.append(data)
-            date = datetime.strptime(self.cmb_caseDates.currentText(), "%Y-%m-%d %H:%M")
-            database.DBapi.updateContent(self.input_caseID.text(), self.input_trans.text(), date, content)
+            date = self.caseData["dates"][self.cmb_caseDates.currentIndex()]
+            database.DBapi.updateContent(self.caseID, date, self.input_trans.text(), content)
             self.emitUtter(childUtterance)
-            #TODO: emit key
+            key = [self.input_caseID.text(),date]
+            self.emitKey(key)
             self.input_caseID.setStyleSheet("border: 1px solid initial;")
             self.input_utterance.setStyleSheet("border: 1px solid initial;")
         else:
