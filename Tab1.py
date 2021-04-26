@@ -20,7 +20,7 @@ class DateEdit(QtWidgets.QDateTimeEdit):
     def __init__(self, parent=None):
         super().__init__(parent, calendarPopup=True)
         self.setDateTime(QtCore.QDateTime.currentDateTime())
-        self.setDisplayFormat("yyyy-MM-dd HH:mm:ss")
+        self.setDisplayFormat("yyyy-MM-dd HH:mm")
 
 class Myform(QtWidgets.QWidget):
     procStart = QtCore.pyqtSignal(str)
