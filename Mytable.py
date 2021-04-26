@@ -204,7 +204,7 @@ class Mytable(QtWidgets.QWidget):
         y = selected[0].column()
 
         #將ComboBox編號存成一般儲存格
-        if self.id_x != -1:
+        if self.id_x != -1 and self.tableWidget.cellWidget(self.id_x,0):
             num = self.tableWidget.cellWidget(self.id_x,0).currentText()
             self.tableWidget.removeCellWidget(self.id_x,0)
             item = QtWidgets.QTableWidgetItem()
@@ -263,7 +263,7 @@ class Mytable(QtWidgets.QWidget):
             for i in range(row_count): #數幾個格子是有字的
                 if self.tableWidget.item(i,4) and self.tableWidget.item(i,4).font().bold():
                     self.tableWidget.item(i,3).setText('')
-                elif self.tableWidget.item(i,4) and self.tableWidget.item(i,4).text() != '':
+                elif self.tableWidget.item(i,4) and self.tableWidget.item(i,4) and self.tableWidget.item(i,4).text() != '':
                     self.tableWidget.item(i,3).setText(str(num))
                     num += 1
                 #清除沒文字的格子的編號
