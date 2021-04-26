@@ -77,7 +77,7 @@ def findDateAndFirstContent(caseID): # argument = caseID , if find return {"date
     FirstContent = db.find_one(query)["transcribe"]["content"]
 
     data["dates"] = dates
-    data["FirstContent"] = content
+    data["FirstContent"] = FirstContent
     
     return data
 
