@@ -556,29 +556,30 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = {}  #成人編號
 
         #set table
-        for i in range(content.__len__()):
-                rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
-                self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
-                utterance = QtWidgets.QTableWidgetItem(content[i]["utterance"])
-                scenario = QtWidgets.QTableWidgetItem(content[i]["scenario"])
+        if content:
+            for i in range(content.__len__()):
+                    rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
+                    self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
+                    utterance = QtWidgets.QTableWidgetItem(content[i]["utterance"])
+                    scenario = QtWidgets.QTableWidgetItem(content[i]["scenario"])
 
-                if content[i]["role"] == "adult":  #成人
-                    if content[i]["ID"]:   #如果有編號(有採計)
-                        if not content[i]["ID"][0] in self.adultNums:  #新的成人編號
-                            self.adultNums[content[i]["ID"][0]] = 1
-                            self.cmb_role.addItem(content[i]["ID"][0])  #在編號選單新增新的編號
-                        else:   #已有的成人編號
-                            self.adultNums[content[i]["ID"][0]] += 1
-                    role = QtWidgets.QTableWidgetItem(content[i]["ID"])
-                    self.tableWidget.tableWidget.setItem(rowCount, 0, role)
-                    self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
-                elif content[i]["role"] == "child":    #兒童
-                    if content[i]["ID"]:   #如果有編號(有採計)
-                        self.childNum += 1
-                    role = QtWidgets.QTableWidgetItem(content[i]["ID"])
-                    self.tableWidget.tableWidget.setItem(rowCount, 3, role)
-                    self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
-                self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
+                    if content[i]["role"] == "adult":  #成人
+                        if content[i]["ID"]:   #如果有編號(有採計)
+                            if not content[i]["ID"][0] in self.adultNums:  #新的成人編號
+                                self.adultNums[content[i]["ID"][0]] = 1
+                                self.cmb_role.addItem(content[i]["ID"][0])  #在編號選單新增新的編號
+                            else:   #已有的成人編號
+                                self.adultNums[content[i]["ID"][0]] += 1
+                        role = QtWidgets.QTableWidgetItem(content[i]["ID"])
+                        self.tableWidget.tableWidget.setItem(rowCount, 0, role)
+                        self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
+                    elif content[i]["role"] == "child":    #兒童
+                        if content[i]["ID"]:   #如果有編號(有採計)
+                            self.childNum += 1
+                        role = QtWidgets.QTableWidgetItem(content[i]["ID"])
+                        self.tableWidget.tableWidget.setItem(rowCount, 3, role)
+                        self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
+                    self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
 
     #儲存至資料庫
     def _save(self):
