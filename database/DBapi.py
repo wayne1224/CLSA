@@ -15,7 +15,7 @@ def get_db():
     return CLSA
 
 # 收錄表 api
-def findChildData(caseID): # argument = caseID , if find return childData (type = dict) , else return {}
+def findChildData(caseID): # argument = caseID , if find return childData (type = dict) , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
@@ -59,7 +59,7 @@ def insertDoc(childData , include): # argument = childData , include , if succee
     return True
 
 # 轉錄表 api     
-def findDateAndFirstContent(caseID): # argument = caseID , if find return {"dates" : 全部的日期 (type = list) , "FirstContent" : content} , else return {}
+def findDateAndFirstContent(caseID): # argument = caseID , if find return {"dates" : 全部的日期 (type = list) , "FirstContent" : content} , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
@@ -81,7 +81,7 @@ def findDateAndFirstContent(caseID): # argument = caseID , if find return {"date
     
     return data
 
-def findContent(caseID , date): # argument = caseID , date , if find return content (type = dict) , else return {}
+def findContent(caseID , date): # argument = caseID , date , if find return content (type = array) , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
