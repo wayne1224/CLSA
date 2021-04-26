@@ -104,7 +104,7 @@ class Myform(QtWidgets.QWidget):
         self.label_3.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.label_3.setObjectName("label_3")
         self.horizontalLayoutWidget_13 = QtWidgets.QWidget(self)
-        self.horizontalLayoutWidget_13.setGeometry(QtCore.QRect(600, 340, 301, 61))
+        self.horizontalLayoutWidget_13.setGeometry(QtCore.QRect(600, 350, 301, 51))
         self.horizontalLayoutWidget_13.setObjectName("horizontalLayoutWidget_13")
         self.horizontalLayout_13 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_13)
         self.horizontalLayout_13.setContentsMargins(0, 0, 0, 0)
@@ -259,7 +259,7 @@ class Myform(QtWidgets.QWidget):
         self.checkBox_2.setObjectName("checkBox_2")
         self.horizontalLayout_19.addWidget(self.checkBox_2)
         self.horizontalLayoutWidget_8 = QtWidgets.QWidget(self)
-        self.horizontalLayoutWidget_8.setGeometry(QtCore.QRect(600, 290, 681, 51))
+        self.horizontalLayoutWidget_8.setGeometry(QtCore.QRect(600, 300, 681, 51))
         self.horizontalLayoutWidget_8.setObjectName("horizontalLayoutWidget_8")
         self.horizontalLayout_8 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_8)
         self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
@@ -360,7 +360,7 @@ class Myform(QtWidgets.QWidget):
         self.plainTextEdit_2.setObjectName("plainTextEdit_2")
         self.horizontalLayout_21.addWidget(self.plainTextEdit_2)
         self.horizontalLayoutWidget_10 = QtWidgets.QWidget(self)
-        self.horizontalLayoutWidget_10.setGeometry(QtCore.QRect(200, 320, 331, 111))
+        self.horizontalLayoutWidget_10.setGeometry(QtCore.QRect(200, 340, 331, 71))
         self.horizontalLayoutWidget_10.setObjectName("horizontalLayoutWidget_10")
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_10)
         self.horizontalLayout_10.setContentsMargins(0, 0, 0, 0)
@@ -465,7 +465,7 @@ class Myform(QtWidgets.QWidget):
         self.label_4.setObjectName("label_4")
         self.horizontalLayout_14.addWidget(self.label_4)
         self.horizontalLayoutWidget_22 = QtWidgets.QWidget(self)
-        self.horizontalLayoutWidget_22.setGeometry(QtCore.QRect(200, 220, 331, 101))
+        self.horizontalLayoutWidget_22.setGeometry(QtCore.QRect(200, 240, 331, 61))
         self.horizontalLayoutWidget_22.setObjectName("horizontalLayoutWidget_22")
         self.horizontalLayout_22 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_22)
         self.horizontalLayout_22.setContentsMargins(0, 0, 0, 0)
@@ -584,7 +584,7 @@ class Myform(QtWidgets.QWidget):
         self.label_28.setFont(font)
         self.label_28.setObjectName("label_28")
         self.horizontalLayout_23.addWidget(self.label_28)
-        self.lineEdit_14 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_18)
+        self.lineEdit_14 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_18) #錄音檔名
         self.lineEdit_14.setEnabled(True)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -655,8 +655,8 @@ class Myform(QtWidgets.QWidget):
         self.pushButton_2.setText(_translate("self", "查詢"))
         self.label_23.setText(_translate("self", "收錄情境:"))
         self.label_24.setText(_translate("self", "收錄地點:"))
-        self.label_16.setText(_translate("self", "參與人員:"))
-        self.label_26.setText(_translate("self", "誘發題材:"))
+        self.label_16.setText(_translate("self", "誘發題材:"))
+        self.label_26.setText(_translate("self", "參與人員:"))
         self.label_17.setText(_translate("self", "記錄方式:"))
         self.label_28.setText(_translate("self", "錄影／錄音檔名"))
 
@@ -677,8 +677,7 @@ class Myform(QtWidgets.QWidget):
     def save (self): #儲存資料
         self.on_button_clicked()
         error = 0
-        date = str(self.dateEdit.date().toPyDate())
-        date2 = datetime.strptime(date, "%Y-%m-%d")
+        
         if not self.lineEdit.text(): #收錄者
             error+=1
             self.lineEdit.setStyleSheet("border: 1px solid red;" )
@@ -726,11 +725,48 @@ class Myform(QtWidgets.QWidget):
             self.lineEdit_12.setStyleSheet("border: 1px solid red;")
         else :
             self.lineEdit_12.setStyleSheet("border: 1px solid initial;")
-
+        if not self.lineEdit_14.text():
+            error += 1
+            self.lineEdit_14.setStyleSheet("border: 1px solid red;")
+        else :
+            self.lineEdit_14.setStyleSheet("border: 1px solid initial;")
         
-        if  error > 0:
+        if  error > 0: #如果有錯跳提示視窗
             win32api.MessageBox(0, '紅色框為必填欄位', '警告')
-
+            date = str(self.dateEdit.dateTime().toPyDateTime())
+            recordDate = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+            print(recordDate)
+        else :
+            print("success")
+            date = str(self.dateEdit.date().toPyDate())
+            birthday = datetime.strptime(date, "%Y-%m-%d")
+            
+            date2 = str(self.dateEdit.dateTime().toPyDateTime())
+            recordDate = datetime.strptime(date2, "%Y-%m-%d %H:%M:%S")
+            if self.radioButton.isChecked():
+                gender = 'male'
+            else :
+                gender = 'female'
+            childData = {
+                'caseID' : self.lineEdit_2.text(),
+                'name': self.lineEdit_3.text(),
+                'gender' : gender,
+                'birthday' : birthday
+            }
+            include = {
+                'SLP': self.lineEdit.text(),
+                'location' : self.lineEdit_7.text(),
+                'fileName' : self.lineEdit_14.text(),
+                'form' : '',
+                'date' : recordDate,
+                'inducement' : self.lineEdit_12.text(),
+                'participants' : '',
+                'recordType' :'',
+                'help' : '',
+                'situation' : self.lineEdit_11.text(),
+                'others' : ''
+            }
+            database.DBapi.insertDoc(childData, include)
         self.procStart.emit(self.lineEdit_2.text())
 
         
