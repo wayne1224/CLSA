@@ -21,7 +21,8 @@ def findChildData(caseID): # argument = caseID , if find return childData (type 
     query["childData.caseID"] = caseID
 
     if db.count_documents(query) == 0:
-        return {}
+        print("can not find this caseID")
+        return False
 
     return db.find_one(query)["childData"]
 
@@ -34,7 +35,7 @@ def insertDoc(childData , include): # argument = childData , include , if succee
     query["include.date"] = include["date"]  
     
     if db.count_documents(query) != 0:
-        print("false")
+        print("this document already exists")
         return False
 
     # 更新舊的childData
@@ -54,7 +55,7 @@ def insertDoc(childData , include): # argument = childData , include , if succee
 
     db.insert_one(data)
 
-    print("true")
+    print("document inserts successfully")
     return True
 
 # 轉錄表 api     
@@ -64,7 +65,8 @@ def findDateAndFirstContent(caseID): # argument = caseID , if find return {"date
     query["childData.caseID"] = caseID
 
     if db.count_documents(query) == 0:
-        return {}
+        print("can not find this caseID")
+        return False
     
     dates = list()
     data = dict()
@@ -75,7 +77,7 @@ def findDateAndFirstContent(caseID): # argument = caseID , if find return {"date
     FirstContent = db.find_one(query)["transcribe"]["content"]
 
     data["dates"] = dates
-    data["FirstContent"] = content
+    data["FirstContent"] = FirstContent
     
     return data
 
@@ -86,7 +88,8 @@ def findContent(caseID , date): # argument = caseID , date , if find return cont
     query["include.date"] = date
 
     if db.count_documents(query) == 0:
-        return {}
+        print("can not find this caseID")
+        return False
 
     return db.find_one(query)["transcribe"]["content"]
 
@@ -97,12 +100,11 @@ def updateContent(caseID , date , transcriber , content): # argument = caseID , 
     query["include.date"] = date
 
     if db.count_documents(query) == 0:
-        print("False")
+        print("can not find this caseID")
         return False
 
     db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content}})
 
-    print("True")
     return True
 
 def updateAnaylsis(caseID , date , anaylsis): # argument = caseID , date , anaylsis , if succeed return True , else return False
@@ -112,12 +114,11 @@ def updateAnaylsis(caseID , date , anaylsis): # argument = caseID , date , anayl
     query["include.date"] = date
 
     if db.count_documents(query) == 0:
-        print("False")
+        print("can not find this caseID")
         return False
 
     db.update_one(query , {"$set" : {"transcribe.anaylsis" : anaylsis}})
 
-    print("True")
     return True
 
 objID = ObjectId("607455182078fa7d5e9d01f3")
@@ -158,7 +159,7 @@ analysis = {
             'MLU5-c':0
         }
 
-date = datetime.datetime.strptime("2018-02-01", "%Y-%m-%d")
+date = datetime.datetime.strptime("2018-01-31 00:00", "%Y-%m-%d %H:%M")
 birthday = datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")
 
 childData = {"caseID" : "001" , "name" : "1234" , "gender" : "male" , "birthday" : birthday}

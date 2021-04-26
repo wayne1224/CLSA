@@ -251,8 +251,6 @@ class Mytable(QtWidgets.QWidget):
             self.id_x = x
             #self.last_x = x
 
-            
-
     def _setChildID(self):
         #被選到的格子
         selected = self.tableWidget.selectedIndexes()
@@ -261,7 +259,7 @@ class Mytable(QtWidgets.QWidget):
 
         if y == 4 and self.edit: #如果被選到的格子是兒童語句
             row_count = self.tableWidget.rowCount()
-            num = 0
+            num = 1
             for i in range(row_count): #數幾個格子是有字的
                 if self.tableWidget.item(i,4) and self.tableWidget.item(i,4).font().bold():
                     self.tableWidget.item(i,3).setText('')
