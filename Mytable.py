@@ -9,12 +9,12 @@ from functools import partial
 
 class Mytable(QtWidgets.QWidget):
     #keyboard key
-    keyPressed = QtCore.pyqtSignal(QtCore.QEvent)
+    #keyPressed = QtCore.pyqtSignal(QtCore.QEvent) //enter
     def __init__(self):
         super(Mytable, self).__init__()
         #QtWidgets.QWidget.__init__(self)
         #trigger keyboard key
-        self.keyPressed.connect(self.on_key)
+        #self.keyPressed.connect(self.on_key) //enter
 
         layout = QtWidgets.QGridLayout()
         self.setLayout(layout)
@@ -103,6 +103,7 @@ class Mytable(QtWidgets.QWidget):
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "兒童語句"))
 
+    '''
     def keyPressEvent(self, event):
         super(Mytable, self).keyPressEvent(event)
         self.keyPressed.emit(event) 
@@ -110,6 +111,7 @@ class Mytable(QtWidgets.QWidget):
     def on_key(self, event):
         if event.key() == QtCore.Qt.Key_Return:
             self._addRow()
+    '''
     
     def _addRow(self):
         if self._checkAdult():
