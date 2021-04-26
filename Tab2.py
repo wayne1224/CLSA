@@ -472,6 +472,8 @@ class Tab2(QtWidgets.QWidget):
             self.cmb_role.addItem("兒童")
             self.cmb_role.addItem("語境")
             self.tableWidget.tableWidget.setRowCount(0)
+            self.childNum = 0   #兒童編號
+            self.adultNums = {}  #成人編號
 
             self.lbl_searchResult.setText("此個案總共有" + len(self.caseData["dates"]).__str__() + "筆資料")
             for i in range(len(self.caseData['dates'])):
@@ -517,6 +519,8 @@ class Tab2(QtWidgets.QWidget):
         self.cmb_role.addItem("兒童")
         self.cmb_role.addItem("語境")
         self.tableWidget.tableWidget.setRowCount(0)
+        self.childNum = 0   #兒童編號
+        self.adultNums = {}  #成人編號
 
         #set table
         for i in range(content.__len__()):
