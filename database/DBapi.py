@@ -171,5 +171,5 @@ include = {"SLP" : "doctor123123456" , "date" : date}
 # insertDoc(childData , include)
 # print(findDateAndFirstContent("001"))
 # print(findContent("001" , date))
-# updateContent("001" , date , "transcriber" , content)
+# updateContent("001" , date , "transcriber" , content , 10 , 8)
 # updateAnaylsis("001" , date , analysis)
