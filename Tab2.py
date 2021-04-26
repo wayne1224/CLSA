@@ -17,7 +17,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Tab2(QtWidgets.QWidget):
     procUtter = QtCore.pyqtSignal(list)
-    procKey = QtCore.pyqtSignal(list)
+    procKey = QtCore.pyqtSignal(dict)
 
     def __init__(self):
         super(Tab2, self).__init__()
@@ -577,10 +577,11 @@ class Tab2(QtWidgets.QWidget):
     #儲存至資料庫
     def _save(self):
         if self.input_caseID.text():
-            content = []
-            childUtterance = []
-            totalUtterance = 0
-            validUtterance = 0
+            content = []    #對話內容
+            childUtterance = [] #兒童語句
+            totalUtterance = 0  #總語句數
+            validUtterance = 0  #採計語句數
+
             for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
                 data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
                 if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
@@ -590,7 +591,9 @@ class Tab2(QtWidgets.QWidget):
                     data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
                     data['role'] = 'adult'
                     if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
-                        self.tableWidget.tableWidget.item(rowIndex, 1).setText('')
+                        item = QtWidgets.QTableWidgetItem()
+                        item.setText('')
+                        self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
                     data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
                 elif self.tableWidget.tableWidget.item(rowIndex, 3):    #child
                     if self.tableWidget.tableWidget.item(rowIndex, 3).text().__len__() == 0:    #不採計語句
@@ -599,22 +602,30 @@ class Tab2(QtWidgets.QWidget):
                     data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
                     data['role'] = 'child'
                     if self.tableWidget.tableWidget.item(rowIndex, 4) == None:
-                        self.tableWidget.tableWidget.item(rowIndex, 4).setText('')
+                        item = QtWidgets.QTableWidgetItem()
+                        item.setText('')
+                        self.tableWidget.tableWidget.setItem(rowIndex, 4, item)
                     data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 4).text()
                     childUtterance.append(self.tableWidget.tableWidget.item(rowIndex, 4).text()) # 傳給Tab3
                 if self.tableWidget.tableWidget.item(rowIndex, 2):
                     if self.tableWidget.tableWidget.item(rowIndex, 2) == None:
-                        self.tableWidget.tableWidget.item(rowIndex, 2).setText('')
+                        item = QtWidgets.QTableWidgetItem()
+                        item.setText('')
+                        self.tableWidget.tableWidget.setItem(rowIndex, 2, item)
                     data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                 content.append(data)
+            
             date = self.caseData["dates"][self.cmb_caseDates.currentIndex()]
+            print(totalUtterance)
+            print(validUtterance)
             database.DBapi.updateContent(self.caseID, date, self.input_trans.text(), content, totalUtterance, validUtterance)
             self.emitUtter(childUtterance)
-            key = [self.input_caseID.text(),date]
+            key = {'caseID':self.caseID,
+                    'date':date }
             self.emitKey(key)
             self.input_caseID.setStyleSheet("border: 1px solid initial;")
             self.input_utterance.setStyleSheet("border: 1px solid initial;")
-        else:
+        else:   #未輸入個案編號
             self.msg_noCaseID.exec_()
             self.input_caseID.setStyleSheet("border: 1px solid red;")
 
