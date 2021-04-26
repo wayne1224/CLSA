@@ -189,11 +189,11 @@ class AnalysisTab(QtWidgets.QWidget):
         self.caseID = ''
         self.date = None
 
-    @QtCore.pyqtSlot(list)
+    @QtCore.pyqtSlot(dict)
     def getKey(self, key):
         if not key: 
-            self.caseID = key[0]
-            self.date = key[1]
+            self.caseID = key['caseID']
+            self.date = key['date']
 
     @QtCore.pyqtSlot(list)
     def getChildUtterance(self, utterance):
@@ -285,6 +285,8 @@ class AnalysisTab(QtWidgets.QWidget):
         Analysis['MLU5-c'] = round(mean(charCount[:5]),2)
 
         #呼叫資料庫
+        print('caseID:',self.caseID)
+        print('Date:',self.date)
         database.DBapi.updateAnaylsis(self.caseID, self.date, Analysis)
 
         #顯示在Table
