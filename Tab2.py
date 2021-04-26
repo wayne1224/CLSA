@@ -350,6 +350,9 @@ class Tab2(QtWidgets.QWidget):
                     self.childNum += 1
                     role = QtWidgets.QTableWidgetItem(self.childNum.__str__())
                     self.tableWidget.tableWidget.setItem(rowCount, 3, role)
+                else:   #不採計
+                    role = QtWidgets.QTableWidgetItem('')
+                    self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                 
                 self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
                 self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
@@ -393,6 +396,9 @@ class Tab2(QtWidgets.QWidget):
                         self.adultNums[self.cmb_role.currentText()] += 1
                     roleNum = self.cmb_role.currentText() + self.adultNums[self.cmb_role.currentText()].__str__()
                     role = QtWidgets.QTableWidgetItem(roleNum)
+                    self.tableWidget.tableWidget.setItem(rowCount, 0, role)
+                else:   #不採計
+                    role = QtWidgets.QTableWidgetItem('')
                     self.tableWidget.tableWidget.setItem(rowCount, 0, role)
 
                 self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
@@ -582,6 +588,11 @@ class Tab2(QtWidgets.QWidget):
             totalUtterance = 0  #總語句數
             validUtterance = 0  #採計語句數
 
+            date = self.caseData["dates"][self.cmb_caseDates.currentIndex()]
+            key = {'caseID':self.caseID,
+                    'date':date }
+            self.emitKey(key)
+
             for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
                 data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
                 if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
@@ -615,14 +626,10 @@ class Tab2(QtWidgets.QWidget):
                     data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                 content.append(data)
             
-            date = self.caseData["dates"][self.cmb_caseDates.currentIndex()]
             print(totalUtterance)
             print(validUtterance)
             database.DBapi.updateContent(self.caseID, date, self.input_trans.text(), content, totalUtterance, validUtterance)
             self.emitUtter(childUtterance)
-            key = {'caseID':self.caseID,
-                    'date':date }
-            self.emitKey(key)
             self.input_caseID.setStyleSheet("border: 1px solid initial;")
             self.input_utterance.setStyleSheet("border: 1px solid initial;")
         else:   #未輸入個案編號
