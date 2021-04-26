@@ -113,7 +113,7 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_searchResult.setFont(font)
         self.lbl_searchResult.setText("")
         self.lbl_searchResult.setObjectName("lbl_searchResult")
-        self.verticalLayout_6.addWidget(self.lbl_searchResult)
+        #self.verticalLayout_6.addWidget(self.lbl_searchResult)
         self.cmb_caseDates = QtWidgets.QComboBox()
         #sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         #sizePolicy.setHorizontalStretch(0)
@@ -124,7 +124,7 @@ class Tab2(QtWidgets.QWidget):
         font.setPointSize(12)
         self.cmb_caseDates.setFont(font)
         self.cmb_caseDates.setObjectName("cmb_caseDates")
-        self.verticalLayout_6.addWidget(self.cmb_caseDates)
+        #self.verticalLayout_6.addWidget(self.cmb_caseDates)
         self.verticalLayout_3.addLayout(self.verticalLayout_6)
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()
         self.verticalLayout_5.setSpacing(1)
@@ -322,8 +322,8 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_trans.setText(_translate("", "轉錄者："))
         self.lbl_caseID.setText(_translate("", "個案編號："))
         self.btn_searchCase.setText(_translate("", "查詢"))
-        self.lbl_searchResult.setText(_translate("", "啥小啦幹"))
-        self.lbl_rolePrompt.setText(_translate("", "成人請自行輸入編號"))
+        #self.lbl_searchResult.setText(_translate("", "啥小啦幹"))
+        self.lbl_rolePrompt.setText(_translate("", "成人請自行輸入編號 ex: A, B"))
         self.lbl_role.setText(_translate("", "編號："))
         self.cmb_role.setItemText(0, _translate("Form", "兒童"))
         self.cmb_role.setItemText(1, _translate("Form", "語境"))
@@ -472,6 +472,8 @@ class Tab2(QtWidgets.QWidget):
             self.cmb_role.addItem("兒童")
             self.cmb_role.addItem("語境")
             self.tableWidget.tableWidget.setRowCount(0)
+            self.childNum = 0   #兒童編號
+            self.adultNums = {}  #成人編號
 
             self.lbl_searchResult.setText("此個案總共有" + len(self.caseData["dates"]).__str__() + "筆資料")
             for i in range(len(self.caseData['dates'])):
@@ -501,6 +503,10 @@ class Tab2(QtWidgets.QWidget):
                     self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                     self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
                 self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
+                #顯示出查詢結果
+                self.verticalLayout_6.addWidget(self.lbl_searchResult)
+                self.verticalLayout_6.addWidget(self.cmb_caseDates)
+                self.verticalLayout_3.addLayout(self.verticalLayout_6)
         else:
             print("empty")
     
@@ -513,6 +519,8 @@ class Tab2(QtWidgets.QWidget):
         self.cmb_role.addItem("兒童")
         self.cmb_role.addItem("語境")
         self.tableWidget.tableWidget.setRowCount(0)
+        self.childNum = 0   #兒童編號
+        self.adultNums = {}  #成人編號
 
         #set table
         for i in range(content.__len__()):
