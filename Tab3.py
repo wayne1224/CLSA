@@ -191,7 +191,8 @@ class AnalysisTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot(dict)
     def getKey(self, key):
-        if not key: 
+        print(key)
+        if key != None: 
             self.caseID = key['caseID']
             self.date = key['date']
 
