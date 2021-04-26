@@ -49,7 +49,9 @@ def insertDoc(childData , include): # argument = childData , include , if succee
         "include" : include,
         "transcribe" : {"transcriber" : None, 
                         "content" : None,
-                        "anaylsis" : None
+                        "anaylsis" : None,
+                        "totalUtterance" : None,
+                        "validUtterance" : None
         } 
     }
 
@@ -93,7 +95,7 @@ def findContent(caseID , date): # argument = caseID , date , if find return cont
 
     return db.find_one(query)["transcribe"]["content"]
 
-def updateContent(caseID , date , transcriber , content): # argument = caseID , date , transcriber , content , if succeed return True , else return False
+def updateContent(caseID , date , transcriber , content , totalUtterance , validUtterance): # argument = caseID , date , transcriber , content , totalUtterance , validUtterance , if succeed return True , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
@@ -103,7 +105,7 @@ def updateContent(caseID , date , transcriber , content): # argument = caseID , 
         print("can not find this caseID")
         return False
 
-    db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content}})
+    db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content , "transcribe.totalUtterance" : totalUtterance , "transcribe.validUtterance" : validUtterance}})
 
     return True
 
