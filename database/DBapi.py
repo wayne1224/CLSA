@@ -15,7 +15,7 @@ def get_db():
     return CLSA
 
 # 查詢頁 api
-def findDoc(SLP , caseID , name): # argument = SLP , caseID , name, if find return True , else return False
+def findDoc(SLP , caseID , name): # argument = SLP , caseID , name, if find return pymongo object , else return False
     db = get_db()
     query = dict()
 
