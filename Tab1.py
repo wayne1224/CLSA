@@ -624,7 +624,7 @@ class Myform(QtWidgets.QWidget):
         self.label_21.setText(_translate("self", "收錄者:"))
         self.label_22.setText(_translate("self", "個案姓名:"))
         self.label_3.setText(_translate("self", "CLSA分析"))
-        self.label_14.setText(_translate("self", "兒童總語句數"))
+        self.label_14.setText(_translate("self", "兒童總語句數:"))
         self.label_2.setText(_translate("self", "個案編號:"))
         self.label_20.setText(_translate("self", "需要引導協助:"))
         self.label_19.setText(_translate("self", "其他特殊情況:"))
@@ -661,7 +661,8 @@ class Myform(QtWidgets.QWidget):
         self.label_28.setText(_translate("self", "錄影／錄音檔名"))
 
     @QtCore.pyqtSlot()
-    def searchCaseID(self): #查詢個案編號把個案資料貼到Tab1
+    #查詢個案編號把個案資料貼到Tab1
+    def searchCaseID(self): 
         caseData = database.DBapi.findChildData(self.lineEdit_2.text())
         print (caseData)
         if caseData:
@@ -673,27 +674,32 @@ class Myform(QtWidgets.QWidget):
             self.dateEdit.setDate(caseData['birthday'])
         else :
             win32api.MessageBox(0, '查無此個案資料', '提示')
-        
-    def save (self): #儲存資料
+    #儲存資料到資料庫 
+    def save (self): 
         self.on_button_clicked()
         error = 0
-        
-        if not self.lineEdit.text(): #收錄者
+
+        #收錄者
+        if not self.lineEdit.text(): 
             error+=1
             self.lineEdit.setStyleSheet("border: 1px solid red;" )
         else :
             self.lineEdit.setStyleSheet("border: 1px solid initial;" )
-        if not self.lineEdit_2.text(): #個案編號
+        
+        #個案編號
+        if not self.lineEdit_2.text(): 
             error+=1
             self.lineEdit_2.setStyleSheet("border: 1px solid red;" )
         else :
             self.lineEdit_2.setStyleSheet("border: 1px solid initial;" )
-        if not self.lineEdit_3.text(): #個案姓名
+        #個案姓名
+        if not self.lineEdit_3.text(): 
             error+=1
             self.lineEdit_3.setStyleSheet("border: 1px solid red;")
         else:
             self.lineEdit_3.setStyleSheet("border: 1px solid initial;" )
-        if not (self.radioButton.isChecked() or self.radioButton_2.isChecked()): #性別
+        #性別
+        if not (self.radioButton.isChecked() or self.radioButton_2.isChecked()): 
             error += 1
             self.horizontalLayoutWidget_5.setStyleSheet("border: 1px solid red;")
             self.radioButton.setStyleSheet("border: 1px;")
@@ -701,16 +707,20 @@ class Myform(QtWidgets.QWidget):
             self.label_5.setStyleSheet("border: 1px;")
         else:
             self.horizontalLayoutWidget_5.setStyleSheet("border: 1px;")
-        if not self.lineEdit_7.text(): #收錄地點
+        #收錄地點
+        if not self.lineEdit_7.text(): 
             error +=1
             self.lineEdit_7.setStyleSheet("border: 1px solid red;")
         else:
             self.lineEdit_7.setStyleSheet("border: 1px solid initial;")
-        if not self.lineEdit_11.text(): #收錄情境
+        
+        #收錄情境
+        if not self.lineEdit_11.text(): 
             error += 1
             self.lineEdit_11.setStyleSheet("border: 1px solid red;")
         else :
             self.lineEdit_11.setStyleSheet("border: 1px solid initial;")
+        #互動形式
         if not (self.radioButton_7.isChecked() or self.radioButton_8.isChecked() or self.radioButton_9.isChecked()):
             error += 1
             self.horizontalLayoutWidget_8.setStyleSheet("border: 1px solid red;")
@@ -720,33 +730,55 @@ class Myform(QtWidgets.QWidget):
             self.label_8.setStyleSheet("border: 1px;")
         else :
             self.horizontalLayoutWidget_8.setStyleSheet("border: 1px;")
+        #誘發題材
         if not self.lineEdit_12.text():
             error += 1
             self.lineEdit_12.setStyleSheet("border: 1px solid red;")
         else :
             self.lineEdit_12.setStyleSheet("border: 1px solid initial;")
+        #錄影錄音檔名
         if not self.lineEdit_14.text():
             error += 1
             self.lineEdit_14.setStyleSheet("border: 1px solid red;")
         else :
             self.lineEdit_14.setStyleSheet("border: 1px solid initial;")
-        
-        if  error > 0: #如果有錯跳提示視窗
+
+        #如果有必填欄位沒填跳提示視窗
+        if  error > 0: 
             win32api.MessageBox(0, '紅色框為必填欄位', '警告')
-            date = str(self.dateEdit.dateTime().toPyDateTime())
-            recordDate = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-            print(recordDate)
+            strDate = str(self.dateEdit_3.dateTime().toPyDateTime())
+            DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+            strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+            DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+            print  (DateTimeRecordDate)
+
         else :
-            print("success")
+
+            #將dateEdit變成dateTime型態
             date = str(self.dateEdit.date().toPyDate())
             birthday = datetime.strptime(date, "%Y-%m-%d")
             
-            date2 = str(self.dateEdit.dateTime().toPyDateTime())
-            recordDate = datetime.strptime(date2, "%Y-%m-%d %H:%M:%S")
+            #將dateEdit_3變成dateTime型態
+            strDate = str(self.dateEdit_3.dateTime().toPyDateTime())
+            DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+            strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+            DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+            print  (DateTimeRecordDate)
+
+            #判斷是男是女
             if self.radioButton.isChecked():
                 gender = 'male'
             else :
                 gender = 'female'
+
+            #判斷互動形式
+            if self.radioButton_7.isChecked():
+                form = '交談'
+            if self.radioButton_8.isChecked():
+                form = '自由遊戲'
+            if self.radioButton_9.isChecked():
+                form = '敘事'
+
             childData = {
                 'caseID' : self.lineEdit_2.text(),
                 'name': self.lineEdit_3.text(),
@@ -757,8 +789,8 @@ class Myform(QtWidgets.QWidget):
                 'SLP': self.lineEdit.text(),
                 'location' : self.lineEdit_7.text(),
                 'fileName' : self.lineEdit_14.text(),
-                'form' : '',
-                'date' : recordDate,
+                'form' : form,
+                'date' : DateTimeRecordDate,
                 'inducement' : self.lineEdit_12.text(),
                 'participants' : '',
                 'recordType' :'',
@@ -766,7 +798,10 @@ class Myform(QtWidgets.QWidget):
                 'situation' : self.lineEdit_11.text(),
                 'others' : ''
             }
-            database.DBapi.insertDoc(childData, include)
+            if database.DBapi.insertDoc(childData, include) :
+                win32api.MessageBox(0, '新增成功', '提示')
+            else :
+                win32api.MessageBox(0, '新增失敗', '提示')
         self.procStart.emit(self.lineEdit_2.text())
 
         
