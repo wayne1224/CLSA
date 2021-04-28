@@ -9,12 +9,12 @@ from functools import partial
 
 class Mytable(QtWidgets.QWidget):
     #keyboard key
-    keyPressed = QtCore.pyqtSignal(QtCore.QEvent)
+    #keyPressed = QtCore.pyqtSignal(QtCore.QEvent) //enter
     def __init__(self):
         super(Mytable, self).__init__()
         #QtWidgets.QWidget.__init__(self)
         #trigger keyboard key
-        self.keyPressed.connect(self.on_key)
+        #self.keyPressed.connect(self.on_key) //enter
 
         layout = QtWidgets.QGridLayout()
         self.setLayout(layout)
@@ -103,6 +103,7 @@ class Mytable(QtWidgets.QWidget):
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "兒童語句"))
 
+    '''
     def keyPressEvent(self, event):
         super(Mytable, self).keyPressEvent(event)
         self.keyPressed.emit(event) 
@@ -110,6 +111,7 @@ class Mytable(QtWidgets.QWidget):
     def on_key(self, event):
         if event.key() == QtCore.Qt.Key_Return:
             self._addRow()
+    '''
     
     def _addRow(self):
         if self._checkAdult():
@@ -204,7 +206,7 @@ class Mytable(QtWidgets.QWidget):
         y = selected[0].column()
 
         #將ComboBox編號存成一般儲存格
-        if self.id_x != -1:
+        if self.id_x != -1 and self.tableWidget.cellWidget(self.id_x,0):
             num = self.tableWidget.cellWidget(self.id_x,0).currentText()
             self.tableWidget.removeCellWidget(self.id_x,0)
             item = QtWidgets.QTableWidgetItem()
@@ -263,7 +265,7 @@ class Mytable(QtWidgets.QWidget):
             for i in range(row_count): #數幾個格子是有字的
                 if self.tableWidget.item(i,4) and self.tableWidget.item(i,4).font().bold():
                     self.tableWidget.item(i,3).setText('')
-                elif self.tableWidget.item(i,4) and self.tableWidget.item(i,4).text() != '':
+                elif self.tableWidget.item(i,4) and self.tableWidget.item(i,4) and self.tableWidget.item(i,4).text() != '':
                     self.tableWidget.item(i,3).setText(str(num))
                     num += 1
                 #清除沒文字的格子的編號

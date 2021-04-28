@@ -14,8 +14,26 @@ def get_db():
 
     return CLSA
 
+# 查詢頁 api
+def findDoc(SLP , caseID , name): # argument = SLP , caseID , name, if find return pymongo object , else return False
+    db = get_db()
+    query = dict()
+
+    if SLP:
+        query["include.SLP"] = SLP
+    if caseID:
+        query["childData.caseID"] = caseID
+    if name:
+        query["childData.name"] = name
+
+    if db.count_documents(query) == 0:
+        print("can not find this document")
+        return False
+
+    return db.find(query)
+    
 # 收錄表 api
-def findChildData(caseID): # argument = caseID , if find return childData (type = dict) , else return {}
+def findChildData(caseID): # argument = caseID , if find return childData (type = dict) , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
@@ -26,40 +44,41 @@ def findChildData(caseID): # argument = caseID , if find return childData (type 
 
     return db.find_one(query)["childData"]
 
-def insertDoc(childData , include): # argument = childData , include , if succeed return True , else return False
+def upsertChildAndInclude(childData , include): # argument = childData , include
     db = get_db()
-
-    # 查看是否已存在 用個案編號和收錄日期判斷獨立性
     query = dict()
     query["childData.caseID"] = childData["caseID"]
     query["include.date"] = include["date"]  
-    
-    if db.count_documents(query) != 0:
-        print("this document already exists")
-        return False
 
+
+    # 更新收錄表
+    if db.count_documents(query) != 0: 
+        a = db.update_one(query , {"$set" : {"childData" : childData , "include" : include}})
+        print("document updates successfully")
+
+    # 插入新的收錄表  
+    else:
+        data = {
+            "childData" : childData,
+            "include" : include,
+            "transcribe" : {"transcriber" : None, 
+                            "content" : None,
+                            "anaylsis" : None,
+                            "totalUtterance" : None,
+                            "validUtterance" : None
+            } 
+        }
+
+        db.insert_one(data)
+        print("document inserts successfully")
+    
     # 更新舊的childData
     query = dict()
     query["childData.caseID"] = childData["caseID"]
     db.update_many(query , {"$set" : {"childData" : childData}})
 
-    # 插入新的 childData , transcribe
-    data = {
-        "childData" : childData,
-        "include" : include,
-        "transcribe" : {"transcriber" : None, 
-                        "content" : None,
-                        "anaylsis" : None
-        } 
-    }
-
-    db.insert_one(data)
-
-    print("document inserts successfully")
-    return True
-
-# 轉錄表 api     
-def findDateAndFirstContent(caseID): # argument = caseID , if find return {"dates" : 全部的日期 (type = list) , "FirstContent" : content} , else return {}
+# 轉錄表 api    
+def findDateAndFirstContent(caseID): # argument = caseID , if find return {"dates" : 全部的日期 (type = list) , "FirstContent" : content} , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
@@ -81,19 +100,19 @@ def findDateAndFirstContent(caseID): # argument = caseID , if find return {"date
     
     return data
 
-def findContent(caseID , date): # argument = caseID , date , if find return content (type = dict) , else return {}
+def findContent(caseID , date): # argument = caseID , date , if find return content (type = array) , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
     query["include.date"] = date
 
     if db.count_documents(query) == 0:
-        print("can not find this caseID")
+        print("can not find this content")
         return False
 
     return db.find_one(query)["transcribe"]["content"]
 
-def updateContent(caseID , date , transcriber , content): # argument = caseID , date , transcriber , content , if succeed return True , else return False
+def updateContent(caseID , date , transcriber , content , totalUtterance , validUtterance): # argument = caseID , date , transcriber , content , totalUtterance , validUtterance , if succeed return True , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
@@ -103,9 +122,22 @@ def updateContent(caseID , date , transcriber , content): # argument = caseID , 
         print("can not find this caseID")
         return False
 
-    db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content}})
+    db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content , "transcribe.totalUtterance" : totalUtterance , "transcribe.validUtterance" : validUtterance}})
 
     return True
+
+# 彙錄表 api 
+def findAnaylsis(caseID , date): # argument = caseID , date , if succeed return anaylsis , else return False
+    db = get_db()
+    query = dict()
+    query["childData.caseID"] = caseID
+    query["include.date"] = date
+
+    if db.count_documents(query) == 0:
+        print("can not find this anaylsis")
+        return False
+
+    return db.find_one(query)["transcribe"]["anaylsis"]
 
 def updateAnaylsis(caseID , date , anaylsis): # argument = caseID , date , anaylsis , if succeed return True , else return False
     db = get_db()
@@ -159,15 +191,20 @@ analysis = {
             'MLU5-c':0
         }
 
-date = datetime.datetime.strptime("2018-01-31 00:00", "%Y-%m-%d %H:%M")
+date = datetime.datetime.strptime("2018-02-20 00:00", "%Y-%m-%d %H:%M")
 birthday = datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")
 
 childData = {"caseID" : "001" , "name" : "1234" , "gender" : "male" , "birthday" : birthday}
-include = {"SLP" : "doctor123123456" , "date" : date}
+include = {"SLP" : "123" , "date" : date}
+
+# print(findDoc("" , "001" , ""))
 
 # print(findChildData("001"))
-# insertDoc(childData , include)
+# upsertDoc(childData , include)
+
 # print(findDateAndFirstContent("001"))
 # print(findContent("001" , date))
 # updateContent("001" , date , "transcriber" , content)
+
+# print(findAnaylsis("001" , date))
 # updateAnaylsis("001" , date , analysis)

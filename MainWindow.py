@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from Tab0 import SearchTab
 from Tab2 import Tab2
 from Tab1 import Myform
 from Tab3 import AnalysisTab
@@ -10,14 +10,16 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.resize(1393, 870)
         self.setWindowTitle("CLSA")
 
-        #創建3個tab
-        self.tab1=Myform()
-        self.tab2=Tab2()
-        self.tab3=AnalysisTab()
+        #創建4個tab
+        self.tab0 = SearchTab()
+        self.tab1 = Myform()
+        self.tab2 = Tab2()
+        self.tab3 = AnalysisTab()
 
         #self.tab1.procStart.connect(self.tab2.onprocStart)
 
         #將tab加入MainWindow中
+        self.addTab(self.tab0, "查詢頁面")
         self.addTab(self.tab1, "收錄表")
         self.addTab(self.tab2, "轉錄表")
         self.addTab(self.tab3, "彙整表")
