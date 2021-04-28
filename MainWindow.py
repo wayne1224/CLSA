@@ -31,6 +31,10 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab2.procUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab3.getKey)
     
+    #override closeEvent
+    def closeEvent(self, event):
+        print(111)
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     demo = MainTabWidget()
