@@ -884,8 +884,26 @@ class Myform(QtWidgets.QWidget):
             else :
                 win32api.MessageBox(0, '新增失敗', '提示')
         self.procStart.emit(self.lineEdit_2.text())
-
-        
+    def saveExamination (self) :
+        data = {
+            'caseID' : self.lineEdit_2.text(),
+            'name': self.lineEdit_3.text(),
+            'gender' : gender,
+            'birthday' : birthday
+            'date' : DateTimeRecordDate,
+            'SLP': self.lineEdit.text(),
+            'scenario': self.lineEdit_11.text(),
+            'fileName' : self.lineEdit_14.text(),
+            'location' : self.lineEdit_7.text(),
+            'form' : form,
+            'inducement' : self.lineEdit_12.text(),
+            'participants' : participants,
+            'recordType' :recordType,
+            'help' : needhelp,
+            'others' : self.plainTextEdit.toPlainText(),
+            'situation' : self.plainTextEdit_2.toPlainText()
+        }
+        return data
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     ui = Myform()
