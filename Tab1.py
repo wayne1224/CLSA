@@ -211,7 +211,8 @@ class Myform(QtWidgets.QWidget):
         font.setPointSize(14)
         self.lineEdit.setFont(font)
         self.lineEdit.setText("")
-        self.lineEdit.setObjectName("lineEdit") #收錄者姓名
+        #收錄者姓名
+        self.lineEdit.setObjectName("lineEdit") 
         self.horizontalLayout_7.addWidget(self.lineEdit)
         self.horizontalLayoutWidget_3 = QtWidgets.QWidget(self)
         self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(450, 100, 251, 71))
@@ -452,7 +453,7 @@ class Myform(QtWidgets.QWidget):
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_6)
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        # self.dateEdit = QtWidgets.QDateEdit(self.horizontalLayoutWidget_6)
+
         self.dateEdit = BirthdayEdit()
         font = QtGui.QFont()
         font.setFamily("Agency FB")
@@ -525,7 +526,7 @@ class Myform(QtWidgets.QWidget):
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_11)
         self.horizontalLayout_11.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        # self.dateEdit_3 = QtWidgets.QDateEdit(self.horizontalLayoutWidget_11)
+
         self.dateEdit_3 = DateEdit()
         font = QtGui.QFont()
         font.setFamily("Agency FB")
@@ -611,7 +612,8 @@ class Myform(QtWidgets.QWidget):
         self.lineEdit_14.setText("")
         self.lineEdit_14.setObjectName("lineEdit_14")
         self.horizontalLayout_23.addWidget(self.lineEdit_14)
-        self.pushButton = QtWidgets.QPushButton(self) #儲存資料的按鈕
+         #儲存資料的按鈕
+        self.pushButton = QtWidgets.QPushButton(self)
         self.pushButton.setGeometry(QtCore.QRect(1080, 750, 161, 41))
         font = QtGui.QFont()
         font.setFamily("Agency FB")
@@ -621,12 +623,6 @@ class Myform(QtWidgets.QWidget):
         self.pushButton.clicked.connect(self.save)
 
         self.retranslateUi()
-        # QtCore.QMetaObject.connectSlotsByName(self)
-
-    #傳個案編號到Tab2
-    @QtCore.pyqtSlot() 
-    def on_button_clicked(self):
-        self.procStart.emit(self.lineEdit_2.text())
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -671,7 +667,11 @@ class Myform(QtWidgets.QWidget):
         self.label_17.setText(_translate("self", "記錄方式:"))
         self.label_28.setText(_translate("self", "錄影／錄音檔名"))
 
-    @QtCore.pyqtSlot()
+    #傳個案編號到Tab2
+    @QtCore.pyqtSlot() 
+    def on_button_clicked(self):
+        self.procStart.emit(self.lineEdit_2.text())
+
     #查詢個案編號把個案資料貼到Tab1
     def searchCaseID(self): 
         caseData = database.DBapi.findChildData(self.lineEdit_2.text())
@@ -685,6 +685,7 @@ class Myform(QtWidgets.QWidget):
             self.dateEdit.setDate(caseData['birthday'])
         else :
             win32api.MessageBox(0, '查無此個案資料', '提示')
+
     #儲存資料到資料庫 
     def save (self): 
         self.on_button_clicked()
@@ -878,7 +879,7 @@ class Myform(QtWidgets.QWidget):
                 'others' : self.plainTextEdit.toPlainText(),
                 'situation' : self.plainTextEdit_2.toPlainText()
             }
-            if database.DBapi.insertDoc(childData, include) :
+            if database.DBapi.upsertChildAndInclude(childData, include) :
                 win32api.MessageBox(0, '新增成功', '提示')
             else :
                 win32api.MessageBox(0, '新增失敗', '提示')
