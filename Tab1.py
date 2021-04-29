@@ -623,6 +623,7 @@ class Myform(QtWidgets.QWidget):
         self.pushButton.clicked.connect(self.save)
 
         self.retranslateUi()
+        self.saveForm = self.returnTab1Data()
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -667,6 +668,7 @@ class Myform(QtWidgets.QWidget):
         self.label_17.setText(_translate("self", "記錄方式:"))
         self.label_28.setText(_translate("self", "錄影／錄音檔名"))
 
+
     #傳個案編號到Tab2
     @QtCore.pyqtSlot() 
     def on_button_clicked(self):
@@ -685,7 +687,90 @@ class Myform(QtWidgets.QWidget):
             self.dateEdit.setDate(caseData['birthday'])
         else :
             win32api.MessageBox(0, '查無此個案資料', '提示')
-    saveForm = {}
+    
+    #回傳現在tab1的所有資料
+    def returnTab1Data (self) :
+        #判斷是男是女
+        if self.radioButton.isChecked():
+            gender = 'male'
+        else :
+            gender = 'female'
+
+        #將dateEdit變成dateTime型態
+        date = str(self.dateEdit.date().toPyDate())
+        birthday = datetime.strptime(date, "%Y-%m-%d")
+
+        #將dateEdit_3變成dateTime型態
+        strDate = str(self.dateEdit_3.dateTime().toPyDateTime())
+        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+
+        #判斷互動形式   
+        form = ''
+        if self.radioButton_7.isChecked():
+            form = '交談'
+        if self.radioButton_8.isChecked():
+            form = '自由遊戲'
+        if self.radioButton_9.isChecked():
+            form = '敘事'
+        
+        #判斷記錄方式
+        recordType = ''
+        if self.radioButton_10.isChecked():
+            recordType = '錄音筆'
+        if self.radioButton_11.isChecked():
+            recordType = '其他錄音設備'
+        if self.radioButton_12.isChecked():
+            recordType = '攝影機'
+
+        #判斷需要引導協助
+        needhelp = ''
+        if self.radioButton_14.isChecked():
+            needhelp = '總是'
+        if self.radioButton_15.isChecked():
+            needhelp = '很少 (幾乎不需要引導)'
+        if self.radioButton_16.isChecked():
+            needhelp = '經常 (6~9次)'
+        if self.radioButton_17.isChecked():
+            needhelp = '有時 (2~5次)'
+
+        #判斷參與人員
+        participants = []
+        if self.checkBox_2.isChecked():
+            participants.append("兒童")
+        if self.checkBox_3.isChecked():
+            participants.append("爸爸")
+        if self.checkBox_4.isChecked():
+            participants.append("施測者")
+        if self.checkBox_5.isChecked():
+            participants.append("老師")
+        if self.checkBox_6.isChecked():
+            participants.append("媽媽")
+        if self.checkBox_7.isChecked() and self.lineEdit_10.text():
+            participants.append(self.lineEdit_10.text())
+        
+        data = {
+            'caseID' : self.lineEdit_2.text(),
+            'name': self.lineEdit_3.text(),
+            'gender' : gender,
+            'birthday' : birthday,
+            'date' : DateTimeRecordDate,
+            'SLP': self.lineEdit.text(),
+            'scenario': self.lineEdit_11.text(),
+            'fileName' : self.lineEdit_14.text(),
+            'location' : self.lineEdit_7.text(),
+            'form' : form,
+            'inducement' : self.lineEdit_12.text(),
+            'participants' : participants,
+            'recordType' :recordType,
+            'help' : needhelp,
+            'others' : self.plainTextEdit.toPlainText(),
+            'situation' : self.plainTextEdit_2.toPlainText()
+        }
+        return data
+        
+
     #儲存資料到資料庫 
     def save (self): 
         self.on_button_clicked()
@@ -881,106 +966,26 @@ class Myform(QtWidgets.QWidget):
                 'situation' : self.plainTextEdit_2.toPlainText()
             }
             if database.DBapi.upsertChildAndInclude(childData, include) :
-                saveForm = self.saveExamination()
+                saveForm = self.returnTab1Data()
                 print (saveForm)
                 print ("save success")
                 win32api.MessageBox(0, '新增成功', '提示')
                 return True
             else :
-                saveForm = self.saveExamination()
+                saveForm = self.returnTab1Data()
                 print (saveForm)
                 win32api.MessageBox(0, '新增失敗', '提示')
                 return False
-        
         self.procStart.emit(self.lineEdit_2.text())
     
-
+    #檢查是否有變更
     def saveExamination (self) :
-        #判斷是男是女
-        if self.radioButton.isChecked():
-            gender = 'male'
+        tab1Changed = self.returnTab1Data()
+        if tab1Changed == self.saveForm :
+            return False
         else :
-            gender = 'female'
+            return True 
 
-        #將dateEdit變成dateTime型態
-        date = str(self.dateEdit.date().toPyDate())
-        birthday = datetime.strptime(date, "%Y-%m-%d")
-
-        #將dateEdit_3變成dateTime型態
-        strDate = str(self.dateEdit_3.dateTime().toPyDateTime())
-        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
-
-        form = ''
-        #判斷互動形式   
-        if self.radioButton_7.isChecked():
-            form = '交談'
-        if self.radioButton_8.isChecked():
-            form = '自由遊戲'
-        if self.radioButton_9.isChecked():
-            form = '敘事'
-
-        recordType = ''
-        #判斷記錄方式
-        if self.radioButton_10.isChecked():
-            recordType = '錄音筆'
-        if self.radioButton_11.isChecked():
-            recordType = '其他錄音設備'
-        if self.radioButton_12.isChecked():
-            recordType = '攝影機'
-
-        needhelp = ''
-        #判斷需要引導協助
-        if self.radioButton_14.isChecked():
-            needhelp = '總是'
-        if self.radioButton_15.isChecked():
-            needhelp = '很少 (幾乎不需要引導)'
-        if self.radioButton_16.isChecked():
-            needhelp = '經常 (6~9次)'
-        if self.radioButton_17.isChecked():
-            needhelp = '有時 (2~5次)'
-
-        #判斷參與人員
-        participants = []
-        if self.checkBox_2.isChecked():
-            participants.append("兒童")
-        if self.checkBox_3.isChecked():
-            participants.append("爸爸")
-        if self.checkBox_4.isChecked():
-            participants.append("施測者")
-        if self.checkBox_5.isChecked():
-            participants.append("老師")
-        if self.checkBox_6.isChecked():
-            participants.append("媽媽")
-        if self.checkBox_7.isChecked() and self.lineEdit_10.text():
-            participants.append(self.lineEdit_10.text())
-        
-        tab1Changed = self.tab1.saveExamination()
-        print (tab1Changed)            
-        print (self.tab1.saveForm)
-        if tab1Changed == self.tab1.saveForm :
-            print("form doesn't change")
-        
-        data = {
-            'caseID' : self.lineEdit_2.text(),
-            'name': self.lineEdit_3.text(),
-            'gender' : gender,
-            'birthday' : birthday,
-            'date' : DateTimeRecordDate,
-            'SLP': self.lineEdit.text(),
-            'scenario': self.lineEdit_11.text(),
-            'fileName' : self.lineEdit_14.text(),
-            'location' : self.lineEdit_7.text(),
-            'form' : form,
-            'inducement' : self.lineEdit_12.text(),
-            'participants' : participants,
-            'recordType' :recordType,
-            'help' : needhelp,
-            'others' : self.plainTextEdit.toPlainText(),
-            'situation' : self.plainTextEdit_2.toPlainText()
-        }
-        return data
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     ui = Myform()
