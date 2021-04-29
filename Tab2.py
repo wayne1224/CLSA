@@ -16,7 +16,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Tab2(QtWidgets.QWidget):
-    procUtterNum = QtCore.pyqtSignal(list)
+    procUtterNum = QtCore.pyqtSignal(dict)
     procChildUtter = QtCore.pyqtSignal(list)
     procKey = QtCore.pyqtSignal(dict)
 
@@ -306,11 +306,11 @@ class Tab2(QtWidgets.QWidget):
 
         self.caseID = ''    #個案編號
         self.caseData = {}  #個案紀錄
+        self.searchContent = []    #查詢到的個案紀錄內容
         self.childNum = 0   #兒童編號
         self.adultNums = {}  #成人編號
         self.childUtternace = []    #兒童語句
         self.checkFirstSearch = True    #檢查是不是第一次查詢
-        self.isEdit = False #檢查內容有無編輯
 
         #未輸入語句提示視窗
         self.msg_noInp = QtWidgets.QMessageBox()
@@ -508,13 +508,40 @@ class Tab2(QtWidgets.QWidget):
 
     #更改content
     def _isEdit(self):
-        self.isEdit = True
-        print(self.isEdit)
+        content = []
+        for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
+            data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
+            if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
+                data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
+                data['role'] = 'adult'
+                if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
+                    item = QtWidgets.QTableWidgetItem()
+                    item.setText('')
+                    self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
+                data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
+            elif self.tableWidget.tableWidget.item(rowIndex, 3):    #child
+                data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
+                data['role'] = 'child'
+                if self.tableWidget.tableWidget.item(rowIndex, 4) == None:
+                    item = QtWidgets.QTableWidgetItem()
+                    item.setText('')
+                    self.tableWidget.tableWidget.setItem(rowIndex, 4, item)
+                data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 4).text()
+            if self.tableWidget.tableWidget.item(rowIndex, 2):
+                if self.tableWidget.tableWidget.item(rowIndex, 2) == None:
+                    item = QtWidgets.QTableWidgetItem()
+                    item.setText('')
+                    self.tableWidget.tableWidget.setItem(rowIndex, 2, item)
+                data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
+            content.append(data)
+        
+        return self.searchContent == content
 
     #查詢個案編號紀錄
     def _searchCase(self):
         self.caseID = self.input_caseID.text()
         self.caseData = database.DBapi.findDateAndFirstContent(self.input_caseID.text())
+        self.searchContent = self.caseData['FirstContent']
         print(self.caseData)
 
         if self.caseData:
@@ -567,8 +594,7 @@ class Tab2(QtWidgets.QWidget):
     
     #用日期選擇個案紀錄
     def _dateSearch(self):
-        content = database.DBapi.findContent(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()])
-        print(content)
+        self.searchContent = database.DBapi.findContent(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()])
         #清空、復原Tab2
         self.cmb_role.clear()
         self.cmb_role.addItem("兒童")
@@ -578,30 +604,34 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = {}  #成人編號
 
         #set table
-        if content:
-            for i in range(content.__len__()):
+        if self.searchContent:
+            for i in range(self.searchContent.__len__()):
                     rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
                     self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
-                    utterance = QtWidgets.QTableWidgetItem(content[i]["utterance"])
-                    scenario = QtWidgets.QTableWidgetItem(content[i]["scenario"])
+                    utterance = QtWidgets.QTableWidgetItem(self.searchContent[i]["utterance"])
+                    scenario = QtWidgets.QTableWidgetItem(self.searchContent[i]["scenario"])
 
-                    if content[i]["role"] == "adult":  #成人
-                        if content[i]["ID"]:   #如果有編號(有採計)
-                            if not content[i]["ID"][0] in self.adultNums:  #新的成人編號
-                                self.adultNums[content[i]["ID"][0]] = 1
-                                self.cmb_role.addItem(content[i]["ID"][0])  #在編號選單新增新的編號
+                    if self.searchContent[i]["role"] == "adult":  #成人
+                        if self.searchContent[i]["ID"]:   #如果有編號(有採計)
+                            if not self.searchContent[i]["ID"][0] in self.adultNums:  #新的成人編號
+                                self.adultNums[self.searchContent[i]["ID"][0]] = 1
+                                self.cmb_role.addItem(self.searchContent[i]["ID"][0])  #在編號選單新增新的編號
                             else:   #已有的成人編號
-                                self.adultNums[content[i]["ID"][0]] += 1
-                        role = QtWidgets.QTableWidgetItem(content[i]["ID"])
+                                self.adultNums[self.searchContent[i]["ID"][0]] += 1
+                        role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
                         self.tableWidget.tableWidget.setItem(rowCount, 0, role)
                         self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
-                    elif content[i]["role"] == "child":    #兒童
-                        if content[i]["ID"]:   #如果有編號(有採計)
+                    elif self.searchContent[i]["role"] == "child":    #兒童
+                        if self.searchContent[i]["ID"]:   #如果有編號(有採計)
                             self.childNum += 1
-                        role = QtWidgets.QTableWidgetItem(content[i]["ID"])
+                        role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
                         self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                         self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
                     self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
+            
+            key = {'caseID':self.caseID,
+                    'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()]}
+            self.emitKey(key)
 
     #儲存至資料庫
     def _save(self):
@@ -643,7 +673,7 @@ class Tab2(QtWidgets.QWidget):
             
             database.DBapi.updateContent(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()], 
                                             self.input_trans.text(), content, totalUtterance, validUtterance)
-            utteranceNum = [totalUtterance, validUtterance]
+            utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
             self.emitUtterNum(utteranceNum)
             self.childUtterance = childUtterance
 
