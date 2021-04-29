@@ -32,16 +32,19 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab2.procKey.connect(self.tab3.getKey)
 
     def closeEvent(self, event):
-        close = QtWidgets.QMessageBox.question(self,
-                        "CLSA",
-                        "要儲存變更嗎?",
-                        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
-        if close == QtWidgets.QMessageBox.Yes and self.tab1.save():
+        if not self.tab1.saveExamination() :
             event.accept()
-        elif close == QtWidgets.QMessageBox.No:
-            event.accept()
-        else:
-            event.ignore()
+        else :
+            close = QtWidgets.QMessageBox.question(self,
+                            "CLSA",
+                            "要儲存變更嗎?",
+                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
+            if close == QtWidgets.QMessageBox.Yes and self.tab1.save():
+                event.accept()
+            elif close == QtWidgets.QMessageBox.No:
+                event.accept()
+            else:
+                event.ignore()
     
 
 if __name__ == '__main__':
