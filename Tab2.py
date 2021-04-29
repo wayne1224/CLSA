@@ -507,7 +507,7 @@ class Tab2(QtWidgets.QWidget):
         self.childNum = checkChildNum   #更新兒童編號
 
     #更改content
-    def _isEdit(self):
+    def isEdit(self):
         content = []
         for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
             data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}

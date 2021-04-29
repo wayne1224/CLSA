@@ -27,6 +27,9 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #設定tab的css
         self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
 
+        #設定Tab Signal
+        self.currentChanged.connect(self.checkTab2Changed)
+
         #self.tab1.procStart.connect(self.tab2.setCaseID)
         #self.tab2.procUtterNum.connect(self.tab3.)
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
@@ -43,7 +46,14 @@ class MainTabWidget(QtWidgets.QTabWidget):
             event.accept()
         else:
             event.ignore()
-    
+
+    def checkTab2Changed(self):
+        if self.currentIndex() == 3 and self.tab2.isEdit():
+            informBox = QtWidgets.QMessageBox.warning(self, '警告','轉錄表已變動 請重新產生彙整表', QtWidgets.QMessageBox.Ok)
+
+    def importAnalysis(self):
+        pass
+
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

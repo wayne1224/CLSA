@@ -15,24 +15,24 @@ class AnalysisTab(QtWidgets.QWidget):
         
         #add Header 
         self.headerLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label_2 = QtWidgets.QLabel()
+        # self.horizontalLayout = QtWidgets.QHBoxLayout()
+        # self.horizontalLayout.setObjectName("horizontalLayout")
+        # self.label_2 = QtWidgets.QLabel()
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.label_2.setFont(font)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout.addWidget(self.label_2)
-        self.transcriber_label = QtWidgets.QLabel()
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.transcriber_label.setFont(font)
-        self.transcriber_label.setText("")
-        self.transcriber_label.setObjectName("transcriber_label")
-        self.horizontalLayout.addWidget(self.transcriber_label)
-        self.headerLayout.addLayout(self.horizontalLayout)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
-        self.headerLayout.addItem(spacerItem)
+        # self.label_2.setFont(font)
+        # self.label_2.setObjectName("label_2")
+        # self.horizontalLayout.addWidget(self.label_2)
+        # self.transcriber_label = QtWidgets.QLabel()
+        # font = QtGui.QFont()
+        # font.setPointSize(14)
+        # self.transcriber_label.setFont(font)
+        # self.transcriber_label.setText("")
+        # self.transcriber_label.setObjectName("transcriber_label")
+        # self.horizontalLayout.addWidget(self.transcriber_label)
+        # #self.headerLayout.addLayout(self.horizontalLayout)
+        # spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
+        # self.headerLayout.addItem(spacerItem)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.label_3 = QtWidgets.QLabel()
@@ -49,7 +49,7 @@ class AnalysisTab(QtWidgets.QWidget):
         self.caseID_label.setObjectName("caseID_label")
         self.horizontalLayout_2.addWidget(self.caseID_label)
         self.headerLayout.addLayout(self.horizontalLayout_2)
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(60, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
         self.headerLayout.addItem(spacerItem1)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
@@ -72,6 +72,8 @@ class AnalysisTab(QtWidgets.QWidget):
         self.date_label.setObjectName("date_label")
         self.horizontalLayout_3.addWidget(self.date_label)
         self.headerLayout.addLayout(self.horizontalLayout_3)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.headerLayout.addItem(spacerItem)
         layout.addLayout(self.headerLayout)
 
         #add Space
@@ -261,6 +263,18 @@ class AnalysisTab(QtWidgets.QWidget):
         if key != None: 
             self.caseID = key['caseID']
             self.date = key['date']
+            self.caseID_label.setText(str(self.caseID))
+            date_time = self.date.strftime("%Y-%m-%d %H:%M")
+            self.date_label.setText(date_time)
+
+            #呼叫過去的Analysis
+            analysis = database.DBapi.findAnaylsis(self.caseID,self.date)
+            if analysis:
+                pass
+            else:
+                print("No data")
+                pass
+            
 
     @QtCore.pyqtSlot(list)
     def getChildUtterance(self, utterance):
@@ -353,7 +367,7 @@ class AnalysisTab(QtWidgets.QWidget):
 
         #呼叫資料庫
         print('caseID:',self.caseID)
-        print('Date:',self.date)
+        print('Date:',type(self.date))
         database.DBapi.updateAnaylsis(self.caseID, self.date, Analysis)
 
         #顯示在Table
@@ -451,7 +465,7 @@ class AnalysisTab(QtWidgets.QWidget):
         item = self.tableWidget.item(23, 2)
         item.setText(_translate("Form", "MLU5-c"))
         self.tableWidget.setSortingEnabled(__sortingEnabled)
-        self.label_2.setText(_translate("Form", "轉錄者："))
+        #self.label_2.setText(_translate("Form", "轉錄者："))
         self.label_3.setText(_translate("Form", "個案編號："))
         self.label_5.setText(_translate("Form", "收錄日期："))
 
