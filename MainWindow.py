@@ -43,6 +43,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         else:
             event.ignore()
     
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     demo = MainTabWidget()

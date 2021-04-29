@@ -31,7 +31,21 @@ def findDoc(SLP , caseID , name): # argument = SLP , caseID , name, if find retu
         return False
 
     return db.find(query)
-    
+
+def deleteDoc(objID): # argument = caseID , date , if delete successfully return True , else return False
+    db = get_db()
+    query = dict()
+    query["_id"] = objID
+
+    before = len(list(db.find()))
+    db.delete_one(query)
+    after = len(list(db.find()))
+
+    if before > after: 
+        return True
+    else:
+        return False     
+
 # 收錄表 api
 def findChildData(caseID): # argument = caseID , if find return childData (type = dict) , else return False
     db = get_db()
@@ -44,20 +58,28 @@ def findChildData(caseID): # argument = caseID , if find return childData (type 
 
     return db.find_one(query)["childData"]
 
-def upsertChildAndInclude(childData , include): # argument = childData , include
+def upsertChildAndInclude(childData , include): # argument = childData , include , if upsert successfully return [("insert" or "update") , True]
     db = get_db()
     query = dict()
     query["childData.caseID"] = childData["caseID"]
     query["include.date"] = include["date"]  
 
+    result = ["" , True]
 
     # 更新收錄表
     if db.count_documents(query) != 0: 
-        a = db.update_one(query , {"$set" : {"childData" : childData , "include" : include}})
-        print("document updates successfully")
+        result[0] = "update"
 
+        try:
+            db.update_one(query , {"$set" : {"childData" : childData , "include" : include}})
+            result[1] = True
+        except pymongo.errors.PyMongoError as e:
+            result[1] = False
+           
     # 插入新的收錄表  
     else:
+        result[0] = "insert"
+        
         data = {
             "childData" : childData,
             "include" : include,
@@ -69,13 +91,22 @@ def upsertChildAndInclude(childData , include): # argument = childData , include
             } 
         }
 
+        before = len(list(db.find()))
         db.insert_one(data)
-        print("document inserts successfully")
-    
+        after = len(list(db.find()))
+
+        if before < after: 
+            result[1] = True
+        else:
+            result[1] = False
+         
     # 更新舊的childData
-    query = dict()
-    query["childData.caseID"] = childData["caseID"]
-    db.update_many(query , {"$set" : {"childData" : childData}})
+    if result[1]:
+        query = dict()
+        query["childData.caseID"] = childData["caseID"]
+        db.update_many(query , {"$set" : {"childData" : childData}})
+    
+    return result
 
 # 轉錄表 api    
 def findDateAndFirstContent(caseID): # argument = caseID , if find return {"dates" : 全部的日期 (type = list) , "FirstContent" : content} , else return False
@@ -119,12 +150,14 @@ def updateContent(caseID , date , transcriber , content , totalUtterance , valid
     query["include.date"] = date
 
     if db.count_documents(query) == 0:
-        print("can not find this caseID")
+        print("can not find this caseID or date")
         return False
 
-    db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content , "transcribe.totalUtterance" : totalUtterance , "transcribe.validUtterance" : validUtterance}})
-
-    return True
+    try:
+        db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content , "transcribe.totalUtterance" : totalUtterance , "transcribe.validUtterance" : validUtterance}})
+        return True
+    except pymongo.errors.PyMongoError as e:
+        return False
 
 # 彙錄表 api 
 def findAnaylsis(caseID , date): # argument = caseID , date , if succeed return anaylsis , else return False
@@ -146,14 +179,16 @@ def updateAnaylsis(caseID , date , anaylsis): # argument = caseID , date , anayl
     query["include.date"] = date
 
     if db.count_documents(query) == 0:
-        print("can not find this caseID")
+        print("can not find this caseID or date")
         return False
 
-    db.update_one(query , {"$set" : {"transcribe.anaylsis" : anaylsis}})
+    try:
+        db.update_one(query , {"$set" : {"transcribe.anaylsis" : anaylsis}})
+        return True
+    except pymongo.errors.PyMongoError as e:
+        return False
 
-    return True
-
-objID = ObjectId("607455182078fa7d5e9d01f3")
+objID = ObjectId("608a755d67f22058c9e8867d")
 
 a1 = {"ID" : "a1" , "role" : "adult" , "utterance" : "1234" , "scenario" : "123"}
 a2 = {"ID" : "1" , "role" : "child" , "utterance" : "123" , "scenario" : "123"}
@@ -191,20 +226,23 @@ analysis = {
             'MLU5-c':0
         }
 
-date = datetime.datetime.strptime("2018-02-20 00:00", "%Y-%m-%d %H:%M")
+date = datetime.datetime.strptime("2021-04-29 17:52", "%Y-%m-%d %H:%M")
 birthday = datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")
 
 childData = {"caseID" : "001" , "name" : "1234" , "gender" : "male" , "birthday" : birthday}
 include = {"SLP" : "123" , "date" : date}
 
+
+
 # print(findDoc("" , "001" , ""))
+# print(deleteDoc("165497489"))
 
 # print(findChildData("001"))
-# upsertDoc(childData , include)
+# print(upsertChildAndInclude(childData , include))
 
 # print(findDateAndFirstContent("001"))
 # print(findContent("001" , date))
-# updateContent("001" , date , "transcriber" , content)
+# print(updateContent("test6" , date , "transcriber" , content , 10 , 8))
 
 # print(findAnaylsis("001" , date))
 # updateAnaylsis("001" , date , analysis)
