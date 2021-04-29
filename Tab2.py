@@ -114,7 +114,8 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_searchResult.setFont(font)
         self.lbl_searchResult.setText("")
         self.lbl_searchResult.setObjectName("lbl_searchResult")
-        #self.verticalLayout_6.addWidget(self.lbl_searchResult)
+        self.lbl_searchResult.setVisible(False)
+        self.verticalLayout_6.addWidget(self.lbl_searchResult)
         self.cmb_caseDates = QtWidgets.QComboBox()
         #sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         #sizePolicy.setHorizontalStretch(0)
@@ -125,7 +126,8 @@ class Tab2(QtWidgets.QWidget):
         font.setPointSize(12)
         self.cmb_caseDates.setFont(font)
         self.cmb_caseDates.setObjectName("cmb_caseDates")
-        #self.verticalLayout_6.addWidget(self.cmb_caseDates)
+        self.cmb_caseDates.setVisible(False)
+        self.verticalLayout_6.addWidget(self.cmb_caseDates)
         self.verticalLayout_3.addLayout(self.verticalLayout_6)
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()
         self.verticalLayout_5.setSpacing(2)
@@ -302,7 +304,6 @@ class Tab2(QtWidgets.QWidget):
         self.btn_generateAndSave.clicked.connect(self._generateAndSave)
         self.cmb_caseDates.activated.connect(self._dateSearch)
         self.tableWidget.tableWidget.cellClicked.connect(self._syncTableCmbRoleNum)
-        #self.tableWidget.tableWidget.cellChanged.connect(self._isEdit)
 
         self.caseID = ''    #個案編號
         self.caseData = {}  #個案紀錄
@@ -327,13 +328,17 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noCaseID.setWindowTitle("提示")
         self.msg_noCaseID.setText("未輸入個案編號！")
         self.msg_noCaseID.setIcon(QtWidgets.QMessageBox.Warning)
+        #查詢無此個案
+        self.msg_noCaseData = QtWidgets.QMessageBox()
+        self.msg_noCaseData.setWindowTitle("提示")
+        self.msg_noCaseData.setText("查無此個案！")
+        self.msg_noCaseData.setIcon(QtWidgets.QMessageBox.Warning)
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         self.lbl_trans.setText(_translate("", "轉錄者："))
         self.lbl_caseID.setText(_translate("", "個案編號："))
         self.btn_searchCase.setText(_translate("", "查詢"))
-        #self.lbl_searchResult.setText(_translate("", "啥小啦幹"))
         self.lbl_rolePrompt.setText(_translate("", "成人請自行輸入編號 ex: A, B"))
         self.lbl_role.setText(_translate("", "編號："))
         self.cmb_role.setItemText(0, _translate("Form", "兒童"))
@@ -506,8 +511,8 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = checkAdultNum  #更新成人編號
         self.childNum = checkChildNum   #更新兒童編號
 
-    #更改content
-    def _isEdit(self):
+    #檢查有無更改content
+    def isEdit(self):
         content = []
         for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
             data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
@@ -541,18 +546,21 @@ class Tab2(QtWidgets.QWidget):
     def _searchCase(self):
         self.caseID = self.input_caseID.text()
         self.caseData = database.DBapi.findDateAndFirstContent(self.input_caseID.text())
-        self.searchContent = self.caseData['FirstContent']
         print(self.caseData)
 
+        #清空、復原Tab2
+        self.cmb_caseDates.clear()
+        self.cmb_role.clear()
+        self.cmb_role.addItem("兒童")
+        self.cmb_role.addItem("語境")
+        self.tableWidget.tableWidget.setRowCount(0)
+        self.childNum = 0   #兒童編號
+        self.adultNums = {}  #成人編號
+        self.lbl_searchResult.setVisible(False)
+        self.cmb_caseDates.setVisible(False)
+
         if self.caseData:
-            #清空、復原Tab2
-            self.cmb_caseDates.clear()
-            self.cmb_role.clear()
-            self.cmb_role.addItem("兒童")
-            self.cmb_role.addItem("語境")
-            self.tableWidget.tableWidget.setRowCount(0)
-            self.childNum = 0   #兒童編號
-            self.adultNums = {}  #成人編號
+            self.searchContent = self.caseData['FirstContent']
 
             self.lbl_searchResult.setText("此個案總共有" + len(self.caseData["dates"]).__str__() + "筆資料")
             for i in range(len(self.caseData['dates'])):
@@ -585,12 +593,12 @@ class Tab2(QtWidgets.QWidget):
 
                 if self.checkFirstSearch:   #第一次查詢
                     #顯示出查詢結果
-                    self.verticalLayout_6.addWidget(self.lbl_searchResult)
-                    self.verticalLayout_6.addWidget(self.cmb_caseDates)
-                    self.verticalLayout_3.addLayout(self.verticalLayout_6)
+                    self.lbl_searchResult.setVisible(True)
+                    self.cmb_caseDates.setVisible(True)
+                    #self.verticalLayout_3.addLayout(self.verticalLayout_6)
                     self.checkFirstSearch = False
         else:
-            print("empty")
+            self.msg_noCaseData.exec_()
     
     #用日期選擇個案紀錄
     def _dateSearch(self):
@@ -675,6 +683,7 @@ class Tab2(QtWidgets.QWidget):
                                             self.input_trans.text(), content, totalUtterance, validUtterance)
             utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
             self.emitUtterNum(utteranceNum)
+            self.searchContent = content    #更新內容
             self.childUtterance = childUtterance
 
             #復原輸入框
