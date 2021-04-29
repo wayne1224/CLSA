@@ -27,8 +27,9 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #設定tab的css
         self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
 
-        self.tab1.procStart.connect(self.tab2.setCaseID)
-        self.tab2.procUtter.connect(self.tab3.getChildUtterance)
+        #self.tab1.procStart.connect(self.tab2.setCaseID)
+        #self.tab2.procUtterNum.connect(self.tab3.)
+        self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab3.getKey)
 
     def closeEvent(self, event):
@@ -36,7 +37,9 @@ class MainTabWidget(QtWidgets.QTabWidget):
                         "CLSA",
                         "要儲存變更嗎?",
                         QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
-        if close == QtWidgets.QMessageBox.Yes:
+        if close == QtWidgets.QMessageBox.Yes and self.tab1.save():
+            event.accept()
+        elif close == QtWidgets.QMessageBox.No:
             event.accept()
         else:
             event.ignore()
