@@ -27,8 +27,9 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #設定tab的css
         self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
 
-        self.tab1.procStart.connect(self.tab2.setCaseID)
-        self.tab2.procUtter.connect(self.tab3.getChildUtterance)
+        #self.tab1.procStart.connect(self.tab2.setCaseID)
+        #self.tab2.procUtterNum.connect(self.tab3.)
+        self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab3.getKey)
 
     def closeEvent(self, event):
