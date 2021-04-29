@@ -30,6 +30,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab1.procStart.connect(self.tab2.setCaseID)
         self.tab2.procUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab3.getKey)
+
     def closeEvent(self, event):
         close = QtWidgets.QMessageBox.question(self,
                         "CLSA",
@@ -40,9 +41,6 @@ class MainTabWidget(QtWidgets.QTabWidget):
         else:
             event.ignore()
     
-    #override closeEvent
-    def closeEvent(self, event):
-        print(111)
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
