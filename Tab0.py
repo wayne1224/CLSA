@@ -111,46 +111,51 @@ class SearchTab(QtWidgets.QWidget):
     def _search(self):
         cursor = database.DBapi.findDoc(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
 
-        self.tableWidget.clear()
+        # self.tableWidget.clear()
+        while self.tableWidget.rowCount() > 0:
+            self.tableWidget.removeRow(self.tableWidget.rowCount()-1)
 
-        for idx, doc in enumerate(cursor):
-            self.tableWidget.insertRow(idx)        
-            
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(doc['include']['SLP'])
-            self.tableWidget.setItem(idx , 0 , item)
+        if cursor:
+            for idx, doc in enumerate(cursor):
+                self.tableWidget.insertRow(idx)        
+                
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(doc['include']['SLP'])
+                self.tableWidget.setItem(idx , 0 , item)
 
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(doc['childData']['caseID'])
-            self.tableWidget.setItem(idx , 1 , item)
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(doc['childData']['caseID'])
+                self.tableWidget.setItem(idx , 1 , item)
 
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(doc['childData']['name'])
-            self.tableWidget.setItem(idx , 2 , item)
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(doc['childData']['name'])
+                self.tableWidget.setItem(idx , 2 , item)
 
-            item = QtWidgets.QTableWidgetItem()
-            time = datetime.strftime(doc['include']['date'],'%Y-%m-%d %H:%M')
-            item.setText(time)
-            self.tableWidget.setItem(idx , 3 , item)
-            
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(doc['include']['situation'])
-            self.tableWidget.setItem(idx , 4 , item)
-            
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(doc['include']['location'])
-            self.tableWidget.setItem(idx , 5 , item)
+                item = QtWidgets.QTableWidgetItem()
+                time = datetime.strftime(doc['include']['date'],'%Y-%m-%d %H:%M')
+                item.setText(time)
+                self.tableWidget.setItem(idx , 3 , item)
+                
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(doc['include']['situation'])
+                self.tableWidget.setItem(idx , 4 , item)
+                
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(doc['include']['location'])
+                self.tableWidget.setItem(idx , 5 , item)
 
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(doc['include']['inducement'])
-            self.tableWidget.setItem(idx , 6 , item)
-       
-            importBtn = QtWidgets.QPushButton('匯入')
-            deleteBtn = QtWidgets.QPushButton('刪除')
-            self.tableWidget.setCellWidget(idx,7,importBtn)
-            self.tableWidget.setCellWidget(idx,8,deleteBtn)
-            importBtn.clicked.connect(partial(self.importDoc , doc['_id'] , idx))
-            deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx))
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(doc['include']['inducement'])
+                self.tableWidget.setItem(idx , 6 , item)
+        
+                importBtn = QtWidgets.QPushButton('匯入')
+                deleteBtn = QtWidgets.QPushButton('刪除')
+                self.tableWidget.setCellWidget(idx,7,importBtn)
+                self.tableWidget.setCellWidget(idx,8,deleteBtn)
+                importBtn.clicked.connect(partial(self.importDoc , doc['_id'] , idx))
+                deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx))
+        else:
+            informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
     def importDoc(self , objID):
         pass
