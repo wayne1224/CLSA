@@ -38,20 +38,73 @@ class Myform(QtWidgets.QWidget):
         self.horizontalLayout_15 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_15)
         self.horizontalLayout_15.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_15.setObjectName("horizontalLayout_15")
-        self.checkBox_7 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_15)
+        self.horizontalLayoutWidget_19 = QtWidgets.QWidget(self)        
+        self.horizontalLayoutWidget_19.setGeometry(QtCore.QRect(200, 410, 931, 51))
+        self.horizontalLayoutWidget_19.setObjectName("horizontalLayoutWidget_19")
+        self.horizontalLayout_19 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_19)
+        self.horizontalLayout_19.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_19.setObjectName("horizontalLayout_19")
+        self.checkBox_5 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(14)
+        self.checkBox_5.setFont(font)
+        self.checkBox_5.setObjectName("checkBox_5")
+        self.horizontalLayout_19.addWidget(self.checkBox_5)
+        self.checkBox_3 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(14)
+        self.checkBox_3.setFont(font)
+        self.checkBox_3.setObjectName("checkBox_3")
+        self.horizontalLayout_19.addWidget(self.checkBox_3)
+        self.checkBox_6 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(14)
+        self.checkBox_6.setFont(font)
+        self.checkBox_6.setObjectName("checkBox_6")
+        self.horizontalLayout_19.addWidget(self.checkBox_6)
+        self.checkBox_4 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(14)
+        self.checkBox_4.setFont(font)
+        self.checkBox_4.setObjectName("checkBox_4")
+        self.horizontalLayout_19.addWidget(self.checkBox_4)
+        self.checkBox_2 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(14)
+        self.checkBox_2.setFont(font)
+        self.checkBox_2.setObjectName("checkBox_2")
+        self.horizontalLayout_19.addWidget(self.checkBox_2)
+        self.horizontalLayout_15 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_15.setObjectName("horizontalLayout_15")
+        self.checkBox_7 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
         font = QtGui.QFont()
         font.setFamily("Agency FB")
         font.setPointSize(14)
         self.checkBox_7.setFont(font)
         self.checkBox_7.setObjectName("checkBox_7")
         self.horizontalLayout_15.addWidget(self.checkBox_7)
-        self.lineEdit_10 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_15)
+        self.lineEdit_10 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_19)
         self.lineEdit_10.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lineEdit_10.sizePolicy().hasHeightForWidth())
         self.lineEdit_10.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(14)
+        self.lineEdit_10.setFont(font)
+        self.lineEdit_10.setText("")
+        self.lineEdit_10.setObjectName("lineEdit_10")
+        self.horizontalLayout_15.addWidget(self.lineEdit_10)
+        self.horizontalLayout_19.addLayout(self.horizontalLayout_15)
+        spacerItem = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_19.addItem(spacerItem)
         font = QtGui.QFont()
         font.setFamily("Agency FB")
         font.setPointSize(14)
@@ -158,7 +211,8 @@ class Myform(QtWidgets.QWidget):
         font.setPointSize(14)
         self.lineEdit.setFont(font)
         self.lineEdit.setText("")
-        self.lineEdit.setObjectName("lineEdit") #收錄者姓名
+        #收錄者姓名
+        self.lineEdit.setObjectName("lineEdit") 
         self.horizontalLayout_7.addWidget(self.lineEdit)
         self.horizontalLayoutWidget_3 = QtWidgets.QWidget(self)
         self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(450, 100, 251, 71))
@@ -217,47 +271,7 @@ class Myform(QtWidgets.QWidget):
         self.label_18.setAlignment(QtCore.Qt.AlignCenter)
         self.label_18.setObjectName("label_18")
         self.verticalLayout.addWidget(self.label_18)
-        self.horizontalLayoutWidget_19 = QtWidgets.QWidget(self)
-        self.horizontalLayoutWidget_19.setGeometry(QtCore.QRect(200, 400, 631, 71))
-        self.horizontalLayoutWidget_19.setObjectName("horizontalLayoutWidget_19")
-        self.horizontalLayout_19 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_19)
-        self.horizontalLayout_19.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_19.setObjectName("horizontalLayout_19")
-        self.checkBox_5 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
-        font = QtGui.QFont()
-        font.setFamily("Agency FB")
-        font.setPointSize(14)
-        self.checkBox_5.setFont(font)
-        self.checkBox_5.setObjectName("checkBox_5")
-        self.horizontalLayout_19.addWidget(self.checkBox_5)
-        self.checkBox_3 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
-        font = QtGui.QFont()
-        font.setFamily("Agency FB")
-        font.setPointSize(14)
-        self.checkBox_3.setFont(font)
-        self.checkBox_3.setObjectName("checkBox_3")
-        self.horizontalLayout_19.addWidget(self.checkBox_3)
-        self.checkBox_6 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
-        font = QtGui.QFont()
-        font.setFamily("Agency FB")
-        font.setPointSize(14)
-        self.checkBox_6.setFont(font)
-        self.checkBox_6.setObjectName("checkBox_6")
-        self.horizontalLayout_19.addWidget(self.checkBox_6)
-        self.checkBox_4 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
-        font = QtGui.QFont()
-        font.setFamily("Agency FB")
-        font.setPointSize(14)
-        self.checkBox_4.setFont(font)
-        self.checkBox_4.setObjectName("checkBox_4")
-        self.horizontalLayout_19.addWidget(self.checkBox_4)
-        self.checkBox_2 = QtWidgets.QCheckBox(self.horizontalLayoutWidget_19)
-        font = QtGui.QFont()
-        font.setFamily("Agency FB")
-        font.setPointSize(14)
-        self.checkBox_2.setFont(font)
-        self.checkBox_2.setObjectName("checkBox_2")
-        self.horizontalLayout_19.addWidget(self.checkBox_2)
+        
         self.horizontalLayoutWidget_8 = QtWidgets.QWidget(self)
         self.horizontalLayoutWidget_8.setGeometry(QtCore.QRect(600, 300, 681, 51))
         self.horizontalLayoutWidget_8.setObjectName("horizontalLayoutWidget_8")
@@ -380,7 +394,7 @@ class Myform(QtWidgets.QWidget):
         self.lineEdit_12.setObjectName("lineEdit_12")
         self.horizontalLayout_10.addWidget(self.lineEdit_12)
         self.horizontalLayoutWidget_16 = QtWidgets.QWidget(self)
-        self.horizontalLayoutWidget_16.setGeometry(QtCore.QRect(251, 511, 881, 71))
+        self.horizontalLayoutWidget_16.setGeometry(QtCore.QRect(251, 521, 881, 51))
         self.horizontalLayoutWidget_16.setObjectName("horizontalLayoutWidget_16")
         self.horizontalLayout_16 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_16)
         self.horizontalLayout_16.setContentsMargins(0, 0, 0, 0)
@@ -439,7 +453,7 @@ class Myform(QtWidgets.QWidget):
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_6)
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        # self.dateEdit = QtWidgets.QDateEdit(self.horizontalLayoutWidget_6)
+
         self.dateEdit = BirthdayEdit()
         font = QtGui.QFont()
         font.setFamily("Agency FB")
@@ -512,7 +526,7 @@ class Myform(QtWidgets.QWidget):
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_11)
         self.horizontalLayout_11.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
-        # self.dateEdit_3 = QtWidgets.QDateEdit(self.horizontalLayoutWidget_11)
+
         self.dateEdit_3 = DateEdit()
         font = QtGui.QFont()
         font.setFamily("Agency FB")
@@ -584,7 +598,7 @@ class Myform(QtWidgets.QWidget):
         self.label_28.setFont(font)
         self.label_28.setObjectName("label_28")
         self.horizontalLayout_23.addWidget(self.label_28)
-        self.lineEdit_14 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_18) #錄音檔名
+        self.lineEdit_14 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_18)
         self.lineEdit_14.setEnabled(True)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -598,9 +612,8 @@ class Myform(QtWidgets.QWidget):
         self.lineEdit_14.setText("")
         self.lineEdit_14.setObjectName("lineEdit_14")
         self.horizontalLayout_23.addWidget(self.lineEdit_14)
-
-
-        self.pushButton = QtWidgets.QPushButton(self) #儲存資料的按鈕
+         #儲存資料的按鈕
+        self.pushButton = QtWidgets.QPushButton(self)
         self.pushButton.setGeometry(QtCore.QRect(1080, 750, 161, 41))
         font = QtGui.QFont()
         font.setFamily("Agency FB")
@@ -610,12 +623,6 @@ class Myform(QtWidgets.QWidget):
         self.pushButton.clicked.connect(self.save)
 
         self.retranslateUi()
-        # QtCore.QMetaObject.connectSlotsByName(self)
-
-    #傳個案編號到Tab2
-    @QtCore.pyqtSlot() 
-    def on_button_clicked(self):
-        self.procStart.emit(self.lineEdit_2.text())
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -660,7 +667,11 @@ class Myform(QtWidgets.QWidget):
         self.label_17.setText(_translate("self", "記錄方式:"))
         self.label_28.setText(_translate("self", "錄影／錄音檔名"))
 
-    @QtCore.pyqtSlot()
+    #傳個案編號到Tab2
+    @QtCore.pyqtSlot() 
+    def on_button_clicked(self):
+        self.procStart.emit(self.lineEdit_2.text())
+
     #查詢個案編號把個案資料貼到Tab1
     def searchCaseID(self): 
         caseData = database.DBapi.findChildData(self.lineEdit_2.text())
@@ -674,6 +685,7 @@ class Myform(QtWidgets.QWidget):
             self.dateEdit.setDate(caseData['birthday'])
         else :
             win32api.MessageBox(0, '查無此個案資料', '提示')
+
     #儲存資料到資料庫 
     def save (self): 
         self.on_button_clicked()
@@ -692,12 +704,14 @@ class Myform(QtWidgets.QWidget):
             self.lineEdit_2.setStyleSheet("border: 1px solid red;" )
         else :
             self.lineEdit_2.setStyleSheet("border: 1px solid initial;" )
+        
         #個案姓名
         if not self.lineEdit_3.text(): 
             error+=1
             self.lineEdit_3.setStyleSheet("border: 1px solid red;")
         else:
             self.lineEdit_3.setStyleSheet("border: 1px solid initial;" )
+        
         #性別
         if not (self.radioButton.isChecked() or self.radioButton_2.isChecked()): 
             error += 1
@@ -707,6 +721,7 @@ class Myform(QtWidgets.QWidget):
             self.label_5.setStyleSheet("border: 1px;")
         else:
             self.horizontalLayoutWidget_5.setStyleSheet("border: 1px;")
+        
         #收錄地點
         if not self.lineEdit_7.text(): 
             error +=1
@@ -720,6 +735,7 @@ class Myform(QtWidgets.QWidget):
             self.lineEdit_11.setStyleSheet("border: 1px solid red;")
         else :
             self.lineEdit_11.setStyleSheet("border: 1px solid initial;")
+        
         #互動形式
         if not (self.radioButton_7.isChecked() or self.radioButton_8.isChecked() or self.radioButton_9.isChecked()):
             error += 1
@@ -730,30 +746,61 @@ class Myform(QtWidgets.QWidget):
             self.label_8.setStyleSheet("border: 1px;")
         else :
             self.horizontalLayoutWidget_8.setStyleSheet("border: 1px;")
+        
+        #參與人員
+        if not (self.checkBox_2.isChecked() or self.checkBox_3.isChecked() or self.checkBox_4.isChecked() or self.checkBox_5.isChecked() or self.checkBox_6.isChecked() or self.checkBox_7.isChecked()):
+            error +=1
+            self.horizontalLayoutWidget_19.setStyleSheet("border: 1px solid red;")
+            self.checkBox_2.setStyleSheet("border: 1px;")
+            self.checkBox_3.setStyleSheet("border: 1px;")
+            self.checkBox_4.setStyleSheet("border: 1px;")
+            self.checkBox_5.setStyleSheet("border: 1px;")
+            self.checkBox_6.setStyleSheet("border: 1px;")
+            self.checkBox_7.setStyleSheet("border: 1px;")
+            self.lineEdit_10.setStyleSheet("border: 1px;")
+        else :
+            self.horizontalLayoutWidget_19.setStyleSheet("border: 1px;")
+
         #誘發題材
         if not self.lineEdit_12.text():
             error += 1
             self.lineEdit_12.setStyleSheet("border: 1px solid red;")
         else :
             self.lineEdit_12.setStyleSheet("border: 1px solid initial;")
+
         #錄影錄音檔名
         if not self.lineEdit_14.text():
             error += 1
             self.lineEdit_14.setStyleSheet("border: 1px solid red;")
         else :
             self.lineEdit_14.setStyleSheet("border: 1px solid initial;")
+        
+        #其他特殊情況
+        if not self.plainTextEdit.toPlainText():
+            error +=1
+            
+            self.plainTextEdit.setStyleSheet("border: 1px solid red;")
+        else :
+            print(self.plainTextEdit.toPlainText())
+            self.plainTextEdit.setStyleSheet("border: 1px solid initial;")
+
+        #需要引導協助
+        if not (self.radioButton_14.isChecked()  or self.radioButton_15.isChecked() or self.radioButton_16.isChecked() or self.radioButton_17.isChecked()):
+            error +=1
+            self.horizontalLayoutWidget_16.setStyleSheet("border: 1px solid red;")
+            self.radioButton_14.setStyleSheet("border: 1px;")
+            self.radioButton_15.setStyleSheet("border: 1px;")
+            self.radioButton_16.setStyleSheet("border: 1px;")
+            self.radioButton_17.setStyleSheet("border: 1px;")
+        else :
+            self.horizontalLayoutWidget_16.setStyleSheet("border: 1px;")
+
 
         #如果有必填欄位沒填跳提示視窗
         if  error > 0: 
             win32api.MessageBox(0, '紅色框為必填欄位', '警告')
-            strDate = str(self.dateEdit_3.dateTime().toPyDateTime())
-            DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-            strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-            DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
-            print  (DateTimeRecordDate)
 
         else :
-
             #將dateEdit變成dateTime型態
             date = str(self.dateEdit.date().toPyDate())
             birthday = datetime.strptime(date, "%Y-%m-%d")
@@ -779,6 +826,39 @@ class Myform(QtWidgets.QWidget):
             if self.radioButton_9.isChecked():
                 form = '敘事'
 
+            #判斷記錄方式
+            if self.radioButton_10.isChecked():
+                recordType = '錄音筆'
+            if self.radioButton_11.isChecked():
+                recordType = '其他錄音設備'
+            if self.radioButton_12.isChecked():
+                recordType = '攝影機'
+
+            #判斷需要引導協助
+            if self.radioButton_14.isChecked():
+                needhelp = '總是'
+            if self.radioButton_15.isChecked():
+                needhelp = '很少 (幾乎不需要引導)'
+            if self.radioButton_16.isChecked():
+                needhelp = '經常 (6~9次)'
+            if self.radioButton_17.isChecked():
+                needhelp = '有時 (2~5次)'
+
+            #判斷參與人員
+            participants = []
+            if self.checkBox_2.isChecked():
+                participants.append("兒童")
+            if self.checkBox_3.isChecked():
+                participants.append("爸爸")
+            if self.checkBox_4.isChecked():
+                participants.append("施測者")
+            if self.checkBox_5.isChecked():
+                participants.append("老師")
+            if self.checkBox_6.isChecked():
+                participants.append("媽媽")
+            if self.checkBox_7.isChecked() and self.lineEdit_10.text():
+                participants.append(self.lineEdit_10.text())
+            
             childData = {
                 'caseID' : self.lineEdit_2.text(),
                 'name': self.lineEdit_3.text(),
@@ -786,25 +866,44 @@ class Myform(QtWidgets.QWidget):
                 'birthday' : birthday
             }
             include = {
-                'SLP': self.lineEdit.text(),
-                'location' : self.lineEdit_7.text(),
-                'fileName' : self.lineEdit_14.text(),
-                'form' : form,
                 'date' : DateTimeRecordDate,
+                'SLP': self.lineEdit.text(),
+                'scenario': self.lineEdit_11.text(),
+                'fileName' : self.lineEdit_14.text(),
+                'location' : self.lineEdit_7.text(),
+                'form' : form,
                 'inducement' : self.lineEdit_12.text(),
-                'participants' : '',
-                'recordType' :'',
-                'help' : '',
-                'situation' : self.lineEdit_11.text(),
-                'others' : ''
+                'participants' : participants,
+                'recordType' :recordType,
+                'help' : needhelp,
+                'others' : self.plainTextEdit.toPlainText(),
+                'situation' : self.plainTextEdit_2.toPlainText()
             }
-            if database.DBapi.insertDoc(childData, include) :
+            if database.DBapi.upsertChildAndInclude(childData, include) :
                 win32api.MessageBox(0, '新增成功', '提示')
             else :
                 win32api.MessageBox(0, '新增失敗', '提示')
         self.procStart.emit(self.lineEdit_2.text())
-
-        
+    def saveExamination (self) :
+        data = {
+            'caseID' : self.lineEdit_2.text(),
+            'name': self.lineEdit_3.text(),
+            'gender' : gender,
+            'birthday' : birthday,
+            'date' : DateTimeRecordDate,
+            'SLP': self.lineEdit.text(),
+            'scenario': self.lineEdit_11.text(),
+            'fileName' : self.lineEdit_14.text(),
+            'location' : self.lineEdit_7.text(),
+            'form' : form,
+            'inducement' : self.lineEdit_12.text(),
+            'participants' : participants,
+            'recordType' :recordType,
+            'help' : needhelp,
+            'others' : self.plainTextEdit.toPlainText(),
+            'situation' : self.plainTextEdit_2.toPlainText()
+        }
+        return data
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     ui = Myform()
