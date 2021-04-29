@@ -535,7 +535,7 @@ class Tab2(QtWidgets.QWidget):
                 data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
             content.append(data)
         
-        return self.searchContent == content
+        return not self.searchContent == content
 
     #查詢個案編號紀錄
     def _searchCase(self):
