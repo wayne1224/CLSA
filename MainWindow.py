@@ -36,7 +36,9 @@ class MainTabWidget(QtWidgets.QTabWidget):
                         "CLSA",
                         "要儲存變更嗎?",
                         QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
-        if close == QtWidgets.QMessageBox.Yes:
+        if close == QtWidgets.QMessageBox.Yes and self.tab1.save():
+            event.accept()
+        elif close == QtWidgets.QMessageBox.No:
             event.accept()
         else:
             event.ignore()
