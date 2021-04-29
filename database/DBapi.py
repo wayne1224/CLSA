@@ -119,17 +119,18 @@ def findDateAndFirstContent(caseID): # argument = caseID , if find return {"date
         return False
     
     dates = list()
-    data = dict()
-
+    
     for i in db.find(query):
         dates.append(i["include"]["date"])
 
-    FirstContent = db.find_one(query)["transcribe"]["content"]
+    data = db.find_one(query)["transcribe"]
 
-    data["dates"] = dates
-    data["FirstContent"] = FirstContent
+    result = dict()
+    result["dates"] = dates
+    result["transcriber"] = data["transcriber"]
+    result["FirstContent"] = data["content"]
     
-    return data
+    return result
 
 def findContent(caseID , date): # argument = caseID , date , if find return content (type = array) , else return False
     db = get_db()
@@ -141,7 +142,13 @@ def findContent(caseID , date): # argument = caseID , date , if find return cont
         print("can not find this content")
         return False
 
-    return db.find_one(query)["transcribe"]["content"]
+    data = db.find_one(query)["transcribe"]
+
+    result = dict()
+    result["transcriber"] = data["transcriber"]
+    result["FirstContent"] = data["content"]
+
+    return result
 
 def updateContent(caseID , date , transcriber , content , totalUtterance , validUtterance): # argument = caseID , date , transcriber , content , totalUtterance , validUtterance , if succeed return True , else return False
     db = get_db()
@@ -226,7 +233,7 @@ analysis = {
             'MLU5-c':0
         }
 
-date = datetime.datetime.strptime("2021-04-29 17:52", "%Y-%m-%d %H:%M")
+date = datetime.datetime.strptime("2018-01-31 00:00", "%Y-%m-%d %H:%M")
 birthday = datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")
 
 childData = {"caseID" : "001" , "name" : "1234" , "gender" : "male" , "birthday" : birthday}
