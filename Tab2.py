@@ -511,7 +511,9 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = checkAdultNum  #更新成人編號
         self.childNum = checkChildNum   #更新兒童編號
 
+
     #檢查有無更改content
+
     def isEdit(self):
         content = []
         for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
