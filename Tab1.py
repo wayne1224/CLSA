@@ -685,7 +685,7 @@ class Myform(QtWidgets.QWidget):
             self.dateEdit.setDate(caseData['birthday'])
         else :
             win32api.MessageBox(0, '查無此個案資料', '提示')
-
+    saveForm = {}
     #儲存資料到資料庫 
     def save (self): 
         self.on_button_clicked()
@@ -798,8 +798,9 @@ class Myform(QtWidgets.QWidget):
 
         #如果有必填欄位沒填跳提示視窗
         if  error > 0: 
+            print ("save fail")
             win32api.MessageBox(0, '紅色框為必填欄位', '警告')
-
+            return False
         else :
             #將dateEdit變成dateTime型態
             date = str(self.dateEdit.date().toPyDate())
@@ -810,7 +811,7 @@ class Myform(QtWidgets.QWidget):
             DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
             strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
             DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
-            print  (DateTimeRecordDate)
+        
 
             #判斷是男是女
             if self.radioButton.isChecked():
@@ -880,16 +881,92 @@ class Myform(QtWidgets.QWidget):
                 'situation' : self.plainTextEdit_2.toPlainText()
             }
             if database.DBapi.upsertChildAndInclude(childData, include) :
+                saveForm = self.saveExamination()
+                print (saveForm)
+                print ("save success")
                 win32api.MessageBox(0, '新增成功', '提示')
+                return True
             else :
+                saveForm = self.saveExamination()
+                print (saveForm)
                 win32api.MessageBox(0, '新增失敗', '提示')
+                return False
+        
         self.procStart.emit(self.lineEdit_2.text())
+    
+
     def saveExamination (self) :
+        #判斷是男是女
+        if self.radioButton.isChecked():
+            gender = 'male'
+        else :
+            gender = 'female'
+
+        #將dateEdit變成dateTime型態
+        date = str(self.dateEdit.date().toPyDate())
+        birthday = datetime.strptime(date, "%Y-%m-%d")
+
+        #將dateEdit_3變成dateTime型態
+        strDate = str(self.dateEdit_3.dateTime().toPyDateTime())
+        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+
+        form = ''
+        #判斷互動形式   
+        if self.radioButton_7.isChecked():
+            form = '交談'
+        if self.radioButton_8.isChecked():
+            form = '自由遊戲'
+        if self.radioButton_9.isChecked():
+            form = '敘事'
+
+        recordType = ''
+        #判斷記錄方式
+        if self.radioButton_10.isChecked():
+            recordType = '錄音筆'
+        if self.radioButton_11.isChecked():
+            recordType = '其他錄音設備'
+        if self.radioButton_12.isChecked():
+            recordType = '攝影機'
+
+        needhelp = ''
+        #判斷需要引導協助
+        if self.radioButton_14.isChecked():
+            needhelp = '總是'
+        if self.radioButton_15.isChecked():
+            needhelp = '很少 (幾乎不需要引導)'
+        if self.radioButton_16.isChecked():
+            needhelp = '經常 (6~9次)'
+        if self.radioButton_17.isChecked():
+            needhelp = '有時 (2~5次)'
+
+        #判斷參與人員
+        participants = []
+        if self.checkBox_2.isChecked():
+            participants.append("兒童")
+        if self.checkBox_3.isChecked():
+            participants.append("爸爸")
+        if self.checkBox_4.isChecked():
+            participants.append("施測者")
+        if self.checkBox_5.isChecked():
+            participants.append("老師")
+        if self.checkBox_6.isChecked():
+            participants.append("媽媽")
+        if self.checkBox_7.isChecked() and self.lineEdit_10.text():
+            participants.append(self.lineEdit_10.text())
+        
+        tab1Changed = self.tab1.saveExamination()
+        print (tab1Changed)            
+        print (self.tab1.saveForm)
+        if tab1Changed == self.tab1.saveForm :
+            print("form doesn't change")
+        
         data = {
             'caseID' : self.lineEdit_2.text(),
             'name': self.lineEdit_3.text(),
             'gender' : gender,
-            'birthday' : birthday
+            'birthday' : birthday,
             'date' : DateTimeRecordDate,
             'SLP': self.lineEdit.text(),
             'scenario': self.lineEdit_11.text(),
