@@ -889,7 +889,7 @@ class Myform(QtWidgets.QWidget):
             'caseID' : self.lineEdit_2.text(),
             'name': self.lineEdit_3.text(),
             'gender' : gender,
-            'birthday' : birthday
+            'birthday' : birthday,
             'date' : DateTimeRecordDate,
             'SLP': self.lineEdit.text(),
             'scenario': self.lineEdit_11.text(),
