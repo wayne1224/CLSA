@@ -272,7 +272,7 @@ class AnalysisTab(QtWidgets.QWidget):
                 self.date_label.setText(date_time)
 
                 #呼叫過去的Analysis
-                analysis = database.DBapi.findAnaylsis(self.caseID,self.date)
+                analysis = database.DBapi.findAnalysis(self.caseID,self.date)
                 if analysis:
                     self.clearContent()
                     self.setContent(analysis)
@@ -373,7 +373,7 @@ class AnalysisTab(QtWidgets.QWidget):
         #呼叫資料庫
         print('caseID:',self.caseID)
         print('Date:',type(self.date))
-        database.DBapi.updateAnaylsis(self.caseID, self.date, Analysis)
+        database.DBapi.updateAnalysis(self.caseID, self.date, Analysis)
 
         #顯示在Table
         self.setContent(Analysis)
