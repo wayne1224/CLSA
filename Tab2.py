@@ -599,6 +599,11 @@ class Tab2(QtWidgets.QWidget):
                     self.cmb_caseDates.setVisible(True)
                     #self.verticalLayout_3.addLayout(self.verticalLayout_6)
                     self.checkFirstSearch = False
+            
+            key = {'caseID':self.caseID,
+                    'date':self.caseData["dates"][0]}
+            self.emitKey(key)
+
         else:
             self.msg_noCaseData.exec_()
     

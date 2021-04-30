@@ -34,6 +34,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #self.tab2.procUtterNum.connect(self.tab3.)
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab3.getKey)
+        self.tab0.procDoc.connect(self.tab3.getKey)
 
     def closeEvent(self, event):
         if not self.tab1.saveExamination() :
@@ -57,8 +58,6 @@ class MainTabWidget(QtWidgets.QTabWidget):
         if self.currentIndex() == 3 and self.tab2.isEdit():
             informBox = QtWidgets.QMessageBox.warning(self, '警告','轉錄表已變動 請重新產生彙整表', QtWidgets.QMessageBox.Ok)
 
-    def importAnalysis(self):
-        pass
 
 
 

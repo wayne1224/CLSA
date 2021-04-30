@@ -85,7 +85,7 @@ def upsertChildAndInclude(childData , include): # argument = childData , include
             "include" : include,
             "transcribe" : {"transcriber" : None, 
                             "content" : None,
-                            "anaylsis" : None,
+                            "analysis" : None,
                             "totalUtterance" : None,
                             "validUtterance" : None
             } 
@@ -167,19 +167,19 @@ def updateContent(caseID , date , transcriber , content , totalUtterance , valid
         return False
 
 # 彙錄表 api 
-def findAnaylsis(caseID , date): # argument = caseID , date , if succeed return anaylsis , else return False
+def findAnalysis(caseID , date): # argument = caseID , date , if succeed return analysis , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
     query["include.date"] = date
 
     if db.count_documents(query) == 0:
-        print("can not find this anaylsis")
+        print("can not find this analysis")
         return False
 
-    return db.find_one(query)["transcribe"]["anaylsis"]
+    return db.find_one(query)["transcribe"]["analysis"]
 
-def updateAnaylsis(caseID , date , anaylsis): # argument = caseID , date , anaylsis , if succeed return True , else return False
+def updateAnalysis(caseID , date , analysis): # argument = caseID , date , analysis , if succeed return True , else return False
     db = get_db()
     query = dict()
     query["childData.caseID"] = caseID
@@ -190,7 +190,7 @@ def updateAnaylsis(caseID , date , anaylsis): # argument = caseID , date , anayl
         return False
 
     try:
-        db.update_one(query , {"$set" : {"transcribe.anaylsis" : anaylsis}})
+        db.update_one(query , {"$set" : {"transcribe.analysis" : analysis}})
         return True
     except pymongo.errors.PyMongoError as e:
         return False
@@ -251,5 +251,5 @@ include = {"SLP" : "123" , "date" : date}
 # print(findContent("001" , date))
 # print(updateContent("test6" , date , "transcriber" , content , 10 , 8))
 
-# print(findAnaylsis("001" , date))
-# updateAnaylsis("001" , date , analysis)
+# print(findAnalysis("001" , date))
+# updateAnalysis("001" , date , analysis)

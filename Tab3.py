@@ -259,21 +259,26 @@ class AnalysisTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot(dict)
     def getKey(self, key):
-        print(key)
-        if key != None: 
-            self.caseID = key['caseID']
-            self.date = key['date']
-            self.caseID_label.setText(str(self.caseID))
-            date_time = self.date.strftime("%Y-%m-%d %H:%M")
-            self.date_label.setText(date_time)
-
-            #呼叫過去的Analysis
-            analysis = database.DBapi.findAnaylsis(self.caseID,self.date)
-            if analysis:
-                pass
+        if key != None:
+            if '_id' in key: #若傳入整個document
+                self.clearContent()
+                if key['transcribe']['analysis']:
+                    self.setContent(key['transcribe']['analysis'])
             else:
-                print("No data")
-                pass
+                self.caseID = key['caseID']
+                self.date = key['date']
+                self.caseID_label.setText(str(self.caseID))
+                date_time = self.date.strftime("%Y-%m-%d %H:%M")
+                self.date_label.setText(date_time)
+
+                #呼叫過去的Analysis
+                analysis = database.DBapi.findAnaylsis(self.caseID,self.date)
+                if analysis:
+                    self.clearContent()
+                    self.setContent(analysis)
+                else:
+                    self.clearContent()
+                    print("No data")
             
 
     @QtCore.pyqtSlot(list)
@@ -371,6 +376,34 @@ class AnalysisTab(QtWidgets.QWidget):
         database.DBapi.updateAnaylsis(self.caseID, self.date, Analysis)
 
         #顯示在Table
+        self.setContent(Analysis)
+
+    def clearContent(self):
+        self.tableWidget.item(1,3).setText('') 
+        self.tableWidget.item(2,3).setText('') 
+        self.tableWidget.item(5,1).setText('')
+        self.tableWidget.item(13,1).setText('')
+        self.tableWidget.item(5,3).setText('')
+        self.tableWidget.item(6,3).setText('')
+        self.tableWidget.item(7,3).setText('')
+        self.tableWidget.item(8,3).setText('')
+        self.tableWidget.item(9,3).setText('')
+        self.tableWidget.item(10,3).setText('')
+        self.tableWidget.item(11,3).setText('')
+        self.tableWidget.item(12,3).setText('')
+        self.tableWidget.item(13,3).setText('')
+        self.tableWidget.item(14,3).setText('')
+        self.tableWidget.item(15,3).setText('')
+        self.tableWidget.item(16,3).setText('')
+        self.tableWidget.item(17,3).setText('')
+        self.tableWidget.item(18,3).setText('')
+        self.tableWidget.item(19,3).setText('')
+        self.tableWidget.item(20,3).setText('')
+        self.tableWidget.item(21,3).setText('')
+        self.tableWidget.item(22,3).setText('')
+        self.tableWidget.item(23,3).setText('')
+
+    def setContent(self,Analysis):
         self.tableWidget.item(1,3).setText(str(Analysis['charCount'])) #總字數
         self.tableWidget.item(2,3).setText(str(Analysis['wordCount'])) #總詞數
         self.tableWidget.item(5,1).setText(str(Analysis['Content']['sum'])) #總實詞
@@ -394,8 +427,6 @@ class AnalysisTab(QtWidgets.QWidget):
         self.tableWidget.item(21,3).setText(str(Analysis['MLU-c']))
         self.tableWidget.item(22,3).setText(str(Analysis['MLU5-w']))
         self.tableWidget.item(23,3).setText(str(Analysis['MLU5-c']))
-
-        
         
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
