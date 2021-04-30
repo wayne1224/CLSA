@@ -37,13 +37,16 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab0.procDoc.connect(self.tab3.getKey)
 
     def closeEvent(self, event):
-        if not self.tab1.saveExamination() :
-            event.accept()
+        if self.tab1.saveExamination() or self.tab2.isEdit():
+            warnText = '<p style="font-size:13pt; color: #3778bf;">要儲存對下列頁面的變更嗎?</p>\n'
+            if self.tab1.saveExamination():
+                warnText += '收錄表\n'
+            if self.tab2.isEdit():
+                warnText += '轉錄表'
 
-        else :
-            close = QtWidgets.QMessageBox.question(self,
+            close = QtWidgets.QMessageBox.warning(self,
                             "CLSA",
-                            "要儲存變更嗎?",
+                            warnText,
                             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
             if close == QtWidgets.QMessageBox.Yes and self.tab1.save():
                 event.accept()
