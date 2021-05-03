@@ -677,8 +677,8 @@ class Myform(QtWidgets.QWidget):
     def getUtterNum(self, utterance) :
         if utterance == None:
             return
-        self.label.setText(utterance['totalUtterance'])
-        self.label_4.setText(utterance['validUtterance'])
+        self.label.setText(str(utterance['totalUtterance']))
+        self.label_4.setText(str(utterance['validUtterance']))
 
     #傳個案編號到Tab2
     @QtCore.pyqtSlot() 
