@@ -34,6 +34,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab3.getKey)
         self.tab0.procDoc.connect(self.tab3.getKey)
+        self.tab0.procDoc.connect(self.tab2.getDoc)
 
     def closeEvent(self, event):
         if self.tab1.saveExamination() or self.tab2.isEdit():
