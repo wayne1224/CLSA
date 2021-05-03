@@ -175,6 +175,8 @@ class SearchTab(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def importDoc(self , obj):
         self.procDoc.emit(obj)
+        #通知彙整完整
+        informBox = QtWidgets.QMessageBox.information(self, '通知','匯入完成', QtWidgets.QMessageBox.Ok)
 
     def deleteDoc(self , objID , idx):
         if database.DBapi.deleteDoc(objID):
