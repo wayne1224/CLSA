@@ -34,15 +34,19 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #self.tab2.procUtterNum.connect(self.tab3.)
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab3.getKey)
+        self.tab0.procDoc.connect(self.tab3.getKey)
 
     def closeEvent(self, event):
-        if not self.tab1.saveExamination() :
-            event.accept()
+        if self.tab1.saveExamination() or self.tab2.isEdit():
+            warnText = '<p style="font-size:13pt; color: #3778bf;">要儲存對下列頁面的變更嗎?</p>\n'
+            if self.tab1.saveExamination():
+                warnText += '收錄表\n'
+            if self.tab2.isEdit():
+                warnText += '轉錄表'
 
-        else :
-            close = QtWidgets.QMessageBox.question(self,
+            close = QtWidgets.QMessageBox.warning(self,
                             "CLSA",
-                            "要儲存變更嗎?",
+                            warnText,
                             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
             if close == QtWidgets.QMessageBox.Yes and self.tab1.save():
                 event.accept()
@@ -57,8 +61,6 @@ class MainTabWidget(QtWidgets.QTabWidget):
         if self.currentIndex() == 3 and self.tab2.isEdit():
             informBox = QtWidgets.QMessageBox.warning(self, '警告','轉錄表已變動 請重新產生彙整表', QtWidgets.QMessageBox.Ok)
 
-    def importAnalysis(self):
-        pass
 
 
 

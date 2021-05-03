@@ -581,6 +581,7 @@ class Tab2(QtWidgets.QWidget):
                     utterance = QtWidgets.QTableWidgetItem(self.searchContent[i]["utterance"])
                     scenario = QtWidgets.QTableWidgetItem(self.searchContent[i]["scenario"])
 
+
                     if self.searchContent[i]["role"] == "adult":  #成人
                         if self.searchContent[i]["ID"]:   #如果有編號(有採計)
                             if not self.searchContent[i]["ID"][0] in self.adultNums:  #新的成人編號

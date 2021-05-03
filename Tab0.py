@@ -14,6 +14,9 @@ from functools import partial
 from datetime import datetime
 
 class SearchTab(QtWidgets.QWidget):
+    #用來傳Document到各頁
+    procDoc = QtCore.pyqtSignal(dict)
+
     def __init__(self):
         super(SearchTab, self).__init__()
         font = QtGui.QFont()
@@ -152,13 +155,14 @@ class SearchTab(QtWidgets.QWidget):
                 deleteBtn = QtWidgets.QPushButton('刪除')
                 self.tableWidget.setCellWidget(idx,7,importBtn)
                 self.tableWidget.setCellWidget(idx,8,deleteBtn)
-                importBtn.clicked.connect(partial(self.importDoc , doc['_id'] , idx))
+                importBtn.clicked.connect(partial(self.importDoc , doc))
                 deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx))
         else:
             informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
-    def importDoc(self , objID):
-        pass
+    @QtCore.pyqtSlot()
+    def importDoc(self , obj):
+        self.procDoc.emit(obj)
 
     def deleteDoc(self , objID , idx):
         if database.DBapi.deleteDoc(objID):
