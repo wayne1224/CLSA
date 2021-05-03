@@ -399,6 +399,9 @@ class AnalysisTab(QtWidgets.QWidget):
         print('Date:',type(self.date))
         database.DBapi.updateAnalysis(self.caseID, self.date, Analysis)
 
+        #通知彙整完整
+        informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
+
         #顯示在Table
         self.setContent(Analysis)
 
