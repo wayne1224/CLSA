@@ -29,12 +29,14 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #設定Tab Signal
         self.currentChanged.connect(self.checkTab2Changed)
 
-        self.tab1.procStart.connect(self.tab2.setCaseID)
+        # self.tab1.procStart.connect(self.tab2.setCaseID)
         self.tab2.procUtterNum.connect(self.tab1.getUtterNum)
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab3.getKey)
         self.tab0.procDoc.connect(self.tab3.getKey)
+        self.tab0.procDoc.connect(self.tab1.getDoc)
         self.tab0.procDoc.connect(self.tab2.getDoc)
+
 
     def closeEvent(self, event):
         if self.tab1.saveExamination() or self.tab2.isEdit():
