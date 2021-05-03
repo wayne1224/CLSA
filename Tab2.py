@@ -300,19 +300,19 @@ class Tab2(QtWidgets.QWidget):
         self.btn_add.clicked.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
         self.btn_save.clicked.connect(self._save)
-        self.btn_searchCase.clicked.connect(self._searchCase)
+        self.btn_searchCase.clicked.connect(self._searchID)
         self.btn_generateAndSave.clicked.connect(self._generateAndSave)
-        self.cmb_caseDates.activated.connect(self._dateSearch)
+        self.cmb_caseDates.activated.connect(self._searchCmbDate)
         self.tableWidget.tableWidget.cellClicked.connect(self._syncTableCmbRoleNum)
 
         self.caseID = ''    #個案編號
         self.caseData = {}  #用caseID查的個案紀錄{'dates', 'transcriber', 'FirstContent'}
         self.dateSearchData = {}    #用日期查的個案紀錄{'transcriber', 'FirstContent'}
-        self.searchContent = []    #查詢到的個案紀錄內容
+        self.searchContent = None   #查詢到的個案紀錄內容
+        self.transcriber = ''
         self.childNum = 0   #兒童編號
         self.adultNums = {}  #成人編號
         self.childUtternace = []    #兒童語句
-        self.checkFirstSearch = True    #檢查是不是第一次查詢
 
         #未輸入語句提示視窗
         self.msg_noInp = QtWidgets.QMessageBox()
@@ -352,13 +352,17 @@ class Tab2(QtWidgets.QWidget):
         self.btn_save.setText(_translate("", "儲存"))
         self.btn_generateAndSave.setText(_translate("", "產生彙整表並儲存"))
 
-    '''
     #從Tab1接收個案編號
     @QtCore.pyqtSlot(str)
     def setCaseID(self, caseID):
+        self.caseID = caseID
         self.input_caseID.setText(caseID)
-        self.raise_()
-    '''
+
+    #接收tab0接收查詢的資料
+    @QtCore.pyqtSlot(dict)
+    def getDoc(self, doc):
+        self.caseData = {}  #重設caseData
+        self._searchCase(doc['childData']['caseID'], doc['include']['date'])
 
     #傳總語句數和有效語句數給Tab1
     @QtCore.pyqtSlot()
@@ -374,6 +378,44 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def emitKey(self, key):
         self.procKey.emit(key)
+
+    #復原頁面
+    def _clearTab(self):
+        #清空、復原Tab2
+        self.cmb_caseDates.clear()
+        self.cmb_role.clear()
+        self.cmb_role.addItem("兒童")
+        self.cmb_role.addItem("語境")
+        self.tableWidget.tableWidget.setRowCount(0)
+        self.childNum = 0       #兒童編號
+        self.adultNums = {}     #成人編號
+        self.transcriber = ''
+
+    #set table
+    def _setTable(self):
+        for i in range(len(self.searchContent)):
+            rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
+            self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
+            utterance = QtWidgets.QTableWidgetItem(self.searchContent[i]["utterance"])
+            scenario = QtWidgets.QTableWidgetItem(self.searchContent[i]["scenario"])
+
+            if self.searchContent[i]["role"] == "adult":  #成人
+                if self.searchContent[i]["ID"]:   #如果有編號(有採計)
+                    if not self.searchContent[i]["ID"][0] in self.adultNums:  #新的成人編號
+                        self.adultNums[self.searchContent[i]["ID"][0]] = 1
+                        self.cmb_role.addItem(self.searchContent[i]["ID"][0])  #在編號選單新增新的編號
+                    else:   #已有的成人編號
+                        self.adultNums[self.searchContent[i]["ID"][0]] += 1
+                role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
+                self.tableWidget.tableWidget.setItem(rowCount, 0, role)
+                self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
+            elif self.searchContent[i]["role"] == "child":    #兒童
+                if self.searchContent[i]["ID"]:   #如果有編號(有採計)
+                    self.childNum += 1
+                role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
+                self.tableWidget.tableWidget.setItem(rowCount, 3, role)
+                self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
+            self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
 
     #新增列
     def _addRow(self):
@@ -546,114 +588,60 @@ class Tab2(QtWidgets.QWidget):
         
         return not self.searchContent == content
 
-    #查詢個案編號紀錄
-    def _searchCase(self):
-        self.caseID = self.input_caseID.text()
-        self.caseData = database.DBapi.findDateAndFirstContent(self.input_caseID.text())
-        print(self.caseData)
+    #查詢紀錄
+    def _searchCase(self, caseID, date):
+        self._clearTab()
+        if date:    #有傳date(選定日期查詢)
+            if not self.caseData:     #如果尚未用個案編號查詢(tab0匯入)
+                self.input_caseID.setText(caseID)
+                self._searchID()  #設定好這個caseID的資料
+                self._clearTab()    #避免table重複設定語句
+                #將cmb_caseDates設定到tab0匯入的日期
+                self.cmb_caseDates.setCurrentIndex(self.cmb_caseDates.findText(date.strftime("%Y-%m-%d %H:%M")))
 
-        #清空、復原Tab2
-        self.cmb_caseDates.clear()
-        self.cmb_role.clear()
-        self.cmb_role.addItem("兒童")
-        self.cmb_role.addItem("語境")
-        self.tableWidget.tableWidget.setRowCount(0)
-        self.childNum = 0   #兒童編號
-        self.adultNums = {}  #成人編號
-        self.input_trans.setText('')
-        self.lbl_searchResult.setVisible(False)
-        self.cmb_caseDates.setVisible(False)
+            self.dateSearchData = database.DBapi.findContent(caseID, date)
+            self.searchContent = self.dateSearchData['FirstContent']
+            if self.dateSearchData['transcriber']:  #轉錄者
+                self.transcriber = self.dateSearchData['transcriber']
+            #傳key給tab3
+            key = {'caseID':caseID,
+                    'date':date}
+            self.emitKey(key)
 
-        if self.caseData:
-            if self.caseData['transcriber']:
-                self.input_trans.setText(self.caseData['transcriber'])
-            self.searchContent = self.caseData['FirstContent']
+        else:       #沒傳date(只用caseID查詢)
+            self.caseData = database.DBapi.findDateAndFirstContent(caseID)
+            self.lbl_searchResult.setVisible(False)
+            self.cmb_caseDates.setVisible(False)
 
-            self.lbl_searchResult.setText("此個案總共有" + len(self.caseData["dates"]).__str__() + "筆資料")
-            for i in range(len(self.caseData['dates'])):
-                self.cmb_caseDates.addItem(self.caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
+            if self.caseData:
+                if self.caseData['transcriber']:
+                    self.transcriber = self.caseData['transcriber']
+                self.searchContent = self.caseData['FirstContent']
 
-            #set table
-            if self.searchContent:
-                for i in range(len(self.searchContent)):
-                    rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
-                    self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
-                    utterance = QtWidgets.QTableWidgetItem(self.searchContent[i]["utterance"])
-                    scenario = QtWidgets.QTableWidgetItem(self.searchContent[i]["scenario"])
+                self.lbl_searchResult.setText("此個案總共有" + len(self.caseData["dates"]).__str__() + "筆資料")
+                for i in range(len(self.caseData['dates'])):
+                    self.cmb_caseDates.addItem(self.caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
 
-
-                    if self.searchContent[i]["role"] == "adult":  #成人
-                        if self.searchContent[i]["ID"]:   #如果有編號(有採計)
-                            if not self.searchContent[i]["ID"][0] in self.adultNums:  #新的成人編號
-                                self.adultNums[self.searchContent[i]["ID"][0]] = 1
-                                self.cmb_role.addItem(self.searchContent[i]["ID"][0])  #在編號選單新增新的編號
-                            else:   #已有的成人編號
-                                self.adultNums[self.searchContent[i]["ID"][0]] += 1
-                        role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
-                        self.tableWidget.tableWidget.setItem(rowCount, 0, role)
-                        self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
-                    elif self.searchContent[i]["role"] == "child":    #兒童
-                        if self.searchContent[i]["ID"]:   #如果有編號(有採計)
-                            self.childNum += 1
-                        role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
-                        self.tableWidget.tableWidget.setItem(rowCount, 3, role)
-                        self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
-                    self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
-
-                    if self.checkFirstSearch:   #第一次查詢
-                        #顯示出查詢結果
-                        self.lbl_searchResult.setVisible(True)
-                        self.cmb_caseDates.setVisible(True)
-                        self.checkFirstSearch = False
-        else:   #查無此個案
-            self.msg_noCaseData.exec_()
-            self.searchContent = None
-    
-    #用日期選擇個案紀錄
-    def _dateSearch(self):
-        self.dateSearchData = database.DBapi.findContent(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()])
-        self.searchContent = self.dateSearchData['FirstContent']
-        #清空、復原Tab2
-        self.cmb_role.clear()
-        self.cmb_role.addItem("兒童")
-        self.cmb_role.addItem("語境")
-        self.tableWidget.tableWidget.setRowCount(0)
-        self.childNum = 0   #兒童編號
-        self.adultNums = {}  #成人編號
-        self.input_trans.setText('')
-
-        if self.dateSearchData['transcriber']:  #轉錄者
-            self.input_trans.setText(self.dateSearchData['transcriber'])
+                #顯示出查詢結果
+                self.lbl_searchResult.setVisible(True)
+                self.cmb_caseDates.setVisible(True)
+            else:   #查無此個案
+                self.msg_noCaseData.exec_()
+                self.searchContent = None
 
         #set table
         if self.searchContent:
-            for i in range(self.searchContent.__len__()):
-                    rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
-                    self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
-                    utterance = QtWidgets.QTableWidgetItem(self.searchContent[i]["utterance"])
-                    scenario = QtWidgets.QTableWidgetItem(self.searchContent[i]["scenario"])
+            self._setTable()
+        self.input_trans.setText(self.transcriber)
 
-                    if self.searchContent[i]["role"] == "adult":  #成人
-                        if self.searchContent[i]["ID"]:   #如果有編號(有採計)
-                            if not self.searchContent[i]["ID"][0] in self.adultNums:  #新的成人編號
-                                self.adultNums[self.searchContent[i]["ID"][0]] = 1
-                                self.cmb_role.addItem(self.searchContent[i]["ID"][0])  #在編號選單新增新的編號
-                            else:   #已有的成人編號
-                                self.adultNums[self.searchContent[i]["ID"][0]] += 1
-                        role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
-                        self.tableWidget.tableWidget.setItem(rowCount, 0, role)
-                        self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
-                    elif self.searchContent[i]["role"] == "child":    #兒童
-                        if self.searchContent[i]["ID"]:   #如果有編號(有採計)
-                            self.childNum += 1
-                        role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
-                        self.tableWidget.tableWidget.setItem(rowCount, 3, role)
-                        self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
-                    self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
-            
-            key = {'caseID':self.caseID,
-                    'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()]}
-            self.emitKey(key)
+    #用個案編號查詢
+    def _searchID(self):
+        self.caseID = self.input_caseID.text()
+        self._searchCase(self.caseID, None)
+    
+    #用cmb_caseDates選擇日期查詢紀錄
+    def _searchCmbDate(self):
+        self._searchCase(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()])
 
     #儲存至資料庫
     def _save(self):
