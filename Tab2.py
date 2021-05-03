@@ -391,6 +391,15 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = {}     #成人編號
         self.transcriber = ''
 
+    #復原輸入欄
+    def _clearInput(self):
+        self.cmb_role.setCurrentIndex(0)
+        self.input_utterance.clear()
+        self.input_scenario.clear()
+        self.cbx_notCount.setChecked(False)
+        self.input_caseID.setStyleSheet("border: 1px solid initial;")
+        self.input_utterance.setStyleSheet("border: 1px solid initial;")
+
     #set table
     def _setTable(self):
         for i in range(len(self.searchContent)):
@@ -440,12 +449,7 @@ class Tab2(QtWidgets.QWidget):
                 self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
                 #清空、復原輸入欄
-                self.cmb_role.setCurrentIndex(0)
-                self.input_utterance.clear()
-                self.input_scenario.clear()
-                self.cbx_notCount.setChecked(False)
-                self.input_caseID.setStyleSheet("border: 1px solid initial;")
-                self.input_utterance.setStyleSheet("border: 1px solid initial;")
+                self._clearInput()
             else:   #沒輸入句子
                 self.msg_noInp.exec_()    #跳出提示視窗
                 self.input_utterance.setStyleSheet("border: 1px solid red;")
@@ -457,12 +461,7 @@ class Tab2(QtWidgets.QWidget):
             self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
             #清空、復原輸入欄
-            self.cmb_role.setCurrentIndex(0)
-            self.input_utterance.clear()
-            self.input_scenario.clear()
-            self.cbx_notCount.setChecked(False)
-            self.input_caseID.setStyleSheet("border: 1px solid initial;")
-            self.input_utterance.setStyleSheet("border: 1px solid initial;")
+            self._clearInput()
 
         else:   #新增成人語句
             if self.input_utterance.toPlainText():  #檢查有輸入句子
@@ -487,18 +486,15 @@ class Tab2(QtWidgets.QWidget):
                 self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
                 #清空、復原輸入欄
-                self.cmb_role.setCurrentIndex(0)
-                self.input_utterance.clear()
-                self.input_scenario.clear()
-                self.cbx_notCount.setChecked(False)
-                self.input_caseID.setStyleSheet("border: 1px solid initial;")
-                self.input_utterance.setStyleSheet("border: 1px solid initial;")
+                self._clearInput()
             else:   #沒輸入句子
                 self.msg_noInp.exec_()    #跳出提示視窗
                 self.input_utterance.setStyleSheet("border: 1px solid red;")
 
     #刪除列
     def _deleteRow(self):
+        self._clearInput()  #清空、復原輸入欄
+
         indexes = self.tableWidget.tableWidget.selectionModel().selectedRows()
         for index in sorted(indexes, reverse = True):
             if self.tableWidget.tableWidget.item(index.row(), 0): #刪除成人語句
@@ -590,7 +586,9 @@ class Tab2(QtWidgets.QWidget):
 
     #查詢紀錄
     def _searchCase(self, caseID, date):
-        self._clearTab()
+        self._clearTab()    #清空、復原頁面
+        self._clearInput()  #清空、復原輸入欄
+
         if date:    #有傳date(選定日期查詢)
             if not self.caseData:     #如果尚未用個案編號查詢(tab0匯入)
                 self.input_caseID.setText(caseID)
@@ -645,6 +643,8 @@ class Tab2(QtWidgets.QWidget):
 
     #儲存至資料庫
     def _save(self):
+        self._clearInput()  #清空、復原輸入欄
+
         if self.input_caseID.text():
             content = []    #對話內容
             childUtterance = [] #兒童語句
