@@ -382,8 +382,14 @@ class AnalysisTab(QtWidgets.QWidget):
         Analysis['MLU-c'] = round(mean(charCount),2)
         Analysis['MLU5-w'] = round(mean(wordCount[:5]),2)
         Analysis['MLU5-c'] = round(mean(charCount[:5]),2)
-        Analysis['VOCD-w'] = round(self.getVOCD(wordArray),2)
-        Analysis['VOCD-c'] = round(self.getVOCD(charArray),2)
+        try:
+            Analysis['VOCD-w'] = round(self.getVOCD(wordArray),2)
+        except:
+            Analysis['VOCD-w'] = self.getVOCD(wordArray)
+        try:
+            Analysis['VOCD-c'] = round(self.getVOCD(charArray),2)
+        except:
+            Analysis['VOCD-c'] = self.getVOCD(charArray)
 
         print(wordArray)
         print(charArray)
