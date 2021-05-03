@@ -368,17 +368,17 @@ class Tab2(QtWidgets.QWidget):
         self.btn_save.setText(_translate("", "儲存"))
         self.btn_generateAndSave.setText(_translate("", "產生彙整表並儲存"))
 
-    #從Tab1接收個案編號
-    @QtCore.pyqtSlot(str)
-    def setCaseID(self, caseID):
-        self.input_caseID.setText(caseID)
-        self._searchID()
-
     #接收tab0接收查詢的資料
     @QtCore.pyqtSlot(dict)
     def getDoc(self, doc):
         self.caseData = {}  #重設caseData
         self._searchCase(doc['childData']['caseID'], doc['include']['date'])
+
+    #從Tab1接收個案編號和日期
+    @QtCore.pyqtSlot(dict)
+    def setCaseRecord(self, caseIDAndDate):
+        self.caseData = {}  #重設caseData
+        self._searchCase(caseIDAndDate['caseID'], caseIDAndDate['date'])
 
     #傳總語句數和有效語句數給Tab1
     @QtCore.pyqtSlot()

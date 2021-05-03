@@ -23,7 +23,7 @@ class DateEdit(QtWidgets.QDateTimeEdit):
         self.setDisplayFormat("yyyy-MM-dd HH:mm")
 
 class Myform(QtWidgets.QWidget):
-    procStart = QtCore.pyqtSignal(str)
+    procStart = QtCore.pyqtSignal(dict)
 
     def __init__(self):
         super(Myform, self).__init__()
@@ -981,14 +981,14 @@ class Myform(QtWidgets.QWidget):
                 saveForm = self.returnTab1Data()
                 print (saveForm)
                 win32api.MessageBox(0, '新增成功', '提示')
+                caseIDandDate = {'caseID':self.lineEdit_2.text(), 'date':DateTimeRecordDate}
+                self.procStart.emit(caseIDandDate)
                 return True
             else :
                 saveForm = self.returnTab1Data()
                 print (saveForm)
                 win32api.MessageBox(0, '新增失敗', '提示')
                 return False
-        caseIDandDate = {'caseID':self.lineEdit_2.text(), 'date':DateTimeRecordDate}
-        self.procStart.emit(caseIDandDate)
     
     #檢查是否有變更
     def saveExamination (self) :
