@@ -4,6 +4,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from DistilTag import DistilTag  
 from statistics import mean
 from datetime import datetime
+from sympy import solve, symbols, sqrt, sympify
+import numpy as np
+import random
 
 class AnalysisTab(QtWidgets.QWidget):
     def __init__(self):
@@ -285,9 +288,12 @@ class AnalysisTab(QtWidgets.QWidget):
     def getChildUtterance(self, utterance):
         if utterance == None:
             return 
+        
         utterance = list(sorted(utterance, key = len, reverse = True))
         wordCount = [0]*len(utterance) #統計每句詞數
-        charCount = [len(i) for i in utterance]
+        charCount = [len(i) + 1 for i in utterance]
+        wordArray = [] #有效詞
+        charArray = [] #有效字
         utterStr = ""
         Analysis = {
             'charCount':0,
@@ -318,18 +324,22 @@ class AnalysisTab(QtWidgets.QWidget):
             'MLU5-w':0,
             'MLU5-c':0
         }
+
         #將句子合併
         for i in utterance: 
             utterStr += i
-
+            utterStr += '。'
+            
         #開始進行斷詞
         tagger = DistilTag()
         tagged = tagger.tag(utterStr)
-        print(tagged)
+        #print(tagged)
         i = 0 #每句話的index
         for sent in tagged:
+            charArray.extend(utterance[i])
             for pair in sent:
                 wordCount[i] += 1 #統計每句詞數
+                wordArray.append(pair[0]) #收集詞
                 #統計實詞
                 if pair[1] == 'Neu':
                     Analysis['Content']['Neu'] += 1
@@ -357,6 +367,9 @@ class AnalysisTab(QtWidgets.QWidget):
                 else:
                     wordCount[i] -= 1
                     charCount[i] -= 1
+                    if ord(charArray[-1]) + 65248 == ord(wordArray.pop()):  #去除無效詞
+                        charArray.pop() #去除無效字
+            i += 1
                     
         #設Dict值
         Analysis['charCount'] = sum(charCount) #總字數
@@ -369,6 +382,11 @@ class AnalysisTab(QtWidgets.QWidget):
         Analysis['MLU-c'] = round(mean(charCount),2)
         Analysis['MLU5-w'] = round(mean(wordCount[:5]),2)
         Analysis['MLU5-c'] = round(mean(charCount[:5]),2)
+        Analysis['VOCD-w'] = round(self.getVOCD(wordArray),2)
+        Analysis['VOCD-c'] = round(self.getVOCD(charArray),2)
+
+        print(wordArray)
+        print(charArray)
 
         #呼叫資料庫
         print('caseID:',self.caseID)
@@ -377,6 +395,32 @@ class AnalysisTab(QtWidgets.QWidget):
 
         #顯示在Table
         self.setContent(Analysis)
+
+    def getTTR(self,a):
+        return len(set(a)) / len(a)
+
+    def getD(self,TTR,N):
+        D = symbols('x')
+        return solve(D/N * (sqrt(1 + 2*N/D) - 1) - TTR , D)[0]
+
+    def getVOCD(self,token):
+        if len(token) < 50:
+            return "樣本數不足"
+
+        TTR = np.zeros(100)
+        avgTTR = np.zeros(16)
+        D = np.zeros(16)
+        avgD = np.zeros(3)
+
+        for i in range(3): #重複三次
+            for N in range(35,51): #取Token數
+                for j in range(100): #重複100次
+                    TTR[j] = self.getTTR(random.sample(token,N)) #select subsample of N tokens at random and calculate TTR
+                avgTTR[N - 35] = np.mean(TTR)
+                D[N - 35] = self.getD(avgTTR[N - 35],N)
+            avgD[i] = np.mean(D.flatten())
+        return np.mean(avgD)
+
 
     def clearContent(self):
         self.tableWidget.item(1,3).setText('') 
@@ -421,8 +465,8 @@ class AnalysisTab(QtWidgets.QWidget):
         self.tableWidget.item(15,3).setText(str(Analysis['Function']['T']))
         self.tableWidget.item(16,3).setText(str(Analysis['Function']['I']))
         self.tableWidget.item(17,3).setText(str(Analysis['Function']['percentage']*100)+'%')
-        #VOCD-w
-        #VOCD-c
+        self.tableWidget.item(18,3).setText(str(Analysis['VOCD-w']))
+        self.tableWidget.item(19,3).setText(str(Analysis['VOCD-c']))
         self.tableWidget.item(20,3).setText(str(Analysis['MLU-w']))
         self.tableWidget.item(21,3).setText(str(Analysis['MLU-c']))
         self.tableWidget.item(22,3).setText(str(Analysis['MLU5-w']))
