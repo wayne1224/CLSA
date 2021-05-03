@@ -457,11 +457,15 @@ class Tab2(QtWidgets.QWidget):
                     self.childNum += 1
                     role = QtWidgets.QTableWidgetItem(self.childNum.__str__())
                     self.tableWidget.tableWidget.setItem(rowCount, 3, role)
+                    self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
                 else:   #不採計
                     role = QtWidgets.QTableWidgetItem('')
                     self.tableWidget.tableWidget.setItem(rowCount, 3, role)
+                    font = utterance.font()
+                    font.setBold(True)
+                    utterance.setFont(font)
+                    self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
                 
-                self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
                 self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
                 self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
@@ -494,11 +498,15 @@ class Tab2(QtWidgets.QWidget):
                     roleNum = self.cmb_role.currentText() + self.adultNums[self.cmb_role.currentText()].__str__()
                     role = QtWidgets.QTableWidgetItem(roleNum)
                     self.tableWidget.tableWidget.setItem(rowCount, 0, role)
+                    self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
                 else:   #不採計
                     role = QtWidgets.QTableWidgetItem('')
                     self.tableWidget.tableWidget.setItem(rowCount, 0, role)
+                    font = utterance.font()
+                    font.setBold(True)
+                    utterance.setFont(font)
+                    self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
 
-                self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
                 self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
                 self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
@@ -514,11 +522,13 @@ class Tab2(QtWidgets.QWidget):
 
         indexes = self.tableWidget.tableWidget.selectionModel().selectedRows()
         for index in sorted(indexes, reverse = True):
-            if self.tableWidget.tableWidget.item(index.row(), 0): #刪除成人語句
+            #刪除成人語句
+            if self.tableWidget.tableWidget.item(index.row(), 0) and not self.tableWidget.tableWidget.item(index.row(), 0).text() == '':
                 self.adultNums[self.tableWidget.tableWidget.item(index.row(), 0).text()[0]] -= 1   #成人編號-1
                 if self.adultNums[self.tableWidget.tableWidget.item(index.row(), 0).text()[0]] == 0:
                     self.cmb_role.removeItem(self.cmb_role.findText(self.tableWidget.tableWidget.item(index.row(), 0).text()[0]))
-            if self.tableWidget.tableWidget.takeItem(index.row(), 3):   #刪除兒童語句
+            #刪除兒童語句
+            if self.tableWidget.tableWidget.item(index.row(), 4) and not self.tableWidget.tableWidget.item(index.row(), 4).text() == '':
                 self.childNum -= 1  #兒童編號-1
             self.tableWidget.tableWidget.removeRow(index.row())
         self._checkRoleNumAdding()
