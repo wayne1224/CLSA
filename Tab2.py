@@ -611,12 +611,12 @@ class Tab2(QtWidgets.QWidget):
                 self.input_caseID.setText(caseID)
                 self._searchID()  #設定好這個caseID的資料
                 self._clearTab()    #避免table重複設定語句
-                #將cmb_caseDates設定到tab0匯入的日期
-                self.cmb_caseDates.setCurrentIndex(self.cmb_caseDates.findText(date.strftime("%Y-%m-%d %H:%M")))
 
             #將cmb_caseDates日期加回來
             for i in range(len(self.caseData['dates'])):
                 self.cmb_caseDates.addItem(self.caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
+            #將cmb_caseDates設定到tab0匯入的日期
+            self.cmb_caseDates.setCurrentIndex(self.cmb_caseDates.findText(date.strftime("%Y-%m-%d %H:%M")))
             
             self.dateSearchData = database.DBapi.findContent(caseID, date)
             self.searchContent = self.dateSearchData['FirstContent']
