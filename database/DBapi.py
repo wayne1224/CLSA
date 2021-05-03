@@ -5,13 +5,12 @@ import calendar
 from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 
+client = pymongo.MongoClient("mongodb://m001-student:m001-mongodb-basics@sandbox-shard-00-00.b61rz.mongodb.net:27017,sandbox-shard-00-01.b61rz.mongodb.net:27017,sandbox-shard-00-02.b61rz.mongodb.net:27017/test?replicaSet=atlas-r9j9pm-shard-0&ssl=true&authSource=admin")
 # connect database
-def get_db():
-    client = pymongo.MongoClient("mongodb://m001-student:m001-mongodb-basics@sandbox-shard-00-00.b61rz.mongodb.net:27017,sandbox-shard-00-01.b61rz.mongodb.net:27017,sandbox-shard-00-02.b61rz.mongodb.net:27017/test?replicaSet=atlas-r9j9pm-shard-0&ssl=true&authSource=admin")
+def get_db(): 
     db = client["Test"] # choose database
     # db = LocalProxy(get_db) # Use LocalProxy to read the global db instance with just 'db'
     CLSA = db["CLSA"] # choose collection
-
     return CLSA
 
 # 查詢頁 api
