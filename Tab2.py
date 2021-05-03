@@ -12,6 +12,7 @@ import sys
 import database.DBapi
 from Mytable import Mytable
 from datetime import datetime
+from functools import partial
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -299,7 +300,7 @@ class Tab2(QtWidgets.QWidget):
         #事件
         self.btn_add.clicked.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
-        self.btn_save.clicked.connect(self._save)
+        self.btn_save.clicked.connect(partial(self._save, True))
         self.btn_searchCase.clicked.connect(self._searchID)
         self.btn_generateAndSave.clicked.connect(self._generateAndSave)
         self.cmb_caseDates.activated.connect(self._searchCmbDate)
@@ -314,12 +315,13 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = {}  #成人編號
         self.childUtternace = []    #兒童語句
 
-        #未輸入語句提示視窗
+        #視窗
+        #未輸入語句
         self.msg_noInp = QtWidgets.QMessageBox()
         self.msg_noInp.setWindowTitle("提示")
         self.msg_noInp.setText("請輸入語句！")
         self.msg_noInp.setIcon(QtWidgets.QMessageBox.Question)
-        #成人、兒童同時輸入提示視窗
+        #成人、兒童同時輸入
         self.msg_multiInp = QtWidgets.QMessageBox()
         self.msg_multiInp.setWindowTitle("提示")
         self.msg_multiInp.setText("成人與兒童語句不能同時輸入！")
@@ -329,11 +331,25 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noCaseID.setWindowTitle("提示")
         self.msg_noCaseID.setText("未輸入個案編號！")
         self.msg_noCaseID.setIcon(QtWidgets.QMessageBox.Warning)
+        #未輸入轉錄者
+        self.msg_noTrans = QtWidgets.QMessageBox()
+        self.msg_noTrans.setWindowTitle('提示')
+        self.msg_noTrans.setText('未輸入轉錄者！')
+        self.msg_noTrans.setIcon(QtWidgets.QMessageBox.Warning)
+        #未輸入轉錄者及個案編號
+        self.msg_noCaseIDAndTrans = QtWidgets.QMessageBox()
+        self.msg_noCaseIDAndTrans.setWindowTitle('提示')
+        self.msg_noCaseIDAndTrans.setText('未輸入轉錄者及個案編號！')
+        self.msg_noCaseIDAndTrans.setIcon(QtWidgets.QMessageBox.Warning)
         #查詢無此個案
         self.msg_noCaseData = QtWidgets.QMessageBox()
         self.msg_noCaseData.setWindowTitle("提示")
         self.msg_noCaseData.setText("查無此個案！")
         self.msg_noCaseData.setIcon(QtWidgets.QMessageBox.Warning)
+        #儲存完成
+        self.msg_save = QtWidgets.QMessageBox()
+        self.msg_save.setWindowTitle("提示")
+        self.msg_save.setText("儲存完成！")
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
@@ -355,8 +371,8 @@ class Tab2(QtWidgets.QWidget):
     #從Tab1接收個案編號
     @QtCore.pyqtSlot(str)
     def setCaseID(self, caseID):
-        self.caseID = caseID
         self.input_caseID.setText(caseID)
+        self._searchID()
 
     #接收tab0接收查詢的資料
     @QtCore.pyqtSlot(dict)
@@ -374,7 +390,7 @@ class Tab2(QtWidgets.QWidget):
     def emitChildUtter(self, utterance):
         self.procChildUtter.emit(utterance)
         
-    #傳個案編號、日期給Tab3
+    #傳個案編號、日期給Tab1和Tab3
     @QtCore.pyqtSlot()
     def emitKey(self, key):
         self.procKey.emit(key)
@@ -398,6 +414,7 @@ class Tab2(QtWidgets.QWidget):
         self.input_scenario.clear()
         self.cbx_notCount.setChecked(False)
         self.input_caseID.setStyleSheet("border: 1px solid initial;")
+        self.input_trans.setStyleSheet("border: 1px solid initial;")
         self.input_utterance.setStyleSheet("border: 1px solid initial;")
 
     #set table
@@ -597,13 +614,17 @@ class Tab2(QtWidgets.QWidget):
                 #將cmb_caseDates設定到tab0匯入的日期
                 self.cmb_caseDates.setCurrentIndex(self.cmb_caseDates.findText(date.strftime("%Y-%m-%d %H:%M")))
 
+            #將cmb_caseDates日期加回來
+            for i in range(len(self.caseData['dates'])):
+                self.cmb_caseDates.addItem(self.caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
+            
             self.dateSearchData = database.DBapi.findContent(caseID, date)
             self.searchContent = self.dateSearchData['FirstContent']
             if self.dateSearchData['transcriber']:  #轉錄者
                 self.transcriber = self.dateSearchData['transcriber']
+
             #傳key給tab3
-            key = {'caseID':caseID,
-                    'date':date}
+            key = {'caseID':caseID, 'date':date}
             self.emitKey(key)
 
         else:       #沒傳date(只用caseID查詢)
@@ -623,6 +644,10 @@ class Tab2(QtWidgets.QWidget):
                 #顯示出查詢結果
                 self.lbl_searchResult.setVisible(True)
                 self.cmb_caseDates.setVisible(True)
+
+                #傳key給tab3
+                key = {'caseID':caseID, 'date':self.caseData['dates'][0]}
+                self.emitKey(key)
             else:   #查無此個案
                 self.msg_noCaseData.exec_()
                 self.searchContent = None
@@ -636,16 +661,16 @@ class Tab2(QtWidgets.QWidget):
     def _searchID(self):
         self.caseID = self.input_caseID.text()
         self._searchCase(self.caseID, None)
-    
+
     #用cmb_caseDates選擇日期查詢紀錄
     def _searchCmbDate(self):
         self._searchCase(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()])
 
     #儲存至資料庫
-    def _save(self):
+    def _save(self, isBtn):
         self._clearInput()  #清空、復原輸入欄
 
-        if self.input_caseID.text():
+        if self.input_caseID.text() and self.input_trans.text():
             content = []    #對話內容
             childUtterance = [] #兒童語句
             totalUtterance = 0  #總語句數
@@ -691,13 +716,27 @@ class Tab2(QtWidgets.QWidget):
             #復原輸入框
             self.input_caseID.setStyleSheet("border: 1px solid initial;")
             self.input_utterance.setStyleSheet("border: 1px solid initial;")
-        else:   #未輸入個案編號
-            self.msg_noCaseID.exec_()
-            self.input_caseID.setStyleSheet("border: 1px solid red;")
 
+            if isBtn:
+                self.msg_save.exec_()
+        else:
+            #未輸入個案編號及轉錄者
+            if not self.input_caseID.text() and not self.input_trans.text():
+                self.msg_noCaseIDAndTrans.exec_()
+                self.input_caseID.setStyleSheet("border: 1px solid red;")
+                self.input_trans.setStyleSheet("border: 1px solid red;")
+            #未輸入個案編號
+            elif not self.input_caseID.text() and self.input_trans.text():
+                self.msg_noCaseID.exec_()
+                self.input_caseID.setStyleSheet("border: 1px solid red;")
+            #未輸入轉錄者
+            elif self.input_caseID.text() and not self.input_trans.text():
+                self.msg_noTrans.exec_()
+                self.input_trans.setStyleSheet("border: 1px solid red;")
+          
     #產生彙整表並儲存至資料庫
     def _generateAndSave(self):
-        self._save()
+        self._save(False)
         key = {'caseID':self.caseID,
                 'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()] }
         self.emitKey(key)
