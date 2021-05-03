@@ -308,7 +308,7 @@ class Tab2(QtWidgets.QWidget):
         self.caseID = ''    #個案編號
         self.caseData = {}  #用caseID查的個案紀錄{'dates', 'transcriber', 'FirstContent'}
         self.dateSearchData = {}    #用日期查的個案紀錄{'transcriber', 'FirstContent'}
-        self.searchContent = []    #查詢到的個案紀錄內容
+        self.searchContent = None   #查詢到的個案紀錄內容
         self.childNum = 0   #兒童編號
         self.adultNums = {}  #成人編號
         self.childUtternace = []    #兒童語句
@@ -352,13 +352,10 @@ class Tab2(QtWidgets.QWidget):
         self.btn_save.setText(_translate("", "儲存"))
         self.btn_generateAndSave.setText(_translate("", "產生彙整表並儲存"))
 
-    '''
     #從Tab1接收個案編號
     @QtCore.pyqtSlot(str)
     def setCaseID(self, caseID):
         self.input_caseID.setText(caseID)
-        self.raise_()
-    '''
 
     #傳總語句數和有效語句數給Tab1
     @QtCore.pyqtSlot()
@@ -580,7 +577,6 @@ class Tab2(QtWidgets.QWidget):
                     self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
                     utterance = QtWidgets.QTableWidgetItem(self.searchContent[i]["utterance"])
                     scenario = QtWidgets.QTableWidgetItem(self.searchContent[i]["scenario"])
-
 
                     if self.searchContent[i]["role"] == "adult":  #成人
                         if self.searchContent[i]["ID"]:   #如果有編號(有採計)
