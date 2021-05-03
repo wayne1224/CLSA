@@ -16,6 +16,7 @@ from datetime import datetime
 class SearchTab(QtWidgets.QWidget):
     #用來傳Document到各頁
     procDoc = QtCore.pyqtSignal(dict)
+    procMain = QtCore.pyqtSignal(int)
 
     def __init__(self):
         super(SearchTab, self).__init__()
@@ -177,6 +178,8 @@ class SearchTab(QtWidgets.QWidget):
         self.procDoc.emit(obj)
         #通知彙整完整
         informBox = QtWidgets.QMessageBox.information(self, '通知','匯入完成', QtWidgets.QMessageBox.Ok)
+        self.procMain.emit(1)
+        
 
     def deleteDoc(self , objID , idx):
         if database.DBapi.deleteDoc(objID):

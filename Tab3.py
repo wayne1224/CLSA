@@ -9,6 +9,7 @@ import numpy as np
 import random
 
 class AnalysisTab(QtWidgets.QWidget):
+    procMain = QtCore.pyqtSignal(int)
     def __init__(self):
         super(AnalysisTab, self).__init__()
         # self.setObjectName("Form")
@@ -404,6 +405,9 @@ class AnalysisTab(QtWidgets.QWidget):
 
         #顯示在Table
         self.setContent(Analysis)
+
+        #傳signal給MainWindow
+        self.procMain.emit(3)
 
     def getTTR(self,a):
         return len(set(a)) / len(a)

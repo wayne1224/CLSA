@@ -20,12 +20,12 @@ class Tab2(QtWidgets.QWidget):
     procUtterNum = QtCore.pyqtSignal(dict)
     procChildUtter = QtCore.pyqtSignal(list)
     procKey = QtCore.pyqtSignal(dict)
+    procMain = QtCore.pyqtSignal(int)
 
     def __init__(self):
         super(Tab2, self).__init__()
 
         #self.setGeometry(QtCore.QRect(-1, 0, 1121, 801))
-
         layout = QtWidgets.QVBoxLayout()
         self.setLayout(layout)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -746,6 +746,8 @@ class Tab2(QtWidgets.QWidget):
           
     #產生彙整表並儲存至資料庫
     def _generateAndSave(self):
+        #傳signal給MainWindow
+        self.procMain.emit(2)
         self._save(False)
         key = {'caseID':self.caseID,
                 'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()] }
