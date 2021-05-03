@@ -23,7 +23,7 @@ class DateEdit(QtWidgets.QDateTimeEdit):
         self.setDisplayFormat("yyyy-MM-dd HH:mm")
 
 class Myform(QtWidgets.QWidget):
-    procStart = QtCore.pyqtSignal(str)
+    procStart = QtCore.pyqtSignal(dict)
 
     def __init__(self):
         super(Myform, self).__init__()
@@ -682,8 +682,8 @@ class Myform(QtWidgets.QWidget):
 
     #傳個案編號到Tab2
     @QtCore.pyqtSlot() 
-    def on_button_clicked(self):
-        self.procStart.emit(self.lineEdit_2.text())
+    def sendCaseID(self, caseIDandDate):
+        self.procStart.emit(caseIDandDate)
 
     #查詢個案編號並把個案資料貼到Tab1
     def searchCaseID(self): 
@@ -872,7 +872,6 @@ class Myform(QtWidgets.QWidget):
         #其他特殊情況
         if not self.plainTextEdit.toPlainText():
             error +=1
-            
             self.plainTextEdit.setStyleSheet("border: 1px solid red;")
         else :
             print(self.plainTextEdit.toPlainText())
@@ -908,11 +907,13 @@ class Myform(QtWidgets.QWidget):
         
 
             #判斷是男是女
+            gender = ''
             if self.radioButton.isChecked():
                 gender = 'male'
             else :
                 gender = 'female'
 
+            form = ''
             #判斷互動形式
             if self.radioButton_7.isChecked():
                 form = '交談'
@@ -921,6 +922,7 @@ class Myform(QtWidgets.QWidget):
             if self.radioButton_9.isChecked():
                 form = '敘事'
 
+            recordType = ''
             #判斷記錄方式
             if self.radioButton_10.isChecked():
                 recordType = '錄音筆'
@@ -929,6 +931,7 @@ class Myform(QtWidgets.QWidget):
             if self.radioButton_12.isChecked():
                 recordType = '攝影機'
 
+            needhelp = ''
             #判斷需要引導協助
             if self.radioButton_14.isChecked():
                 needhelp = '總是'
@@ -978,13 +981,14 @@ class Myform(QtWidgets.QWidget):
                 saveForm = self.returnTab1Data()
                 print (saveForm)
                 win32api.MessageBox(0, '新增成功', '提示')
+                caseIDandDate = {'caseID':self.lineEdit_2.text(), 'date':DateTimeRecordDate}
+                self.procStart.emit(caseIDandDate)
                 return True
             else :
                 saveForm = self.returnTab1Data()
                 print (saveForm)
                 win32api.MessageBox(0, '新增失敗', '提示')
                 return False
-        self.on_button_clicked()
     
     #檢查是否有變更
     def saveExamination (self) :
@@ -993,6 +997,67 @@ class Myform(QtWidgets.QWidget):
             return False
         else :
             return True 
+
+    #接收來自Tab2的所有資料
+    @QtCore.pyqtSlot(dict)
+    def getDoc(self, Doc) :
+        #設定childData
+        if Doc == None:
+            return
+        self.lineEdit_2.setText(Doc['childData']['caseID'])
+        self.lineEdit_3.setText(Doc['childData']['name'])
+        if Doc['childData']['gender'] == '男':
+            self.radioButton.setChecked(True)
+        else :
+            self.radioButton_2.setChecked(True)
+        self.dateEdit.setDate(Doc['childData']['birthday'])
+
+        #設定include
+        self.dateEdit_3.setDateTime(Doc['include']['date'])
+        self.lineEdit.setText(Doc['include']['SLP'])
+        self.lineEdit_11.setText(Doc['include']['scenario'])
+        self.lineEdit_14.setText(Doc['include']['fileName'])
+        self.lineEdit_7.setText(Doc['include']['location'])
+        if Doc['include']['form'] == '交談':
+            self.radioButton_7.setChecked(True)
+        if Doc['include']['form'] == '自由遊戲':
+            self.radioButton_8.setChecked(True)
+        if Doc['include']['form'] == '敘事' :
+            self.radioButton_9.setChecked(True)
+
+        self.lineEdit_12.setText(Doc['include']['inducement'])
+        
+        if Doc['include']['recordType'] == '其他錄音設備':
+            self.radioButton_11.setChecked(True)
+        if Doc['include']['recordType'] == '錄音筆' :
+            self.radioButton_10.setChecked(True)
+        if Doc['include']['recordType'] == '攝影機' :
+            self.radioButton_12.setChecked(True)
+        
+        if Doc['include']['help'] == '總是':
+            self.radioButton_14.setChecked(True)
+        if Doc['include']['help'] == '很少 (幾乎不需要引導)':
+            self.radioButton_15.setChecked(True)
+        if Doc['include']['help'] == '經常 (6~9次)':
+            self.radioButton_16.setChecked(True)
+        if Doc['include']['help'] == '有時 (2~5次)':
+            self.radioButton_17.setChecked(True)
+        self.plainTextEdit.setPlainText(Doc['include']['others'])
+        self.plainTextEdit_2.setPlainText(Doc['include']['situation'])
+
+        for i in Doc['include']['participants'] :
+            if i == '兒童' :
+                self.checkBox_2.setChecked(True)
+            elif i == '爸爸' :
+                self.checkBox_3.setChecked(True)
+            elif i == '施測者' :
+                self.checkBox_4.setChecked(True)
+            elif i == '老師' :
+                self.checkBox_5.setChecked(True)
+            elif i == '媽媽' :
+                self.checkBox_6.setChecked(True)
+            else :
+                self.checkBox_7.setChecked(True)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
