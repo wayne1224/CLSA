@@ -12,7 +12,6 @@ import sys
 import database.DBapi
 from Mytable import Mytable
 from datetime import datetime
-from functools import partial
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -301,7 +300,7 @@ class Tab2(QtWidgets.QWidget):
         self.btn_add.clicked.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
         self.btn_save.clicked.connect(self._save)
-        self.btn_searchCase.clicked.connect(partial(self._searchID, self.input_caseID.text()))
+        self.btn_searchCase.clicked.connect(self._searchID)
         self.btn_generateAndSave.clicked.connect(self._generateAndSave)
         self.cmb_caseDates.activated.connect(self._searchCmbDate)
         self.tableWidget.tableWidget.cellClicked.connect(self._syncTableCmbRoleNum)
@@ -589,12 +588,13 @@ class Tab2(QtWidgets.QWidget):
         
         return not self.searchContent == content
 
+    #查詢紀錄
     def _searchCase(self, caseID, date):
         self._clearTab()
         if date:    #有傳date(選定日期查詢)
             if not self.caseData:     #如果尚未用個案編號查詢(tab0匯入)
-                print('imort')
-                self._searchID(caseID)  #設定好這個caseID的資料
+                self.input_caseID.setText(caseID)
+                self._searchID()  #設定好這個caseID的資料
                 self._clearTab()    #避免table重複設定語句
                 #將cmb_caseDates設定到tab0匯入的日期
                 self.cmb_caseDates.setCurrentIndex(self.cmb_caseDates.findText(date.strftime("%Y-%m-%d %H:%M")))
@@ -609,7 +609,6 @@ class Tab2(QtWidgets.QWidget):
             self.emitKey(key)
 
         else:       #沒傳date(只用caseID查詢)
-            print('searchID')
             self.caseData = database.DBapi.findDateAndFirstContent(caseID)
             self.lbl_searchResult.setVisible(False)
             self.cmb_caseDates.setVisible(False)
@@ -636,8 +635,8 @@ class Tab2(QtWidgets.QWidget):
         self.input_trans.setText(self.transcriber)
 
     #用個案編號查詢
-    def _searchID(self, caseID):
-        self.caseID = caseID
+    def _searchID(self):
+        self.caseID = self.input_caseID.text()
         self._searchCase(self.caseID, None)
     
     #用cmb_caseDates選擇日期查詢紀錄
