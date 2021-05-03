@@ -16,7 +16,6 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab2 = Tab2()
         self.tab3 = AnalysisTab()
 
-        #self.tab1.procStart.connect(self.tab2.onprocStart)
 
         #將tab加入MainWindow中
         self.addTab(self.tab0, "查詢頁面")
@@ -30,8 +29,8 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #設定Tab Signal
         self.currentChanged.connect(self.checkTab2Changed)
 
-        #self.tab1.procStart.connect(self.tab2.setCaseID)
-        #self.tab2.procUtterNum.connect(self.tab3.)
+        self.tab1.procStart.connect(self.tab2.setCaseID)
+        self.tab2.procUtterNum.connect(self.tab1.getUtterNum)
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab3.getKey)
         self.tab0.procDoc.connect(self.tab3.getKey)

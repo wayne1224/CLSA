@@ -28,6 +28,10 @@ class Myform(QtWidgets.QWidget):
     def __init__(self):
         super(Myform, self).__init__()
         self.setObjectName("self")
+
+        layout = QtWidgets.QVBoxLayout()
+        self.setLayout(layout)
+        
         self.resize(1393, 815)
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -667,14 +671,21 @@ class Myform(QtWidgets.QWidget):
         self.label_26.setText(_translate("self", "參與人員:"))
         self.label_17.setText(_translate("self", "記錄方式:"))
         self.label_28.setText(_translate("self", "錄影／錄音檔名"))
-
+        
+    #接收來自Tab2的總語句數與有效語句數
+    @QtCore.pyqtSlot(dict)
+    def getUtterNum(self, utterance) :
+        if utterance == None:
+            return
+        self.label.setText(utterance['totalUtterance'])
+        self.label_4.setText(utterance['validUtterance'])
 
     #傳個案編號到Tab2
     @QtCore.pyqtSlot() 
     def on_button_clicked(self):
         self.procStart.emit(self.lineEdit_2.text())
 
-    #查詢個案編號把個案資料貼到Tab1
+    #查詢個案編號並把個案資料貼到Tab1
     def searchCaseID(self): 
         caseData = database.DBapi.findChildData(self.lineEdit_2.text())
         print (caseData)
@@ -688,7 +699,7 @@ class Myform(QtWidgets.QWidget):
         else :
             win32api.MessageBox(0, '查無此個案資料', '提示')
     
-    #回傳現在tab1的所有資料
+    #回傳現在Tab1的所有資料
     def returnTab1Data (self) :
         #判斷是男是女
         if self.radioButton.isChecked():
@@ -770,10 +781,8 @@ class Myform(QtWidgets.QWidget):
         }
         return data
         
-
     #儲存資料到資料庫 
     def save (self): 
-        self.on_button_clicked()
         error = 0
 
         #收錄者
@@ -968,7 +977,6 @@ class Myform(QtWidgets.QWidget):
             if database.DBapi.upsertChildAndInclude(childData, include) :
                 saveForm = self.returnTab1Data()
                 print (saveForm)
-                print ("save success")
                 win32api.MessageBox(0, '新增成功', '提示')
                 return True
             else :
@@ -976,7 +984,7 @@ class Myform(QtWidgets.QWidget):
                 print (saveForm)
                 win32api.MessageBox(0, '新增失敗', '提示')
                 return False
-        self.procStart.emit(self.lineEdit_2.text())
+        self.on_button_clicked()
     
     #檢查是否有變更
     def saveExamination (self) :
