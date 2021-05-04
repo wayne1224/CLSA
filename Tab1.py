@@ -851,7 +851,7 @@ class Myform(QtWidgets.QWidget):
             self.checkBox_5.setStyleSheet("border: 1px;")
             self.checkBox_6.setStyleSheet("border: 1px;")
             self.checkBox_7.setStyleSheet("border: 1px;")
-            self.lineEdit_10.setStyleSheet("border: 1px;")
+            # self.lineEdit_10.setStyleSheet("border: 1px; black;")
         else :
             self.horizontalLayoutWidget_19.setStyleSheet("border: 1px;")
 
@@ -1013,7 +1013,11 @@ class Myform(QtWidgets.QWidget):
         self.dateEdit.setDate(Doc['childData']['birthday'])
 
         #設定include
-        self.dateEdit_3.setDateTime(Doc['include']['date'])
+        strDate = Doc['include']['date'].strftime("%Y-%m-%d %H:%M:%S")
+        Date = strDate + '.224000'
+        DateTimeDate = datetime.strptime(Date, "%Y-%m-%d %H:%M:%S.%f")
+        self.dateEdit_3.setDateTime(DateTimeDate)
+
         self.lineEdit.setText(Doc['include']['SLP'])
         self.lineEdit_11.setText(Doc['include']['scenario'])
         self.lineEdit_14.setText(Doc['include']['fileName'])
@@ -1058,6 +1062,7 @@ class Myform(QtWidgets.QWidget):
                 self.checkBox_6.setChecked(True)
             else :
                 self.checkBox_7.setChecked(True)
+        self.saveForm = self.returnTab1Data()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
