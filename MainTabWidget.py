@@ -41,10 +41,6 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab0.procDoc.connect(self.tab2.getDoc) 
 
 
-    
-    
-
-
     def checkTab2Changed(self):
         if self.currentIndex() == 3 and self.tab2.isEdit():
             informBox = QtWidgets.QMessageBox.warning(self, '警告','轉錄表已變動 請重新產生彙整表', QtWidgets.QMessageBox.Ok)
