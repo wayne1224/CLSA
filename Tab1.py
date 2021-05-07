@@ -671,7 +671,14 @@ class Myform(QtWidgets.QWidget):
         self.label_26.setText(_translate("self", "參與人員:"))
         self.label_17.setText(_translate("self", "記錄方式:"))
         self.label_28.setText(_translate("self", "錄影／錄音檔名"))
-        
+
+    #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
+    @QtCore.pyqtSlot(dict)
+    def getCaseIDAndDate(self, CaseIDAndDate) :
+        Doc = database.DBapi.findChildDataAndRecording(CaseIDAndDate['caseID'], CaseIDAndDate['date'])
+        self.getDoc(Doc)
+        self.saveForm = self.returnTab1Data()
+
     #接收來自Tab2的總語句數與有效語句數
     @QtCore.pyqtSlot(dict)
     def getUtterNum(self, utterance) :
@@ -698,6 +705,7 @@ class Myform(QtWidgets.QWidget):
             self.dateEdit.setDate(caseData['birthday'])
         else :
             win32api.MessageBox(0, '查無此個案資料', '提示')
+        self.saveForm = self.returnTab1Data()
     
     #回傳現在Tab1的所有資料
     def returnTab1Data (self) :
@@ -998,7 +1006,7 @@ class Myform(QtWidgets.QWidget):
         else :
             return True 
 
-    #接收來自Tab2的所有資料
+    #接收來自Tab0的所有資料
     @QtCore.pyqtSlot(dict)
     def getDoc(self, Doc) :
         #設定childData
@@ -1012,7 +1020,7 @@ class Myform(QtWidgets.QWidget):
             self.radioButton_2.setChecked(True)
         self.dateEdit.setDate(Doc['childData']['birthday'])
 
-        #設定include
+        #設定recording
         strDate = Doc['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
         Date = strDate + '.224000'
         DateTimeDate = datetime.strptime(Date, "%Y-%m-%d %H:%M:%S.%f")
@@ -1062,6 +1070,7 @@ class Myform(QtWidgets.QWidget):
                 self.checkBox_6.setChecked(True)
             else :
                 self.checkBox_7.setChecked(True)
+                self.lineEdit_10.setText(i)
         self.saveForm = self.returnTab1Data()
 
 if __name__ == "__main__":

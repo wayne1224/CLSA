@@ -34,7 +34,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab1.procStart.connect(self.tab2.setCaseRecord)
         self.tab2.procUtterNum.connect(self.tab1.getUtterNum)
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
-        #self.tab2.procKey.connect(self.tab1.~~~)
+        self.tab2.procKey.connect(self.tab1.getCaseIDAndDate)
         self.tab2.procKey.connect(self.tab3.getKey)
         self.tab0.procDoc.connect(self.tab3.getKey)
         self.tab0.procDoc.connect(self.tab1.getDoc)
