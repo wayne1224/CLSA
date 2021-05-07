@@ -350,6 +350,14 @@ class Tab2(QtWidgets.QWidget):
         self.msg_save = QtWidgets.QMessageBox()
         self.msg_save.setWindowTitle("提示")
         self.msg_save.setText("儲存完成！")
+        self.msg_save.setIcon(QtWidgets.QMessageBox.Information)
+        #尚未儲存
+        self.msg_notSave = QtWidgets.QMessageBox()
+        self.msg_notSave.setWindowTitle("提示")
+        self.msg_notSave.setText("更動內容尚未儲存！")
+        self.msg_notSave.setInformativeText("要儲存嗎？")
+        self.msg_notSave.setIcon(QtWidgets.QMessageBox.Information)
+        self.msg_notSave.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
@@ -613,6 +621,13 @@ class Tab2(QtWidgets.QWidget):
 
     #查詢紀錄
     def _searchCase(self, caseID, date):
+        if self.isEdit():   #儲存變動內容視窗
+            action = self.msg_notSave.exec_()
+            if action == QtWidgets.QMessageBox.Yes:
+                self._save()
+            elif action == QtWidgets.QMessageBox.Cancel:
+                return
+        
         self._clearTab()    #清空、復原頁面
         self._clearInput()  #清空、復原輸入欄
 
