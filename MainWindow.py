@@ -3,7 +3,35 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
 import database.DBapi
 
-# Subclass QMainWindow to customise your application's main window
+class LoadingScreen(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QtWidgets.QVBoxLayout()
+        self.setLayout(layout)
+        self.setStyleSheet("background-color: white;")
+        #self.setFixedSize(200,200)
+        self.label1 = QtWidgets.QLabel('<p style="font-size:10pt; color: black; font-weight: bold;">彙整中...</p>')
+        self.label1.setAlignment(QtCore.Qt.AlignCenter)
+        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint)
+        self.label = QtWidgets.QLabel(self)
+        self.movie = QtGui.QMovie('sss.gif')
+        self.label.setMovie(self.movie)
+        self.setWindowModality(QtCore.Qt.ApplicationModal)
+        #timer = QTimer(self)
+        layout.addWidget(self.label1)
+        layout.addWidget(self.label)
+        
+        #timer.singleShot(3000,self.stopAnimation)
+
+    def startAnimation(self):
+        self.show()
+        self.movie.start()
+
+    def stopAnimation(self):
+        self.movie.stop()
+        self.close()
+
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -21,6 +49,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainTab.tab2.procMain.connect(self.getAction)
         self.mainTab.tab3.procMain.connect(self.getAction)
 
+        self.load = LoadingScreen()
+
         if database.DBapi.connectDB():
             print("t")
             # 資料庫連接成功
@@ -28,15 +58,7 @@ class MainWindow(QtWidgets.QMainWindow):
             print("f")
             # 資料庫連接失敗
 
-        # self.label = QtWidgets.QLabel() 
-        # self.label.setObjectName("loading")
-        # self.label.show()
-        # self.movie = QtGui.QMovie('loading.gif')
-        # self.label.setMovie(self.movie) 
-        # self.startAnimation() 
 
-    def startAnimation(self): 
-        self.movie.start() 
 
     @QtCore.pyqtSlot(int)
     def getAction(self, key):
@@ -44,11 +66,14 @@ class MainWindow(QtWidgets.QMainWindow):
             self.mainTab.setCurrentIndex(1)
         elif key == 2:
             pass
-            #self.setGraphicsEffect(self.blur_effect)
         elif key == 3:
-            pass
-            #self.setGraphicsEffect(0)
+            #self.load.stopAnimation()
+            informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
     
+    def showProgress(self):
+        pass
+            
+
     def closeEvent(self, event):
         if self.mainTab.tab1.saveExamination() or self.mainTab.tab2.isEdit():
             warnText = '<p style="font-size:13pt; color: #3778bf;">要儲存對下列頁面的變更嗎?</p>\n'
