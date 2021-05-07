@@ -182,11 +182,16 @@ class SearchTab(QtWidgets.QWidget):
         
 
     def deleteDoc(self , objID , idx):
-        if database.DBapi.deleteDoc(objID):
-            self.tableWidget.removeRow(idx)
-            informBox = QtWidgets.QMessageBox.information(self, '成功','成功刪除個案', QtWidgets.QMessageBox.Ok)
-        else:
-            informBox = QtWidgets.QMessageBox.information(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
+        delete = QtWidgets.QMessageBox.warning(self,
+                            "CLSA",
+                            '<p style="font-size:13pt; color: red;">確定要刪除此資料嗎?</p>',
+                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel)
+        if delete == QtWidgets.QMessageBox.Yes:
+            if database.DBapi.deleteDoc(objID):
+                self.tableWidget.removeRow(idx)
+                informBox = QtWidgets.QMessageBox.information(self, '成功','成功刪除個案', QtWidgets.QMessageBox.Ok)
+            else:
+                informBox = QtWidgets.QMessageBox.critical(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
     
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
