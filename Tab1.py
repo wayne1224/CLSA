@@ -718,22 +718,22 @@ class Myform(QtWidgets.QWidget):
         DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
 
         #判斷互動形式   
-        form = ''
+        interactionType = ''
         if self.radioButton_7.isChecked():
-            form = '交談'
+            interactionType = '交談'
         if self.radioButton_8.isChecked():
-            form = '自由遊戲'
+            interactionType = '自由遊戲'
         if self.radioButton_9.isChecked():
-            form = '敘事'
+            interactionType = '敘事'
         
         #判斷記錄方式
-        recordType = ''
+        equipment = ''
         if self.radioButton_10.isChecked():
-            recordType = '錄音筆'
+            equipment = '錄音筆'
         if self.radioButton_11.isChecked():
-            recordType = '其他錄音設備'
+            equipment = '其他錄音設備'
         if self.radioButton_12.isChecked():
-            recordType = '攝影機'
+            equipment = '攝影機'
 
         #判斷需要引導協助
         needhelp = ''
@@ -771,10 +771,10 @@ class Myform(QtWidgets.QWidget):
             'scenario': self.lineEdit_11.text(),
             'fileName' : self.lineEdit_14.text(),
             'location' : self.lineEdit_7.text(),
-            'form' : form,
+            'interactionType' : interactionType,
             'inducement' : self.lineEdit_12.text(),
             'participants' : participants,
-            'recordType' :recordType,
+            'equipment' :equipment,
             'help' : needhelp,
             'others' : self.plainTextEdit.toPlainText(),
             'situation' : self.plainTextEdit_2.toPlainText()
@@ -913,23 +913,23 @@ class Myform(QtWidgets.QWidget):
             else :
                 gender = 'female'
 
-            form = ''
+            interactionType = ''
             #判斷互動形式
             if self.radioButton_7.isChecked():
-                form = '交談'
+                interactionType = '交談'
             if self.radioButton_8.isChecked():
-                form = '自由遊戲'
+                interactionType = '自由遊戲'
             if self.radioButton_9.isChecked():
-                form = '敘事'
+                interactionType = '敘事'
 
-            recordType = ''
+            equipment = ''
             #判斷記錄方式
             if self.radioButton_10.isChecked():
-                recordType = '錄音筆'
+                equipment = '錄音筆'
             if self.radioButton_11.isChecked():
-                recordType = '其他錄音設備'
+                equipment = '其他錄音設備'
             if self.radioButton_12.isChecked():
-                recordType = '攝影機'
+                equipment = '攝影機'
 
             needhelp = ''
             #判斷需要引導協助
@@ -963,21 +963,21 @@ class Myform(QtWidgets.QWidget):
                 'gender' : gender,
                 'birthday' : birthday
             }
-            include = {
+            recording = {
                 'date' : DateTimeRecordDate,
                 'SLP': self.lineEdit.text(),
                 'scenario': self.lineEdit_11.text(),
                 'fileName' : self.lineEdit_14.text(),
                 'location' : self.lineEdit_7.text(),
-                'form' : form,
+                'interactionType' : interactionType,
                 'inducement' : self.lineEdit_12.text(),
                 'participants' : participants,
-                'recordType' :recordType,
+                'equipment' :equipment,
                 'help' : needhelp,
                 'others' : self.plainTextEdit.toPlainText(),
                 'situation' : self.plainTextEdit_2.toPlainText()
             }
-            if database.DBapi.upsertChildAndInclude(childData, include) :
+            if database.DBapi.upsertChildAndInclude(childData, recording) :
                 saveForm = self.returnTab1Data()
                 print (saveForm)
                 win32api.MessageBox(0, '新增成功', '提示')
@@ -1013,43 +1013,43 @@ class Myform(QtWidgets.QWidget):
         self.dateEdit.setDate(Doc['childData']['birthday'])
 
         #設定include
-        strDate = Doc['include']['date'].strftime("%Y-%m-%d %H:%M:%S")
+        strDate = Doc['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
         Date = strDate + '.224000'
         DateTimeDate = datetime.strptime(Date, "%Y-%m-%d %H:%M:%S.%f")
         self.dateEdit_3.setDateTime(DateTimeDate)
 
-        self.lineEdit.setText(Doc['include']['SLP'])
-        self.lineEdit_11.setText(Doc['include']['scenario'])
-        self.lineEdit_14.setText(Doc['include']['fileName'])
-        self.lineEdit_7.setText(Doc['include']['location'])
-        if Doc['include']['form'] == '交談':
+        self.lineEdit.setText(Doc['recording']['SLP'])
+        self.lineEdit_11.setText(Doc['recording']['scenario'])
+        self.lineEdit_14.setText(Doc['recording']['fileName'])
+        self.lineEdit_7.setText(Doc['recording']['location'])
+        if Doc['recording']['interactionType'] == '交談':
             self.radioButton_7.setChecked(True)
-        if Doc['include']['form'] == '自由遊戲':
+        if Doc['recording']['interactionType'] == '自由遊戲':
             self.radioButton_8.setChecked(True)
-        if Doc['include']['form'] == '敘事' :
+        if Doc['recording']['interactionType'] == '敘事' :
             self.radioButton_9.setChecked(True)
 
-        self.lineEdit_12.setText(Doc['include']['inducement'])
+        self.lineEdit_12.setText(Doc['recording']['inducement'])
         
-        if Doc['include']['recordType'] == '其他錄音設備':
+        if Doc['recording']['equipment'] == '其他錄音設備':
             self.radioButton_11.setChecked(True)
-        if Doc['include']['recordType'] == '錄音筆' :
+        if Doc['recording']['equipment'] == '錄音筆' :
             self.radioButton_10.setChecked(True)
-        if Doc['include']['recordType'] == '攝影機' :
+        if Doc['recording']['equipment'] == '攝影機' :
             self.radioButton_12.setChecked(True)
         
-        if Doc['include']['help'] == '總是':
+        if Doc['recording']['help'] == '總是':
             self.radioButton_14.setChecked(True)
-        if Doc['include']['help'] == '很少 (幾乎不需要引導)':
+        if Doc['recording']['help'] == '很少 (幾乎不需要引導)':
             self.radioButton_15.setChecked(True)
-        if Doc['include']['help'] == '經常 (6~9次)':
+        if Doc['recording']['help'] == '經常 (6~9次)':
             self.radioButton_16.setChecked(True)
-        if Doc['include']['help'] == '有時 (2~5次)':
+        if Doc['recording']['help'] == '有時 (2~5次)':
             self.radioButton_17.setChecked(True)
-        self.plainTextEdit.setPlainText(Doc['include']['others'])
-        self.plainTextEdit_2.setPlainText(Doc['include']['situation'])
+        self.plainTextEdit.setPlainText(Doc['recording']['others'])
+        self.plainTextEdit_2.setPlainText(Doc['recording']['situation'])
 
-        for i in Doc['include']['participants'] :
+        for i in Doc['recording']['participants'] :
             if i == '兒童' :
                 self.checkBox_2.setChecked(True)
             elif i == '爸爸' :

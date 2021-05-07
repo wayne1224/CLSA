@@ -6,10 +6,11 @@ from bson.objectid import ObjectId
 
 # connect to datebase
 def connectDB():
-    global CLSA
+    global CLSA  
+    
     try:
         host = "mongodb://m001-student:m001-mongodb-basics@sandbox-shard-00-00.b61rz.mongodb.net:27017,sandbox-shard-00-01.b61rz.mongodb.net:27017,sandbox-shard-00-02.b61rz.mongodb.net:27017/test?replicaSet=atlas-r9j9pm-shard-0&ssl=true&authSource=admin"
-        client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 0.00001) # Timeout 10s
+        client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000) # Timeout 10s
         db = client["Test"] # choose database
         CLSA = db["CLSA"] # choose collection
         client.server_info()

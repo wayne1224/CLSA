@@ -266,8 +266,8 @@ class AnalysisTab(QtWidgets.QWidget):
         if key != None:
             if '_id' in key: #若傳入整個document
                 self.clearContent()
-                if key['transcribe']['analysis']:
-                    self.setContent(key['transcribe']['analysis'])
+                if key['transcription']['analysis']:
+                    self.setContent(key['transcription']['analysis'])
             else:
                 self.caseID = key['caseID']
                 self.date = key['date']
