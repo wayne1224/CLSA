@@ -65,7 +65,25 @@ def findChildData(caseID): # argument = caseID , if find return childData (type 
 
     return db.find_one(query)["childData"]
 
-def upsertChildAndInclude(childData , recording): # argument = childData , recording , if upsert successfully return [("insert" or "update") , True]
+def findChildDataAndRecording(caseID , date): # argument = caseID , date , if find return {"childData" : childData , "recording" : recording} , else return False
+    db = CLSA
+    query = dict()
+    query["childData.caseID"] = caseID
+    query["recording.date"] = date 
+
+    if db.count_documents(query) == 0:
+        print("can not find this doc")
+        return False
+
+    data = db.find_one(query)
+
+    result = dict()
+    result["childData"] = data["childData"]
+    result["recording"] = data["recording"]
+
+    return result
+
+def upsertChildDataAndRecording(childData , recording): # argument = childData , recording , if upsert successfully return [("insert" or "update") , True]
     db = CLSA
     query = dict()
     query["childData.caseID"] = childData["caseID"]
@@ -240,7 +258,7 @@ analysis = {
             'MLU5-c':0
         }
 
-date = datetime.datetime.strptime("2018-01-31 00:00", "%Y-%m-%d %H:%M")
+date = datetime.datetime.strptime("2021-04-26 00:00", "%Y-%m-%d %H:%M")
 birthday = datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")
 
 childData = {"caseID" : "001" , "name" : "1234" , "gender" : "male" , "birthday" : birthday}
@@ -252,6 +270,7 @@ connectDB()
 # print(deleteDoc("165497489"))
 
 # print(findChildData("001"))
+# print(findChildDataAndRecording("00757001" , date))
 # print(upsertChildAndInclude(childData , recording))
 
 # print(findDateAndFirstContent("001"))
