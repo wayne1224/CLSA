@@ -136,7 +136,7 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.insertRow(idx)        
                 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['include']['SLP'])
+                item.setText(doc['recording']['SLP'])
                 self.tableWidget.setItem(idx , 0 , item)
 
                 item = QtWidgets.QTableWidgetItem()
@@ -148,20 +148,20 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.setItem(idx , 2 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                time = datetime.strftime(doc['include']['date'],'%Y-%m-%d %H:%M')
+                time = datetime.strftime(doc['recording']['date'],'%Y-%m-%d %H:%M')
                 item.setText(time)
                 self.tableWidget.setItem(idx , 3 , item)
                 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['include']['situation'])
+                item.setText(doc['recording']['situation'])
                 self.tableWidget.setItem(idx , 4 , item)
                 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['include']['location'])
+                item.setText(doc['recording']['location'])
                 self.tableWidget.setItem(idx , 5 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['include']['inducement'])
+                item.setText(doc['recording']['inducement'])
                 self.tableWidget.setItem(idx , 6 , item)
         
                 importBtn = QtWidgets.QPushButton('匯入')

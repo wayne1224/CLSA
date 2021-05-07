@@ -2,24 +2,31 @@ import pymongo
 import datetime
 import time
 import calendar
-from werkzeug.local import LocalProxy
 from bson.objectid import ObjectId
 
-client = pymongo.MongoClient("mongodb://m001-student:m001-mongodb-basics@sandbox-shard-00-00.b61rz.mongodb.net:27017,sandbox-shard-00-01.b61rz.mongodb.net:27017,sandbox-shard-00-02.b61rz.mongodb.net:27017/test?replicaSet=atlas-r9j9pm-shard-0&ssl=true&authSource=admin")
-# connect database
-def get_db(): 
-    db = client["Test"] # choose database
-    # db = LocalProxy(get_db) # Use LocalProxy to read the global db instance with just 'db'
-    CLSA = db["CLSA"] # choose collection
-    return CLSA
+# connect to datebase
+def connectDB():
+    global CLSA
+    try:
+        host = "mongodb://m001-student:m001-mongodb-basics@sandbox-shard-00-00.b61rz.mongodb.net:27017,sandbox-shard-00-01.b61rz.mongodb.net:27017,sandbox-shard-00-02.b61rz.mongodb.net:27017/test?replicaSet=atlas-r9j9pm-shard-0&ssl=true&authSource=admin"
+        client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 0.00001) # Timeout 10s
+        db = client["Test"] # choose database
+        CLSA = db["CLSA"] # choose collection
+        client.server_info()
+        return True
+
+    except pymongo.errors.ServerSelectionTimeoutError as err:
+        print(err)
+        client.close()
+        return False
 
 # 查詢頁 api
 def findDoc(SLP , caseID , name): # argument = SLP , caseID , name, if find return pymongo object , else return False
-    db = get_db()
+    db = CLSA
     query = dict()
 
     if SLP:
-        query["include.SLP"] = SLP
+        query["recording.SLP"] = SLP
     if caseID:
         query["childData.caseID"] = caseID
     if name:
@@ -32,7 +39,7 @@ def findDoc(SLP , caseID , name): # argument = SLP , caseID , name, if find retu
     return db.find(query)
 
 def deleteDoc(objID): # argument = caseID , date , if delete successfully return True , else return False
-    db = get_db()
+    db = CLSA
     query = dict()
     query["_id"] = objID
 
@@ -47,7 +54,7 @@ def deleteDoc(objID): # argument = caseID , date , if delete successfully return
 
 # 收錄表 api
 def findChildData(caseID): # argument = caseID , if find return childData (type = dict) , else return False
-    db = get_db()
+    db = CLSA
     query = dict()
     query["childData.caseID"] = caseID
 
@@ -57,11 +64,11 @@ def findChildData(caseID): # argument = caseID , if find return childData (type 
 
     return db.find_one(query)["childData"]
 
-def upsertChildAndInclude(childData , include): # argument = childData , include , if upsert successfully return [("insert" or "update") , True]
-    db = get_db()
+def upsertChildAndInclude(childData , recording): # argument = childData , recording , if upsert successfully return [("insert" or "update") , True]
+    db = CLSA
     query = dict()
     query["childData.caseID"] = childData["caseID"]
-    query["include.date"] = include["date"]  
+    query["recording.date"] = recording["date"]  
 
     result = ["" , True]
 
@@ -70,7 +77,7 @@ def upsertChildAndInclude(childData , include): # argument = childData , include
         result[0] = "update"
 
         try:
-            db.update_one(query , {"$set" : {"childData" : childData , "include" : include}})
+            db.update_one(query , {"$set" : {"childData" : childData , "recording" : recording}})
             result[1] = True
         except pymongo.errors.PyMongoError as e:
             result[1] = False
@@ -81,8 +88,8 @@ def upsertChildAndInclude(childData , include): # argument = childData , include
         
         data = {
             "childData" : childData,
-            "include" : include,
-            "transcribe" : {"transcriber" : None, 
+            "recording" : recording,
+            "transcription" : {"transcriber" : None, 
                             "content" : None,
                             "analysis" : None,
                             "totalUtterance" : None,
@@ -109,7 +116,7 @@ def upsertChildAndInclude(childData , include): # argument = childData , include
 
 # 轉錄表 api    
 def findDateAndFirstContent(caseID): # argument = caseID , if find return {"dates" : 全部的日期 (type = list) , "FirstContent" : content} , else return False
-    db = get_db()
+    db = CLSA
     query = dict()
     query["childData.caseID"] = caseID
 
@@ -120,9 +127,9 @@ def findDateAndFirstContent(caseID): # argument = caseID , if find return {"date
     dates = list()
     
     for i in db.find(query):
-        dates.append(i["include"]["date"])
+        dates.append(i["recording"]["date"])
 
-    data = db.find_one(query)["transcribe"]
+    data = db.find_one(query)["transcription"]
 
     result = dict()
     result["dates"] = dates
@@ -132,16 +139,16 @@ def findDateAndFirstContent(caseID): # argument = caseID , if find return {"date
     return result
 
 def findContent(caseID , date): # argument = caseID , date , if find return content (type = array) , else return False
-    db = get_db()
+    db = CLSA
     query = dict()
     query["childData.caseID"] = caseID
-    query["include.date"] = date
+    query["recording.date"] = date
 
     if db.count_documents(query) == 0:
         print("can not find this content")
         return False
 
-    data = db.find_one(query)["transcribe"]
+    data = db.find_one(query)["transcription"]
 
     result = dict()
     result["transcriber"] = data["transcriber"]
@@ -150,46 +157,46 @@ def findContent(caseID , date): # argument = caseID , date , if find return cont
     return result
 
 def updateContent(caseID , date , transcriber , content , totalUtterance , validUtterance): # argument = caseID , date , transcriber , content , totalUtterance , validUtterance , if succeed return True , else return False
-    db = get_db()
+    db = CLSA
     query = dict()
     query["childData.caseID"] = caseID
-    query["include.date"] = date
+    query["recording.date"] = date
 
     if db.count_documents(query) == 0:
         print("can not find this caseID or date")
         return False
 
     try:
-        db.update_one(query , {"$set" : {"transcribe.transcriber" : transcriber , "transcribe.content" : content , "transcribe.totalUtterance" : totalUtterance , "transcribe.validUtterance" : validUtterance}})
+        db.update_one(query , {"$set" : {"transcription.transcriber" : transcriber , "transcription.content" : content , "transcription.totalUtterance" : totalUtterance , "transcription.validUtterance" : validUtterance}})
         return True
     except pymongo.errors.PyMongoError as e:
         return False
 
 # 彙錄表 api 
 def findAnalysis(caseID , date): # argument = caseID , date , if succeed return analysis , else return False
-    db = get_db()
+    db = CLSA
     query = dict()
     query["childData.caseID"] = caseID
-    query["include.date"] = date
+    query["recording.date"] = date
 
     if db.count_documents(query) == 0:
         print("can not find this analysis")
         return False
 
-    return db.find_one(query)["transcribe"]["analysis"]
+    return db.find_one(query)["transcription"]["analysis"]
 
 def updateAnalysis(caseID , date , analysis): # argument = caseID , date , analysis , if succeed return True , else return False
-    db = get_db()
+    db = CLSA
     query = dict()
     query["childData.caseID"] = caseID
-    query["include.date"] = date
+    query["recording.date"] = date
 
     if db.count_documents(query) == 0:
         print("can not find this caseID or date")
         return False
 
     try:
-        db.update_one(query , {"$set" : {"transcribe.analysis" : analysis}})
+        db.update_one(query , {"$set" : {"transcription.analysis" : analysis}})
         return True
     except pymongo.errors.PyMongoError as e:
         return False
@@ -236,15 +243,15 @@ date = datetime.datetime.strptime("2018-01-31 00:00", "%Y-%m-%d %H:%M")
 birthday = datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")
 
 childData = {"caseID" : "001" , "name" : "1234" , "gender" : "male" , "birthday" : birthday}
-include = {"SLP" : "123" , "date" : date}
+recording = {"SLP" : "123" , "date" : date}
 
-
+connectDB()
 
 # print(findDoc("" , "001" , ""))
 # print(deleteDoc("165497489"))
 
 # print(findChildData("001"))
-# print(upsertChildAndInclude(childData , include))
+# print(upsertChildAndInclude(childData , recording))
 
 # print(findDateAndFirstContent("001"))
 # print(findContent("001" , date))

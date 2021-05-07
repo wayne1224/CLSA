@@ -1,6 +1,8 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
+import database.DBapi
+
 # Subclass QMainWindow to customise your application's main window
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -18,6 +20,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainTab.tab0.procMain.connect(self.getAction)
         self.mainTab.tab2.procMain.connect(self.getAction)
         self.mainTab.tab3.procMain.connect(self.getAction)
+
+        if database.DBapi.connectDB():
+            print("t")
+            # 資料庫連接成功
+        else:
+            print("f")
+            # 資料庫連接失敗
 
         # self.label = QtWidgets.QLabel() 
         # self.label.setObjectName("loading")
