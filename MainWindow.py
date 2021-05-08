@@ -17,11 +17,9 @@ class LoadingScreen(QtWidgets.QWidget):
         self.movie = QtGui.QMovie('sss.gif')
         self.label.setMovie(self.movie)
         self.setWindowModality(QtCore.Qt.ApplicationModal)
-        #timer = QTimer(self)
         layout.addWidget(self.label1)
         layout.addWidget(self.label)
-        
-        #timer.singleShot(3000,self.stopAnimation)
+    
 
     def startAnimation(self):
         self.show()
@@ -49,6 +47,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainTab.tab2.procMain.connect(self.getAction)
         self.mainTab.tab3.procMain.connect(self.getAction)
 
+        #Loading Screen
         self.load = LoadingScreen()
 
         if database.DBapi.connectDB():
@@ -58,20 +57,15 @@ class MainWindow(QtWidgets.QMainWindow):
             print("f")
             # 資料庫連接失敗
 
-
-
     @QtCore.pyqtSlot(int)
     def getAction(self, key):
         if key == 1:
             self.mainTab.setCurrentIndex(1)
         elif key == 2:
-            pass
+            self.load.startAnimation()
         elif key == 3:
-            #self.load.stopAnimation()
+            self.load.stopAnimation()
             informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
-    
-    def showProgress(self):
-        pass
             
 
     def closeEvent(self, event):

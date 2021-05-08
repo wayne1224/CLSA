@@ -1,12 +1,29 @@
 import sys
 import database.DBapi
+import time
+import numpy as np
+import random
 from PyQt5 import QtCore, QtGui, QtWidgets
 from DistilTag import DistilTag  
 from statistics import mean
 from datetime import datetime
 from sympy import solve, symbols, sqrt, sympify
-import numpy as np
-import random
+from functools import partial
+
+
+class Worker(QtCore.QObject):
+    finished = QtCore.pyqtSignal()
+    progress = QtCore.pyqtSignal(int)
+
+    def __init__(self, fn):
+        super(Worker, self).__init__()
+        self.func = fn
+
+    def run(self):
+        self.func()
+        
+        self.finished.emit()
+
 
 class AnalysisTab(QtWidgets.QWidget):
     procMain = QtCore.pyqtSignal(int)
@@ -16,7 +33,7 @@ class AnalysisTab(QtWidgets.QWidget):
         # self.resize(1080, 868)
         layout = QtWidgets.QVBoxLayout()
         self.setLayout(layout)
-        
+
         #add Header 
         self.headerLayout = QtWidgets.QHBoxLayout()
         # self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -287,9 +304,25 @@ class AnalysisTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot(list)
     def getChildUtterance(self, utterance):
+        #Create a QThread object
+        self.thread = QtCore.QThread()
+        #Create a worker object
+        self.worker = Worker(partial(self.analyze_and_setContent,utterance))
+        #Move worker to the thread
+        self.worker.moveToThread(self.thread)
+        #Connect signals and slots
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        #self.worker.progress.connect(self.reportProgress)
+        #Start the thread
+        self.thread.start()
+
+    def analyze_and_setContent(self,utterance):
         if utterance == None:
             return 
-        
+
         utterance = list(sorted(utterance, key = len, reverse = True))
         wordCount = [0]*len(utterance) #統計每句詞數
         charCount = [len(i) + 1 for i in utterance]
@@ -472,12 +505,12 @@ class AnalysisTab(QtWidgets.QWidget):
         self.tableWidget.item(9,3).setText(str(Analysis['Content']['Nf']))
         self.tableWidget.item(10,3).setText(str(Analysis['Content']['Nh']))
         self.tableWidget.item(11,3).setText(str(Analysis['Content']['D']))
-        self.tableWidget.item(12,3).setText(str(Analysis['Content']['percentage']*100)+'%')
+        self.tableWidget.item(12,3).setText('{:.1%}'.format(Analysis['Content']['percentage']))
         self.tableWidget.item(13,3).setText(str(Analysis['Function']['P']))
         self.tableWidget.item(14,3).setText(str(Analysis['Function']['C']))
         self.tableWidget.item(15,3).setText(str(Analysis['Function']['T']))
         self.tableWidget.item(16,3).setText(str(Analysis['Function']['I']))
-        self.tableWidget.item(17,3).setText(str(Analysis['Function']['percentage']*100)+'%')
+        self.tableWidget.item(17,3).setText('{:.1%}'.format(Analysis['Function']['percentage']))
         self.tableWidget.item(18,3).setText(str(Analysis['VOCD-w']))
         self.tableWidget.item(19,3).setText(str(Analysis['VOCD-c']))
         self.tableWidget.item(20,3).setText(str(Analysis['MLU-w']))

@@ -761,9 +761,11 @@ class Tab2(QtWidgets.QWidget):
           
     #產生彙整表並儲存至資料庫
     def _generateAndSave(self):
+        self._save(False)
+
         #傳signal給MainWindow
         self.procMain.emit(2)
-        self._save(False)
+        
         key = {'caseID':self.caseID,
                 'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()] }
         self.emitKey(key)
