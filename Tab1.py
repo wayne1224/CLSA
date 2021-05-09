@@ -859,9 +859,10 @@ class Myform(QtWidgets.QWidget):
             self.checkBox_5.setStyleSheet("border: 1px;")
             self.checkBox_6.setStyleSheet("border: 1px;")
             self.checkBox_7.setStyleSheet("border: 1px;")
-            # self.lineEdit_10.setStyleSheet("border: 1px; black;")
+            self.lineEdit_10.setStyleSheet("border: 1px; black;")
         else :
             self.horizontalLayoutWidget_19.setStyleSheet("border: 1px;")
+            self.lineEdit_10.setStyleSheet("border: 1px; black;")
 
         #誘發題材
         if not self.lineEdit_12.text():
@@ -899,6 +900,7 @@ class Myform(QtWidgets.QWidget):
 
         #如果有必填欄位沒填跳提示視窗
         if  error > 0: 
+            self.saveForm = self.returnTab1Data()
             print ("save fail")
             win32api.MessageBox(0, '紅色框為必填欄位', '警告')
             return False
@@ -985,16 +987,13 @@ class Myform(QtWidgets.QWidget):
                 'others' : self.plainTextEdit.toPlainText(),
                 'situation' : self.plainTextEdit_2.toPlainText()
             }
-            if database.DBapi.upsertChildAndInclude(childData, recording) :
-                saveForm = self.returnTab1Data()
-                print (saveForm)
+            if database.DBapi.upsertChildDataAndRecording(childData, recording) :
+                self.saveForm = self.returnTab1Data()
                 win32api.MessageBox(0, '新增成功', '提示')
                 caseIDandDate = {'caseID':self.lineEdit_2.text(), 'date':DateTimeRecordDate}
                 self.procStart.emit(caseIDandDate)
                 return True
             else :
-                saveForm = self.returnTab1Data()
-                print (saveForm)
                 win32api.MessageBox(0, '新增失敗', '提示')
                 return False
     
@@ -1072,6 +1071,37 @@ class Myform(QtWidgets.QWidget):
                 self.checkBox_7.setChecked(True)
                 self.lineEdit_10.setText(i)
         self.saveForm = self.returnTab1Data()
+
+    #清空所有資料
+    @QtCore.pyqtSlot()
+    def clearContent(self) :
+        self.lineEdit.setText('')
+        self.lineEdit_2.setText('')
+        self.lineEdit_3.setText('')
+        self.lineEdit_7.setText('')
+        self.lineEdit_10.setText('')
+        self.lineEdit_11.setText('')
+        self.lineEdit_12.setText('')
+        self.lineEdit_14.setText('')
+        self.checkBox_2.setChecked(False)
+        self.checkBox_3.setChecked(False)
+        self.checkBox_4.setChecked(False)
+        self.checkBox_5.setChecked(False)
+        self.checkBox_6.setChecked(False)
+        self.checkBox_7.setChecked(False)
+        self.radioButton.setChecked(False)
+        self.radioButton_2.setChecked(False)
+        self.radioButton_7.setChecked(False)
+        self.radioButton_8.setChecked(False)
+        self.radioButton_9.setChecked(False)
+        self.radioButton_10.setChecked(False)
+        self.radioButton_11.setChecked(False)
+        self.radioButton_12.setChecked(False)
+        self.radioButton_14.setChecked(False)
+        self.radioButton_15.setChecked(False)
+        self.radioButton_16.setChecked(False)
+        self.radioButton_17.setChecked(False)
+        self.saveForm =self.returnTab1Data()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
