@@ -35,10 +35,18 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab2.procUtterNum.connect(self.tab1.getUtterNum)
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab1.getCaseIDAndDate)
-        self.tab2.procKey.connect(self.tab3.getKey)
-        self.tab0.procDoc.connect(self.tab3.getKey)
+        self.tab2.procKey.connect(self.tab3.getDoc)
+
+        #搜尋頁面傳document給其他Tab
         self.tab0.procDoc.connect(self.tab1.getDoc)
-        self.tab0.procDoc.connect(self.tab2.getDoc) 
+        self.tab0.procDoc.connect(self.tab2.getDoc)
+        self.tab0.procDoc.connect(self.tab3.getDoc)
+
+        #搜尋頁面按下搜尋時，其他頁面清空
+        self.tab0.procFind.connect(self.tab1.clearContent)
+        self.tab0.procFind.connect(self.tab2.clearTab)
+        self.tab0.procFind.connect(self.tab2.clearInput)
+        self.tab0.procFind.connect(self.tab3.clearContent)
 
 
     def checkTab2Changed(self):
