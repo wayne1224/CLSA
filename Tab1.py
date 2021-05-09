@@ -859,10 +859,10 @@ class Myform(QtWidgets.QWidget):
             self.checkBox_5.setStyleSheet("border: 1px;")
             self.checkBox_6.setStyleSheet("border: 1px;")
             self.checkBox_7.setStyleSheet("border: 1px;")
-            self.lineEdit_10.setStyleSheet("border: 1px; black;")
+            
         else :
             self.horizontalLayoutWidget_19.setStyleSheet("border: 1px;")
-            self.lineEdit_10.setStyleSheet("border: 1px; black;")
+            self.lineEdit_10.setStyleSheet("border: 1px solid initial;")
 
         #誘發題材
         if not self.lineEdit_12.text():
@@ -1101,6 +1101,9 @@ class Myform(QtWidgets.QWidget):
         self.radioButton_15.setChecked(False)
         self.radioButton_16.setChecked(False)
         self.radioButton_17.setChecked(False)
+        self.plainTextEdit.setPlainText('')
+        self.plainTextEdit_2.setPlainText('')
+        self.dateEdit.setDate(QtCore.QDate(2000, 1, 1))
         self.saveForm =self.returnTab1Data()
 
 if __name__ == "__main__":
