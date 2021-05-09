@@ -2,18 +2,17 @@ import pymongo
 import datetime
 import time
 import calendar
-from bson.objectid import ObjectId
 
 # connect to datebase
 def connectDB():
     global CLSA  
     
     try:
-        host = "mongodb://m001-student:m001-mongodb-basics@sandbox-shard-00-00.b61rz.mongodb.net:27017,sandbox-shard-00-01.b61rz.mongodb.net:27017,sandbox-shard-00-02.b61rz.mongodb.net:27017/test?replicaSet=atlas-r9j9pm-shard-0&ssl=true&authSource=admin"
-        client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000) # Timeout 10s
+        host = "mongodb+srv://wayne1224:wayne1224@sandbox.qjd2q.mongodb.net/myFirstDatabase?authSource=admin&replicaSet=atlas-bu8995-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true"
+        client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000 , ssl = True) # Timeout 10s
         db = client["Test"] # choose database
         CLSA = db["CLSA"] # choose collection
-        client.server_info()
+        # client.server_info()
         return True
 
     except pymongo.errors.ServerSelectionTimeoutError as err:
@@ -23,21 +22,25 @@ def connectDB():
 
 # 查詢頁 api
 def findDoc(SLP , caseID , name): # argument = SLP , caseID , name, if find return pymongo object , else return False
-    db = CLSA
-    query = dict()
+    try:
+        db = CLSA
+        query = dict()
 
-    if SLP:
-        query["recording.SLP"] = SLP
-    if caseID:
-        query["childData.caseID"] = caseID
-    if name:
-        query["childData.name"] = name
+        if SLP:
+            query["recording.SLP"] = SLP
+        if caseID:
+            query["childData.caseID"] = caseID
+        if name:
+            query["childData.name"] = name
 
-    if db.count_documents(query) == 0:
-        print("can not find this document")
-        return False
+        if db.count_documents(query) == 0:
+            print("can not find this document")
+            return False
 
-    return db.find(query)
+        return db.find(query)
+
+    except Exception as e:
+        print(e)
 
 def deleteDoc(objID): # argument = caseID , date , if delete successfully return True , else return False
     db = CLSA
@@ -220,7 +223,6 @@ def updateAnalysis(caseID , date , analysis): # argument = caseID , date , analy
     except pymongo.errors.PyMongoError as e:
         return False
 
-objID = ObjectId("608a755d67f22058c9e8867d")
 
 a1 = {"ID" : "a1" , "role" : "adult" , "utterance" : "1234" , "scenario" : "123"}
 a2 = {"ID" : "1" , "role" : "child" , "utterance" : "123" , "scenario" : "123"}
