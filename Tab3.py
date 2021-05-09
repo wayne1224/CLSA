@@ -4,7 +4,7 @@ import time
 import numpy as np
 import random
 from PyQt5 import QtCore, QtGui, QtWidgets
-from DistilTag import DistilTag  
+import DistilTag  
 from statistics import mean
 from datetime import datetime
 from sympy import solve, symbols, sqrt, sympify
@@ -29,6 +29,11 @@ class AnalysisTab(QtWidgets.QWidget):
     procMain = QtCore.pyqtSignal(int)
     def __init__(self):
         super(AnalysisTab, self).__init__()
+
+        try:
+            DistilTag.download()
+        except:
+            pass
         # self.setObjectName("Form")
         # self.resize(1080, 868)
         layout = QtWidgets.QVBoxLayout()
@@ -279,7 +284,7 @@ class AnalysisTab(QtWidgets.QWidget):
         self.date = None
 
     @QtCore.pyqtSlot(dict)
-    def getKey(self, key):
+    def getDoc(self, key):
         if key != None:
             if '_id' in key: #若傳入整個document
                 self.clearContent()
@@ -365,7 +370,7 @@ class AnalysisTab(QtWidgets.QWidget):
             utterStr += '。'
             
         #開始進行斷詞
-        tagger = DistilTag()
+        tagger = DistilTag.DistilTag()
         tagged = tagger.tag(utterStr)
         #print(tagged)
         i = 0 #每句話的index
@@ -467,7 +472,7 @@ class AnalysisTab(QtWidgets.QWidget):
             avgD[i] = np.mean(D.flatten())
         return np.mean(avgD)
 
-
+    @QtCore.pyqtSlot()
     def clearContent(self):
         self.tableWidget.item(1,3).setText('') 
         self.tableWidget.item(2,3).setText('') 
