@@ -17,6 +17,7 @@ class SearchTab(QtWidgets.QWidget):
     #用來傳Document到各頁
     procDoc = QtCore.pyqtSignal(dict)
     procMain = QtCore.pyqtSignal(int)
+    procFind = QtCore.pyqtSignal()
 
     def __init__(self):
         super(SearchTab, self).__init__()
@@ -125,6 +126,7 @@ class SearchTab(QtWidgets.QWidget):
         self.retranslateUi()
 
     def _search(self):
+        self.procFind.emit()
         cursor = database.DBapi.findDoc(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
 
         # self.tableWidget.clear()
