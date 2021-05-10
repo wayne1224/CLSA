@@ -678,6 +678,8 @@ class Tab2(QtWidgets.QWidget):
             
             self.dateSearchData = database.DBapi.findContent(caseID, date)
             self.searchContent = self.dateSearchData['FirstContent']
+            if self.searchContent.__len__() == 0:
+                self.searchContent = None
             if self.dateSearchData['transcriber']:  #轉錄者
                 self.transcriber = self.dateSearchData['transcriber']
 
@@ -728,6 +730,7 @@ class Tab2(QtWidgets.QWidget):
     def _save(self, isBtn):
         if self.caseData:   #已查詢個案
             if self.input_trans.text():
+                self.transcriber = self.input_trans.text()
                 content = []    #對話內容
                 childUtterance = [] #兒童語句
                 totalUtterance = 0  #總語句數
@@ -764,15 +767,17 @@ class Tab2(QtWidgets.QWidget):
                     content.append(data)
                 
                 database.DBapi.updateContent(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()], 
-                                                self.input_trans.text(), content, totalUtterance, validUtterance)
+                                                self.transcriber, content, totalUtterance, validUtterance)
                 utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
                 self.emitUtterNum(utteranceNum)
                 self.searchContent = content    #更新內容
+                if self.searchContent.__len__() == 0:
+                    self.searchContent = None
                 self.childUtterance = childUtterance
 
-                #復原輸入框
-                self.input_caseID.setStyleSheet("border: 1px solid initial;")
-                self.input_utterance.setStyleSheet("border: 1px solid initial;")
+                self.clearInput()  #清空、復原輸入欄
+                self.input_trans.setText(self.transcriber)
+                self.input_caseID.setText(self.caseID)
 
                 if isBtn:
                     self.msg_save.exec_()
@@ -782,10 +787,6 @@ class Tab2(QtWidgets.QWidget):
             self.input_caseID.setText(self.caseID.__str__())    #自動回復caseID
         else:   #尚未查詢個案
             self.msg_saveNotSearch.exec_()
-        
-        self.clearInput()  #清空、復原輸入欄
-        self.input_trans.setText(self.transcriber)
-        self.input_caseID.setText(self.caseID)
           
     #產生彙整表並儲存至資料庫
     def _generateAndSave(self):
