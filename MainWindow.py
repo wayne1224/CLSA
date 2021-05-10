@@ -49,13 +49,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #Loading Screen
         self.load = LoadingScreen()
-
-        if database.DBapi.connectDB():
-            print("t")
-            # 資料庫連接成功
-        else:
+        
+        # 資料庫連接失敗 直接關閉程式
+        if not database.DBapi.connectDB():
             print("f")
-            # 資料庫連接失敗
+            quit()          
 
     @QtCore.pyqtSlot(int)
     def getAction(self, key):
