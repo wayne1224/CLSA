@@ -379,13 +379,19 @@ class Tab2(QtWidgets.QWidget):
     #接收tab0接收查詢的資料
     @QtCore.pyqtSlot(dict)
     def getDoc(self, doc):
+        self.clearTab()    #清空、復原頁面
+        self.clearInput()  #清空、復原輸入欄
         self.caseData = {}  #重設caseData
+        self.searchContent = None   #重設searchContent
         self._searchCase(doc['childData']['caseID'], doc['recording']['date'])
 
     #從Tab1接收個案編號和日期
     @QtCore.pyqtSlot(dict)
     def setCaseRecord(self, caseIDAndDate):
+        self.clearTab()    #清空、復原頁面
+        self.clearInput()  #清空、復原輸入欄
         self.caseData = {}  #重設caseData
+        self.searchContent = None   #重設searchContent
         self._searchCase(caseIDAndDate['caseID'], caseIDAndDate['date'])
 
     #傳總語句數和有效語句數給Tab1
@@ -419,6 +425,8 @@ class Tab2(QtWidgets.QWidget):
     #復原輸入欄
     @QtCore.pyqtSlot()
     def clearInput(self):
+        self.input_trans.clear()
+        self.input_caseID.clear()
         self.cmb_role.setCurrentIndex(0)
         self.input_utterance.clear()
         self.input_scenario.clear()
@@ -481,6 +489,8 @@ class Tab2(QtWidgets.QWidget):
 
                 #清空、復原輸入欄
                 self.clearInput()
+                self.input_trans.setText(self.transcriber)
+                self.input_caseID.setText(self.caseID)
             else:   #沒輸入句子
                 self.msg_noInp.exec_()    #跳出提示視窗
                 self.input_utterance.setStyleSheet("border: 1px solid red;")
@@ -493,6 +503,8 @@ class Tab2(QtWidgets.QWidget):
 
             #清空、復原輸入欄
             self.clearInput()
+            self.input_trans.setText(self.transcriber)
+            self.input_caseID.setText(self.caseID)
 
         else:   #新增成人語句
             if self.input_utterance.toPlainText():  #檢查有輸入句子
@@ -522,6 +534,8 @@ class Tab2(QtWidgets.QWidget):
 
                 #清空、復原輸入欄
                 self.clearInput()
+                self.input_trans.setText(self.transcriber)
+                self.input_caseID.setText(self.caseID)
             else:   #沒輸入句子
                 self.msg_noInp.exec_()    #跳出提示視窗
                 self.input_utterance.setStyleSheet("border: 1px solid red;")
@@ -529,6 +543,8 @@ class Tab2(QtWidgets.QWidget):
     #刪除列
     def _deleteRow(self):
         self.clearInput()  #清空、復原輸入欄
+        self.input_trans.setText(self.transcriber)
+        self.input_caseID.setText(self.caseID)
 
         indexes = self.tableWidget.tableWidget.selectionModel().selectedRows()
         if indexes:
@@ -635,6 +651,8 @@ class Tab2(QtWidgets.QWidget):
         
         self.clearTab()    #清空、復原頁面
         self.clearInput()  #清空、復原輸入欄
+        self.input_trans.setText(self.transcriber)
+        self.input_caseID.setText(self.caseID)
 
         if date:    #有傳date(選定日期查詢)
             if not self.caseData:     #如果尚未用個案編號查詢(tab0匯入)
@@ -699,6 +717,8 @@ class Tab2(QtWidgets.QWidget):
     #儲存至資料庫
     def _save(self, isBtn):
         self.clearInput()  #清空、復原輸入欄
+        self.input_trans.setText(self.transcriber)
+        self.input_caseID.setText(self.caseID)
 
         if self.caseData:   #已查詢個案
             if self.input_trans.text():
