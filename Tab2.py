@@ -314,6 +314,7 @@ class Tab2(QtWidgets.QWidget):
         self.childNum = 0   #兒童編號
         self.adultNums = {}  #成人編號
         self.childUtterance = []    #兒童語句
+        self.currentDate = None     #目前記錄日期
 
         #視窗
         #未輸入語句
@@ -456,12 +457,20 @@ class Tab2(QtWidgets.QWidget):
                         self.cmb_role.addItem(self.searchContent[i]["ID"][0])  #在編號選單新增新的編號
                     else:   #已有的成人編號
                         self.adultNums[self.searchContent[i]["ID"][0]] += 1
+                else:
+                    font = utterance.font()
+                    font.setBold(True)
+                    utterance.setFont(font)
                 role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
                 self.tableWidget.tableWidget.setItem(rowCount, 0, role)
                 self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
             elif self.searchContent[i]["role"] == "child":    #兒童
                 if self.searchContent[i]["ID"]:   #如果有編號(有採計)
                     self.childNum += 1
+                else:
+                    font = utterance.font()
+                    font.setBold(True)
+                    utterance.setFont(font)
                 role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
                 self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                 self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
@@ -622,7 +631,7 @@ class Tab2(QtWidgets.QWidget):
         for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
             data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
             #adult
-            if self.tableWidget.tableWidget.item(rowIndex, 0) and not self.tableWidget.tableWidget.item(rowIndex, 0).text() == '':
+            if self.tableWidget.tableWidget.item(rowIndex, 1) and not self.tableWidget.tableWidget.item(rowIndex, 1).text() == '':
                 data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
                 data['role'] = 'adult'
                 if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
@@ -631,7 +640,7 @@ class Tab2(QtWidgets.QWidget):
                     self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
                 data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
             #child
-            elif self.tableWidget.tableWidget.item(rowIndex, 3) and not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':
+            elif self.tableWidget.tableWidget.item(rowIndex, 4) and not self.tableWidget.tableWidget.item(rowIndex, 4).text() == '':
                 data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
                 data['role'] = 'child'
                 if self.tableWidget.tableWidget.item(rowIndex, 4) == None:
@@ -661,7 +670,7 @@ class Tab2(QtWidgets.QWidget):
         if self.isEdit():   #儲存變動內容視窗
             action = self.msg_notSave.exec_()
             if action == QtWidgets.QMessageBox.Yes:
-                self._save()
+                self._save(False)
             elif action == QtWidgets.QMessageBox.Cancel:
                 return
         
@@ -681,6 +690,7 @@ class Tab2(QtWidgets.QWidget):
                 self.cmb_caseDates.addItem(self.caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
             #將cmb_caseDates設定到tab0匯入的日期
             self.cmb_caseDates.setCurrentIndex(self.cmb_caseDates.findText(date.strftime("%Y-%m-%d %H:%M")))
+            self.currentDate = date
             
             self.dateSearchData = database.DBapi.findContent(caseID, date)
             self.searchContent = self.dateSearchData['FirstContent']
@@ -704,6 +714,7 @@ class Tab2(QtWidgets.QWidget):
                 self.lbl_searchResult.setText("此個案總共有" + len(self.caseData["dates"]).__str__() + "筆資料")
                 for i in range(len(self.caseData['dates'])):
                     self.cmb_caseDates.addItem(self.caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
+                self.currentDate = self.caseData['dates'][0]
 
                 #顯示出查詢結果
                 self.lbl_searchResult.setVisible(True)
@@ -743,7 +754,7 @@ class Tab2(QtWidgets.QWidget):
                 for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
                     data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
                     #adult
-                    if self.tableWidget.tableWidget.item(rowIndex, 0) and not self.tableWidget.tableWidget.item(rowIndex, 0).text() == '':
+                    if self.tableWidget.tableWidget.item(rowIndex, 1) and not self.tableWidget.tableWidget.item(rowIndex, 1).text() == '':
                         data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
                         data['role'] = 'adult'
                         if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
@@ -752,8 +763,8 @@ class Tab2(QtWidgets.QWidget):
                             self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
                         data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
                     #child
-                    elif self.tableWidget.tableWidget.item(rowIndex, 3) and not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':
-                        if not self.tableWidget.tableWidget.item(rowIndex, 3).text().__len__() == 0:    #採計語句
+                    elif self.tableWidget.tableWidget.item(rowIndex, 4) and not self.tableWidget.tableWidget.item(rowIndex, 4).text() == '':
+                        if not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':    #採計語句
                             validUtterance += 1
                         totalUtterance += 1
                         data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
@@ -772,8 +783,7 @@ class Tab2(QtWidgets.QWidget):
                         data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                     content.append(data)
                 
-                database.DBapi.updateContent(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()], 
-                                                self.transcriber, content, totalUtterance, validUtterance)
+                database.DBapi.updateContent(self.caseID, self.currentDate, self.transcriber, content, totalUtterance, validUtterance)
                 utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
                 self.emitUtterNum(utteranceNum)
                 self.searchContent = content    #更新內容
