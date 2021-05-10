@@ -321,6 +321,11 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noInp.setWindowTitle("提示")
         self.msg_noInp.setText("請輸入語句！")
         self.msg_noInp.setIcon(QtWidgets.QMessageBox.Question)
+        #未輸入語境
+        self.msg_noScenario = QtWidgets.QMessageBox()
+        self.msg_noScenario.setWindowTitle('提示')
+        self.msg_noScenario.setText('請輸入語境！')
+        self.msg_noScenario.setIcon(QtWidgets.QMessageBox.Question)
         #成人、兒童同時輸入
         self.msg_multiInp = QtWidgets.QMessageBox()
         self.msg_multiInp.setWindowTitle("提示")
@@ -434,6 +439,7 @@ class Tab2(QtWidgets.QWidget):
         self.input_caseID.setStyleSheet("border: 1px solid initial;")
         self.input_trans.setStyleSheet("border: 1px solid initial;")
         self.input_utterance.setStyleSheet("border: 1px solid initial;")
+        self.input_scenario.setStyleSheet("border: 1px solid initial;")
 
     #set table
     def _setTable(self):
@@ -496,15 +502,19 @@ class Tab2(QtWidgets.QWidget):
                 self.input_utterance.setStyleSheet("border: 1px solid red;")
 
         elif self.cmb_role.currentText() == "語境":   #只新增語境
-            rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
-            self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
-            self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
-            self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
+            if self.input_scenario.toPlainText():
+                rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
+                self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
+                self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
+                self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
-            #清空、復原輸入欄
-            self.clearInput()
-            self.input_trans.setText(self.transcriber)
-            self.input_caseID.setText(self.caseID)
+                #清空、復原輸入欄
+                self.clearInput()
+                self.input_trans.setText(self.transcriber)
+                self.input_caseID.setText(self.caseID)
+            else:
+                self.msg_noScenario.exec_()
+                self.input_scenario.setStyleSheet("border: 1px solid red;")
 
         else:   #新增成人語句
             if self.input_utterance.toPlainText():  #檢查有輸入句子
@@ -716,10 +726,6 @@ class Tab2(QtWidgets.QWidget):
 
     #儲存至資料庫
     def _save(self, isBtn):
-        self.clearInput()  #清空、復原輸入欄
-        self.input_trans.setText(self.transcriber)
-        self.input_caseID.setText(self.caseID)
-
         if self.caseData:   #已查詢個案
             if self.input_trans.text():
                 content = []    #對話內容
@@ -776,6 +782,10 @@ class Tab2(QtWidgets.QWidget):
             self.input_caseID.setText(self.caseID.__str__())    #自動回復caseID
         else:   #尚未查詢個案
             self.msg_saveNotSearch.exec_()
+        
+        self.clearInput()  #清空、復原輸入欄
+        self.input_trans.setText(self.transcriber)
+        self.input_caseID.setText(self.caseID)
           
     #產生彙整表並儲存至資料庫
     def _generateAndSave(self):
