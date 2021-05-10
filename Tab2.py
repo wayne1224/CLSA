@@ -728,6 +728,7 @@ class Tab2(QtWidgets.QWidget):
     def _save(self, isBtn):
         if self.caseData:   #已查詢個案
             if self.input_trans.text():
+                self.transcriber = self.input_trans.text()
                 content = []    #對話內容
                 childUtterance = [] #兒童語句
                 totalUtterance = 0  #總語句數
@@ -764,7 +765,7 @@ class Tab2(QtWidgets.QWidget):
                     content.append(data)
                 
                 database.DBapi.updateContent(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()], 
-                                                self.input_trans.text(), content, totalUtterance, validUtterance)
+                                                self.transcriber, content, totalUtterance, validUtterance)
                 utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
                 self.emitUtterNum(utteranceNum)
                 self.searchContent = content    #更新內容
