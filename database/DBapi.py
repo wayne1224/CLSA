@@ -258,7 +258,7 @@ recording = {"SLP" : "123" , "date" : date}
 
 connectDB()
 
-print(findDoc("" , "001" , ""))
+# print(findDocs("" , "001" , ""))
 # print(deleteDoc("165497489"))
 
 # print(findChildData("001"))
