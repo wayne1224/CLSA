@@ -36,6 +36,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
         self.tab2.procKey.connect(self.tab1.getCaseIDAndDate)
         self.tab2.procKey.connect(self.tab3.getDoc)
+        self.tab2.procEdit.connect(self.tab3.setEdit)
 
         #搜尋頁面傳document給其他Tab
         self.tab0.procDoc.connect(self.tab1.getDoc)
@@ -52,7 +53,8 @@ class MainTabWidget(QtWidgets.QTabWidget):
     def checkTab2Changed(self):
         if self.currentIndex() == 3 and self.tab2.isEdit():
             informBox = QtWidgets.QMessageBox.warning(self, '警告','轉錄表已變動 請重新產生彙整表', QtWidgets.QMessageBox.Ok)
-
+        elif self.currentIndex() == 3 and self.tab3.getEdit():
+            informBox = QtWidgets.QMessageBox.warning(self, '警告','轉錄表已變動 請重新產生彙整表', QtWidgets.QMessageBox.Ok)
 
 
 

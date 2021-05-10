@@ -2,6 +2,7 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
 import database.DBapi
+import DistilTag
 
 class LoadingScreen(QtWidgets.QWidget):
     def __init__(self):
@@ -64,6 +65,9 @@ class MainWindow(QtWidgets.QMainWindow):
         elif key == 3:
             self.load.stopAnimation()
             informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
+        elif key == 4:
+            self.load.stopAnimation()
+            informBox = QtWidgets.QMessageBox.warning(self, '警告','資料不足無法彙整', QtWidgets.QMessageBox.Ok)
             
 
     def closeEvent(self, event):
@@ -86,6 +90,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 event.ignore()
 
 if __name__ == '__main__':
+    try:
+        DistilTag.download()
+    except:
+        print('模型下載失敗')
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()

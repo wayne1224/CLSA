@@ -21,7 +21,7 @@ class Tab2(QtWidgets.QWidget):
     procChildUtter = QtCore.pyqtSignal(list)
     procKey = QtCore.pyqtSignal(dict)
     procMain = QtCore.pyqtSignal(int)
-    proEdit = QtCore.pyqtSignal()
+    procEdit = QtCore.pyqtSignal()
 
     def __init__(self):
         super(Tab2, self).__init__()
@@ -796,7 +796,7 @@ class Tab2(QtWidgets.QWidget):
 
                 if isBtn:
                     self.msg_save.exec_()
-                    self.proEdit.emit()
+                    self.procEdit.emit()
             else:   #未輸入轉錄者
                 self.msg_noTrans.exec_()
                 self.input_trans.setStyleSheet("border: 1px solid red;")
