@@ -646,11 +646,15 @@ class Tab2(QtWidgets.QWidget):
                     self.tableWidget.tableWidget.setItem(rowIndex, 2, item)
                 data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
             content.append(data)
-
-        if content.__len__() == 0:
-            content = None
         
-        return not self.searchContent == content
+        if self.searchContent == None and content == []:
+            return False
+        elif self.searchContent == [] and content == None:
+            return False
+        elif self.searchContent == content:
+            return False
+        else:
+            return True
 
     #查詢紀錄
     def _searchCase(self, caseID, date):
@@ -680,8 +684,6 @@ class Tab2(QtWidgets.QWidget):
             
             self.dateSearchData = database.DBapi.findContent(caseID, date)
             self.searchContent = self.dateSearchData['FirstContent']
-            if self.searchContent.__len__() == 0:
-                self.searchContent = None
             if self.dateSearchData['transcriber']:  #轉錄者
                 self.transcriber = self.dateSearchData['transcriber']
 
@@ -775,8 +777,6 @@ class Tab2(QtWidgets.QWidget):
                 utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
                 self.emitUtterNum(utteranceNum)
                 self.searchContent = content    #更新內容
-                if self.searchContent.__len__() == 0:
-                    self.searchContent = None
                 self.childUtterance = childUtterance
 
                 self.clearInput()  #清空、復原輸入欄
