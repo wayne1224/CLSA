@@ -621,7 +621,8 @@ class Tab2(QtWidgets.QWidget):
         content = []
         for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
             data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
-            if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
+            #adult
+            if self.tableWidget.tableWidget.item(rowIndex, 0) and not self.tableWidget.tableWidget.item(rowIndex, 0).text() == '':
                 data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
                 data['role'] = 'adult'
                 if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
@@ -629,7 +630,8 @@ class Tab2(QtWidgets.QWidget):
                     item.setText('')
                     self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
                 data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
-            elif self.tableWidget.tableWidget.item(rowIndex, 3):    #child
+            #child
+            elif self.tableWidget.tableWidget.item(rowIndex, 3) and not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':
                 data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
                 data['role'] = 'child'
                 if self.tableWidget.tableWidget.item(rowIndex, 4) == None:
@@ -738,7 +740,8 @@ class Tab2(QtWidgets.QWidget):
 
                 for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
                     data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
-                    if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
+                    #adult
+                    if self.tableWidget.tableWidget.item(rowIndex, 0) and not self.tableWidget.tableWidget.item(rowIndex, 0).text() == '':
                         data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
                         data['role'] = 'adult'
                         if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
@@ -746,7 +749,8 @@ class Tab2(QtWidgets.QWidget):
                             item.setText('')
                             self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
                         data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
-                    elif self.tableWidget.tableWidget.item(rowIndex, 3):    #child
+                    #child
+                    elif self.tableWidget.tableWidget.item(rowIndex, 3) and not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':
                         if not self.tableWidget.tableWidget.item(rowIndex, 3).text().__len__() == 0:    #採計語句
                             validUtterance += 1
                         totalUtterance += 1
