@@ -313,7 +313,7 @@ class Tab2(QtWidgets.QWidget):
         self.transcriber = ''
         self.childNum = 0   #兒童編號
         self.adultNums = {}  #成人編號
-        self.childUtternace = []    #兒童語句
+        self.childUtterance = []    #兒童語句
 
         #視窗
         #未輸入語句
@@ -790,15 +790,23 @@ class Tab2(QtWidgets.QWidget):
           
     #產生彙整表並儲存至資料庫
     def _generateAndSave(self):
-        self._save(False)
+        if self.caseData:   #已查詢個案
+            if self.input_trans.text():
+                self._save(False)
 
-        #傳signal給MainWindow
-        self.procMain.emit(2)
-        
-        key = {'caseID':self.caseID,
-                'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()] }
-        self.emitKey(key)
-        self.emitChildUtter(self.childUtterance)
+                #傳signal給MainWindow
+                self.procMain.emit(2)
+                
+                key = {'caseID':self.caseID,
+                        'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()] }
+                self.emitKey(key)
+                self.emitChildUtter(self.childUtterance)
+            else:   #未輸入轉錄者
+                self.msg_noTrans.exec_()
+                self.input_trans.setStyleSheet("border: 1px solid red;")
+            self.input_caseID.setText(self.caseID.__str__())    #自動回復caseID
+        else:   #尚未查詢個案
+            self.msg_saveNotSearch.exec_()
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
