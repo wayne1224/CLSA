@@ -446,6 +446,8 @@ class AnalysisTab(QtWidgets.QWidget):
             #顯示在Table
             self.setContent(Analysis)
 
+            #傳signal給MainWindow
+            self.procMain.emit(3)
         except Exception as e:
             #傳signal給MainWindow
             self.procMain.emit(3)
