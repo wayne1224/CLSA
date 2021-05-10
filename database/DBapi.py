@@ -21,26 +21,22 @@ def connectDB():
         return False
 
 # 查詢頁 api
-def findDoc(SLP , caseID , name): # argument = SLP , caseID , name, if find return pymongo object , else return False
-    try:
-        db = CLSA
-        query = dict()
+def findDocs(SLP , caseID , name): # argument = SLP , caseID , name, if find return pymongo object , else return False
+    db = CLSA
+    query = dict()
 
-        if SLP:
-            query["recording.SLP"] = SLP
-        if caseID:
-            query["childData.caseID"] = caseID
-        if name:
-            query["childData.name"] = name
+    if SLP:
+        query["recording.SLP"] = SLP
+    if caseID:
+        query["childData.caseID"] = caseID
+    if name:
+        query["childData.name"] = name
 
-        if db.count_documents(query) == 0:
-            print("can not find this document")
-            return False
+    if db.count_documents(query) == 0:
+        print("can not find this document")
+        return False
 
-        return db.find(query)
-
-    except Exception as e:
-        print(e)
+    return db.find(query)
 
 def deleteDoc(objID): # argument = caseID , date , if delete successfully return True , else return False
     db = CLSA
@@ -68,7 +64,7 @@ def findChildData(caseID): # argument = caseID , if find return childData (type 
 
     return db.find_one(query)["childData"]
 
-def findChildDataAndRecording(caseID , date): # argument = caseID , date , if find return {"childData" : childData , "recording" : recording} , else return False
+def findDoc(caseID , date): # argument = caseID , date , if find return document , else return False
     db = CLSA
     query = dict()
     query["childData.caseID"] = caseID
@@ -78,13 +74,7 @@ def findChildDataAndRecording(caseID , date): # argument = caseID , date , if fi
         print("can not find this doc")
         return False
 
-    data = db.find_one(query)
-
-    result = dict()
-    result["childData"] = data["childData"]
-    result["recording"] = data["recording"]
-
-    return result
+    return db.find_one(query)
 
 def upsertChildDataAndRecording(childData , recording): # argument = childData , recording , if upsert successfully return [("insert" or "update") , True]
     db = CLSA
@@ -268,7 +258,7 @@ recording = {"SLP" : "123" , "date" : date}
 
 connectDB()
 
-# print(findDoc("" , "001" , ""))
+# print(findDocs("" , "001" , ""))
 # print(deleteDoc("165497489"))
 
 # print(findChildData("001"))

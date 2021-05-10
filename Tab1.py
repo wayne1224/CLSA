@@ -675,7 +675,7 @@ class Myform(QtWidgets.QWidget):
     #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
     @QtCore.pyqtSlot(dict)
     def getCaseIDAndDate(self, CaseIDAndDate) :
-        Doc = database.DBapi.findChildDataAndRecording(CaseIDAndDate['caseID'], CaseIDAndDate['date'])
+        Doc = database.DBapi.findDoc(CaseIDAndDate['caseID'], CaseIDAndDate['date'])
         self.getDoc(Doc)
         self.saveForm = self.returnTab1Data()
 
@@ -1011,6 +1011,8 @@ class Myform(QtWidgets.QWidget):
         #設定childData
         if Doc == None:
             return
+        self.label.setText(str(Doc['transcription']['totalUtterance']))
+        self.label_4.setText(str(Doc['transcription']['validUtterance']))
         self.lineEdit_2.setText(Doc['childData']['caseID'])
         self.lineEdit_3.setText(Doc['childData']['name'])
         if Doc['childData']['gender'] == '男':
@@ -1075,6 +1077,7 @@ class Myform(QtWidgets.QWidget):
     #清空所有資料
     @QtCore.pyqtSlot()
     def clearContent(self) :
+        
         self.lineEdit.setText('')
         self.lineEdit_2.setText('')
         self.lineEdit_3.setText('')
@@ -1104,6 +1107,8 @@ class Myform(QtWidgets.QWidget):
         self.plainTextEdit.setPlainText('')
         self.plainTextEdit_2.setPlainText('')
         self.dateEdit.setDate(QtCore.QDate(2000, 1, 1))
+        self.label.setText('')
+        self.label_4.setText('')
         self.saveForm =self.returnTab1Data()
 
 if __name__ == "__main__":
