@@ -325,7 +325,9 @@ class AnalysisTab(QtWidgets.QWidget):
         self.thread.start()
 
     def analyze_and_setContent(self,utterance):
-        if utterance == None:
+        if not utterance:
+            #傳signal給MainWindow
+            self.procMain.emit(3)
             return 
         try:
             utterance = list(sorted(utterance, key = len, reverse = True))
@@ -444,9 +446,9 @@ class AnalysisTab(QtWidgets.QWidget):
             #顯示在Table
             self.setContent(Analysis)
 
+        except Exception as e:
             #傳signal給MainWindow
             self.procMain.emit(3)
-        except Exception as e:
             print(e)
 
     def getTTR(self,a):
