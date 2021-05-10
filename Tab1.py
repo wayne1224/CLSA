@@ -1011,6 +1011,8 @@ class Myform(QtWidgets.QWidget):
         #設定childData
         if Doc == None:
             return
+        self.label.setText(Doc['transcription']['totalUtterance'])
+        self.label_4.setText(Doc['transcription']['validUtterance'])
         self.lineEdit_2.setText(Doc['childData']['caseID'])
         self.lineEdit_3.setText(Doc['childData']['name'])
         if Doc['childData']['gender'] == '男':
@@ -1075,6 +1077,7 @@ class Myform(QtWidgets.QWidget):
     #清空所有資料
     @QtCore.pyqtSlot()
     def clearContent(self) :
+        
         self.lineEdit.setText('')
         self.lineEdit_2.setText('')
         self.lineEdit_3.setText('')
@@ -1104,6 +1107,8 @@ class Myform(QtWidgets.QWidget):
         self.plainTextEdit.setPlainText('')
         self.plainTextEdit_2.setPlainText('')
         self.dateEdit.setDate(QtCore.QDate(2000, 1, 1))
+        self.label.setText('')
+        self.label_4.setText('')
         self.saveForm =self.returnTab1Data()
 
 if __name__ == "__main__":
