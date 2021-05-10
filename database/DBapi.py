@@ -6,17 +6,18 @@ import calendar
 # connect to datebase
 def connectDB():
     global CLSA  
-    
+    client = pymongo.MongoClient()
+
     try:
         host = "mongodb+srv://wayne1224:wayne1224@sandbox.qjd2q.mongodb.net/myFirstDatabase?authSource=admin&replicaSet=atlas-bu8995-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true"
-        client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000 , ssl = True) # Timeout 10s
+        client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000) # Timeout 10s
         db = client["Test"] # choose database
         CLSA = db["CLSA"] # choose collection
-        # client.server_info()
+        client.server_info()
         return True
 
-    except pymongo.errors.ServerSelectionTimeoutError as err:
-        print(err)
+    except Exception as e:
+        print(e)
         client.close()
         return False
 
