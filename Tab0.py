@@ -127,7 +127,7 @@ class SearchTab(QtWidgets.QWidget):
 
     def _search(self):
         self.procFind.emit()
-        cursor = database.DBapi.findDoc(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
+        cursor = database.DBapi.findDocs(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
 
         # self.tableWidget.clear()
         while self.tableWidget.rowCount() > 0:
