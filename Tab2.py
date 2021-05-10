@@ -678,6 +678,8 @@ class Tab2(QtWidgets.QWidget):
             
             self.dateSearchData = database.DBapi.findContent(caseID, date)
             self.searchContent = self.dateSearchData['FirstContent']
+            if self.searchContent.__len__() == 0:
+                self.searchContent = None
             if self.dateSearchData['transcriber']:  #轉錄者
                 self.transcriber = self.dateSearchData['transcriber']
 
