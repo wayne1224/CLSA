@@ -68,7 +68,7 @@ def findChildData(caseID): # argument = caseID , if find return childData (type 
 
     return db.find_one(query)["childData"]
 
-def findChildDataAndRecording(caseID , date): # argument = caseID , date , if find return {"childData" : childData , "recording" : recording} , else return False
+def findDoc(caseID , date): # argument = caseID , date , if find return document , else return False
     db = CLSA
     query = dict()
     query["childData.caseID"] = caseID
@@ -78,13 +78,7 @@ def findChildDataAndRecording(caseID , date): # argument = caseID , date , if fi
         print("can not find this doc")
         return False
 
-    data = db.find_one(query)
-
-    result = dict()
-    result["childData"] = data["childData"]
-    result["recording"] = data["recording"]
-
-    return result
+    return db.find_one(query)
 
 def upsertChildDataAndRecording(childData , recording): # argument = childData , recording , if upsert successfully return [("insert" or "update") , True]
     db = CLSA
