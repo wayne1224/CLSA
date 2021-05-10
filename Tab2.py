@@ -21,6 +21,7 @@ class Tab2(QtWidgets.QWidget):
     procChildUtter = QtCore.pyqtSignal(list)
     procKey = QtCore.pyqtSignal(dict)
     procMain = QtCore.pyqtSignal(int)
+    proEdit = QtCore.pyqtSignal()
 
     def __init__(self):
         super(Tab2, self).__init__()
@@ -670,7 +671,7 @@ class Tab2(QtWidgets.QWidget):
         if self.isEdit():   #儲存變動內容視窗
             action = self.msg_notSave.exec_()
             if action == QtWidgets.QMessageBox.Yes:
-                self._save(False)
+                self._save(True)
             elif action == QtWidgets.QMessageBox.Cancel:
                 return
         
@@ -795,6 +796,7 @@ class Tab2(QtWidgets.QWidget):
 
                 if isBtn:
                     self.msg_save.exec_()
+                    self.proEdit.emit()
             else:   #未輸入轉錄者
                 self.msg_noTrans.exec_()
                 self.input_trans.setStyleSheet("border: 1px solid red;")
