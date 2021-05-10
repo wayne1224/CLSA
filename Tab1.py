@@ -1011,8 +1011,8 @@ class Myform(QtWidgets.QWidget):
         #設定childData
         if Doc == None:
             return
-        self.label.setText(Doc['transcription']['totalUtterance'])
-        self.label_4.setText(Doc['transcription']['validUtterance'])
+        self.label.setText(str(Doc['transcription']['totalUtterance']))
+        self.label_4.setText(str(Doc['transcription']['validUtterance']))
         self.lineEdit_2.setText(Doc['childData']['caseID'])
         self.lineEdit_3.setText(Doc['childData']['name'])
         if Doc['childData']['gender'] == '男':
