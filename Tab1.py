@@ -675,7 +675,7 @@ class Myform(QtWidgets.QWidget):
     #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
     @QtCore.pyqtSlot(dict)
     def getCaseIDAndDate(self, CaseIDAndDate) :
-        Doc = database.DBapi.findChildDataAndRecording(CaseIDAndDate['caseID'], CaseIDAndDate['date'])
+        Doc = database.DBapi.findDoc(CaseIDAndDate['caseID'], CaseIDAndDate['date'])
         self.getDoc(Doc)
         self.saveForm = self.returnTab1Data()
 
