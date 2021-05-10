@@ -313,7 +313,7 @@ class Tab2(QtWidgets.QWidget):
         self.transcriber = ''
         self.childNum = 0   #兒童編號
         self.adultNums = {}  #成人編號
-        self.childUtternace = []    #兒童語句
+        self.childUtterance = []    #兒童語句
 
         #視窗
         #未輸入語句
@@ -621,7 +621,8 @@ class Tab2(QtWidgets.QWidget):
         content = []
         for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
             data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
-            if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
+            #adult
+            if self.tableWidget.tableWidget.item(rowIndex, 0) and not self.tableWidget.tableWidget.item(rowIndex, 0).text() == '':
                 data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
                 data['role'] = 'adult'
                 if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
@@ -629,7 +630,8 @@ class Tab2(QtWidgets.QWidget):
                     item.setText('')
                     self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
                 data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
-            elif self.tableWidget.tableWidget.item(rowIndex, 3):    #child
+            #child
+            elif self.tableWidget.tableWidget.item(rowIndex, 3) and not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':
                 data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
                 data['role'] = 'child'
                 if self.tableWidget.tableWidget.item(rowIndex, 4) == None:
@@ -644,11 +646,15 @@ class Tab2(QtWidgets.QWidget):
                     self.tableWidget.tableWidget.setItem(rowIndex, 2, item)
                 data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
             content.append(data)
-
-        if content.__len__() == 0:
-            content = None
         
-        return not self.searchContent == content
+        if self.searchContent == None and content == []:
+            return False
+        elif self.searchContent == [] and content == None:
+            return False
+        elif self.searchContent == content:
+            return False
+        else:
+            return True
 
     #查詢紀錄
     def _searchCase(self, caseID, date):
@@ -678,8 +684,6 @@ class Tab2(QtWidgets.QWidget):
             
             self.dateSearchData = database.DBapi.findContent(caseID, date)
             self.searchContent = self.dateSearchData['FirstContent']
-            if self.searchContent.__len__() == 0:
-                self.searchContent = None
             if self.dateSearchData['transcriber']:  #轉錄者
                 self.transcriber = self.dateSearchData['transcriber']
 
@@ -738,7 +742,8 @@ class Tab2(QtWidgets.QWidget):
 
                 for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
                     data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
-                    if self.tableWidget.tableWidget.item(rowIndex, 0):  #adult
+                    #adult
+                    if self.tableWidget.tableWidget.item(rowIndex, 0) and not self.tableWidget.tableWidget.item(rowIndex, 0).text() == '':
                         data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
                         data['role'] = 'adult'
                         if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
@@ -746,7 +751,8 @@ class Tab2(QtWidgets.QWidget):
                             item.setText('')
                             self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
                         data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
-                    elif self.tableWidget.tableWidget.item(rowIndex, 3):    #child
+                    #child
+                    elif self.tableWidget.tableWidget.item(rowIndex, 3) and not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':
                         if not self.tableWidget.tableWidget.item(rowIndex, 3).text().__len__() == 0:    #採計語句
                             validUtterance += 1
                         totalUtterance += 1
@@ -771,8 +777,6 @@ class Tab2(QtWidgets.QWidget):
                 utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
                 self.emitUtterNum(utteranceNum)
                 self.searchContent = content    #更新內容
-                if self.searchContent.__len__() == 0:
-                    self.searchContent = None
                 self.childUtterance = childUtterance
 
                 self.clearInput()  #清空、復原輸入欄
@@ -790,15 +794,23 @@ class Tab2(QtWidgets.QWidget):
           
     #產生彙整表並儲存至資料庫
     def _generateAndSave(self):
-        self._save(False)
+        if self.caseData:   #已查詢個案
+            if self.input_trans.text():
+                self._save(False)
 
-        #傳signal給MainWindow
-        self.procMain.emit(2)
-        
-        key = {'caseID':self.caseID,
-                'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()] }
-        self.emitKey(key)
-        self.emitChildUtter(self.childUtterance)
+                #傳signal給MainWindow
+                self.procMain.emit(2)
+                
+                key = {'caseID':self.caseID,
+                        'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()] }
+                self.emitKey(key)
+                self.emitChildUtter(self.childUtterance)
+            else:   #未輸入轉錄者
+                self.msg_noTrans.exec_()
+                self.input_trans.setStyleSheet("border: 1px solid red;")
+            self.input_caseID.setText(self.caseID.__str__())    #自動回復caseID
+        else:   #尚未查詢個案
+            self.msg_saveNotSearch.exec_()
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
