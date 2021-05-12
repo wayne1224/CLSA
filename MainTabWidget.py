@@ -51,9 +51,8 @@ class MainTabWidget(QtWidgets.QTabWidget):
 
 
     def checkTab2Changed(self):
-        if self.currentIndex() == 3 and self.tab2.isEdit():
-            informBox = QtWidgets.QMessageBox.warning(self, '警告','轉錄表已變動 請重新產生彙整表', QtWidgets.QMessageBox.Ok)
-        elif self.currentIndex() == 3 and self.tab3.getEdit():
+        if ((self.currentIndex() == 3 and self.tab2.isEdit()) or (self.currentIndex() == 3 and self.tab3.getEdit())):
+            self.tab3.clearContent()
             informBox = QtWidgets.QMessageBox.warning(self, '警告','轉錄表已變動 請重新產生彙整表', QtWidgets.QMessageBox.Ok)
 
 
