@@ -21,7 +21,6 @@ class Worker(QtCore.QObject):
 
     def run(self):
         self.func()
-        
         self.finished.emit()
 
 

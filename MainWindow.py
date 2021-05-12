@@ -21,7 +21,6 @@ class LoadingScreen(QtWidgets.QWidget):
         layout.addWidget(self.label1)
         layout.addWidget(self.label)
     
-
     def startAnimation(self):
         self.show()
         self.movie.start()
@@ -29,6 +28,20 @@ class LoadingScreen(QtWidgets.QWidget):
     def stopAnimation(self):
         self.movie.stop()
         self.close()
+
+class Worker(QtCore.QObject):
+    finished = QtCore.pyqtSignal()
+    progress = QtCore.pyqtSignal(int)
+
+    def __init__(self, fn):
+        super(Worker, self).__init__()
+        self.func = fn
+
+    def run(self):
+        if not self.func():
+            print("Database Failed")
+            quit()  
+        self.finished.emit()
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -40,7 +53,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.mainTab)
 
         #模糊特效
-        self.blur_effect = QtWidgets.QGraphicsBlurEffect()
+        #self.blur_effect = QtWidgets.QGraphicsBlurEffect()
         #self.setGraphicsEffect(self.blur_effect)
 
         #signal
@@ -52,9 +65,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load = LoadingScreen()
         
         # 資料庫連接失敗 直接關閉程式
-        if not database.DBapi.connectDB():
-            print("f")
-            quit()          
+        self.thread = QtCore.QThread()
+        self.worker = Worker(database.DBapi.connectDB)
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.thread.start()
+                
 
     @QtCore.pyqtSlot(int)
     def getAction(self, key):
