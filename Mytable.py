@@ -8,14 +8,9 @@ import csv
 from functools import partial
 
 class Mytable(QtWidgets.QWidget):
-    #keyboard key
-    #keyPressed = QtCore.pyqtSignal(QtCore.QEvent) #enter
     def __init__(self):
         super(Mytable, self).__init__()
-        #QtWidgets.QWidget.__init__(self)
-        #trigger keyboard key
-        #self.keyPressed.connect(self.on_key) #enter
-
+        
         layout = QtWidgets.QGridLayout()
         self.setLayout(layout)
         
@@ -96,16 +91,6 @@ class Mytable(QtWidgets.QWidget):
         item.setText(_translate("MainWindow", "兒童編號"))
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "兒童語句"))
-
-    '''
-    def keyPressEvent(self, event):
-        super(Mytable, self).keyPressEvent(event)
-        self.keyPressed.emit(event) 
-
-    def on_key(self, event):
-        if event.key() == QtCore.Qt.Key_Return:
-            self._addRow()
-    '''
     
     def _addRow(self):
         #if self._checkAdult():
@@ -241,18 +226,22 @@ class Mytable(QtWidgets.QWidget):
 
         #設成人編號的Dict
         idDict = {}
-        for i in range(self.tableWidget.rowCount()):
-            if self.tableWidget.item(i,0) and self.tableWidget.item(i,0).text() != '':
-                pattern = r"[a-zA-Z]+"   
-                key = re.search(pattern,self.tableWidget.item(i,0).text()).group()
-                if key in idDict:
-                    idDict[key] += 1
-                else:
-                    idDict[key] = 1
-                key += str(idDict[key])
-                item = QtWidgets.QTableWidgetItem()
-                item.setText(key)
-                self.tableWidget.setItem(i,0,item)
+        try:
+            for i in range(self.tableWidget.rowCount()):
+                if self.tableWidget.item(i,0) and self.tableWidget.item(i,0).text() != '':
+                    pattern = r"[a-zA-Z]+"   
+                    key = re.search(pattern,self.tableWidget.item(i,0).text()).group()
+                    if key in idDict:
+                        idDict[key] += 1
+                    else:
+                        idDict[key] = 1
+                    key += str(idDict[key])
+                    item = QtWidgets.QTableWidgetItem()
+                    item.setText(key)
+                    self.tableWidget.setItem(i,0,item)
+        except Exception as e:
+            print(e)
+            informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
 
         #初始化ComboBox
         if y == 0:
