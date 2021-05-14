@@ -912,7 +912,6 @@ class Myform(QtWidgets.QWidget):
             error +=1
             self.plainTextEdit.setStyleSheet("border: 1px solid red;")
         else :
-            print(self.plainTextEdit.toPlainText())
             self.plainTextEdit.setStyleSheet("border: 1px solid initial;")
 
         #需要引導協助
@@ -1016,8 +1015,9 @@ class Myform(QtWidgets.QWidget):
                 'others' : self.plainTextEdit.toPlainText(),
                 'situation' : self.plainTextEdit_2.toPlainText()
             }
-            if database.DBapi.upsertChildDataAndRecording(childData, recording) :
-                upsert = database.DBapi.upsertChildDataAndRecording(childData, recording)
+            upsert = database.DBapi.upsertChildDataAndRecording(childData, recording)
+            if upsert[1]:
+                print(upsert[0])
                 if upsert[0] == 'update' :
                     self.saveForm = self.returnTab1Data()
                     win32api.MessageBox(0, '更新成功', '提示')
