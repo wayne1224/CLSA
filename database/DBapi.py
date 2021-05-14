@@ -257,7 +257,7 @@ birthday = datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")
 childData = {"caseID" : "001" , "name" : "1234" , "gender" : "male" , "birthday" : birthday}
 recording = {"SLP" : "123" , "date" : date}
 
-connectDB()
+# connectDB()
 
 # print(findDocs("" , "001" , ""))
 # print(deleteDoc("165497489"))

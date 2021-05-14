@@ -21,7 +21,6 @@ class Worker(QtCore.QObject):
 
     def run(self):
         self.func()
-        
         self.finished.emit()
 
 
@@ -29,11 +28,6 @@ class AnalysisTab(QtWidgets.QWidget):
     procMain = QtCore.pyqtSignal(int)
     def __init__(self):
         super(AnalysisTab, self).__init__()
-
-        try:
-            DistilTag.download()
-        except:
-            pass
         # self.setObjectName("Form")
         # self.resize(1080, 868)
         layout = QtWidgets.QVBoxLayout()
@@ -280,8 +274,18 @@ class AnalysisTab(QtWidgets.QWidget):
                 item = QtWidgets.QTableWidgetItem()
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.tableWidget.setItem(i, 3, item)
+        
+        #Class內變數宣告
         self.caseID = ''
         self.date = None
+        self.isEdit = False
+
+    @QtCore.pyqtSlot()
+    def setEdit(self):
+        self.isEdit = True
+    
+    def getEdit(self):
+        return self.isEdit
 
     @QtCore.pyqtSlot(dict)
     def getDoc(self, key):
@@ -325,9 +329,10 @@ class AnalysisTab(QtWidgets.QWidget):
         self.thread.start()
 
     def analyze_and_setContent(self,utterance):
+        self.isEdit = False
         if not utterance:
             #傳signal給MainWindow
-            self.procMain.emit(3)
+            self.procMain.emit(4)
             return 
         try:
             utterance = list(sorted(utterance, key = len, reverse = True))
@@ -448,9 +453,10 @@ class AnalysisTab(QtWidgets.QWidget):
 
             #傳signal給MainWindow
             self.procMain.emit(3)
+
         except Exception as e:
             #傳signal給MainWindow
-            self.procMain.emit(3)
+            self.procMain.emit(4)
             print(e)
 
     def getTTR(self,a):
