@@ -363,11 +363,7 @@ class Myform(QtWidgets.QWidget):
         font.setPointSize(14)
         self.radioButton_12.setFont(font)
         self.radioButton_12.setObjectName("radioButton_12")
-        self.horizontalLayout_20.addWidget(self.radioButton_12)
-        self.group = QtWidgets.QButtonGroup()
-        self.group.addButton(self.radioButton_10)
-        self.group.addButton(self.radioButton_11)
-        self.group.addButton(self.radioButton_12)         
+        self.horizontalLayout_20.addWidget(self.radioButton_12)  
         self.horizontalLayoutWidget_21 = QtWidgets.QWidget(self)
         self.horizontalLayoutWidget_21.setGeometry(QtCore.QRect(251, 671, 1011, 56))
         self.horizontalLayoutWidget_21.setObjectName("horizontalLayoutWidget_21")
@@ -641,21 +637,23 @@ class Myform(QtWidgets.QWidget):
         self.retranslateUi()
         self.saveForm = self.returnTab1Data()
 
+        #用來清除radioButton
+        self.group = QtWidgets.QButtonGroup()
+        self.group.addButton(self.radioButton_10)
+        self.group.addButton(self.radioButton_11)
+        self.group.addButton(self.radioButton_12)       
         self.group_2 = QtWidgets.QButtonGroup()
         self.group_2.addButton(self.radioButton_14)
         self.group_2.addButton(self.radioButton_15)
         self.group_2.addButton(self.radioButton_16)
         self.group_2.addButton(self.radioButton_17)
-
         self.group_3 = QtWidgets.QButtonGroup()
         self.group_3.addButton(self.radioButton)        
         self.group_3.addButton(self.radioButton_2)
-        
         self.group_4 = QtWidgets.QButtonGroup()
         self.group_4.addButton(self.radioButton_7)
         self.group_4.addButton(self.radioButton_8)
         self.group_4.addButton(self.radioButton_9)
-
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -1019,9 +1017,13 @@ class Myform(QtWidgets.QWidget):
                 'situation' : self.plainTextEdit_2.toPlainText()
             }
             if database.DBapi.upsertChildDataAndRecording(childData, recording) :
-                print(up)
-                self.saveForm = self.returnTab1Data()
-                win32api.MessageBox(0, '新增成功', '提示')
+                upsert = database.DBapi.upsertChildDataAndRecording(childData, recording)
+                if upsert[0] == 'update' :
+                    self.saveForm = self.returnTab1Data()
+                    win32api.MessageBox(0, '更新成功', '提示')
+                if upsert[0] == 'insert' :
+                    self.saveForm = self.returnTab1Data()
+                    win32api.MessageBox(0, '新增成功', '提示')
                 caseIDandDate = {'caseID':self.lineEdit_2.text(), 'date':DateTimeRecordDate}
                 self.procStart.emit(caseIDandDate)
                 return True
