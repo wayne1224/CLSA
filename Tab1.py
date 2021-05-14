@@ -364,6 +364,10 @@ class Myform(QtWidgets.QWidget):
         self.radioButton_12.setFont(font)
         self.radioButton_12.setObjectName("radioButton_12")
         self.horizontalLayout_20.addWidget(self.radioButton_12)
+        self.group = QtWidgets.QButtonGroup()
+        self.group.addButton(self.radioButton_10)
+        self.group.addButton(self.radioButton_11)
+        self.group.addButton(self.radioButton_12)         
         self.horizontalLayoutWidget_21 = QtWidgets.QWidget(self)
         self.horizontalLayoutWidget_21.setGeometry(QtCore.QRect(251, 671, 1011, 56))
         self.horizontalLayoutWidget_21.setObjectName("horizontalLayoutWidget_21")
@@ -625,9 +629,33 @@ class Myform(QtWidgets.QWidget):
         self.pushButton.setFont(font)
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.save)
+        self.pushButton_3 = QtWidgets.QPushButton(self)
+        self.pushButton_3.setGeometry(QtCore.QRect(890, 750, 161, 41))
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(14)
+        self.pushButton_3.setFont(font)
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.clicked.connect(self.clearContent)
 
         self.retranslateUi()
         self.saveForm = self.returnTab1Data()
+
+        self.group_2 = QtWidgets.QButtonGroup()
+        self.group_2.addButton(self.radioButton_14)
+        self.group_2.addButton(self.radioButton_15)
+        self.group_2.addButton(self.radioButton_16)
+        self.group_2.addButton(self.radioButton_17)
+
+        self.group_3 = QtWidgets.QButtonGroup()
+        self.group_3.addButton(self.radioButton)        
+        self.group_3.addButton(self.radioButton_2)
+        
+        self.group_4 = QtWidgets.QButtonGroup()
+        self.group_4.addButton(self.radioButton_7)
+        self.group_4.addButton(self.radioButton_8)
+        self.group_4.addButton(self.radioButton_9)
+
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -671,6 +699,8 @@ class Myform(QtWidgets.QWidget):
         self.label_26.setText(_translate("self", "參與人員:"))
         self.label_17.setText(_translate("self", "記錄方式:"))
         self.label_28.setText(_translate("self", "錄影／錄音檔名"))
+        self.pushButton_3.setText(_translate("self", "清空資料"))
+
 
     #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
     @QtCore.pyqtSlot(dict)
@@ -686,6 +716,7 @@ class Myform(QtWidgets.QWidget):
             return
         self.label.setText(str(utterance['totalUtterance']))
         self.label_4.setText(str(utterance['validUtterance']))
+        self.saveForm = self.returnTab1Data()
 
     #傳個案編號到Tab2
     @QtCore.pyqtSlot() 
@@ -988,6 +1019,7 @@ class Myform(QtWidgets.QWidget):
                 'situation' : self.plainTextEdit_2.toPlainText()
             }
             if database.DBapi.upsertChildDataAndRecording(childData, recording) :
+                print(up)
                 self.saveForm = self.returnTab1Data()
                 win32api.MessageBox(0, '新增成功', '提示')
                 caseIDandDate = {'caseID':self.lineEdit_2.text(), 'date':DateTimeRecordDate}
@@ -1092,18 +1124,33 @@ class Myform(QtWidgets.QWidget):
         self.checkBox_5.setChecked(False)
         self.checkBox_6.setChecked(False)
         self.checkBox_7.setChecked(False)
+
+        self.group_3.setExclusive(False)
         self.radioButton.setChecked(False)
         self.radioButton_2.setChecked(False)
+        self.group_3.setExclusive(False)
+
+        self.group_4.setExclusive(False)
         self.radioButton_7.setChecked(False)
         self.radioButton_8.setChecked(False)
         self.radioButton_9.setChecked(False)
+        self.group_4.setExclusive(False)
+
+
+        self.group.setExclusive(False)
         self.radioButton_10.setChecked(False)
         self.radioButton_11.setChecked(False)
         self.radioButton_12.setChecked(False)
+        self.group.setExclusive(True)
+        
+        self.group_2.setExclusive(False)
         self.radioButton_14.setChecked(False)
         self.radioButton_15.setChecked(False)
         self.radioButton_16.setChecked(False)
         self.radioButton_17.setChecked(False)
+        self.group_2.setExclusive(True)
+
+
         self.plainTextEdit.setPlainText('')
         self.plainTextEdit_2.setPlainText('')
         self.dateEdit.setDate(QtCore.QDate(2000, 1, 1))
