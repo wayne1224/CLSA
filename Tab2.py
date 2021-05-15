@@ -69,23 +69,25 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_caseID.setFont(font)
         self.lbl_caseID.setObjectName("lbl_caseID")
         self.horizontalLayout.addWidget(self.lbl_caseID)
-        self.input_caseID = QtWidgets.QLineEdit()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.lbl_impCaseID = QtWidgets.QLabel()
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.input_caseID.sizePolicy().hasHeightForWidth())
-        self.input_caseID.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.lbl_impCaseID.sizePolicy().hasHeightForWidth())
+        self.lbl_impCaseID.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.input_caseID.setFont(font)
-        self.input_caseID.setObjectName("input_caseID")
-        self.horizontalLayout.addWidget(self.input_caseID)
+        self.lbl_impCaseID.setFont(font)
+        self.lbl_impCaseID.setObjectName("lbl_impCaseID")
+        self.horizontalLayout.addWidget(self.lbl_impCaseID)
+        '''
         self.btn_searchCase = QtWidgets.QPushButton()
         font = QtGui.QFont()
         font.setPointSize(12)
         self.btn_searchCase.setFont(font)
         self.btn_searchCase.setObjectName("btn_searchCase")
         self.horizontalLayout.addWidget(self.btn_searchCase)
+        '''
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem2)
         layout.addLayout(self.horizontalLayout)
@@ -105,31 +107,29 @@ class Tab2(QtWidgets.QWidget):
         self.verticalLayout_6 = QtWidgets.QVBoxLayout()
         self.verticalLayout_6.setSpacing(5)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.lbl_searchResult = QtWidgets.QLabel()
+        self.lbl_caseDate = QtWidgets.QLabel()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_searchResult.sizePolicy().hasHeightForWidth())
-        self.lbl_searchResult.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.lbl_caseDate.sizePolicy().hasHeightForWidth())
+        self.lbl_caseDate.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.lbl_searchResult.setFont(font)
-        self.lbl_searchResult.setText("")
-        self.lbl_searchResult.setObjectName("lbl_searchResult")
-        self.lbl_searchResult.setVisible(False)
-        self.verticalLayout_6.addWidget(self.lbl_searchResult)
+        self.lbl_caseDate.setFont(font)
+        self.lbl_caseDate.setText("")
+        self.lbl_caseDate.setObjectName("lbl_caseDate")
+        self.lbl_caseDate.setVisible(False)
+        self.lbl_caseDate.setAlignment(QtCore.Qt.AlignCenter)
+        self.verticalLayout_6.addWidget(self.lbl_caseDate)
+        '''
         self.cmb_caseDates = QtWidgets.QComboBox()
-        #sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        #sizePolicy.setHorizontalStretch(0)
-        #sizePolicy.setVerticalStretch(0)
-        #sizePolicy.setHeightForWidth(self.cmb_caseDates.sizePolicy().hasHeightForWidth())
-        #self.cmb_caseDates.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(12)
         self.cmb_caseDates.setFont(font)
         self.cmb_caseDates.setObjectName("cmb_caseDates")
         self.cmb_caseDates.setVisible(False)
         self.verticalLayout_6.addWidget(self.cmb_caseDates)
+        '''
         self.verticalLayout_3.addLayout(self.verticalLayout_6)
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()
         self.verticalLayout_5.setSpacing(2)
@@ -184,14 +184,14 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_utterance.setFont(font)
         self.lbl_utterance.setObjectName("lbl_utterance")
         self.horizontalLayout_5.addWidget(self.lbl_utterance)
-        self.input_utterance = QtWidgets.QTextEdit()
+        self.input_utterance = QtWidgets.QLineEdit()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.input_utterance.sizePolicy().hasHeightForWidth())
         self.input_utterance.setSizePolicy(sizePolicy)
-        self.input_utterance.setMinimumSize(QtCore.QSize(400, 40))
-        self.input_utterance.setMaximumSize(QtCore.QSize(400, 40))
+        self.input_utterance.setMinimumSize(QtCore.QSize(400, 0))
+        self.input_utterance.setMaximumSize(QtCore.QSize(400, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.input_utterance.setFont(font)
@@ -211,14 +211,14 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_scenario.setFont(font)
         self.lbl_scenario.setObjectName("lbl_scenario")
         self.horizontalLayout_6.addWidget(self.lbl_scenario)
-        self.input_scenario = QtWidgets.QTextEdit()
+        self.input_scenario = QtWidgets.QLineEdit()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.input_scenario.sizePolicy().hasHeightForWidth())
         self.input_scenario.setSizePolicy(sizePolicy)
-        self.input_scenario.setMinimumSize(QtCore.QSize(400, 40))
-        self.input_scenario.setMaximumSize(QtCore.QSize(400, 40))
+        self.input_scenario.setMinimumSize(QtCore.QSize(400, 0))
+        self.input_scenario.setMaximumSize(QtCore.QSize(400, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.input_scenario.setFont(font)
@@ -265,6 +265,14 @@ class Tab2(QtWidgets.QWidget):
         self.btn_delete.setFont(font)
         self.btn_delete.setObjectName("btn_delete")
         self.horizontalLayout_4.addWidget(self.btn_delete)
+        self.btn_clearTab = QtWidgets.QPushButton()
+        self.btn_clearTab.setMinimumSize(QtCore.QSize(0, 51))
+        self.btn_clearTab.setMaximumSize(QtCore.QSize(16777215, 51))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.btn_clearTab.setFont(font)
+        self.btn_clearTab.setObjectName("btn_clearTab")
+        self.horizontalLayout_4.addWidget(self.btn_clearTab)
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem4)
         self.btn_save = QtWidgets.QPushButton()
@@ -300,22 +308,25 @@ class Tab2(QtWidgets.QWidget):
 
         #事件
         self.btn_add.clicked.connect(self._addRow)
+        self.input_utterance.returnPressed.connect(self._addRow)
+        self.input_scenario.returnPressed.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
+        self.btn_clearTab.clicked.connect(self.clearAll)
         self.btn_save.clicked.connect(partial(self._save, True))
-        self.btn_searchCase.clicked.connect(self._searchID)
+        #self.btn_searchCase.clicked.connect(self._searchID)
         self.btn_generateAndSave.clicked.connect(self._generateAndSave)
-        self.cmb_caseDates.activated.connect(self._searchCmbDate)
+        #self.cmb_caseDates.activated.connect(self._searchCmbDate)
         self.tableWidget.tableWidget.cellClicked.connect(self._syncTableCmbRoleNum)
 
         self.caseID = ''    #個案編號
         self.caseData = {}  #用caseID查的個案紀錄{'dates', 'transcriber', 'FirstContent'}
         self.dateSearchData = {}    #用日期查的個案紀錄{'transcriber', 'FirstContent'}
-        self.searchContent = None   #查詢到的個案紀錄內容
+        self.content = None   #查詢到的個案紀錄內容
         self.transcriber = ''
         self.childNum = 0   #兒童編號
         self.adultNums = {}  #成人編號
         self.childUtterance = []    #兒童語句
-        self.currentDate = None     #目前記錄日期
+        self.caseDate = None     #目前記錄日期
 
         #視窗
         #未輸入語句
@@ -370,7 +381,7 @@ class Tab2(QtWidgets.QWidget):
         _translate = QtCore.QCoreApplication.translate
         self.lbl_trans.setText(_translate("", "轉錄者："))
         self.lbl_caseID.setText(_translate("", "個案編號："))
-        self.btn_searchCase.setText(_translate("", "查詢"))
+        #self.btn_searchCase.setText(_translate("", "查詢"))
         self.lbl_rolePrompt.setText(_translate("", "成人請自行輸入編號 ex: A, B"))
         self.lbl_role.setText(_translate("", "編號："))
         self.cmb_role.setItemText(0, _translate("Form", "兒童"))
@@ -379,7 +390,8 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_scenario.setText(_translate("", "語境："))
         self.cbx_notCount.setText(_translate("", "此句不採計"))
         self.btn_add.setText(_translate("", "新增"))
-        self.btn_delete.setText(_translate("", "刪除"))
+        self.btn_delete.setText(_translate("", "刪除列"))
+        self.btn_clearTab.setText(_translate("", "全部清空"))
         self.btn_save.setText(_translate("", "儲存"))
         self.btn_generateAndSave.setText(_translate("", "產生彙整表並儲存"))
 
@@ -389,8 +401,8 @@ class Tab2(QtWidgets.QWidget):
         self.clearTab()    #清空、復原頁面
         self.clearInput()  #清空、復原輸入欄
         self.caseData = {}  #重設caseData
-        self.searchContent = None   #重設searchContent
-        self._searchCase(doc['childData']['caseID'], doc['recording']['date'])
+        self.content = []   #重設content
+        self._importCase(doc['childData']['caseID'], doc['recording']['date'])
 
     #從Tab1接收個案編號和日期
     @QtCore.pyqtSlot(dict)
@@ -398,8 +410,8 @@ class Tab2(QtWidgets.QWidget):
         self.clearTab()    #清空、復原頁面
         self.clearInput()  #清空、復原輸入欄
         self.caseData = {}  #重設caseData
-        self.searchContent = None   #重設searchContent
-        self._searchCase(caseIDAndDate['caseID'], caseIDAndDate['date'])
+        self.content = []   #重設content
+        self._importCase(caseIDAndDate['caseID'], caseIDAndDate['date'])
 
     #傳總語句數和有效語句數給Tab1
     @QtCore.pyqtSlot()
@@ -420,7 +432,6 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def clearTab(self):
         #清空、復原Tab2
-        self.cmb_caseDates.clear()
         self.cmb_role.clear()
         self.cmb_role.addItem("兒童")
         self.cmb_role.addItem("語境")
@@ -433,57 +444,71 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def clearInput(self):
         self.input_trans.clear()
-        self.input_caseID.clear()
+        self.lbl_impCaseID.clear()
         self.cmb_role.setCurrentIndex(0)
         self.input_utterance.clear()
         self.input_scenario.clear()
         self.cbx_notCount.setChecked(False)
-        self.input_caseID.setStyleSheet("border: 1px solid initial;")
         self.input_trans.setStyleSheet("border: 1px solid initial;")
         self.input_utterance.setStyleSheet("border: 1px solid initial;")
         self.input_scenario.setStyleSheet("border: 1px solid initial;")
 
+    #全部清空
+    def clearAll(self):
+        self.clearTab()
+        self.clearInput()
+        self.caseID = ''
+        self.caseData = {}
+        self.dateSearchData = {}
+        self.content = None
+        self.transcriber = ''
+        self.childNum = 0
+        self.adultNums = {}
+        self.childUtterance = []
+        self.caseDate = None
+        self.lbl_caseDate.setVisible(False)
+
     #set table
     def _setTable(self):
-        for i in range(len(self.searchContent)):
+        for i in range(len(self.content)):
             rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
             self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
-            utterance = QtWidgets.QTableWidgetItem(self.searchContent[i]["utterance"])
-            scenario = QtWidgets.QTableWidgetItem(self.searchContent[i]["scenario"])
+            utterance = QtWidgets.QTableWidgetItem(self.content[i]["utterance"])
+            scenario = QtWidgets.QTableWidgetItem(self.content[i]["scenario"])
 
-            if self.searchContent[i]["role"] == "adult":  #成人
-                if self.searchContent[i]["ID"]:   #如果有編號(有採計)
-                    if not self.searchContent[i]["ID"][0] in self.adultNums:  #新的成人編號
-                        self.adultNums[self.searchContent[i]["ID"][0]] = 1
-                        self.cmb_role.addItem(self.searchContent[i]["ID"][0])  #在編號選單新增新的編號
+            if self.content[i]["role"] == "adult":  #成人
+                if self.content[i]["ID"]:   #如果有編號(有採計)
+                    if not self.content[i]["ID"][0] in self.adultNums:  #新的成人編號
+                        self.adultNums[self.content[i]["ID"][0]] = 1
+                        self.cmb_role.addItem(self.content[i]["ID"][0])  #在編號選單新增新的編號
                     else:   #已有的成人編號
-                        self.adultNums[self.searchContent[i]["ID"][0]] += 1
+                        self.adultNums[self.content[i]["ID"][0]] += 1
                 else:
                     font = utterance.font()
                     font.setBold(True)
                     utterance.setFont(font)
-                role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
+                role = QtWidgets.QTableWidgetItem(self.content[i]["ID"])
                 self.tableWidget.tableWidget.setItem(rowCount, 0, role)
                 self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
-            elif self.searchContent[i]["role"] == "child":    #兒童
-                if self.searchContent[i]["ID"]:   #如果有編號(有採計)
+            elif self.content[i]["role"] == "child":    #兒童
+                if self.content[i]["ID"]:   #如果有編號(有採計)
                     self.childNum += 1
                 else:
                     font = utterance.font()
                     font.setBold(True)
                     utterance.setFont(font)
-                role = QtWidgets.QTableWidgetItem(self.searchContent[i]["ID"])
+                role = QtWidgets.QTableWidgetItem(self.content[i]["ID"])
                 self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                 self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
             self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
 
     #新增列
     def _addRow(self):
-        utterance = QtWidgets.QTableWidgetItem(self.input_utterance.toPlainText())
-        scenario = QtWidgets.QTableWidgetItem(self.input_scenario.toPlainText())
+        utterance = QtWidgets.QTableWidgetItem(self.input_utterance.text())
+        scenario = QtWidgets.QTableWidgetItem(self.input_scenario.text())
 
         if self.cmb_role.currentText() == "兒童":   #新增兒童語句
-            if self.input_utterance.toPlainText():  #檢查有輸入句子
+            if self.input_utterance.text():  #檢查有輸入句子
                 rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
                 self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
 
@@ -506,13 +531,17 @@ class Tab2(QtWidgets.QWidget):
                 #清空、復原輸入欄
                 self.clearInput()
                 self.input_trans.setText(self.transcriber)
-                self.input_caseID.setText(self.caseID)
-            else:   #沒輸入句子
+                self.lbl_impCaseID.setText(self.caseID)
+            else:   #沒輸入語句
+                #先復原輸入欄
+                self.input_trans.setStyleSheet("border: 1px solid initial;")
+                self.input_utterance.setStyleSheet("border: 1px solid initial;")
+                self.input_scenario.setStyleSheet("border: 1px solid initial;")
                 self.msg_noInp.exec_()    #跳出提示視窗
                 self.input_utterance.setStyleSheet("border: 1px solid red;")
 
         elif self.cmb_role.currentText() == "語境":   #只新增語境
-            if self.input_scenario.toPlainText():
+            if self.input_scenario.text():
                 rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
                 self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
                 self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
@@ -521,13 +550,17 @@ class Tab2(QtWidgets.QWidget):
                 #清空、復原輸入欄
                 self.clearInput()
                 self.input_trans.setText(self.transcriber)
-                self.input_caseID.setText(self.caseID)
-            else:
-                self.msg_noScenario.exec_()
+                self.lbl_impCaseID.setText(self.caseID)
+            else:   #沒輸入語境
+                #先復原輸入欄
+                self.input_trans.setStyleSheet("border: 1px solid initial;")
+                self.input_utterance.setStyleSheet("border: 1px solid initial;")
+                self.input_scenario.setStyleSheet("border: 1px solid initial;")
+                self.msg_noScenario.exec_() #跳出提示視窗
                 self.input_scenario.setStyleSheet("border: 1px solid red;")
 
         else:   #新增成人語句
-            if self.input_utterance.toPlainText():  #檢查有輸入句子
+            if self.input_utterance.text():  #檢查有輸入句子
                 rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
                 self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
 
@@ -555,8 +588,12 @@ class Tab2(QtWidgets.QWidget):
                 #清空、復原輸入欄
                 self.clearInput()
                 self.input_trans.setText(self.transcriber)
-                self.input_caseID.setText(self.caseID)
-            else:   #沒輸入句子
+                self.lbl_impCaseID.setText(self.caseID)
+            else:   #沒輸入語句
+                #先復原輸入欄
+                self.input_trans.setStyleSheet("border: 1px solid initial;")
+                self.input_utterance.setStyleSheet("border: 1px solid initial;")
+                self.input_scenario.setStyleSheet("border: 1px solid initial;")
                 self.msg_noInp.exec_()    #跳出提示視窗
                 self.input_utterance.setStyleSheet("border: 1px solid red;")
 
@@ -564,7 +601,7 @@ class Tab2(QtWidgets.QWidget):
     def _deleteRow(self):
         self.clearInput()  #清空、復原輸入欄
         self.input_trans.setText(self.transcriber)
-        self.input_caseID.setText(self.caseID)
+        self.lbl_impCaseID.setText(self.caseID)
 
         indexes = self.tableWidget.tableWidget.selectionModel().selectedRows()
         if indexes:
@@ -657,17 +694,17 @@ class Tab2(QtWidgets.QWidget):
                 data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
             content.append(data)
         
-        if self.searchContent == None and content == []:
+        if self.content == None and content == []:
             return False
-        elif self.searchContent == [] and content == None:
+        elif self.content == [] and content == None:
             return False
-        elif self.searchContent == content:
+        elif self.content == content:
             return False
         else:
             return True
 
-    #查詢紀錄
-    def _searchCase(self, caseID, date):
+    #匯入個案紀錄
+    def _importCase(self, caseID, date):
         if self.isEdit():   #儲存變動內容視窗
             action = self.msg_notSave.exec_()
             if action == QtWidgets.QMessageBox.Yes:
@@ -677,12 +714,29 @@ class Tab2(QtWidgets.QWidget):
         
         self.clearTab()    #清空、復原頁面
         self.clearInput()  #清空、復原輸入欄
-        self.input_trans.setText(self.transcriber)
-        self.input_caseID.setText(self.caseID)
 
+        self.caseData = database.DBapi.findContent(caseID, date)
+        if self.caseData['transcriber']:
+            self.transcriber = self.caseData['transcriber']
+            self.input_trans.setText(self.transcriber)
+        self.caseID = caseID
+        self.lbl_impCaseID.setText(self.caseID)
+        self.caseDate = date
+        self.lbl_caseDate.setText('此個案收錄日期為\n' + date.strftime("%Y-%m-%d %H:%M"))
+        self.lbl_caseDate.setVisible(True)
+        self.content = self.caseData['FirstContent']
+        #set table
+        if self.content:
+            self._setTable()
+
+        #傳key給tab3
+        key = {'caseID':caseID, 'date':date}
+        self.emitKey(key)
+
+        '''
         if date:    #有傳date(選定日期查詢)
             if not self.caseData:     #如果尚未用個案編號查詢(tab0匯入)
-                self.input_caseID.setText(caseID)
+                self.lbl_impCaseID.setText(caseID)
                 self._searchID()  #設定好這個caseID的資料
                 self.clearTab()    #避免table重複設定語句
 
@@ -691,10 +745,10 @@ class Tab2(QtWidgets.QWidget):
                 self.cmb_caseDates.addItem(self.caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
             #將cmb_caseDates設定到tab0匯入的日期
             self.cmb_caseDates.setCurrentIndex(self.cmb_caseDates.findText(date.strftime("%Y-%m-%d %H:%M")))
-            self.currentDate = date
+            self.caseDate = date
             
             self.dateSearchData = database.DBapi.findContent(caseID, date)
-            self.searchContent = self.dateSearchData['FirstContent']
+            self.content = self.dateSearchData['FirstContent']
             if self.dateSearchData['transcriber']:  #轉錄者
                 self.transcriber = self.dateSearchData['transcriber']
 
@@ -704,21 +758,21 @@ class Tab2(QtWidgets.QWidget):
 
         else:       #沒傳date(只用caseID查詢)
             self.caseData = database.DBapi.findDateAndFirstContent(caseID)
-            self.lbl_searchResult.setVisible(False)
+            self.lbl_caseDate.setVisible(False)
             self.cmb_caseDates.setVisible(False)
 
             if self.caseData:
                 if self.caseData['transcriber']:
                     self.transcriber = self.caseData['transcriber']
-                self.searchContent = self.caseData['FirstContent']
+                self.content = self.caseData['FirstContent']
 
-                self.lbl_searchResult.setText("此個案總共有" + len(self.caseData["dates"]).__str__() + "筆資料")
+                self.lbl_caseDate.setText("此個案總共有" + len(self.caseData["dates"]).__str__() + "筆資料")
                 for i in range(len(self.caseData['dates'])):
                     self.cmb_caseDates.addItem(self.caseData['dates'][i].strftime("%Y-%m-%d %H:%M"))
-                self.currentDate = self.caseData['dates'][0]
+                self.caseDate = self.caseData['dates'][0]
 
                 #顯示出查詢結果
-                self.lbl_searchResult.setVisible(True)
+                self.lbl_caseDate.setVisible(True)
                 self.cmb_caseDates.setVisible(True)
 
                 #傳key給tab3
@@ -726,21 +780,22 @@ class Tab2(QtWidgets.QWidget):
                 self.emitKey(key)
             else:   #查無此個案
                 self.msg_noCaseData.exec_()
-                self.searchContent = None
+                self.content = None
 
         #set table
-        if self.searchContent:
+        if self.content:
             self._setTable()
         self.input_trans.setText(self.transcriber)
 
     #用個案編號查詢
     def _searchID(self):
-        self.caseID = self.input_caseID.text()
-        self._searchCase(self.caseID, None)
+        self.caseID = self.lbl_impCaseID.text()
+        self._importCase(self.caseID, None)
 
     #用cmb_caseDates選擇日期查詢紀錄
     def _searchCmbDate(self):
-        self._searchCase(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()])
+        self._importCase(self.caseID, self.caseData["dates"][self.cmb_caseDates.currentIndex()])
+    '''
 
     #儲存至資料庫
     def _save(self, isBtn):
@@ -784,15 +839,15 @@ class Tab2(QtWidgets.QWidget):
                         data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                     content.append(data)
                 
-                database.DBapi.updateContent(self.caseID, self.currentDate, self.transcriber, content, totalUtterance, validUtterance)
+                database.DBapi.updateContent(self.caseID, self.caseDate, self.transcriber, content, totalUtterance, validUtterance)
                 utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
                 self.emitUtterNum(utteranceNum)
-                self.searchContent = content    #更新內容
+                self.content = content    #更新內容
                 self.childUtterance = childUtterance
 
                 self.clearInput()  #清空、復原輸入欄
                 self.input_trans.setText(self.transcriber)
-                self.input_caseID.setText(self.caseID)
+                self.lbl_impCaseID.setText(self.caseID)
 
                 if isBtn:
                     self.msg_save.exec_()
@@ -800,7 +855,7 @@ class Tab2(QtWidgets.QWidget):
             else:   #未輸入轉錄者
                 self.msg_noTrans.exec_()
                 self.input_trans.setStyleSheet("border: 1px solid red;")
-            self.input_caseID.setText(self.caseID.__str__())    #自動回復caseID
+            self.lbl_impCaseID.setText(self.caseID.__str__())    #自動回復caseID
         else:   #尚未查詢個案
             self.msg_saveNotSearch.exec_()
           
@@ -814,13 +869,13 @@ class Tab2(QtWidgets.QWidget):
                 self.procMain.emit(2)
                 
                 key = {'caseID':self.caseID,
-                        'date':self.caseData["dates"][self.cmb_caseDates.currentIndex()] }
+                        'date':self.caseDate }
                 self.emitKey(key)
                 self.emitChildUtter(self.childUtterance)
             else:   #未輸入轉錄者
                 self.msg_noTrans.exec_()
                 self.input_trans.setStyleSheet("border: 1px solid red;")
-            self.input_caseID.setText(self.caseID.__str__())    #自動回復caseID
+            self.lbl_impCaseID.setText(self.caseID.__str__())    #自動回復caseID
         else:   #尚未查詢個案
             self.msg_saveNotSearch.exec_()
 
