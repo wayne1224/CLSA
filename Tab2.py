@@ -439,6 +439,7 @@ class Tab2(QtWidgets.QWidget):
         self.childNum = 0       #兒童編號
         self.adultNums = {}     #成人編號
         self.transcriber = ''
+        self.lbl_caseDate.setVisible(False)
 
     #復原輸入欄
     @QtCore.pyqtSlot()
@@ -466,7 +467,6 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = {}
         self.childUtterance = []
         self.caseDate = None
-        self.lbl_caseDate.setVisible(False)
 
     #set table
     def _setTable(self):
