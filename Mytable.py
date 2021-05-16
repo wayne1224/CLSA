@@ -242,6 +242,8 @@ class Mytable(QtWidgets.QWidget):
         except Exception as e:
             print(e)
             informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
+            item = QtWidgets.QTableWidgetItem('')
+            self.tableWidget.setItem(i,0,item)
 
         #初始化ComboBox
         if y == 0:
