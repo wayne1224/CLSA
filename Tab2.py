@@ -22,6 +22,7 @@ class Tab2(QtWidgets.QWidget):
     procKey = QtCore.pyqtSignal(dict)
     procMain = QtCore.pyqtSignal(int)
     procEdit = QtCore.pyqtSignal()
+    procClear = QtCore.pyqtSignal()
 
     def __init__(self):
         super(Tab2, self).__init__()
@@ -466,6 +467,9 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = {}
         self.childUtterance = []
         self.caseDate = None
+
+        #讓Tab3也clear
+        self.procClear.emit()
 
     #set table
     def _setTable(self):
