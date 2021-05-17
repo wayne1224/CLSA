@@ -668,6 +668,12 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = checkAdultNum  #更新成人編號
         self.childNum = checkChildNum   #更新兒童編號
 
+        self.cmb_role.clear()
+        self.cmb_role.addItem("兒童")
+        self.cmb_role.addItem("語境")
+        for i in checkAdultNum:
+            self.cmb_role.addItem(i)
+
     #檢查有無更改content
     def isEdit(self):
         content = []
