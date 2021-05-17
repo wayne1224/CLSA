@@ -403,19 +403,13 @@ class Tab2(QtWidgets.QWidget):
     #接收tab0接收查詢的資料
     @QtCore.pyqtSlot(dict)
     def getDoc(self, doc):
-        self.clearTab()    #清空、復原頁面
-        self.clearInput()  #清空、復原輸入欄
-        self.caseData = {}  #重設caseData
-        self.content = []   #重設content
+        self.clearAll()
         self._importCase(doc['childData']['caseID'], doc['recording']['date'])
 
     #從Tab1接收個案編號和日期
     @QtCore.pyqtSlot(dict)
     def setCaseRecord(self, caseIDAndDate):
-        self.clearTab()    #清空、復原頁面
-        self.clearInput()  #清空、復原輸入欄
-        self.caseData = {}  #重設caseData
-        self.content = []   #重設content
+        self.clearAll()
         self._importCase(caseIDAndDate['caseID'], caseIDAndDate['date'])
 
     #傳總語句數和有效語句數給Tab1
