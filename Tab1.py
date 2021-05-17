@@ -1145,13 +1145,13 @@ class Myform(QtWidgets.QWidget):
         self.group_3.setExclusive(False)
         self.radioButton.setChecked(False)
         self.radioButton_2.setChecked(False)
-        self.group_3.setExclusive(False)
+        self.group_3.setExclusive(True)
 
         self.group_4.setExclusive(False)
         self.radioButton_7.setChecked(False)
         self.radioButton_8.setChecked(False)
         self.radioButton_9.setChecked(False)
-        self.group_4.setExclusive(False)
+        self.group_4.setExclusive(True))
 
 
         self.group.setExclusive(False)
