@@ -30,7 +30,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
 
         #設定Tab Signal
         self.currentChanged.connect(self.checkTab2Changed)
-
+        self.currentChanged.connect(self.leaveTab1)
         self.tab1.procStart.connect(self.tab2.setCaseRecord)
         self.tab2.procUtterNum.connect(self.tab1.getUtterNum)
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
@@ -49,6 +49,10 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab0.procFind.connect(self.tab2.clearInput)
         self.tab0.procFind.connect(self.tab3.clearContent)
 
+    def leaveTab1(self) :
+        if (self.currentIndex() != 1) :
+            print('leaveTab1')
+            self.tab1.clearRedFrame()
 
     def checkTab2Changed(self):
         if ((self.currentIndex() == 3 and self.tab2.isEdit()) or (self.currentIndex() == 3 and self.tab3.getEdit())):

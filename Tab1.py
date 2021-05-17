@@ -818,6 +818,22 @@ class Myform(QtWidgets.QWidget):
         }
         return data
         
+    #清除紅框
+    def clearRedFrame (self) :
+        self.lineEdit.setStyleSheet("border: 1px solid initial;" )
+        self.lineEdit_2.setStyleSheet("border: 1px solid initial;" )
+        self.lineEdit_3.setStyleSheet("border: 1px solid initial;" )
+        self.horizontalLayoutWidget_5.setStyleSheet("border: 1px;")
+        self.lineEdit_7.setStyleSheet("border: 1px solid initial;")
+        self.lineEdit_11.setStyleSheet("border: 1px solid initial;")
+        self.horizontalLayoutWidget_8.setStyleSheet("border: 1px;")
+        self.horizontalLayoutWidget_19.setStyleSheet("border: 1px;")
+        self.lineEdit_10.setStyleSheet("border: 1px solid initial;")
+        self.lineEdit_12.setStyleSheet("border: 1px solid initial;")
+        self.lineEdit_14.setStyleSheet("border: 1px solid initial;")
+        self.plainTextEdit.setStyleSheet("border: 1px solid initial;")
+        self.horizontalLayoutWidget_16.setStyleSheet("border: 1px;")
+
     #儲存資料到資料庫 
     def save (self): 
         error = 0
@@ -887,8 +903,7 @@ class Myform(QtWidgets.QWidget):
             self.checkBox_4.setStyleSheet("border: 1px;")
             self.checkBox_5.setStyleSheet("border: 1px;")
             self.checkBox_6.setStyleSheet("border: 1px;")
-            self.checkBox_7.setStyleSheet("border: 1px;")
-            
+            self.checkBox_7.setStyleSheet("border: 1px;")    
         else :
             self.horizontalLayoutWidget_19.setStyleSheet("border: 1px;")
             self.lineEdit_10.setStyleSheet("border: 1px solid initial;")
