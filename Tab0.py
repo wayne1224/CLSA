@@ -81,20 +81,12 @@ class SearchTab(QtWidgets.QWidget):
         self.searchBtn.setFont(font)
         self.searchBtn.setObjectName("searchBtn")
         self.searchBtn.clicked.connect(self._search)
+        self.searchBtn.setToolTip('若輸入皆為空白，可查詢所有個案')
         self.horizontalLayout_4.addWidget(self.searchBtn)
         self.horizontalLayout_4.addItem(spacerItem)
 
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.horizontalLayout_5.addItem(spacerItem)
-        self.hintLabel = QtWidgets.QLabel()
-        self.hintLabel.setObjectName("hintLabel")
-        self.hintLabel.setFont(font)
-        self.horizontalLayout_5.addWidget(self.hintLabel)
-
         layout.addLayout(self.horizontalLayout_4)
-        layout.addLayout(self.horizontalLayout_5)
-
+        
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         layout.addItem(spacerItem)
 
@@ -211,7 +203,6 @@ class SearchTab(QtWidgets.QWidget):
         self.label.setText(_translate("Form", "收錄者："))
         self.label_2.setText(_translate("Form", "個案編號："))
         self.label_3.setText(_translate("Form", "個案姓名："))
-        self.hintLabel.setText(_translate("Form", "若輸入皆為空白，可查詢所有個案"))
         self.searchBtn.setText(_translate("Form", "    查詢    "))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("Form", "收錄者"))
