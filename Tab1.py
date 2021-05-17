@@ -1151,8 +1151,7 @@ class Myform(QtWidgets.QWidget):
         self.radioButton_7.setChecked(False)
         self.radioButton_8.setChecked(False)
         self.radioButton_9.setChecked(False)
-        self.group_4.setExclusive(True))
-
+        self.group_4.setExclusive(True)
 
         self.group.setExclusive(False)
         self.radioButton_10.setChecked(False)
@@ -1166,7 +1165,6 @@ class Myform(QtWidgets.QWidget):
         self.radioButton_16.setChecked(False)
         self.radioButton_17.setChecked(False)
         self.group_2.setExclusive(True)
-
 
         self.plainTextEdit.setPlainText('')
         self.plainTextEdit_2.setPlainText('')
