@@ -51,7 +51,6 @@ class MainTabWidget(QtWidgets.QTabWidget):
 
     def leaveTab1(self) :
         if (self.currentIndex() != 1) :
-            print('leaveTab1')
             self.tab1.clearRedFrame()
 
     def checkTab2Changed(self):
