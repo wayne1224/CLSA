@@ -266,8 +266,8 @@ class Tab2(QtWidgets.QWidget):
         self.btn_delete.setObjectName("btn_delete")
         self.horizontalLayout_4.addWidget(self.btn_delete)
         self.btn_clearTab = QtWidgets.QPushButton()
-        self.btn_clearTab.setMinimumSize(QtCore.QSize(0, 51))
-        self.btn_clearTab.setMaximumSize(QtCore.QSize(16777215, 51))
+        self.btn_clearTab.setMinimumSize(QtCore.QSize(115, 51))
+        self.btn_clearTab.setMaximumSize(QtCore.QSize(115, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.btn_clearTab.setFont(font)
@@ -289,8 +289,8 @@ class Tab2(QtWidgets.QWidget):
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout_4.addWidget(self.btn_save)
         self.btn_generateAndSave = QtWidgets.QPushButton()
-        self.btn_generateAndSave.setMinimumSize(QtCore.QSize(0, 51))
-        self.btn_generateAndSave.setMaximumSize(QtCore.QSize(16777215, 51))
+        self.btn_generateAndSave.setMinimumSize(QtCore.QSize(225, 51))
+        self.btn_generateAndSave.setMaximumSize(QtCore.QSize(225, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.btn_generateAndSave.setFont(font)
@@ -329,6 +329,11 @@ class Tab2(QtWidgets.QWidget):
         self.caseDate = None     #目前記錄日期
 
         #視窗
+        #編號不是輸入字母
+        self.msg_roleNotAlpha = QtWidgets.QMessageBox()
+        self.msg_roleNotAlpha.setWindowTitle("提示")
+        self.msg_roleNotAlpha.setText("編號只能輸入英文！")
+        self.msg_roleNotAlpha.setIcon(QtWidgets.QMessageBox.Warning)
         #未輸入語句
         self.msg_noInp = QtWidgets.QMessageBox()
         self.msg_noInp.setWindowTitle("提示")
@@ -532,6 +537,7 @@ class Tab2(QtWidgets.QWidget):
                 self.clearInput()
                 self.input_trans.setText(self.transcriber)
                 self.lbl_impCaseID.setText(self.caseID)
+                self.input_utterance.setFocus()     #focus到語句欄
             else:   #沒輸入語句
                 #先復原輸入欄
                 self.input_trans.setStyleSheet("border: 1px solid initial;")
@@ -551,6 +557,7 @@ class Tab2(QtWidgets.QWidget):
                 self.clearInput()
                 self.input_trans.setText(self.transcriber)
                 self.lbl_impCaseID.setText(self.caseID)
+                self.input_utterance.setFocus()     #focus到語句欄
             else:   #沒輸入語境
                 #先復原輸入欄
                 self.input_trans.setStyleSheet("border: 1px solid initial;")
@@ -560,42 +567,46 @@ class Tab2(QtWidgets.QWidget):
                 self.input_scenario.setStyleSheet("border: 1px solid red;")
 
         else:   #新增成人語句
-            if self.input_utterance.text():  #檢查有輸入句子
-                rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
-                self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
+            if self.cmb_role.currentText().encode( 'UTF-8' ).isalpha():
+                if self.input_utterance.text():  #檢查有輸入句子
+                    rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
+                    self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
 
-                if not self.cbx_notCount.isChecked():   #此句採計
-                    if not self.cmb_role.currentText() in self.adultNums:  #新的成人編號
-                        self.adultNums[self.cmb_role.currentText()] = 1
-                        self.cmb_role.addItem(self.cmb_role.currentText())  #在編號選單新增新的編號
-                    else:   #已有的成人編號
-                        self.adultNums[self.cmb_role.currentText()] += 1
-                    roleNum = self.cmb_role.currentText() + self.adultNums[self.cmb_role.currentText()].__str__()
-                    role = QtWidgets.QTableWidgetItem(roleNum)
-                    self.tableWidget.tableWidget.setItem(rowCount, 0, role)
-                    self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
-                else:   #不採計
-                    role = QtWidgets.QTableWidgetItem('')
-                    self.tableWidget.tableWidget.setItem(rowCount, 0, role)
-                    font = utterance.font()
-                    font.setBold(True)
-                    utterance.setFont(font)
-                    self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
+                    if not self.cbx_notCount.isChecked():   #此句採計
+                        if not self.cmb_role.currentText() in self.adultNums:  #新的成人編號
+                            self.adultNums[self.cmb_role.currentText()] = 1
+                            self.cmb_role.addItem(self.cmb_role.currentText())  #在編號選單新增新的編號
+                        else:   #已有的成人編號
+                            self.adultNums[self.cmb_role.currentText()] += 1
+                        roleNum = self.cmb_role.currentText() + self.adultNums[self.cmb_role.currentText()].__str__()
+                        role = QtWidgets.QTableWidgetItem(roleNum)
+                        self.tableWidget.tableWidget.setItem(rowCount, 0, role)
+                        self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
+                    else:   #不採計
+                        role = QtWidgets.QTableWidgetItem('')
+                        self.tableWidget.tableWidget.setItem(rowCount, 0, role)
+                        font = utterance.font()
+                        font.setBold(True)
+                        utterance.setFont(font)
+                        self.tableWidget.tableWidget.setItem(rowCount, 1, utterance)
 
-                self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
-                self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
+                    self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
+                    self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
-                #清空、復原輸入欄
-                self.clearInput()
-                self.input_trans.setText(self.transcriber)
-                self.lbl_impCaseID.setText(self.caseID)
-            else:   #沒輸入語句
-                #先復原輸入欄
-                self.input_trans.setStyleSheet("border: 1px solid initial;")
-                self.input_utterance.setStyleSheet("border: 1px solid initial;")
-                self.input_scenario.setStyleSheet("border: 1px solid initial;")
-                self.msg_noInp.exec_()    #跳出提示視窗
-                self.input_utterance.setStyleSheet("border: 1px solid red;")
+                    #清空、復原輸入欄
+                    self.clearInput()
+                    self.input_trans.setText(self.transcriber)
+                    self.lbl_impCaseID.setText(self.caseID)
+                    self.input_utterance.setFocus()     #focus到語句欄
+                else:   #沒輸入語句
+                    #先復原輸入欄
+                    self.input_trans.setStyleSheet("border: 1px solid initial;")
+                    self.input_utterance.setStyleSheet("border: 1px solid initial;")
+                    self.input_scenario.setStyleSheet("border: 1px solid initial;")
+                    self.msg_noInp.exec_()    #跳出提示視窗
+                    self.input_utterance.setStyleSheet("border: 1px solid red;")
+            else:   #編號不是英文
+                self.msg_roleNotAlpha.exec_()
 
     #刪除列
     def _deleteRow(self):
