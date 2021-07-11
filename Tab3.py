@@ -334,130 +334,133 @@ class AnalysisTab(QtWidgets.QWidget):
             #傳signal給MainWindow
             self.procMain.emit(4)
             return 
+        #try:
+        print(utterance)
+        utterance = list(sorted(utterance, key = len, reverse = True))
+        wordArray = [] #有效詞
+        charArray = [] #有效字
+        utterStr = ""
+        Analysis = {
+            'charCount':0,
+            'wordCount':0,
+            'Content':{
+                'N':0,
+                'V':0,
+                'VH':0,
+                'Neu':0,
+                'Nf':0,
+                'Nh':0,
+                'D':0,
+                'percentage':0.0,
+                'sum':0
+            },
+            'Function':{
+                'P':0,
+                'C':0,
+                'T':0,
+                'I':0,
+                'percentage':0.0,
+                'sum':0
+            },
+            'VOCD-w':0.0,
+            'VOCD-c':0.0,
+            'MLU-w':0,
+            'MLU-c':0,
+            'MLU5-w':0,
+            'MLU5-c':0
+        }
+
+        #將句子合併
+        for i in utterance: 
+            utterStr += i
+            utterStr += '。'
+            
+        #開始進行斷詞
+        tagger = DistilTag.DistilTag()
+        tagged = tagger.tag(utterStr)
+        print(tagged)
+        wordCount = [0]*len(tagged) #統計每句詞數
+        charCount = [len(i) + 1 for i in tagged]
+        i = 0 #每句話的index
+        for sent in tagged:
+            print(i)
+            #charArray.extend(utterance[i])
+            for pair in sent:
+                wordCount[i] += 1 #統計每句詞數
+                wordArray.append(pair[0]) #收集詞
+                charArray.append(len(pair[0]))
+                #統計實詞
+                if pair[1] == 'Neu':
+                    Analysis['Content']['Neu'] += 1
+                elif pair[1] == 'Nf' or pair[1] == 'Nequ':
+                    Analysis['Content']['Nf'] += 1
+                elif pair[1] == 'Nh' or pair[1] == 'Nep':
+                    Analysis['Content']['Nh'] += 1
+                elif pair[1].startswith('N'):
+                    Analysis['Content']['N'] += 1
+                elif pair[1] == 'VH' or pair[1] == 'A':
+                    Analysis['Content']['VH'] += 1
+                elif pair[1].startswith('V') or pair[1] == 'SHI':
+                    Analysis['Content']['V'] += 1
+                elif pair[1].startswith('D') and pair[1] != 'DASHCATEGORY':
+                    Analysis['Content']['D'] += 1
+                #統計虛詞
+                elif pair[1] == 'P':
+                    Analysis['Function']['P'] += 1
+                elif pair[1].startswith('Ca') or pair[1].startswith('Cb'):
+                    Analysis['Function']['C'] += 1
+                elif pair[1].startswith('T'):
+                    Analysis['Function']['T'] += 1
+                elif pair[1] == 'I':
+                    Analysis['Function']['I'] += 1
+                else:
+                    wordCount[i] -= 1
+                    charCount[i] -= 1
+                    # if ord(charArray[-1]) + 65248 == ord(wordArray.pop()):  #去除無效詞
+                    #     charArray.pop() #去除無效字
+            i += 1
+                    
+        #設Dict值
+        Analysis['charCount'] = sum(charCount) #總字數
+        Analysis['wordCount'] = sum(wordCount) #總詞數
+        Analysis['Content']['percentage'] = round(sum(Analysis['Content'].values())/sum(wordCount),2) #實詞比例
+        Analysis['Function']['percentage'] = round(sum(Analysis['Function'].values())/sum(wordCount),2) #虛詞比例
+        Analysis['Content']['sum'] = int(sum(Analysis['Content'].values())) #總實詞
+        Analysis['Function']['sum'] = int(sum(Analysis['Function'].values())) #總虛詞
+        Analysis['MLU-w'] = round(mean(wordCount),2)
+        Analysis['MLU-c'] = round(mean(charCount),2)
+        Analysis['MLU5-w'] = round(mean(wordCount[:5]),2)
+        Analysis['MLU5-c'] = round(mean(charCount[:5]),2)
         try:
-            utterance = list(sorted(utterance, key = len, reverse = True))
-            wordCount = [0]*len(utterance) #統計每句詞數
-            charCount = [len(i) + 1 for i in utterance]
-            wordArray = [] #有效詞
-            charArray = [] #有效字
-            utterStr = ""
-            Analysis = {
-                'charCount':0,
-                'wordCount':0,
-                'Content':{
-                    'N':0,
-                    'V':0,
-                    'VH':0,
-                    'Neu':0,
-                    'Nf':0,
-                    'Nh':0,
-                    'D':0,
-                    'percentage':0.0,
-                    'sum':0
-                },
-                'Function':{
-                    'P':0,
-                    'C':0,
-                    'T':0,
-                    'I':0,
-                    'percentage':0.0,
-                    'sum':0
-                },
-                'VOCD-w':0.0,
-                'VOCD-c':0.0,
-                'MLU-w':0,
-                'MLU-c':0,
-                'MLU5-w':0,
-                'MLU5-c':0
-            }
+            Analysis['VOCD-w'] = round(self.getVOCD(wordArray),2)
+        except:
+            Analysis['VOCD-w'] = self.getVOCD(wordArray)
+        try:
+            Analysis['VOCD-c'] = round(self.getVOCD(charArray),2)
+        except:
+            Analysis['VOCD-c'] = self.getVOCD(charArray)
 
-            #將句子合併
-            for i in utterance: 
-                utterStr += i
-                utterStr += '。'
-                
-            #開始進行斷詞
-            tagger = DistilTag.DistilTag()
-            tagged = tagger.tag(utterStr)
-            #print(tagged)
-            i = 0 #每句話的index
-            for sent in tagged:
-                charArray.extend(utterance[i])
-                for pair in sent:
-                    wordCount[i] += 1 #統計每句詞數
-                    wordArray.append(pair[0]) #收集詞
-                    #統計實詞
-                    if pair[1] == 'Neu':
-                        Analysis['Content']['Neu'] += 1
-                    elif pair[1] == 'Nf' or pair[1] == 'Nequ':
-                        Analysis['Content']['Nf'] += 1
-                    elif pair[1] == 'Nh' or pair[1] == 'Nep':
-                        Analysis['Content']['Nh'] += 1
-                    elif pair[1].startswith('N'):
-                        Analysis['Content']['N'] += 1
-                    elif pair[1] == 'VH' or pair[1] == 'A':
-                        Analysis['Content']['VH'] += 1
-                    elif pair[1].startswith('V') or pair[1] == 'SHI':
-                        Analysis['Content']['V'] += 1
-                    elif pair[1].startswith('D') and pair[1] != 'DASHCATEGORY':
-                        Analysis['Content']['D'] += 1
-                    #統計虛詞
-                    elif pair[1] == 'P':
-                        Analysis['Function']['P'] += 1
-                    elif pair[1].startswith('Ca') or pair[1].startswith('Cb'):
-                        Analysis['Function']['C'] += 1
-                    elif pair[1].startswith('T'):
-                        Analysis['Function']['T'] += 1
-                    elif pair[1] == 'I':
-                        Analysis['Function']['I'] += 1
-                    else:
-                        wordCount[i] -= 1
-                        charCount[i] -= 1
-                        if ord(charArray[-1]) + 65248 == ord(wordArray.pop()):  #去除無效詞
-                            charArray.pop() #去除無效字
-                i += 1
-                        
-            #設Dict值
-            Analysis['charCount'] = sum(charCount) #總字數
-            Analysis['wordCount'] = sum(wordCount) #總詞數
-            Analysis['Content']['percentage'] = round(sum(Analysis['Content'].values())/sum(wordCount),2) #實詞比例
-            Analysis['Function']['percentage'] = round(sum(Analysis['Function'].values())/sum(wordCount),2) #虛詞比例
-            Analysis['Content']['sum'] = int(sum(Analysis['Content'].values())) #總實詞
-            Analysis['Function']['sum'] = int(sum(Analysis['Function'].values())) #總虛詞
-            Analysis['MLU-w'] = round(mean(wordCount),2)
-            Analysis['MLU-c'] = round(mean(charCount),2)
-            Analysis['MLU5-w'] = round(mean(wordCount[:5]),2)
-            Analysis['MLU5-c'] = round(mean(charCount[:5]),2)
-            try:
-                Analysis['VOCD-w'] = round(self.getVOCD(wordArray),2)
-            except:
-                Analysis['VOCD-w'] = self.getVOCD(wordArray)
-            try:
-                Analysis['VOCD-c'] = round(self.getVOCD(charArray),2)
-            except:
-                Analysis['VOCD-c'] = self.getVOCD(charArray)
+        print(wordArray)
+        print(charArray)
 
-            print(wordArray)
-            print(charArray)
+        #呼叫資料庫
+        print('caseID:',self.caseID)
+        print('Date:',type(self.date))
+        database.DBapi.updateAnalysis(self.caseID, self.date, Analysis)
 
-            #呼叫資料庫
-            print('caseID:',self.caseID)
-            print('Date:',type(self.date))
-            database.DBapi.updateAnalysis(self.caseID, self.date, Analysis)
+        #通知彙整完整
+        #informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
 
-            #通知彙整完整
-            #informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
+        #顯示在Table
+        self.setContent(Analysis)
 
-            #顯示在Table
-            self.setContent(Analysis)
+        #傳signal給MainWindow
+        self.procMain.emit(3)
 
-            #傳signal給MainWindow
-            self.procMain.emit(3)
-
-        except Exception as e:
-            #傳signal給MainWindow
-            self.procMain.emit(4)
-            print(e)
+        # except Exception as e:
+        #     #傳signal給MainWindow
+        #     self.procMain.emit(4)
+        #     print(e)
 
     def getTTR(self,a):
         return len(set(a)) / len(a)
