@@ -59,19 +59,24 @@ class chartTab(QtWidgets.QWidget):
             return
         self.clearlayout()
 
-        series = QLineSeries(self)
-        strDate = Doc['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
-        series.setName(strDate)
-        series.append(QPoint(0, Doc['transcription']['analysis']['Content']['N']))
-        series.append(QPoint(1, Doc['transcription']['analysis']['Content']['V']))
-        series.append(QPoint(2, Doc['transcription']['analysis']['Content']['VH']))
-        series.append(QPoint(3, Doc['transcription']['analysis']['Content']['Neu']))
-        series.append(QPoint(4, Doc['transcription']['analysis']['Content']['Nf']))
-        series.append(QPoint(5, Doc['transcription']['analysis']['Content']['Nh']))
-        series.append(QPoint(6, Doc['transcription']['analysis']['Content']['D']))
-
+        caseDocs = database.DBapi.findDocsByCaseID(Doc['childData']['caseID'])
+        caseDocs = list(caseDocs)
+        
         chart =  QChart()
-        chart.addSeries(series)
+        for index in caseDocs:
+            series = QLineSeries(self)
+            strDate = index['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
+            series.setName(strDate)
+            series.append(QPoint(0, index['transcription']['analysis']['Content']['N']))
+            series.append(QPoint(1, index['transcription']['analysis']['Content']['V']))
+            series.append(QPoint(2, index['transcription']['analysis']['Content']['VH']))
+            series.append(QPoint(3, index['transcription']['analysis']['Content']['Neu']))
+            series.append(QPoint(4, index['transcription']['analysis']['Content']['Nf']))
+            series.append(QPoint(5, index['transcription']['analysis']['Content']['Nh']))
+            series.append(QPoint(6, index['transcription']['analysis']['Content']['D']))
+            chart.addSeries(series)
+        
+        
         categories = ["名詞", "動詞", "形容詞", "數詞", "量詞", "代詞", "副詞"]
         axisX = QBarCategoryAxis()
         axisX.append(categories)
