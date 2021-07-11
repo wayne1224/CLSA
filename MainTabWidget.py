@@ -48,6 +48,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab0.procFind.connect(self.tab2.clearTab)
         self.tab0.procFind.connect(self.tab2.clearInput)
         self.tab0.procFind.connect(self.tab3.clearContent)
+        self.tab2.procClear.connect(self.tab3.clearContent)
 
     def leaveTab1(self) :
         if (self.currentIndex() != 1) :
