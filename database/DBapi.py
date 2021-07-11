@@ -245,6 +245,22 @@ def updateAnalysis(caseID , date , analysis): # argument = caseID , date , analy
         print(e)
 
 
+# 圖表 api
+def findDocsByCaseID(caseID): # argument = caseID, if find return pymongo object , else return False
+    try:
+        db = CLSA
+        query = dict()
+        query["childData.caseID"] = caseID
+
+        if db.count_documents(query) == 0:
+            print("can not find this document")
+            return False
+
+        return db.find(query)
+    except Exception as e:
+        print(e)
+
+
 a1 = {"ID" : "a1" , "role" : "adult" , "utterance" : "1234" , "scenario" : "123"}
 a2 = {"ID" : "1" , "role" : "child" , "utterance" : "123" , "scenario" : "123"}
 a3 = {"ID" : "" , "role" : "" , "utterance" : "" , "scenario" : "123"}
@@ -289,16 +305,3 @@ recording = {"SLP" : "123" , "date" : date}
 
 # connectDB()
 
-# print(findDocs("" , "001" , ""))
-# print(deleteDoc("165497489"))
-
-# print(findChildData("001"))
-# print(findChildDataAndRecording("00757001" , date))
-# print(upsertChildAndInclude(childData , recording))
-
-# print(findDateAndFirstContent("001"))
-# print(findContent("001" , date))
-# print(updateContent("test6" , date , "transcriber" , content , 10 , 8))
-
-# print(findAnalysis("001" , date))
-# updateAnalysis("001" , date , analysis)
