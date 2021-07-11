@@ -4,6 +4,7 @@ from Tab0 import SearchTab
 from Tab2 import Tab2
 from Tab1 import Myform
 from Tab3 import AnalysisTab
+from Chart import chartTab
 
 class MainTabWidget(QtWidgets.QTabWidget):
     def __init__(self,parent=None):
@@ -15,6 +16,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab1 = Myform()
         self.tab2 = Tab2()
         self.tab3 = AnalysisTab()
+        self.tab4 = chartTab()
 
         #模糊特效
         self.blur_effect = QtWidgets.QGraphicsBlurEffect()
@@ -24,6 +26,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.addTab(self.tab1, "收錄表")
         self.addTab(self.tab2, "轉錄表")
         self.addTab(self.tab3, "彙整表")
+        self.addTab(self.tab4, "圖表")
 
         #設定tab的css
         self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
@@ -42,6 +45,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab0.procDoc.connect(self.tab1.getDoc)
         self.tab0.procDoc.connect(self.tab2.getDoc)
         self.tab0.procDoc.connect(self.tab3.getDoc)
+        self.tab0.procDoc.connect(self.tab4.create_linechart)
 
         #搜尋頁面按下搜尋時，其他頁面清空
         self.tab0.procFind.connect(self.tab1.clearContent)

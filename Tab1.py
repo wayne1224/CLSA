@@ -1169,7 +1169,6 @@ class Myform(QtWidgets.QWidget):
         self.radioButton_17.setChecked(False)
         self.group_2.setExclusive(True)
 
-
         self.plainTextEdit.setPlainText('')
         self.plainTextEdit_2.setPlainText('')
         self.dateEdit.setDate(QtCore.QDate(2000, 1, 1))
