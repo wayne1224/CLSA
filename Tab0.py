@@ -157,7 +157,7 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.setItem(idx , 3 , item)
                 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['recording']['situation'])
+                item.setText(doc['recording']['scenario'])
                 self.tableWidget.setItem(idx , 4 , item)
                 
                 item = QtWidgets.QTableWidgetItem()
