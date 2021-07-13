@@ -9,6 +9,7 @@
 
 
 import sys
+import os
 import database.DBapi
 from Mytable import Mytable
 from datetime import datetime
@@ -328,6 +329,7 @@ class Tab2(QtWidgets.QWidget):
         self.adultNums = {}  #成人編號
         self.childUtterance = []    #兒童語句
         self.caseDate = None     #目前記錄日期
+        self.cwd = os.getcwd() #目前檔案位置
 
         #視窗
         #編號不是輸入字母
