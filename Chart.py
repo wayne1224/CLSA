@@ -14,7 +14,7 @@ class chartTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot(dict)
     def create_piechart(self, Doc):
-        if Doc == None:
+        if Doc['transcription']['analysis'] == None:
             return
         self.clearlayout()
         series = QPieSeries()
@@ -30,17 +30,32 @@ class chartTab(QtWidgets.QWidget):
         slice = QPieSlice()
         slice = series.slices()[3]
         slice.setExploded(True)
-        slice.setLabelVisible(True)
-        slice.setPen(QPen(Qt.darkGreen, 6))
-        slice.setBrush(Qt.green)
+        # slice.setPen(QPen(Qt.darkGreen, 6))
+        # slice.setBrush(Qt.green)
+
+        # series.setLabelsPosition(QtChart.QPieSlice.LabelInsideHorizontal)
+        for slice in series.slices():
+            slice.setLabel("{:.2f}%".format(100 * slice.percentage()))
+            slice.setLabelVisible(True)
 
         chart = QChart()
         chart.legend().hide()
         chart.addSeries(series)
         chart.createDefaultAxes()
         chart.setAnimationOptions(QChart.SeriesAnimations)
-        chart.setTitle("Pie Chart Example")
- 
+        chart.setTitle("實詞百分比")
+        font = QtGui.QFont()
+        font.setPixelSize(24)
+        chart.setTitleFont(font)
+        
+        chart.legend().markers(series)[0].setLabel("名詞")
+        chart.legend().markers(series)[1].setLabel("動詞")
+        chart.legend().markers(series)[2].setLabel("形容詞")
+        chart.legend().markers(series)[3].setLabel("數詞")
+        chart.legend().markers(series)[4].setLabel("量詞")
+        chart.legend().markers(series)[5].setLabel("代詞")
+        chart.legend().markers(series)[6].setLabel("副詞")
+
         chart.legend().setVisible(True)
         chart.legend().setAlignment(Qt.AlignBottom)
  
@@ -62,6 +77,10 @@ class chartTab(QtWidgets.QWidget):
         caseDocs = list(caseDocs)
         
         chart =  QChart()
+        chart.setTitle("個案" + Doc['childData']['caseID'] + "就診紀錄")
+        font = QtGui.QFont()
+        font.setPixelSize(24)
+        chart.setTitleFont(font)
         categories = ["名詞", "動詞", "形容詞", "數詞", "量詞", "代詞", "副詞"]
         axisX = QBarCategoryAxis()
         axisX.append(categories)
@@ -86,12 +105,14 @@ class chartTab(QtWidgets.QWidget):
                 series.attachAxis(axisY)
         axisY.setRange(0, 20)
         axisX.setRange("名詞", "副詞")
-        
+        axisY.setTitleText("詞的個數")
+        axisY.setTitleFont(font)
         chart.legend().setVisible(True)
         chart.legend().setAlignment(Qt.AlignBottom)
 
         chartView = QChartView(chart)
         chartView.setRenderHint(QPainter.Antialiasing)
+        
         self.layout.addWidget(chartView)
 
 if __name__ == "__main__":
