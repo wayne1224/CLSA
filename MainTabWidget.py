@@ -46,7 +46,8 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab0.procDoc.connect(self.tab2.getDoc)
         self.tab0.procDoc.connect(self.tab3.getDoc)
         # self.tab0.procDoc.connect(self.tab4.create_piechart)
-        self.tab0.procDoc.connect(self.tab4.create_linechart)
+        # self.tab0.procDoc.connect(self.tab4.create_linechart)
+        self.tab0.procDoc.connect(self.tab4.create_linebarchart)
 
         #搜尋頁面按下搜尋時，其他頁面清空
         self.tab0.procFind.connect(self.tab1.clearContent)
