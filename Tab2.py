@@ -15,6 +15,7 @@ from Mytable import Mytable
 from datetime import datetime
 from functools import partial
 from PyQt5 import QtCore, QtGui, QtWidgets
+import AudioConvert.audio
 
 
 class Tab2(QtWidgets.QWidget):
@@ -236,6 +237,8 @@ class Tab2(QtWidgets.QWidget):
         self.cbx_notCount.setFont(font)
         self.cbx_notCount.setObjectName("cbx_notCount")
         self.verticalLayout_4.addWidget(self.cbx_notCount)
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.btn_add = QtWidgets.QPushButton()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -248,7 +251,21 @@ class Tab2(QtWidgets.QWidget):
         font.setPointSize(12)
         self.btn_add.setFont(font)
         self.btn_add.setObjectName("btn_add")
-        self.verticalLayout_4.addWidget(self.btn_add)
+        self.horizontalLayout_7.addWidget(self.btn_add)
+        self.btn_uploadAudio = QtWidgets.QPushButton()
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_add.sizePolicy().hasHeightForWidth())
+        self.btn_uploadAudio.setSizePolicy(sizePolicy)
+        self.btn_uploadAudio.setMinimumSize(QtCore.QSize(150, 51))
+        self.btn_uploadAudio.setMaximumSize(QtCore.QSize(150, 51))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.btn_uploadAudio.setFont(font)
+        self.btn_uploadAudio.setObjectName("btn_uploadAudio")
+        self.horizontalLayout_7.addWidget(self.btn_uploadAudio)
+        self.verticalLayout_4.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_2.addLayout(self.verticalLayout_4)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.tableWidget = Mytable()
@@ -310,6 +327,7 @@ class Tab2(QtWidgets.QWidget):
 
         #事件
         self.btn_add.clicked.connect(self._addRow)
+        self.btn_uploadAudio.clicked.connect(self._importAudio)
         self.input_utterance.returnPressed.connect(self._addRow)
         self.input_scenario.returnPressed.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
@@ -398,6 +416,7 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_scenario.setText(_translate("", "語境："))
         self.cbx_notCount.setText(_translate("", "此句不採計"))
         self.btn_add.setText(_translate("", "新增"))
+        self.btn_uploadAudio.setText(_translate("", "上傳錄音檔"))
         self.btn_delete.setText(_translate("", "刪除列"))
         self.btn_clearTab.setText(_translate("", "全部清空"))
         self.btn_save.setText(_translate("", "儲存"))
@@ -506,6 +525,11 @@ class Tab2(QtWidgets.QWidget):
                 self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                 self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
             self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
+
+    #上傳錄音檔
+    def _importAudio(self):
+        text = AudioConvert.audio.importAudio(self)
+        print(text)
 
     #新增列
     def _addRow(self):
