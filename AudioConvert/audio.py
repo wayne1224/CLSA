@@ -69,11 +69,11 @@ def importAudio(self):
     outputText = [] 
     filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
                                         "開啟音訊",
-                                        self.cwd,
+                                        "",
                                         "Audio Files(*.mp3 *.m4a *.wav)")
     if filePath and os.path.exists(filePath):
         newPath = tranfer(filePath)
         outputText = STT_from_file(newPath)
     
     # 這個看你要存在哪
-    # return outputText
+    return outputText
