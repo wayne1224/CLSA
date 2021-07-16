@@ -2,7 +2,7 @@ import database.DBapi
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets, QtChart
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from PyQt5.QtChart import QChart, QLineSeries, QChartView, QPieSeries, QPieSlice, QBarSet, QPercentBarSeries, QBarCategoryAxis, QValueAxis
+from PyQt5.QtChart import QChart, QBarSeries, QLineSeries, QChartView, QPieSeries, QPieSlice, QBarSet, QPercentBarSeries, QBarCategoryAxis, QValueAxis
 from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtCore import QPoint, Qt, QPointF
 
@@ -14,7 +14,7 @@ class chartTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot(dict)
     def create_piechart(self, Doc):
-        if Doc == None:
+        if Doc['transcription']['analysis'] == None:
             return
         self.clearlayout()
         series = QPieSeries()
@@ -30,17 +30,32 @@ class chartTab(QtWidgets.QWidget):
         slice = QPieSlice()
         slice = series.slices()[3]
         slice.setExploded(True)
-        slice.setLabelVisible(True)
-        slice.setPen(QPen(Qt.darkGreen, 6))
-        slice.setBrush(Qt.green)
+        # slice.setPen(QPen(Qt.darkGreen, 6))
+        # slice.setBrush(Qt.green)
+
+        # series.setLabelsPosition(QtChart.QPieSlice.LabelInsideHorizontal)
+        for slice in series.slices():
+            slice.setLabel("{:.2f}%".format(100 * slice.percentage()))
+            slice.setLabelVisible(True)
 
         chart = QChart()
         chart.legend().hide()
         chart.addSeries(series)
         chart.createDefaultAxes()
         chart.setAnimationOptions(QChart.SeriesAnimations)
-        chart.setTitle("Pie Chart Example")
- 
+        chart.setTitle("實詞百分比")
+        font = QtGui.QFont()
+        font.setPixelSize(24)
+        chart.setTitleFont(font)
+        
+        chart.legend().markers(series)[0].setLabel("名詞")
+        chart.legend().markers(series)[1].setLabel("動詞")
+        chart.legend().markers(series)[2].setLabel("形容詞")
+        chart.legend().markers(series)[3].setLabel("數詞")
+        chart.legend().markers(series)[4].setLabel("量詞")
+        chart.legend().markers(series)[5].setLabel("代詞")
+        chart.legend().markers(series)[6].setLabel("副詞")
+
         chart.legend().setVisible(True)
         chart.legend().setAlignment(Qt.AlignBottom)
  
@@ -54,6 +69,72 @@ class chartTab(QtWidgets.QWidget):
             self.layout.removeItem(self.layout.itemAt(i))
 
     @QtCore.pyqtSlot(dict)
+    def create_linebarchart(self, Doc):
+        if Doc['transcription']['analysis'] == None: #是否已分析過
+            return
+        self.clearlayout() 
+        caseDocs = database.DBapi.findDocsByCaseID(Doc['childData']['caseID']) #查詢個案紀錄
+        caseDocs = list(caseDocs)
+        
+        chart =  QChart()
+        chart.setTitle("個案" + Doc['childData']['caseID'] + "就診紀錄")
+        font = QtGui.QFont()
+        font.setPixelSize(24)
+        chart.setTitleFont(font)
+        categories = ["名詞", "動詞", "形容詞", "數詞", "量詞", "代詞", "副詞"]
+        axisX = QBarCategoryAxis()
+        axisX.append(categories)
+        chart.addAxis(axisX, Qt.AlignBottom)
+        axisY = QValueAxis()
+        chart.addAxis(axisY, Qt.AlignLeft)
+        axisY.setRange(0, 20)
+        axisX.setRange("名詞", "副詞")
+        axisY.setTitleText("詞的個數")
+        axisY.setTitleFont(font)
+        sumContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
+        recordCount = 0
+        for index in caseDocs:
+            if index['transcription']['analysis'] != None:
+                barSeries = QBarSeries(self)
+                strDate = index['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
+                set0 = QBarSet(strDate)
+                set0.setLabelFont(font)
+                for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
+                    # print(str(key) + ' ' + str(value))
+                    if key != 'percentage':
+                        if key == 'sum': recordCount += 1
+                        else : sumContent[key] += value
+                set0<< index['transcription']['analysis']['Content']['N']\
+                    <<  index['transcription']['analysis']['Content']['V']\
+                    << index['transcription']['analysis']['Content']['VH']\
+                    << index['transcription']['analysis']['Content']['Neu']\
+                    << index['transcription']['analysis']['Content']['Nf']\
+                    << index['transcription']['analysis']['Content']['Nh']\
+                    << index['transcription']['analysis']['Content']['D']
+                barSeries.append(set0)
+                chart.addSeries(barSeries)
+                barSeries.attachAxis(axisX)
+                barSeries.attachAxis(axisY)
+        lineSeries = QLineSeries(self)
+        lineSeries.setName("平均值")
+        for i, (key, value) in enumerate(sumContent.items()):
+            lineSeries.append(QPoint(i, value/recordCount))
+        chart.addSeries(lineSeries)
+        lineSeries.attachAxis(axisX)
+        lineSeries.attachAxis(axisY)
+        pen = lineSeries.pen()
+        pen.setWidth(4)
+        lineSeries.setPen(pen)
+
+        chart.legend().setVisible(True)
+        chart.legend().setAlignment(Qt.AlignBottom)
+
+        chartView = QChartView(chart)
+        chartView.setRenderHint(QPainter.Antialiasing)
+        
+        self.layout.addWidget(chartView)
+
+    @QtCore.pyqtSlot(dict)
     def create_linechart(self, Doc):
         if Doc['transcription']['analysis'] == None:
             return
@@ -62,6 +143,11 @@ class chartTab(QtWidgets.QWidget):
         caseDocs = list(caseDocs)
         
         chart =  QChart()
+        chart.setTitle("個案" + Doc['childData']['caseID'] + "就診紀錄")
+        font = QtGui.QFont()
+        font.setPixelSize(24)
+        chart.setTitleFont(font)
+        
         categories = ["名詞", "動詞", "形容詞", "數詞", "量詞", "代詞", "副詞"]
         axisX = QBarCategoryAxis()
         axisX.append(categories)
@@ -86,14 +172,15 @@ class chartTab(QtWidgets.QWidget):
                 series.attachAxis(axisY)
         axisY.setRange(0, 20)
         axisX.setRange("名詞", "副詞")
-        
+        axisY.setTitleText("詞的個數")
+        axisY.setTitleFont(font)
         chart.legend().setVisible(True)
         chart.legend().setAlignment(Qt.AlignBottom)
 
         chartView = QChartView(chart)
         chartView.setRenderHint(QPainter.Antialiasing)
+        
         self.layout.addWidget(chartView)
-
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     screen = chartTab()
