@@ -70,10 +70,10 @@ class chartTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot(dict)
     def create_linebarchart(self, Doc):
-        if Doc['transcription']['analysis'] == None:
+        if Doc['transcription']['analysis'] == None: #是否已分析過
             return
-        self.clearlayout()
-        caseDocs = database.DBapi.findDocsByCaseID(Doc['childData']['caseID'])
+        self.clearlayout() 
+        caseDocs = database.DBapi.findDocsByCaseID(Doc['childData']['caseID']) #查詢個案紀錄
         caseDocs = list(caseDocs)
         
         chart =  QChart()
@@ -87,19 +87,23 @@ class chartTab(QtWidgets.QWidget):
         chart.addAxis(axisX, Qt.AlignBottom)
         axisY = QValueAxis()
         chart.addAxis(axisY, Qt.AlignLeft)
-
-        averageContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
+        axisY.setRange(0, 20)
+        axisX.setRange("名詞", "副詞")
+        axisY.setTitleText("詞的個數")
+        axisY.setTitleFont(font)
+        sumContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
         recordCount = 0
         for index in caseDocs:
             if index['transcription']['analysis'] != None:
                 barSeries = QBarSeries(self)
                 strDate = index['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
                 set0 = QBarSet(strDate)
+                set0.setLabelFont(font)
                 for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
                     # print(str(key) + ' ' + str(value))
                     if key != 'percentage':
                         if key == 'sum': recordCount += 1
-                        else : averageContent[key] += value
+                        else : sumContent[key] += value
                 set0<< index['transcription']['analysis']['Content']['N']\
                     <<  index['transcription']['analysis']['Content']['V']\
                     << index['transcription']['analysis']['Content']['VH']\
@@ -113,7 +117,7 @@ class chartTab(QtWidgets.QWidget):
                 barSeries.attachAxis(axisY)
         lineSeries = QLineSeries(self)
         lineSeries.setName("平均值")
-        for i, (key, value) in enumerate(averageContent.items()):
+        for i, (key, value) in enumerate(sumContent.items()):
             lineSeries.append(QPoint(i, value/recordCount))
         chart.addSeries(lineSeries)
         lineSeries.attachAxis(axisX)
@@ -122,10 +126,6 @@ class chartTab(QtWidgets.QWidget):
         pen.setWidth(4)
         lineSeries.setPen(pen)
 
-        axisY.setRange(0, 20)
-        axisX.setRange("名詞", "副詞")
-        axisY.setTitleText("詞的個數")
-        axisY.setTitleFont(font)
         chart.legend().setVisible(True)
         chart.legend().setAlignment(Qt.AlignBottom)
 
