@@ -1,4 +1,5 @@
 #把第一第二格綁在一起
+from typing import Collection
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import re
@@ -322,14 +323,24 @@ class Mytable(QtWidgets.QWidget):
                             self.setValid.setObjectName("setValid")
                             self.setValid.triggered.connect(partial(self.toValid,f,item))
                             self.menu.addAction(self.setValid)
-                            self.menu.exec_(event.globalPos())
-                            
                         else:
                             self.setNotValid = QtWidgets.QAction('不採計')
                             self.setNotValid.setObjectName("setNotValid")
                             self.setNotValid.triggered.connect(partial(self.toNotValid,f,item,index))
                             self.menu.addAction(self.setNotValid)
-                            self.menu.exec_(event.globalPos())
+                        
+                        if index.column() == 1:
+                            self.toChild = QtWidgets.QAction('轉成兒童語句')
+                            self.toChild.setObjectName("toChild")
+                            self.toChild.triggered.connect(partial(self.changeRole,item,index))
+                            self.menu.addAction(self.toChild)
+                        elif index.column() == 4:
+                            self.toAdult = QtWidgets.QAction('轉成成人語句')
+                            self.toAdult.setObjectName("toAdult")
+                            self.toAdult.triggered.connect(partial(self.changeRole,item,index))
+                            self.menu.addAction(self.toAdult)
+
+                        self.menu.exec_(event.globalPos())
 
         return super(Mytable,self).eventFilter(source, event)
 
@@ -347,7 +358,26 @@ class Mytable(QtWidgets.QWidget):
             self.tableWidget.item(index.row(), 3).setText('') 
             f.setBold(True)
             item.setFont(f)
-    
+
+    def changeRole(self, item, index):
+        text = item.text()
+        item.setText("")
+        itemCopy = QtWidgets.QTableWidgetItem(text)
+        if index.column() == 1:     #toChild
+            self.tableWidget.setItem(index.row(), 4, itemCopy)
+            if self.tableWidget.item(index.row(), 0) != None:
+                self.tableWidget.item(index.row(), 0).setText("")
+            self.tableWidget.item(index.row(), 4).setSelected(True)
+            self._setChildID()
+        if index.column() == 4:     #toAdult
+            self.tableWidget.setItem(index.row(), 1, itemCopy)
+            if self.tableWidget.item(index.row(), 3) != None:
+                self.tableWidget.item(index.row(), 3).setText("")
+            if self.tableWidget.item(index.row(), 0) == None:
+                self.tableWidget.setItem(index.row(), 0, QtWidgets.QTableWidgetItem(""))
+            self.tableWidget.item(index.row(), 0).setSelected(True)
+            self._setAdultID()
+
     def generateMenu(self, pos):
         self.menu.exec_(self.tableWidget.mapToGlobal(pos))
 
