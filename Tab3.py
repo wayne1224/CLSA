@@ -1,5 +1,5 @@
 import sys
-import database.DBapi
+import database.DatabaseApi as db
 import time
 import numpy as np
 import random
@@ -302,7 +302,7 @@ class AnalysisTab(QtWidgets.QWidget):
                 self.date_label.setText(date_time)
 
                 #呼叫過去的Analysis
-                analysis = database.DBapi.findAnalysis(self.caseID,self.date)
+                analysis = db.findAnalysis(self.caseID,self.date)
                 if analysis:
                     self.clearContent()
                     self.setContent(analysis)
@@ -446,7 +446,7 @@ class AnalysisTab(QtWidgets.QWidget):
         #呼叫資料庫
         print('caseID:',self.caseID)
         print('Date:',type(self.date))
-        database.DBapi.updateAnalysis(self.caseID, self.date, Analysis)
+        db.updateAnalysis(self.caseID, self.date, Analysis)
 
         #通知彙整完整
         #informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
