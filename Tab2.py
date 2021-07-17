@@ -402,6 +402,11 @@ class Tab2(QtWidgets.QWidget):
         self.msg_saveNotSearch.setWindowTitle("提示")
         self.msg_saveNotSearch.setText("尚未查詢個案！")
         self.msg_saveNotSearch.setIcon(QtWidgets.QMessageBox.Warning)
+        #未輸入成人編號
+        self.msg_noAdultNum = QtWidgets.QMessageBox()
+        self.msg_noAdultNum.setWindowTitle("提示")
+        self.msg_noAdultNum.setText("請輸入成人編號！")
+        self.msg_noAdultNum.setIcon(QtWidgets.QMessageBox.Information)
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
@@ -416,7 +421,7 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_scenario.setText(_translate("", "語境："))
         self.cbx_notCount.setText(_translate("", "此句不採計"))
         self.btn_add.setText(_translate("", "新增"))
-        self.btn_uploadAudio.setText(_translate("", "上傳錄音檔"))
+        self.btn_uploadAudio.setText(_translate("", "匯入錄音檔"))
         self.btn_delete.setText(_translate("", "刪除列"))
         self.btn_clearTab.setText(_translate("", "全部清空"))
         self.btn_save.setText(_translate("", "儲存"))
@@ -495,6 +500,8 @@ class Tab2(QtWidgets.QWidget):
     #set table
     def _setTable(self):
         for i in range(len(self.content)):
+            if self.content[i]["utterance"] == "":
+                continue
             rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
             self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
             utterance = QtWidgets.QTableWidgetItem(self.content[i]["utterance"])
@@ -526,10 +533,31 @@ class Tab2(QtWidgets.QWidget):
                 self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
             self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
 
-    #上傳錄音檔
+    #匯入錄音檔
     def _importAudio(self):
         text = AudioConvert.audio.importAudio(self)
         print(text)
+
+        #清空table
+        self.cmb_role.clear()
+        self.cmb_role.addItem("兒童")
+        self.cmb_role.addItem("語境")
+        self.tableWidget.tableWidget.setRowCount(0)
+        self.childNum = 0       #兒童編號
+        self.adultNums = {}     #成人編號
+        content = []
+
+        if text:
+            for i in range(len(text)):
+                data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
+                self.childNum += 1
+                data["ID"] = str(i+1)
+                data["role"] = "child"
+                data["utterance"] = text[i]
+                content.append(data)
+
+        self.content = content
+        self._setTable()
 
     #新增列
     def _addRow(self):
@@ -711,13 +739,17 @@ class Tab2(QtWidgets.QWidget):
             data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
             #adult
             if self.tableWidget.tableWidget.item(rowIndex, 1) and not self.tableWidget.tableWidget.item(rowIndex, 1).text() == '':
-                data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
-                data['role'] = 'adult'
-                if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
-                    item = QtWidgets.QTableWidgetItem()
-                    item.setText('')
-                    self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
-                data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
+                if self.tableWidget.tableWidget.item(rowIndex, 0) == None or self.tableWidget.tableWidget.item(rowIndex, 0).text() == '':
+                    self.msg_noAdultNum.exec_()
+                    return "NoAdultID"
+                else:
+                    data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
+                    data['role'] = 'adult'
+                    if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
+                        item = QtWidgets.QTableWidgetItem()
+                        item.setText('')
+                        self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
+                    data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
             #child
             elif self.tableWidget.tableWidget.item(rowIndex, 4) and not self.tableWidget.tableWidget.item(rowIndex, 4).text() == '':
                 data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
