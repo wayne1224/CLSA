@@ -144,11 +144,11 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.setItem(idx , 0 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['childData']['caseID'])
+                item.setText(doc['childData']['caseID']) # item.setText(doc['caseID'])
                 self.tableWidget.setItem(idx , 1 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['childData']['name'])
+                item.setText(doc['childData']['name']) # item.setText(doc['name'])
                 self.tableWidget.setItem(idx , 2 , item)
 
                 item = QtWidgets.QTableWidgetItem()

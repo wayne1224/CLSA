@@ -244,7 +244,6 @@ def updateAnalysis(caseID , date , analysis): # argument = caseID , date , analy
     except Exception as e:
         print(e)
 
-
 # 圖表 api
 def findDocsByCaseID(caseID): # argument = caseID, if find return pymongo object , else return False
     try:

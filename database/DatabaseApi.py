@@ -14,7 +14,8 @@ import calendar
 # connect to datebase
 def connectDB():
     global childDataDB 
-    global documentDB 
+    global documentDB
+    global childAndDocumentDB
     client = pymongo.MongoClient()
 
     try:
@@ -23,6 +24,15 @@ def connectDB():
         db = client["CLSA"]         # choose database
         childDataDB = db["childData"] # choose collection
         documentDB = db["document"]   # choose collection
+        # childAndDocumentDB = db['childData'].aggregate([{
+        #                                                 '$lookup': {
+        #                                                     'from': 'document', 
+        #                                                     'localField': 'childData.caseID', 
+        #                                                     'foreignField': 'document.caseID', 
+        #                                                     'as': 'document'
+        #                                                 }
+        #                                             }
+        #                                         ]) # childData joined document
         client.server_info()
         return True
 
@@ -39,22 +49,57 @@ def findDocs(SLP , caseID , name):
 
         # query to childData
         if caseID:
-            query["childData.caseID"] = caseID
+            query2ChildData["caseID"] = caseID
         if name:
-            query["childData.name"] = name
+            query2ChildData["name"] = name
+
+        if childDataDB.count_documents(query2ChildData) == 0:
+            print("can not find this caseID or child's name")
+            return False
+
+        childData = childDataDB.find(query2ChildData)
 
         # query to document
         if SLP:
-            query["recording.SLP"] = SLP
-
-
-        if db.count_documents(query) == 0:
-            print("can not find this document")
+            query2Document["recording.SLP"] = SLP
+        
+        if documentDB.count_documents(query2Document) == 0:
+            print("can not find this SLP")
             return False
 
-        return db.find(query)
+        document = documentDB.find(query2Document)
+
+        data = list()
+
+        for c in childData:
+            for d in document:
+                if d["caseID"] == c["caseID"]:
+                    d["name"] = c["name"]
+                    d["gender"] = c["gender"]
+                    d["birthday"] = c["birthday"]
+
+                    data.append(d)
+
+        return data
+
     except Exception as e:
         print(e)     
+
+def deleteDoc(objID): # 只刪除document 不刪除childData
+    try:
+        query = dict()
+        query["_id"] = objID
+
+        before = len(list(documentDB.find()))
+        documentDB.delete_one(query)
+        after = len(list(documentDB.find()))
+
+        if before > after: 
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e) 
 
 # 收錄表 api
 def findChildData(caseID):
@@ -263,11 +308,10 @@ def updateAnalysis(caseID , date , analysis):
 #                 "gender" : "male",
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
-# connectDB()
+connectDB()
 
 # print(upsertChildData(childData))
 # upsertRecording("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d") , "Recording2")
 # print(findChildData("00757025"))
 # print(findDoc("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d")))
-
-        
+print(findDocs("" , "" , ""))
