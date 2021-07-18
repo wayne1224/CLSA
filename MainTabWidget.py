@@ -4,7 +4,7 @@ from Tab0 import SearchTab
 from Tab2 import Tab2
 from Tab1 import Myform
 from Tab3 import AnalysisTab
-from Chart import chartTab
+from Tab4 import Tab4
 
 class MainTabWidget(QtWidgets.QTabWidget):
     def __init__(self,parent=None):
@@ -16,7 +16,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab1 = Myform()
         self.tab2 = Tab2()
         self.tab3 = AnalysisTab()
-        self.tab4 = chartTab()
+        self.tab4 = Tab4()
 
         #模糊特效
         self.blur_effect = QtWidgets.QGraphicsBlurEffect()
@@ -47,7 +47,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab0.procDoc.connect(self.tab3.getDoc)
         # self.tab0.procDoc.connect(self.tab4.create_piechart)
         # self.tab0.procDoc.connect(self.tab4.create_linechart)
-        self.tab0.procDoc.connect(self.tab4.create_linebarchart)
+        #self.tab0.procDoc.connect(self.tab4.create_linebarchart)
 
         #搜尋頁面按下搜尋時，其他頁面清空
         self.tab0.procFind.connect(self.tab1.clearContent)
