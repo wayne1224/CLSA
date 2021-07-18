@@ -15,7 +15,7 @@ import calendar
 def connectDB():
     global childDataDB 
     global documentDB
-    global childAndDocumentDB
+    global childJoinedDocumentDB
     client = pymongo.MongoClient()
 
     try:
@@ -23,16 +23,7 @@ def connectDB():
         client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000) # Timeout 10s
         db = client["CLSA"]         # choose database
         childDataDB = db["childData"] # choose collection
-        documentDB = db["document"]   # choose collection
-        # childAndDocumentDB = db['childData'].aggregate([{
-        #                                                 '$lookup': {
-        #                                                     'from': 'document', 
-        #                                                     'localField': 'childData.caseID', 
-        #                                                     'foreignField': 'document.caseID', 
-        #                                                     'as': 'document'
-        #                                                 }
-        #                                             }
-        #                                         ]) # childData joined document
+        documentDB = db["document"]   # choose collection       
         client.server_info()
         return True
 
@@ -304,19 +295,24 @@ def updateAnalysis(caseID , date , analysis):
 
 # 圖表頁 api
 def findChildren(caseID , name):
-    try:
-        query = dict()
-
-        if caseID:
-            query["caseID"] = caseID
-        if name:
-            query["name"] = name
-        
-        if childDataDB.count_documents(query) == 0:
-            print("can not find this caseID or child's name")
-            return False
-
-        return childDataDB.find(query)
+    try:  
+        result = childDataDB.aggregate([
+                                {
+                                    '$lookup': {
+                                        'from': 'document', 
+                                        'localField': 'childData.caseID', 
+                                        'foreignField': 'document.caseID', 
+                                        'as': 'document'
+                                    }
+                                }, 
+                                {
+                                    '$match': {
+                                        'caseID': caseID,
+                                        'name' : name
+                                    }
+                                }
+                            ])
+        return result
     except Exception as e:
         print(e)
         return False
