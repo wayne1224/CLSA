@@ -296,22 +296,28 @@ def updateAnalysis(caseID , date , analysis):
 # 圖表頁 api
 def findChildren(caseID , name):
     try:  
+        query = dict()
+        if caseID:
+            query["caseID"] = caseID
+        if name:
+            query["name"] = name
+
+        print(query)
+
         result = childDataDB.aggregate([
                                 {
                                     '$lookup': {
                                         'from': 'document', 
-                                        'localField': 'childData.caseID', 
-                                        'foreignField': 'document.caseID', 
+                                        'localField': 'caseID', 
+                                        'foreignField': 'caseID', 
                                         'as': 'document'
                                     }
                                 }, 
                                 {
-                                    '$match': {
-                                        'caseID': caseID,
-                                        'name' : name
-                                    }
+                                    '$match': query
                                 }
                             ])
+
         return result
     except Exception as e:
         print(e)
@@ -322,7 +328,10 @@ def findChildren(caseID , name):
 #                 "gender" : "male",
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
-# connectDB()
+connectDB()
+
+findChildren("00757025" , "")
+
 
 # print(upsertChildData(childData))
 # upsertRecording("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d") , "Recording2")
