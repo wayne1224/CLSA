@@ -209,7 +209,7 @@ def upsertChildDataAndRecording(caseID , date , recording , childData):
     result1 = upsertChildData(childData)
     result2 = upsertRecording(caseID, date , recording)
 
-    result[0] = result1[0]
+    result[0] = result2[0]
     
     if result1[1] == result2[1]:
         if result2[1] == True:
@@ -298,6 +298,25 @@ def updateAnalysis(caseID , date , analysis):
         except pymongo.errors.PyMongoError as e:
             return False
 
+    except Exception as e:
+        print(e)
+        return False
+
+# 圖表頁 api
+def findChildren(caseID , name):
+    try:
+        query = dict()
+
+        if caseID:
+            query["caseID"] = caseID
+        if name:
+            query["name"] = name
+        
+        if childDataDB.count_documents(query) == 0:
+            print("can not find this caseID or child's name")
+            return False
+
+        return childDataDB.find(query)
     except Exception as e:
         print(e)
         return False
