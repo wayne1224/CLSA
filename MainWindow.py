@@ -1,7 +1,7 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
-import database.DBapi
+import database.DatabaseApi
 import DistilTag
 
 class LoadingScreen(QtWidgets.QWidget):
@@ -66,7 +66,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         # 資料庫連接失敗 直接關閉程式
         self.thread = QtCore.QThread()
-        self.worker = Worker(database.DBapi.connectDB)
+        self.worker = Worker(database.DatabaseApi.connectDB)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
