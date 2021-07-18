@@ -174,9 +174,12 @@ def upsertRecording(caseID , date , recording):
         query = dict()
         query["caseID"] = caseID
         query["date"] = date
+        result = ["" , True]
 
         # insert
         if documentDB.count_documents(query) == 0:
+            result[0] = "insert"
+
             data = {
                 "caseID" : caseID, 
                 "date" : date,
@@ -192,12 +195,14 @@ def upsertRecording(caseID , date , recording):
             documentDB.insert_one(data)
         # update
         else:
+            result[0] = "update"
             documentDB.update_one(query , {"$set" : {"recording" : recording}})
 
-        return True
+        return result
     except Exception as e:
+        result[1] = False
         print(e)
-        return False
+        return result
 
 def upsertChildDataAndRecording(caseID , date , recording , childData):
     result = ["" , True]
@@ -206,8 +211,8 @@ def upsertChildDataAndRecording(caseID , date , recording , childData):
 
     result[0] = result1[0]
     
-    if result1[1] == result2:
-        if result2 == True:
+    if result1[1] == result2[1]:
+        if result2[1] == True:
             result[1] = True
         else:
             result[1] = False
@@ -215,6 +220,7 @@ def upsertChildDataAndRecording(caseID , date , recording , childData):
         result[1] = False
     
     return result
+
 # 轉錄表 api
 def findContent(caseID , date):
     try:
