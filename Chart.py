@@ -108,7 +108,7 @@ class chartTab(QtWidgets.QWidget):
 
     def search(self):
         #API還沒寫
-        cursor = db.findChildren(self.input_caseID.text() , self.input_Name.text())
+        cursor = db.findChildren(self.form.input_caseID.text() , self.form.input_name.text())
 
         while self.form.tableWidget.rowCount() > 0:
             self.form.tableWidget.removeRow(self.form.tableWidget.rowCount()-1)
