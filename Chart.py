@@ -62,7 +62,7 @@ class searchForm(QtWidgets.QWidget):
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.tableWidget = QtWidgets.QTableWidget()
         self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(4)
+        self.tableWidget.setColumnCount(5)
         self.tableWidget.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
@@ -72,11 +72,14 @@ class searchForm(QtWidgets.QWidget):
         self.tableWidget.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(4, item)
         self.verticalLayout.addWidget(self.tableWidget)
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
         self.retranslateUi()
         
 
@@ -93,6 +96,8 @@ class searchForm(QtWidgets.QWidget):
         item.setText(_translate("Form", "生日"))
         item = self.tableWidget.horizontalHeaderItem(3)
         item.setText(_translate("Form", "就診次數"))
+        item = self.tableWidget.horizontalHeaderItem(4)
+        item.setText(_translate("Form", ""))
 
 
 class chartTab(QtWidgets.QWidget):
@@ -109,34 +114,38 @@ class chartTab(QtWidgets.QWidget):
     def search(self):
         #API還沒寫
         cursor = db.findChildren(self.form.input_caseID.text() , self.form.input_name.text())
-
+        print(self.form.input_caseID.text(),self.form.input_name.text())
+    
         while self.form.tableWidget.rowCount() > 0:
             self.form.tableWidget.removeRow(self.form.tableWidget.rowCount()-1)
 
         if cursor:
             for idx, child in enumerate(cursor):
-                self.tableWidget.insertRow(idx)        
+                self.form.tableWidget.insertRow(idx)        
                 
                 item = QtWidgets.QTableWidgetItem()
                 item.setText(child['name'])
-                self.tableWidget.setItem(idx , 0 , item)
+                self.form.tableWidget.setItem(idx , 0 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(child['gender'])
-                self.tableWidget.setItem(idx , 1 , item)
+                if child['gender'] == 'male':
+                    item.setText('男')
+                elif child['gender'] == 'female':
+                    item.setText('女')
+                self.form.tableWidget.setItem(idx , 1 , item)
 
                 item = QtWidgets.QTableWidgetItem()
                 time = datetime.strftime(child['birthday'],'%Y-%m-%d')
                 item.setText(time)
-                self.tableWidget.setItem(idx , 2 , item)
+                self.form.tableWidget.setItem(idx , 2 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(len(child['documents']))
-                self.tableWidget.setItem(idx , 3 , item)
+                item.setText(str(len(child['document'])))
+                self.form.tableWidget.setItem(idx , 3 , item)
                 
                 importBtn = QtWidgets.QPushButton('確認')
-                self.tableWidget.setCellWidget(idx, 4,importBtn)
-                importBtn.clicked.connect(partial(self.create_linebarchart , child['documents']))
+                self.form.tableWidget.setCellWidget(idx, 4,importBtn)
+                importBtn.clicked.connect(partial(self.create_linebarchart , child['document']))
         else:
             informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
@@ -202,7 +211,7 @@ class chartTab(QtWidgets.QWidget):
     def create_linebarchart(self, doc):
         # if Doc['transcription']['analysis'] == None: #是否已分析過
         #     return
-        self.clearlayout()
+        #self.clearLayout()
         # caseDocs = db.findDocsByCaseID(caseID) #查詢個案紀錄
         caseDocs = doc
 
