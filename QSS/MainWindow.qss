@@ -1,0 +1,4 @@
+QWidget {
+    background-color: white;
+    font-family: 'Microsoft YaHei';
+}
