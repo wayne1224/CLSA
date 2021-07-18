@@ -10,7 +10,7 @@
 
 import sys
 import os
-import database.DBapi
+import database.DatabaseApi
 from Mytable import Mytable
 from datetime import datetime
 from functools import partial
@@ -788,7 +788,7 @@ class Tab2(QtWidgets.QWidget):
         self.clearTab()    #清空、復原頁面
         self.clearInput()  #清空、復原輸入欄
 
-        self.caseData = database.DBapi.findContent(caseID, date)
+        self.caseData = database.DatabaseApi.findContent(caseID, date)
         if self.caseData['transcriber']:
             self.transcriber = self.caseData['transcriber']
             self.input_trans.setText(self.transcriber)
@@ -820,7 +820,7 @@ class Tab2(QtWidgets.QWidget):
             self.cmb_caseDates.setCurrentIndex(self.cmb_caseDates.findText(date.strftime("%Y-%m-%d %H:%M")))
             self.caseDate = date
             
-            self.dateSearchData = database.DBapi.findContent(caseID, date)
+            self.dateSearchData = database.DatabaseApi.findContent(caseID, date)
             self.content = self.dateSearchData['FirstContent']
             if self.dateSearchData['transcriber']:  #轉錄者
                 self.transcriber = self.dateSearchData['transcriber']
@@ -830,7 +830,7 @@ class Tab2(QtWidgets.QWidget):
             self.emitKey(key)
 
         else:       #沒傳date(只用caseID查詢)
-            self.caseData = database.DBapi.findDateAndFirstContent(caseID)
+            self.caseData = database.DatabaseApi.findDatesAndFirstContent(caseID)
             self.lbl_caseDate.setVisible(False)
             self.cmb_caseDates.setVisible(False)
 
@@ -912,7 +912,7 @@ class Tab2(QtWidgets.QWidget):
                         data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
                     content.append(data)
                 
-                database.DBapi.updateContent(self.caseID, self.caseDate, self.transcriber, content, totalUtterance, validUtterance)
+                database.DatabaseApi.updateContent(self.caseID, self.caseDate, self.transcriber, content, totalUtterance, validUtterance)
                 utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
                 self.emitUtterNum(utteranceNum)
                 self.content = content    #更新內容
