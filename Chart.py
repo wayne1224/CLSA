@@ -103,7 +103,7 @@ class chartTab(QtWidgets.QWidget):
         self.form = searchForm()
         #add searchForm
         self.layout.addWidget(self.form)
-        self.form.searchBtn.clicked.connect(self.search)
+        self.form.search_btn.clicked.connect(self.search)
 
 
     def search(self):
