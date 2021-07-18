@@ -11,6 +11,7 @@ from datetime import datetime
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 import win32api
+import database.DatabaseApi
 
 class BirthdayEdit(QtWidgets.QDateEdit):
     def __init__(self, parent=None):
@@ -725,7 +726,7 @@ class Myform(QtWidgets.QWidget):
 
     #查詢個案編號並把個案資料貼到Tab1
     def searchCaseID(self): 
-        caseData = database.DBapi.findChildData(self.lineEdit_2.text())
+        caseData = database.DatabaseApi.findChildData(self.lineEdit_2.text())
         print (caseData)
         if caseData:
             self.lineEdit_3.setText(caseData['name'])
@@ -1032,13 +1033,14 @@ class Myform(QtWidgets.QWidget):
                 'others' : self.plainTextEdit.toPlainText(),
                 'situation' : self.plainTextEdit_2.toPlainText()
             }
-            upsert = database.DBapi.upsertChildDataAndRecording(childData, recording)
-            if upsert[1]:
-                print(upsert[0])
-                if upsert[0] == 'update' :
+            upsert1 = database.DatabaseApi.upsertChildData(childData)
+            upsert2 = database.DatabaseApi.upsertRecording(self.lineEdit_2.text(), DateTimeRecordDate, recording)
+            if upsert2[1] and upsert1[1]:
+                print(upsert2[0] and upsert1[1])
+                if upsert2[0] == 'update':
                     self.saveForm = self.returnTab1Data()
                     win32api.MessageBox(0, '更新成功', '提示')
-                if upsert[0] == 'insert' :
+                if upsert2[0] == 'insert' :
                     self.saveForm = self.returnTab1Data()
                     win32api.MessageBox(0, '新增成功', '提示')
                 caseIDandDate = {'caseID':self.lineEdit_2.text(), 'date':DateTimeRecordDate}
