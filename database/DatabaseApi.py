@@ -150,12 +150,13 @@ def upsertChildData(childData):
 
         # insert
         if childDataDB.count_documents(query) == 0:
-            childDataID = childDataDB.insert_one(childData).inserted_id
-            result[0] = childDataID
-
+            result[0] = "insert"
+            childDataDB.insert_one(childData)
+            
         # update
         else: 
-          childDataDB.update_many(query , {"$set" : {
+            result[0] = "update"
+            childDataDB.update_many(query , {"$set" : {
                                                         "caseID" : childData["caseID"],
                                                         "name" : childData["name"],
                                                         "gender" : childData["gender"],
@@ -173,9 +174,12 @@ def upsertRecording(caseID , date , recording):
         query = dict()
         query["caseID"] = caseID
         query["date"] = date
+        result = ["" , True]
 
         # insert
         if documentDB.count_documents(query) == 0:
+            result[0] = "insert"
+
             data = {
                 "caseID" : caseID, 
                 "date" : date,
@@ -191,38 +195,33 @@ def upsertRecording(caseID , date , recording):
             documentDB.insert_one(data)
         # update
         else:
+            result[0] = "update"
             documentDB.update_one(query , {"$set" : {"recording" : recording}})
 
+        return result
     except Exception as e:
+        result[1] = False
         print(e)
-
-# 轉錄表 api
-def findDatesAndFirstContent(caseID):
-    try:
-        dates = list()
-        query = dict()
-        query["caseID"] = caseID
-
-        if documentDB.count_documents(query) == 0:
-            print("can not find this caseID")
-            return False
-  
-        for i in documentDB.find(query):
-            dates.append(i["date"])
-        
-        data = documentDB.find_one(query)["transcription"]
-
-        result = dict()
-        result["dates"] = dates
-        result["transcriber"] = data["transcriber"]
-        result["FirstContent"] = data["content"]
-
         return result
 
-    except Exception as e:
-        print(e)
-        return False
+def upsertChildDataAndRecording(caseID , date , recording , childData):
+    result = ["" , True]
+    result1 = upsertChildData(childData)
+    result2 = upsertRecording(caseID, date , recording)
 
+    result[0] = result1[0]
+    
+    if result1[1] == result2[1]:
+        if result2[1] == True:
+            result[1] = True
+        else:
+            result[1] = False
+    else:
+        result[1] = False
+    
+    return result
+
+# 轉錄表 api
 def findContent(caseID , date):
     try:
         query = dict()
@@ -308,10 +307,10 @@ def updateAnalysis(caseID , date , analysis):
 #                 "gender" : "male",
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
-connectDB()
+# connectDB()
 
 # print(upsertChildData(childData))
 # upsertRecording("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d") , "Recording2")
 # print(findChildData("00757025"))
 # print(findDoc("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d")))
-print(findDocs("" , "" , ""))
+# print(findDocs("" , "" , ""))
