@@ -197,32 +197,6 @@ def upsertRecording(caseID , date , recording):
         print(e)
 
 # 轉錄表 api
-def findDatesAndFirstContent(caseID):
-    try:
-        dates = list()
-        query = dict()
-        query["caseID"] = caseID
-
-        if documentDB.count_documents(query) == 0:
-            print("can not find this caseID")
-            return False
-  
-        for i in documentDB.find(query):
-            dates.append(i["date"])
-        
-        data = documentDB.find_one(query)["transcription"]
-
-        result = dict()
-        result["dates"] = dates
-        result["transcriber"] = data["transcriber"]
-        result["FirstContent"] = data["content"]
-
-        return result
-
-    except Exception as e:
-        print(e)
-        return False
-
 def findContent(caseID , date):
     try:
         query = dict()
@@ -308,10 +282,10 @@ def updateAnalysis(caseID , date , analysis):
 #                 "gender" : "male",
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
-connectDB()
+# connectDB()
 
 # print(upsertChildData(childData))
 # upsertRecording("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d") , "Recording2")
 # print(findChildData("00757025"))
 # print(findDoc("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d")))
-print(findDocs("" , "" , ""))
+# print(findDocs("" , "" , ""))
