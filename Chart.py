@@ -202,16 +202,16 @@ class chartTab(QtWidgets.QWidget):
     #     chartview.setRenderHint(QPainter.Antialiasing)
     #     self.layout.addWidget(chartview)
     # #清除原本layout裡的Widget
-    # def clearlayout(self):
-    #     for i in reversed(range(self.layout.count())):
-    #         print(self.layout.count())
-    #         self.layout.removeItem(self.layout.itemAt(i))
+    def clearLayout(self):
+        for i in reversed(range(self.layout.count()-1)):
+            print(self.layout.count())
+            self.layout.removeItem(self.layout.itemAt(i))
 
 
     def create_linebarchart(self, doc):
         # if Doc['transcription']['analysis'] == None: #是否已分析過
         #     return
-        #self.clearLayout()
+        self.clearLayout()
         # caseDocs = db.findDocsByCaseID(caseID) #查詢個案紀錄
         caseDocs = doc
 
