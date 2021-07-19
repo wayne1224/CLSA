@@ -111,24 +111,29 @@ def findChildData(caseID):
 def findDoc(caseID , date):
     try:
         query2ChildData = dict()
-        query2Recording = dict()
+        query2Document = dict()
 
         query2ChildData["caseID"] = caseID
-        query2Recording["caseID"] = caseID
-        query2Recording["date"] = date
+        query2Document["caseID"] = caseID
+        query2Document["date"] = date
 
         if childDataDB.count_documents(query2ChildData) == 0:
             print("Can not find this Child Data")
             return False
 
-        if documentDB.count_documents(query2Recording) == 0:
+        if documentDB.count_documents(query2Document) == 0:
             print("Can not find this Recording")
             return False
 
         childData = childDataDB.find_one(query2ChildData)
-        recording = documentDB.find_one(query2Recording)
+        document = documentDB.find_one(query2Document)
 
-        return [childData , recording]
+        result = {
+            'childData' : childData,
+            'document' : document
+        }
+
+        return result
         
     except Exception as e:
         print(e)
