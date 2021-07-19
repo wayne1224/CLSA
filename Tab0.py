@@ -129,8 +129,8 @@ class SearchTab(QtWidgets.QWidget):
 
         #QSS
         
-        self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Tab0.qss", "r").read())
-        # self.setStyleSheet(open("QSS/Tab0.qss", "r").read())
+        # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Tab0.qss", "r").read())
+        self.setStyleSheet(open("QSS/Tab0.qss", "r").read())
 
     def _search(self):
         self.procFind.emit()
