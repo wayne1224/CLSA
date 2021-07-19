@@ -71,9 +71,6 @@ def findDocs(SLP , caseID , name):
             }
         ])
 
-        for i in list(result):
-            print(i)
-
         return result
     except Exception as e:
         print(e)     
@@ -321,8 +318,7 @@ def findChildren(caseID , name):
                                 {
                                     '$match': query
                                 }
-                            ])
-
+                            ])  
         return result
     except Exception as e:
         print(e)
@@ -333,11 +329,45 @@ def findChildren(caseID , name):
 #                 "gender" : "male",
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
-connectDB()
-findDocs("" , "00757025" , "")
-# findDocs("" , "00757025" , "")
-# findDoc("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d"))
+# connectDB()
 
+# findDocs return
+# [
+#     {
+#         '_id': ObjectId('60f3f8cbefb5822f048b2bac'), 
+#         'caseID': '00757045', 
+#         'date': datetime.datetime(2021, 7, 18, 17, 42, 24), 
+#         'recording': {
+#             'date': datetime.datetime(2021, 7, 18, 17, 42, 24), 
+#             'SLP': '丁信志', 
+#             'scenario': '下午', 
+#             'fileName': 'sun in 7', 
+#             'location': '虎尾', 
+#             'interactionType': '自由遊戲', 
+#             'inducement': 'NBA', 
+#             'participants': ['兒童', '爸 爸', '媽媽'], 
+#             'equipment': '錄音筆', 
+#             'help': '有時 (2~5次)', 
+#             'others': '無', 
+#             'situation': '無'
+#             }, 
+#         'transcription': {
+#             'transcriber': None, 
+#             'content': None, 
+#             'analysis': None, 
+#             'totalUtterance': None, 
+#             'validUtterance': None}, 
+#             'childData': {
+#                 '_id': ObjectId('60f3f8cbefb5822f048b2bab'), 
+#                 'caseID': '00757045', 
+#                 'name': 'Kenneth', 
+#                 'gender': 'male', 
+#                 'birthday': datetime.datetime(2000, 1, 5, 0, 0)
+#             }
+#     }
+# ]
+
+# findDoc return
 # {'childData': {
 #     '_id': ObjectId('60f0079855497c379424380c'), 
 #     'caseID': '00757025', 
