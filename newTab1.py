@@ -592,12 +592,12 @@ class Myform(QtWidgets.QWidget):
         self.btn_empty.setText(_translate("", "清空資料"))
         self.btn_save.setText(_translate("", "儲存資料"))
 
-    #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
-    @QtCore.pyqtSlot(dict)
-    def getCaseIDAndDate(self, CaseIDAndDate) :
-        Doc = database.DatabaseApi.findDoc(CaseIDAndDate['caseID'], CaseIDAndDate['date'])
-        self.getDoc(Doc)
-        self.saveForm = self.returnTab1Data()
+    # #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
+    # @QtCore.pyqtSlot(dict)
+    # def getCaseIDAndDate(self, CaseIDAndDate) :
+    #     Doc = database.DatabaseApi.findDoc(CaseIDAndDate['caseID'], CaseIDAndDate['date'])
+    #     self.getDoc(Doc)
+    #     self.saveForm = self.returnTab1Data()
 
     #接收來自Tab2的總語句數與有效語句數
     @QtCore.pyqtSlot(dict)
@@ -949,7 +949,7 @@ class Myform(QtWidgets.QWidget):
 
     #接收來自Tab0的所有資料
     @QtCore.pyqtSlot(dict)
-    def getDoc(self, Doc) :
+    def getDoc(self, Doc):
         #設定childData
         if Doc == None:
             return

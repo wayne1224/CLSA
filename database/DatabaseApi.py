@@ -71,8 +71,8 @@ def findDocs(SLP , caseID , name):
             }
         ])
 
-        for i in list(result):
-            print(i)
+        # for i in list(result):
+        #     print(i)
 
         return result
     except Exception as e:
@@ -334,7 +334,7 @@ def findChildren(caseID , name):
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
 connectDB()
-findDocs("" , "00757025" , "")
+#findDocs("" , "00757025" , "")
 # findDocs("" , "00757025" , "")
 # findDoc("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d"))
 

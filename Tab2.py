@@ -442,7 +442,7 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot(dict)
     def getDoc(self, doc):
         self.clearAll()
-        self._importCase(doc['childData']['caseID'], doc['recording']['date'])
+        self._importCase(doc['childData']['caseID'], doc['date'])
 
     #從Tab1接收個案編號和日期
     @QtCore.pyqtSlot(dict)
