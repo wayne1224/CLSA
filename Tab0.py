@@ -180,7 +180,7 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.setCellWidget(idx,7,importBtn)
                 self.tableWidget.setCellWidget(idx,8,deleteBtn)
                 importBtn.clicked.connect(partial(self.importDoc , doc))
-                deleteBtn.clicked.connect(partial(self.deleteDoc , doc['documentObjID'] , idx)) # 只刪document
+                deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx)) # 只刪document
         else:
             informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 

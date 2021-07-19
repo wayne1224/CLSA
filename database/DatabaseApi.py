@@ -66,11 +66,9 @@ def findDocs(SLP , caseID , name):
         for c in childData:
             for d in document:
                 if d["caseID"] == c["caseID"]:
-                    d['recording']['date'] = d['date']
-                    
                     tmp = {
-                        'childData': c,
-                        'documentObjID' : d['_id'],
+                        '_id' : d['_id'],
+                        'childData': c, 
                         'recording' : d['recording'],
                         'transcription' : d['transcription']        
                     }
