@@ -79,6 +79,8 @@ class Mytable(QtWidgets.QWidget):
         self.last_x = -1
         self.edit = True
 
+        self.setStyleSheet(open("QSS/Mytable.qss", "r").read())
+
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         item = self.tableWidget.verticalHeaderItem(0)

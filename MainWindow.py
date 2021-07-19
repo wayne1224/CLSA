@@ -50,11 +50,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.resize(1393, 870)
         self.setWindowTitle("CLSA")
         self.mainTab = MainTabWidget()
+        self.mainTab.tabBar().setDocumentMode(True)
+        self.mainTab.tabBar().setExpanding(True)
         self.setCentralWidget(self.mainTab)
 
         #模糊特效
         #self.blur_effect = QtWidgets.QGraphicsBlurEffect()
         #self.setGraphicsEffect(self.blur_effect)
+
+        #設定tab的css
+        self.setStyleSheet(open("QSS/MainWindow.qss", "r").read())
 
         #signal
         self.mainTab.tab0.procMain.connect(self.getAction)

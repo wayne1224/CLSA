@@ -408,6 +408,8 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noAdultNum.setText("請輸入成人編號！")
         self.msg_noAdultNum.setIcon(QtWidgets.QMessageBox.Information)
 
+        self.setStyleSheet(open("QSS/Tab2.qss", "r").read())
+
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         self.lbl_trans.setText(_translate("", "轉錄者："))
