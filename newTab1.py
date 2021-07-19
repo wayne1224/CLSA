@@ -955,13 +955,13 @@ class Myform(QtWidgets.QWidget):
             return
         self.lbl_showTotalUtterNum.setText(str(Doc['transcription']['totalUtterance']))
         self.lbl_showValidUtterNum.setText(str(Doc['transcription']['validUtterance']))
-        self.input_caseID.setText(Doc['caseID'])
-        self.input_caseName.setText(Doc['name'])
-        if Doc['gender'] == '男':
+        self.input_caseID.setText(Doc['childData']['caseID'])
+        self.input_caseName.setText(Doc['childData']['name'])
+        if Doc['childData']['gender'] == '男':
             self.rbtn_male.setChecked(True)
         else :
             self.rbtn_female.setChecked(True)
-        self.dateEdit_birthday.setDate(Doc['birthday'])
+        self.dateEdit_birthday.setDate(Doc['childData']['birthday'])
 
         #設定recording
         strDate = Doc['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
