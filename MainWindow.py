@@ -13,7 +13,7 @@ class LoadingScreen(QtWidgets.QWidget):
         #self.setFixedSize(200,200)
         self.label1 = QtWidgets.QLabel('<p style="font-size:10pt; color: black; font-weight: bold;">彙整中...</p>')
         self.label1.setAlignment(QtCore.Qt.AlignCenter)
-        self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint)
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
         self.label = QtWidgets.QLabel(self)
         self.movie = QtGui.QMovie('sss.gif')
         self.label.setMovie(self.movie)
@@ -68,6 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #Loading Screen
         self.load = LoadingScreen()
+        self.load.setObjectName("loadScreen") 
         
         # 資料庫連接失敗 直接關閉程式
         self.thread = QtCore.QThread()

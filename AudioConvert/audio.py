@@ -65,12 +65,9 @@ def tranfer(filePath):
 
 
 # button呼叫這個function
-def importAudio(self): 
+def importAudio(filePath): 
     outputText = [] 
-    filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
-                                        "開啟音訊",
-                                        "",
-                                        "Audio Files(*.mp3 *.m4a *.wav)")
+    
     if filePath and os.path.exists(filePath):
         newPath = tranfer(filePath)
         outputText = STT_from_file(newPath)

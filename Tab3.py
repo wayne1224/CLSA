@@ -9,20 +9,7 @@ from statistics import mean
 from datetime import datetime
 from sympy import solve, symbols, sqrt, sympify
 from functools import partial
-
-
-class Worker(QtCore.QObject):
-    finished = QtCore.pyqtSignal()
-    progress = QtCore.pyqtSignal(int)
-
-    def __init__(self, fn):
-        super(Worker, self).__init__()
-        self.func = fn
-
-    def run(self):
-        self.func()
-        self.finished.emit()
-
+from Worker import Worker
 
 class AnalysisTab(QtWidgets.QWidget):
     procMain = QtCore.pyqtSignal(int)

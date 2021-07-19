@@ -16,6 +16,7 @@ from datetime import datetime
 from functools import partial
 from PyQt5 import QtCore, QtGui, QtWidgets
 import AudioConvert.audio
+from Worker import Worker
 
 
 class Tab2(QtWidgets.QWidget):
@@ -329,7 +330,7 @@ class Tab2(QtWidgets.QWidget):
 
         #事件
         self.btn_add.clicked.connect(self._addRow)
-        self.btn_importAudio.clicked.connect(self._importAudio)
+        self.btn_uploadAudio.clicked.connect(self._tranferAudio)
         self.input_utterance.returnPressed.connect(self._addRow)
         self.input_scenario.returnPressed.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
@@ -543,9 +544,35 @@ class Tab2(QtWidgets.QWidget):
                 self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
             self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
 
+    #用Thread呼叫匯入錄音檔
+    def _tranferAudio(self):
+
+        filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
+                                        "開啟音訊",
+                                        "",
+                                        "Audio Files(*.mp3 *.m4a *.wav)")
+
+        #傳signal給MainWindow: 開啟Loading頁
+        self.procMain.emit(2)
+
+        #Create a QThread object
+        self.thread = QtCore.QThread()
+        #Create a worker object
+        self.worker = Worker(partial(self._importAudio, filePath))
+        #Move worker to the thread
+        self.worker.moveToThread(self.thread)
+        #Connect signals and slots
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        #self.worker.progress.connect(self.reportProgress)
+        #Start the thread
+        self.thread.start()
+
     #匯入錄音檔
-    def _importAudio(self):
-        text = AudioConvert.audio.importAudio(self)
+    def _importAudio(self, filePath):
+        text = AudioConvert.audio.importAudio(filePath)
         print(text)
 
         #清空table
@@ -568,6 +595,9 @@ class Tab2(QtWidgets.QWidget):
 
         self.content = content
         self._setTable()
+
+        #傳signal給MainWindow: 關閉Loading頁
+        self.procMain.emit(3)
 
     #新增列
     def _addRow(self):
