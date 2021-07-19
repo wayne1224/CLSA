@@ -130,7 +130,7 @@ def findDoc(caseID , date):
             'childData' : childData,
             'document' : document
         }
-        print(result)
+
         return result
         
     except Exception as e:
@@ -357,13 +357,13 @@ def findChildren(caseID , name):
 #             'analysis': None, 
 #             'totalUtterance': None, 
 #             'validUtterance': None}, 
-#             'childData': {
-#                 '_id': ObjectId('60f3f8cbefb5822f048b2bab'), 
-#                 'caseID': '00757045', 
-#                 'name': 'Kenneth', 
-#                 'gender': 'male', 
-#                 'birthday': datetime.datetime(2000, 1, 5, 0, 0)
-#             }
+#         'childData': {
+#             '_id': ObjectId('60f3f8cbefb5822f048b2bab'), 
+#             'caseID': '00757045', 
+#             'name': 'Kenneth', 
+#             'gender': 'male', 
+#             'birthday': datetime.datetime(2000, 1, 5, 0, 0)
+#         }
 #     }
 # ]
 
