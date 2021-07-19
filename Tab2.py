@@ -330,7 +330,7 @@ class Tab2(QtWidgets.QWidget):
 
         #事件
         self.btn_add.clicked.connect(self._addRow)
-        self.btn_uploadAudio.clicked.connect(self._tranferAudio)
+        self.btn_importAudio.clicked.connect(self._tranferAudio)
         self.input_utterance.returnPressed.connect(self._addRow)
         self.input_scenario.returnPressed.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
