@@ -1,0 +1,31 @@
+QPushButton#btn_search
+{
+    background-color: indianred;
+}
+
+QPushButton#btn_empty
+{
+    background-color: rgb(235, 38, 78);
+    width: 120;
+}
+
+QPushButton#btn_save
+{
+    background-color: cornflowerblue;
+    width: 120;
+}
+
+QPushButton#btn_search:hover
+{
+    background-color: rgb(190, 70, 70);
+}
+
+QPushButton#btn_empty:hover
+{
+    background-color: rgb(219, 26, 65);
+}
+
+QPushButton#btn_save:hover
+{
+    background-color: rgb(90, 138, 226);
+}
