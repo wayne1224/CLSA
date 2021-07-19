@@ -953,8 +953,6 @@ class Myform(QtWidgets.QWidget):
         #設定childData
         if Doc == None:
             return
-        # print(Doc[0])
-        # print(Doc[1])
         self.lbl_showTotalUtterNum.setText(str(Doc['transcription']['totalUtterance']))
         self.lbl_showValidUtterNum.setText(str(Doc['transcription']['validUtterance']))
         self.input_caseID.setText(Doc['caseID'])
