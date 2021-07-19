@@ -251,8 +251,7 @@ class chartTab(QtWidgets.QWidget):
     # #清除原本layout裡的Widget
     def clearLayout(self):
         for i in reversed(range(self.layout.count()-1)):
-            print(self.layout.count())
-            self.layout.removeItem(self.layout.itemAt(i))
+            self.layout.removeItem(self.layout.itemAt(i+1))
 
 
     def create_linebarchart(self, doc):
@@ -304,7 +303,10 @@ class chartTab(QtWidgets.QWidget):
         lineSeries = QLineSeries(self)
         lineSeries.setName("平均值")
         for i, (key, value) in enumerate(sumContent.items()):
-            lineSeries.append(QPoint(i, value/recordCount))
+            if recordCount > 0:
+                lineSeries.append(QPoint(i, value/recordCount))
+            else :
+                lineSeries.append(QPoint(i, 0))
         chart.addSeries(lineSeries)
         lineSeries.attachAxis(axisX)
         lineSeries.attachAxis(axisY)

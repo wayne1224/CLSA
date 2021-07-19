@@ -23,8 +23,8 @@ class DateEdit(QtWidgets.QDateTimeEdit):
         self.setDateTime(QtCore.QDateTime.currentDateTime())
         self.setDisplayFormat("yyyy-MM-dd HH:mm")
 
-class Myform(QtWidgets.QWidget):
-    procStart = QtCore.pyqtSignal(dict)
+# class Myform(QtWidgets.QWidget):
+#     procStart = QtCore.pyqtSignal(dict)
 
     def __init__(self):
         super(Myform, self).__init__()

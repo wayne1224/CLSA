@@ -2,8 +2,7 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from Tab0 import SearchTab
 from Tab2 import Tab2
-#from newTab1 import Tab1
-from Tab1 import Myform
+from newTab1 import Myform
 from Tab3 import AnalysisTab
 from Tab4 import Tab4
 
