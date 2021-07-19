@@ -132,6 +132,7 @@ class Myform(QtWidgets.QWidget):
         font.setPointSize(14)
         self.btn_search.setFont(font)
         self.btn_search.setObjectName("btn_search")
+        self.btn_search.clicked.connect(self.searchCaseID)
         self.horizontalLayout_2.addWidget(self.btn_search)
         self.verticalLayout_4.addLayout(self.horizontalLayout_2)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
