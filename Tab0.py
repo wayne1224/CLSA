@@ -129,8 +129,8 @@ class SearchTab(QtWidgets.QWidget):
 
         #QSS
         
-        # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Tab0.qss", "r").read())
-        self.setStyleSheet(open("QSS/Tab0.qss", "r").read())
+        self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Tab0.qss", "r").read())
+        # self.setStyleSheet(open("QSS/Tab0.qss", "r").read())
 
     def _search(self):
         self.procFind.emit()
@@ -149,11 +149,11 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.setItem(idx , 0 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['caseID'])
+                item.setText(doc['childData']['caseID'])
                 self.tableWidget.setItem(idx , 1 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['name'])
+                item.setText(doc['childData']['name'])
                 self.tableWidget.setItem(idx , 2 , item)
 
                 item = QtWidgets.QTableWidgetItem()
@@ -180,7 +180,7 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.setCellWidget(idx,7,importBtn)
                 self.tableWidget.setCellWidget(idx,8,deleteBtn)
                 importBtn.clicked.connect(partial(self.importDoc , doc))
-                deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx))
+                deleteBtn.clicked.connect(partial(self.deleteDoc , doc['documentObjID'] , idx)) # 只刪document
         else:
             informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
