@@ -40,9 +40,9 @@ def findDocs(SLP , caseID , name):
         if caseID:
             query["caseID"] = caseID
         if name:
-            query["childData"]["name"] = name
+            query["childData.name"] = name
         if SLP:
-            query["recording"]["SLP"] = SLP
+            query["recording.SLP"] = SLP
 
         
         result = documentDB.aggregate([
