@@ -66,12 +66,17 @@ def findDocs(SLP , caseID , name):
         for c in childData:
             for d in document:
                 if d["caseID"] == c["caseID"]:
-                    d["name"] = c["name"]
-                    d["gender"] = c["gender"]
-                    d["birthday"] = c["birthday"]
+                    d['recording']['date'] = d['date']
+                    
+                    tmp = {
+                        'childData': c,
+                        'documentObjID' : d['_id'],
+                        'recording' : d['recording'],
+                        'transcription' : d['transcription']        
+                    }
+                    data.append(tmp)
 
-                    data.append(d)
-
+        print(data)
         return data
 
     except Exception as e:
@@ -132,12 +137,44 @@ def findDoc(caseID , date):
             'childData' : childData,
             'document' : document
         }
-
+        print(result)
         return result
         
     except Exception as e:
         print(e)
         return False
+
+# {'childData': {
+#     '_id': ObjectId('60f0079855497c379424380c'), 
+#     'caseID': '00757025', 
+#     'name': 'Wayne', 
+#     'gender': 'male', 
+#     'birthday': datetime.datetime(1999, 12, 24, 0, 0)
+#     }, 
+# 'document': {
+#     '_id': ObjectId('60f2a9308cf2f71f708dc0d6'), 
+#     'caseID': '00757025', 
+#     'date': datetime.datetime(2021, 7, 15, 0, 0), 
+#     'recording': {
+#         'date': datetime.datetime(2021, 5, 10, 19, 11, 47), 
+#         'SLP': '何文子', 
+#         'scenario': '晚上', 
+#         'fileName': 'CC', 
+#         'location': '海大', 
+#         'interactionType': '自由遊戲', 
+#         'inducement': '健身咖', 
+#         'participants': ['兒童', '老師', 'test'], 
+#         'equipment': '攝影機', 'help': '經常 (6~9次)', 
+#         'others': '健身', 
+#         'situation': ''}, 
+#     'transcription': {
+#         'transcriber': None, 
+#         'content': None, 
+#         'analysis': None, 
+#         'totalUtterance': None, 
+#         'validUtterance': None}
+#         }
+# }
 
 def upsertChildData(childData):
     try:
@@ -332,5 +369,85 @@ def findChildren(caseID , name):
 #                 "gender" : "male",
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
-# connectDB()
+connectDB()
+# findDocs("" , "00757025" , "")
+# findDoc("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d"))
 
+
+
+
+# [   
+#     index = 0
+#     {
+#         '_id': ObjectId('60f2a9308cf2f71f708dc0d6'), 
+#         'caseID': '00757025', 
+#         'date': datetime.datetime(2021, 7, 15, 0, 0), 
+#         'recording': {
+#             'date': datetime.datetime(2021, 5, 10, 19, 11, 47), 
+#             'SLP': '何文子', 
+#             'scenario': '晚上', 
+#             'fileName': 'CC', 
+#             'location': '海大', 
+#             'interactionType': '自由遊戲', 
+#             'inducement': '健身咖', 
+#             'participants': ['兒童', '老師', 'test'], 
+#             'equipment': '攝影機', 'help': '經常 (6~9次)', 
+#             'others': '健身', 'situation': ''
+#             }, 
+#         'transcription': {
+#             'transcriber': None, 
+#             'content': None, 
+#             'analysis': None, 
+#             'totalUtterance': None, 
+#             'validUtterance': None
+#             }, 
+#         'name': 'Wayne', 
+#         'gender': 'male', 
+#         'birthday': datetime.datetime(1999, 12, 24, 0, 0)
+#     },
+
+#     index = 1
+#     {
+#         '_id': ObjectId('60f3ea7082ef192ab8645c89'), 
+#         'caseID': '00757025', 
+#         'date': datetime.datetime(2021, 7, 16, 0, 0), 
+#         'recording': {
+#             'date': datetime.datetime(2021, 5, 10, 19, 11, 47), 
+#             'SLP': '何文豪', 
+#             'scenario': '晚上', 
+#             'fileName': 'CC', 
+#             'location': '海大', 
+#             'interactionType': '自由遊戲', 
+#             'inducement': '健身咖', 
+#             'participants': ['兒童', '老師', 'test'], 
+#             'equipment': '攝影機', 
+#             'help': '經常 (6~9次)', 
+#             'others': '健身', 
+#             'situation': ''
+#             }, 
+#         'transcription': {
+#             'transcriber': '吳鴻億', 
+#             'content': [
+#                 {'ID': '1', 'role': 'child', 'utterance': '我叫吳鴻億', 'scenario': ''}, 
+#                 {'ID': '2', 'role': 'child', 'utterance': '我今天來上課', 'scenario': ''}, 
+#                 {'ID': '3', 'role': 'child', 'utterance': '好好玩今天是一個很好玩的日子\n我要去公園玩有小狗貓咪', 'scenario': ''}, 
+#                 {'ID': '4', 'role': 'child', 'utterance': '上次我去咖啡廳', 'scenario': ''}, 
+#                 {'ID': '5', 'role': 'child', 'utterance': '我今天好好\n', 'scenario': ''}, 
+#                 {'ID': '6', 'role': 'child', 'utterance': '顯違禁', 'scenario': ''}, 
+#                 {'ID': '7', 'role': 'child', 'utterance': '資料資料資料資料資料', 'scenario': ''}, 
+#                 {'ID': '8', 'role': 'child', 'utterance': '我要去賣魯冰花', 'scenario': ''}, 
+#                 {'ID': '9', 'role': 'child', 'utterance': '我今天來上課', 'scenario': ''}, 
+#                 {'ID': '10', 'role': 'child', 'utterance': '我今天來上課', 'scenario': ''}
+#                 ], 
+#             'analysis': {
+#                 'charCount': 82, 
+#                 'wordCount': 53, 
+#                 'Content': {
+#                     'N': 18, 'V': 12, 'VH': 4, 'Neu': 1, 'Nf': 2, 'Nh': 8, 'D': 8, 'percentage': 1, 'sum': 54}, 'Function': {'P': 0, 'C': 0, 'T': 0, 'I': 0, 'percentage': 0, 'sum': 0}, 'VOCD-w': 21.12, 'VOCD-c': 23.56, 'MLU-w': 5.3, 'MLU-c': 8.2, 'MLU5-w': 7.4, 'MLU5-c': 11.2}, 
+#                     'totalUtterance': 10, 'validUtterance': 10
+#                     }, 
+#         'name': 'Wayne', 
+#         'gender': 'male', 
+#         'birthday': datetime.datetime(1999, 12, 24, 0, 0)
+#     }
+# ]
