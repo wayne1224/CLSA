@@ -35,6 +35,7 @@ def connectDB():
 # 查詢頁 api
 def findDocs(SLP , caseID , name):
     try:
+        
         query2ChildData = dict()
         query2Document = dict()       
 
@@ -302,8 +303,6 @@ def findChildren(caseID , name):
         if name:
             query["name"] = name
 
-        print(query)
-
         result = childDataDB.aggregate([
                                 {
                                     '$lookup': {
@@ -328,13 +327,5 @@ def findChildren(caseID , name):
 #                 "gender" : "male",
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
-connectDB()
+# connectDB()
 
-findChildren("00757025" , "")
-
-
-# print(upsertChildData(childData))
-# upsertRecording("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d") , "Recording2")
-# print(findChildData("00757025"))
-# print(findDoc("00757025" , datetime.datetime.strptime("2021-07-15", "%Y-%m-%d")))
-# print(findDocs("" , "" , ""))
