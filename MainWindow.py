@@ -59,6 +59,7 @@ class MainWindow(QtWidgets.QMainWindow):
         #self.setGraphicsEffect(self.blur_effect)
 
         #設定tab的css
+        # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/MainWindow.qss", "r").read())
         self.setStyleSheet(open("QSS/MainWindow.qss", "r").read())
 
         #signal

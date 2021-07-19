@@ -129,6 +129,7 @@ class searchForm(QtWidgets.QWidget):
         self.tableWidget.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
         self.retranslateUi()
+        # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Chart.qss", "r").read())
         self.setStyleSheet(open("QSS/Chart.qss", "r").read())
         
 

@@ -3,6 +3,8 @@ import datetime
 import time
 import calendar
 
+                                       ########### old version database api ########### 
+
 # connect to datebase
 def connectDB():
     global CLSA  
@@ -258,49 +260,6 @@ def findDocsByCaseID(caseID): # argument = caseID, if find return pymongo object
         return db.find(query)
     except Exception as e:
         print(e)
-
-
-a1 = {"ID" : "a1" , "role" : "adult" , "utterance" : "1234" , "scenario" : "123"}
-a2 = {"ID" : "1" , "role" : "child" , "utterance" : "123" , "scenario" : "123"}
-a3 = {"ID" : "" , "role" : "" , "utterance" : "" , "scenario" : "123"}
-
-content = [a1 , a2 , a3]
-
-analysis = {
-            'charCount':0,
-            'wordCount':0,
-            'Content':{
-                'N':0,
-                'V':0,
-                'VH':0,
-                'Neu':0,
-                'Nf':0,
-                'Nh':0,
-                'D':0,
-                'percentage':0.0,
-                'sum':0
-            },
-            'Function':{
-                'P':0,
-                'C':0,
-                'T':0,
-                'I':0,
-                'percentage':0.0,
-                'sum':0
-            },
-            'VOCD-w':0.0,
-            'VOCD-c':0.0,
-            'MLU-w':0,
-            'MLU-c':0,
-            'MLU5-w':0,
-            'MLU5-c':0
-        }
-
-date = datetime.datetime.strptime("2021-04-26 00:00", "%Y-%m-%d %H:%M")
-birthday = datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")
-
-childData = {"caseID" : "001" , "name" : "1234" , "gender" : "male" , "birthday" : birthday}
-recording = {"SLP" : "123" , "date" : date}
 
 # connectDB()
 

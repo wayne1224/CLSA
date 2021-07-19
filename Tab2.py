@@ -416,7 +416,7 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noAdultNum.setIcon(QtWidgets.QMessageBox.Information)
         self.msg_noAdultNum.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
 
-        #QSS
+        # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Tab2.qss", "r").read())
         self.setStyleSheet(open("QSS/Tab2.qss", "r").read())
 
     def retranslateUi(self, ):
