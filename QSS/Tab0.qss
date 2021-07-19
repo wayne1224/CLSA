@@ -1,0 +1,9 @@
+QPushButton#searchBtn
+{
+    background-color: indianred;
+}
+
+QPushButton#searchBtn:hover
+{
+    background-color: rgb(190, 70, 70);
+}

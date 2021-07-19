@@ -127,6 +127,9 @@ class SearchTab(QtWidgets.QWidget):
         layout.addWidget(self.tableWidget)
         self.retranslateUi()
 
+        #QSS
+        self.setStyleSheet(open("QSS/Tab0.qss", "r").read())
+
     def _search(self):
         self.procFind.emit()
         cursor = database.DatabaseApi.findDocs(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
@@ -170,6 +173,8 @@ class SearchTab(QtWidgets.QWidget):
         
                 importBtn = QtWidgets.QPushButton('匯入')
                 deleteBtn = QtWidgets.QPushButton('刪除')
+                importBtn.setStyleSheet("QPushButton {background-color: sandybrown;} QPushButton:hover {background-color: rgb(226, 149, 82);}")
+                deleteBtn.setStyleSheet("QPushButton {background-color: rgb(235, 38, 78);} QPushButton:hover {background-color: rgb(219, 26, 65);}")
                 self.tableWidget.setCellWidget(idx,7,importBtn)
                 self.tableWidget.setCellWidget(idx,8,deleteBtn)
                 importBtn.clicked.connect(partial(self.importDoc , doc))

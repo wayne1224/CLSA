@@ -129,7 +129,9 @@ class searchForm(QtWidgets.QWidget):
         self.tableWidget.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
         self.retranslateUi()
-       
+        self.setStyleSheet(open("QSS/Chart.qss", "r").read())
+        
+
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
@@ -191,6 +193,7 @@ class chartTab(QtWidgets.QWidget):
                 self.form.tableWidget.setItem(idx , 3 , item)
                 
                 importBtn = QtWidgets.QPushButton('確認')
+                importBtn.setStyleSheet("QPushButton {background-color: cornflowerblue;} QPushButton:hover{background-color: rgb(90, 138, 226);}")
                 self.form.tableWidget.setCellWidget(idx, 4,importBtn)
                 importBtn.clicked.connect(partial(self.create_linebarchart , child['document']))
         else:

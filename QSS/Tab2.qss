@@ -1,23 +1,61 @@
-QPushButton
-{
-    border: 1px outset #CCCCCC;
-    border-radius: 10px;
-    font-family: 'Microsoft YaHei';
-}
-
 QPushButton#btn_add
 {
     background-color: aquamarine;
 }
 
-QPushButton#btn_delete
+QPushButton#btn_importAudio
 {
-    background-color: rgb(248, 29, 73);
+    background-color: sandybrown;
 }
 
-QPushButton#btn_add:pressed
+QPushButton#btn_delete
 {
-    border: 1px inset #CCCCCC;
+    background-color: rgb(235, 38, 78);
+}
+
+QPushButton#btn_clearTab
+{
+    background-color: rgb(235, 38, 78);
+}
+
+QPushButton#btn_save
+{
+    background-color: cornflowerblue;
+}
+
+QPushButton#btn_generateAndSave
+{
+    background-color: cornflowerblue;
+}
+
+QPushButton#btn_add:hover
+{
+    background-color: rgb(106, 236, 193);
+}
+
+QPushButton#btn_importAudio:hover
+{
+    background-color: rgb(226, 149, 82);
+}
+
+QPushButton#btn_delete:hover
+{
+    background-color: rgb(219, 26, 65);
+}
+
+QPushButton#btn_clearTab:hover
+{
+    background-color: rgb(219, 26, 65);
+}
+
+QPushButton#btn_save:hover
+{
+    background-color: rgb(90, 138, 226);
+}
+
+QPushButton#btn_generateAndSave:hover
+{
+    background-color: rgb(90, 138, 226);
 }
 
 QComboBox
