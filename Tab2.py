@@ -551,6 +551,8 @@ class Tab2(QtWidgets.QWidget):
                                         "開啟音訊",
                                         "",
                                         "Audio Files(*.mp3 *.m4a *.wav)")
+        if os.path.exists(filePath) == False or filePath == None:
+            return
 
         #傳signal給MainWindow: 開啟Loading頁
         self.procMain.emit(2)
