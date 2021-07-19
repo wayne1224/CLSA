@@ -25,6 +25,7 @@ class Tab2(QtWidgets.QWidget):
     procMain = QtCore.pyqtSignal(int)
     procEdit = QtCore.pyqtSignal()
     procClear = QtCore.pyqtSignal()
+    procAdultID = QtCore.pyqtSignal(dict)
 
     def __init__(self):
         super(Tab2, self).__init__()

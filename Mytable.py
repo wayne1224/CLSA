@@ -319,6 +319,7 @@ class Mytable(QtWidgets.QWidget):
                     item = self.tableWidget.itemFromIndex(index)
                     if item is not None:
                         self.menu = QtWidgets.QMenu(self)
+                        self.menu_adultID = QtWidgets.QMenu(self)
                         f = item.font()
                         if f.bold():
                             self.setValid = QtWidgets.QAction('採計')
@@ -337,9 +338,12 @@ class Mytable(QtWidgets.QWidget):
                             self.toChild.triggered.connect(partial(self.changeRole,item,index))
                             self.menu.addAction(self.toChild)
                         elif index.column() == 4:
+                            self.newID = QtWidgets.QAction('新增')
+                            self.menu_adultID.addAction(self.newID)
                             self.toAdult = QtWidgets.QAction('轉成成人語句')
                             self.toAdult.setObjectName("toAdult")
                             self.toAdult.triggered.connect(partial(self.changeRole,item,index))
+                            #self.toAdult.setMenu(self.menu_adultID)
                             self.menu.addAction(self.toAdult)
 
                         self.menu.exec_(event.globalPos())
