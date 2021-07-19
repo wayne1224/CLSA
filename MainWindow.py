@@ -95,16 +95,16 @@ class MainWindow(QtWidgets.QMainWindow):
             
 
     def closeEvent(self, event):
-        checkTabOne = self.mainTab.tab1.saveExamination()
-        checkTabTwo = self.mainTab.tab2.isEdit()
-        if checkTabTwo == "NoAdultID":
+        checkTab1 = self.mainTab.tab1.saveExamination()
+        checkTab2 = self.mainTab.tab2.isEdit()
+        if checkTab2 == "NoAdultID":
             event.ignore()
         else:
-            if checkTabOne or checkTabTwo:
+            if checkTab1 or checkTab2:
                 warnText = '<p style="font-size:13pt; color: #3778bf;">要儲存對下列頁面的變更嗎?</p>\n'
-                if checkTabOne:
+                if checkTab1:
                     warnText += '收錄表\n'
-                if checkTabTwo:
+                if checkTab2:
                     warnText += '轉錄表'
 
                 close = QtWidgets.QMessageBox.warning(self,

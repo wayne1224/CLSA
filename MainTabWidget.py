@@ -19,6 +19,10 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab3 = AnalysisTab()
         self.tab4 = Tab4()
 
+        #tab4裡的tab自動填滿
+        self.tab4.tabBar().setDocumentMode(True)
+        self.tab4.tabBar().setExpanding(True)
+
         #模糊特效
         self.blur_effect = QtWidgets.QGraphicsBlurEffect()
 

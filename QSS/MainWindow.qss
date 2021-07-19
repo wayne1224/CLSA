@@ -2,3 +2,15 @@ QWidget {
     background-color: white;
     font-family: 'Microsoft YaHei';
 }
+
+QPushButton
+{
+    border: 2px outset #CCCCCC;
+    border-radius: 10px;
+    width: 100;
+}
+
+QPushButton:pressed
+{
+    border: 2px inset #CCCCCC;
+}
