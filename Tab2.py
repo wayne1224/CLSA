@@ -555,7 +555,7 @@ class Tab2(QtWidgets.QWidget):
             return
 
         #傳signal給MainWindow: 開啟Loading頁
-        self.procMain.emit(2)
+        self.procMain.emit(5)
 
         #Create a QThread object
         self.thread = QtCore.QThread()
@@ -599,7 +599,7 @@ class Tab2(QtWidgets.QWidget):
         self._setTable()
 
         #傳signal給MainWindow: 關閉Loading頁
-        self.procMain.emit(3)
+        self.procMain.emit(6)
 
     #新增列
     def _addRow(self):
