@@ -549,6 +549,8 @@ class Myform(QtWidgets.QWidget):
         self.group_recordType.addButton(self.rbtn_pen)
         self.group_recordType.addButton(self.rbtn_camera)
 
+        self.setStyleSheet(open("QSS/Tab1.qss", "r").read())
+
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         self.lbl_title.setText(_translate("", "CLSA分析"))
