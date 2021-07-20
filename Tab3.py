@@ -52,7 +52,7 @@ class AnalysisTab(QtWidgets.QWidget):
         font = QtGui.QFont()
         font.setPointSize(14)
         self.caseID_label.setFont(font)
-        self.caseID_label.setText("")
+        self.caseID_label.setText("d")
         self.caseID_label.setObjectName("caseID_label")
         self.horizontalLayout_2.addWidget(self.caseID_label)
         self.headerLayout.addLayout(self.horizontalLayout_2)
@@ -279,6 +279,11 @@ class AnalysisTab(QtWidgets.QWidget):
         if key != None:
             if '_id' in key: #若傳入整個document
                 self.clearContent()
+                self.caseID = key['caseID']
+                self.date = key['date']
+                self.caseID_label.setText(str(self.caseID))
+                date_time = self.date.strftime("%Y-%m-%d %H:%M")
+                self.date_label.setText(date_time)
                 if key['transcription']['analysis']:
                     self.setContent(key['transcription']['analysis'])
             else:
@@ -476,8 +481,8 @@ class AnalysisTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot()
     def clearContent(self):
-        self.caseID_label.setText('')
-        self.date_label.setText('')
+        #self.caseID_label.setText('')
+        #self.date_label.setText('')
         
         self.tableWidget.item(1,3).setText('') 
         self.tableWidget.item(2,3).setText('') 
