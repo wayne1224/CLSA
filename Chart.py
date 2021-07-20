@@ -40,7 +40,7 @@ class searchForm(QtWidgets.QWidget):
         self.tableWidget.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(4, item)
-        self.gridLayout.addWidget(self.tableWidget, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.tableWidget, 3, 0, 1, 1)
 
         self.upperLayout = QtWidgets.QHBoxLayout()
         self.upperLayout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
@@ -106,6 +106,12 @@ class searchForm(QtWidgets.QWidget):
         self.input_name.setSizePolicy(sizePolicy)
         self.input_name.setMaximumSize(QtCore.QSize(16777215, 50))
         self.input_name.setObjectName("input_name")
+        self.input_name.setFont(font)
+        #提示字
+        self.remindText = QtWidgets.QLabel()
+        self.remindText.setMaximumSize(QtCore.QSize(16777215, 25))
+        self.gridLayout.addWidget(self.remindText, 2, 0, 1, 1)
+
         self.horizontalLayout_3.addWidget(self.input_name)
         self.search_btn = QtWidgets.QPushButton()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
@@ -128,6 +134,7 @@ class searchForm(QtWidgets.QWidget):
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         self.retranslateUi()
         # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Chart.qss", "r").read())
         self.setStyleSheet(open("QSS/Chart.qss", "r").read())
@@ -147,6 +154,7 @@ class searchForm(QtWidgets.QWidget):
         self.label_2.setText(_translate("", "個案編號："))
         self.label.setText(_translate("", "個案姓名："))
         self.search_btn.setText(_translate("", "查詢"))
+        self.remindText.setText(_translate("", "  提示:都不輸入則顯示所有孩童"))
 
 
 class chartTab(QtWidgets.QWidget):
@@ -162,7 +170,9 @@ class chartTab(QtWidgets.QWidget):
 
 
     def search(self):
-        #API還沒寫
+        #移除提示
+        self.form.remindText.setHidden(True)
+
         cursor = db.findChildren(self.form.input_caseID.text() , self.form.input_name.text())
         print(self.form.input_caseID.text(),self.form.input_name.text())
     
@@ -255,6 +265,7 @@ class chartTab(QtWidgets.QWidget):
     # #清除原本layout裡的Widget
     def clearLayout(self):
         for i in reversed(range(self.layout.count()-1)):
+            print(self.layout.count())
             self.layout.removeItem(self.layout.itemAt(i+1))
 
 
