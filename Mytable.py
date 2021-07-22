@@ -78,6 +78,8 @@ class Mytable(QtWidgets.QWidget):
         self.id_x = -1
         self.last_x = -1
         self.edit = True
+
+        self.adultID = {}
         
         # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Mytable.qss", "r").read())
         self.setStyleSheet(open("QSS/Mytable.qss", "r").read())
@@ -95,6 +97,12 @@ class Mytable(QtWidgets.QWidget):
         item.setText(_translate("MainWindow", "兒童編號"))
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "兒童語句"))
+
+    #從Tab2接收AdultID
+    @QtCore.pyqtSlot(dict)
+    def getAdultID(self, adultID):
+        self.adultID = adultID
+        sorted(self.adultID)
     
     def _addRow(self):
         #if self._checkAdult():
@@ -320,7 +328,6 @@ class Mytable(QtWidgets.QWidget):
                     item = self.tableWidget.itemFromIndex(index)
                     if item is not None:
                         self.menu = QtWidgets.QMenu(self)
-                        self.menu_adultID = QtWidgets.QMenu(self)
                         f = item.font()
                         if f.bold():
                             self.setValid = QtWidgets.QAction('採計')
@@ -336,16 +343,20 @@ class Mytable(QtWidgets.QWidget):
                         if index.column() == 1:
                             self.toChild = QtWidgets.QAction('轉成兒童語句')
                             self.toChild.setObjectName("toChild")
-                            self.toChild.triggered.connect(partial(self.changeRole,item,index))
+                            self.toChild.triggered.connect(partial(self.changeRole,item,index,None))
                             self.menu.addAction(self.toChild)
                         elif index.column() == 4:
+                            self.toAdult = QtWidgets.QMenu('轉成成人語句', self)
+                            self.oldID = []
+                            for ID in self.adultID.keys():
+                                self.temp = QtWidgets.QAction(ID)
+                                self.oldID.append(self.temp)
+                                self.oldID[len(self.oldID)-1].triggered.connect(partial(self.changeRole,item,index,ID))
+                                self.toAdult.addAction(self.oldID[len(self.oldID)-1])
                             self.newID = QtWidgets.QAction('新增')
-                            self.menu_adultID.addAction(self.newID)
-                            self.toAdult = QtWidgets.QAction('轉成成人語句')
+                            self.toAdult.addAction(self.newID)
                             self.toAdult.setObjectName("toAdult")
-                            self.toAdult.triggered.connect(partial(self.changeRole,item,index))
-                            #self.toAdult.setMenu(self.menu_adultID)
-                            self.menu.addAction(self.toAdult)
+                            self.menu.addMenu(self.toAdult)
 
                         self.menu.exec_(event.globalPos())
 
@@ -366,22 +377,28 @@ class Mytable(QtWidgets.QWidget):
             f.setBold(True)
             item.setFont(f)
 
-    def changeRole(self, item, index):
+    def changeRole(self, item, index, ID):
         text = item.text()
         item.setText("")
         itemCopy = QtWidgets.QTableWidgetItem(text)
-        if index.column() == 1:     #toChild
+        #toChild
+        #if index.column() == 1:
+        if ID == None:
             self.tableWidget.setItem(index.row(), 4, itemCopy)
             if self.tableWidget.item(index.row(), 0) != None:
                 self.tableWidget.item(index.row(), 0).setText("")
             self.tableWidget.item(index.row(), 4).setSelected(True)
             self._setChildID()
-        if index.column() == 4:     #toAdult
+        #toAdult
+        #if index.column() == 4:
+        else:
             self.tableWidget.setItem(index.row(), 1, itemCopy)
             if self.tableWidget.item(index.row(), 3) != None:
                 self.tableWidget.item(index.row(), 3).setText("")
             if self.tableWidget.item(index.row(), 0) == None:
-                self.tableWidget.setItem(index.row(), 0, QtWidgets.QTableWidgetItem(""))
+                self.tableWidget.setItem(index.row(), 0, QtWidgets.QTableWidgetItem(ID))
+            else:
+                self.tableWidget.item(index.row(), 0).setText(ID)
             self.tableWidget.item(index.row(), 0).setSelected(True)
             self._setAdultID()
 

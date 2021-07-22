@@ -56,7 +56,6 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #搜尋頁面按下搜尋時，其他頁面清空
         self.tab0.procFind.connect(self.tab1.clearContent)
         self.tab0.procFind.connect(self.tab2.clearTab)
-        self.tab0.procFind.connect(self.tab2.clearInput)
         self.tab0.procFind.connect(self.tab3.clearContent)
         self.tab2.procClear.connect(self.tab3.clearContent)
 
