@@ -347,20 +347,38 @@ class Mytable(QtWidgets.QWidget):
                             self.menu.addAction(self.toChild)
                         elif index.column() == 4:
                             self.toAdult = QtWidgets.QMenu('轉成成人語句', self)
+                            self.toAdult.setObjectName("toAdult")
+
                             self.oldID = []
                             for ID in self.adultID.keys():
                                 self.temp = QtWidgets.QAction(ID)
                                 self.oldID.append(self.temp)
                                 self.oldID[len(self.oldID)-1].triggered.connect(partial(self.changeRole,item,index,ID))
                                 self.toAdult.addAction(self.oldID[len(self.oldID)-1])
-                            self.newID = QtWidgets.QAction('新增')
-                            self.toAdult.addAction(self.newID)
-                            self.toAdult.setObjectName("toAdult")
+                            
+                            self.inputID = QtWidgets.QLineEdit()
+                            self.inputID.setPlaceholderText('新增')
+                            self.inputID.setMaximumWidth(70)
+                            self.addID = QtWidgets.QWidgetAction(self)
+                            self.addID.setDefaultWidget(self.inputID)
+                            self.toAdult.addAction(self.addID)
+
+                            self.btnConfirmID = QtWidgets.QPushButton('確認')
+                            self.btnConfirmID.setMaximumWidth(70)
+                            self.btnConfirmID.clicked.connect(partial(self.addNewID,item,index))
+                            print(self.inputID.text())
+                            self.confirmID = QtWidgets.QWidgetAction(self)
+                            self.confirmID.setDefaultWidget(self.btnConfirmID)
+                            self.toAdult.addAction(self.confirmID)
+
                             self.menu.addMenu(self.toAdult)
 
                         self.menu.exec_(event.globalPos())
 
         return super(Mytable,self).eventFilter(source, event)
+    
+    def addNewID(self, item, index):
+        self.changeRole(item, index, self.inputID.text())
 
     def toValid(self,f,item):
         f.setBold(False)
@@ -399,7 +417,7 @@ class Mytable(QtWidgets.QWidget):
                 self.tableWidget.setItem(index.row(), 0, QtWidgets.QTableWidgetItem(ID))
             else:
                 self.tableWidget.item(index.row(), 0).setText(ID)
-            self.tableWidget.item(index.row(), 0).setSelected(True)
+            self.tableWidget.item(index.row(), 1).setSelected(True)
             self._setAdultID()
 
     def generateMenu(self, pos):

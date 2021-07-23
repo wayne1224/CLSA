@@ -710,6 +710,8 @@ class Tab2(QtWidgets.QWidget):
                     self._setInpBorderColorAndJumpMsg('NoUtter')
             else:   #編號不是英文
                 self.msg_roleNotAlpha.exec_()
+        
+        self.emitID(self.adultNums) #傳成人編號給Table
 
     # #新增列
     # def _addRow(self):
