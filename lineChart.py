@@ -16,9 +16,9 @@ class lineChartTab(QtWidgets.QWidget):
 
     # #清除原本layout裡的Widget
     def clearLayout(self):
-        for i in reversed(range(self.layout.count()-1)):
+        for i in reversed(range(self.layout.count())):
             print(self.layout.count())
-            self.layout.removeItem(self.layout.itemAt(i+1))
+            self.layout.removeItem(self.layout.itemAt(i))
 
     @QtCore.pyqtSlot(list)
     def lineChart(self, caseDocs):
@@ -66,8 +66,6 @@ class lineChartTab(QtWidgets.QWidget):
         chartView.setRenderHint(QPainter.Antialiasing)
         
         self.layout.addWidget(chartView)
-
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

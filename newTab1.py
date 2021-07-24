@@ -965,7 +965,7 @@ class Myform(QtWidgets.QWidget):
         self.dateEdit_birthday.setDate(Doc['childData']['birthday'])
 
         #設定recording
-        strDate = Doc['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
+        strDate = Doc['date'].strftime("%Y-%m-%d %H:%M:%S")
         Date = strDate + '.224000'
         DateTimeDate = datetime.strptime(Date, "%Y-%m-%d %H:%M:%S.%f")
         self.dateEdit_recordDate.setDateTime(DateTimeDate)
