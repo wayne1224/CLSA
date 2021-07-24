@@ -993,6 +993,8 @@ class Tab2(QtWidgets.QWidget):
     def _save(self, isBtn):
         if self.caseData:   #已查詢個案
             if self.input_trans.text():
+                self.tableWidget.checkAllID()
+                
                 self.transcriber = self.input_trans.text()
                 content = self._getCurrentContent()    #對話內容
                 childUtterance = [] #兒童語句
