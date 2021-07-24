@@ -52,7 +52,7 @@ class AnalysisTab(QtWidgets.QWidget):
         font = QtGui.QFont()
         font.setPointSize(14)
         self.caseID_label.setFont(font)
-        self.caseID_label.setText("d")
+        self.caseID_label.setText("")
         self.caseID_label.setObjectName("caseID_label")
         self.horizontalLayout_2.addWidget(self.caseID_label)
         self.headerLayout.addLayout(self.horizontalLayout_2)
@@ -380,7 +380,7 @@ class AnalysisTab(QtWidgets.QWidget):
             for pair in sent:
                 wordCount[i] += 1 #統計每句詞數
                 wordArray.append(pair[0]) #收集詞
-                charArray.append(len(pair[0]))
+                charArray.extend(list(pair[0]))
                 #統計實詞
                 if pair[1] == 'Neu':
                     Analysis['Content']['Neu'] += 1
@@ -408,6 +408,9 @@ class AnalysisTab(QtWidgets.QWidget):
                 else:
                     wordCount[i] -= 1
                     charCount[i] -= 1
+                    #去除無效字
+                    wordArray = wordArray[:-1]
+                    charArray = charArray[:-len(pair[0])]
                     # if ord(charArray[-1]) + 65248 == ord(wordArray.pop()):  #去除無效詞
                     #     charArray.pop() #去除無效字
             i += 1
