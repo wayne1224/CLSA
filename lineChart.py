@@ -20,9 +20,53 @@ class lineChartTab(QtWidgets.QWidget):
             print(self.layout.count())
             self.layout.removeItem(self.layout.itemAt(i+1))
 
-    def lineChart(self, doc):
+    @QtCore.pyqtSlot(list)
+    def lineChart(self, caseDocs):
         self.clearLayout()
+        chart =  QChart()
+        chart.setTitle(caseDocs[0]['caseID'] + "個案分析")
+        font = QtGui.QFont()
+        font.setPixelSize(24)
+        chart.setTitleFont(font)
+
+        axisX = QBarCategoryAxis()
+        axisY = QValueAxis()
+        chart.addAxis(axisY, Qt.AlignLeft)
+        axisY.setRange(0.0, 100.0)
+
+        categories = []
+        lineSeriesVOCD_w = QLineSeries(self)
+        lineSeriesVOCD_w.setName("VOCD-w")
+        lineSeriesVOCD_c = QLineSeries(self)
+        lineSeriesVOCD_c.setName("VOCD-c")
+        for i, index in enumerate(caseDocs):
+            if index['transcription']['analysis'] != None:
+                strDate = index['date'].strftime("%Y-%m-%d %H:%M")
+                categories.append(strDate)
+                if (index['transcription']['analysis']['VOCD-w'] != '樣本數不足') :
+                    lineSeriesVOCD_w.append(QPoint(i, index['transcription']['analysis']['VOCD-w']))
+                    lineSeriesVOCD_c.append(QPoint(i, index['transcription']['analysis']['VOCD-c']))
+
+        axisX.append(categories)
+        chart.addAxis(axisX, Qt.AlignBottom)
+        axisX.setRange(categories[0], categories[len(categories) - 1])
+        print(categories)
         
+        chart.addSeries(lineSeriesVOCD_w)
+        chart.addSeries(lineSeriesVOCD_c)
+        lineSeriesVOCD_w.attachAxis(axisX)
+        lineSeriesVOCD_w.attachAxis(axisY)
+        lineSeriesVOCD_c.attachAxis(axisX)
+        lineSeriesVOCD_c.attachAxis(axisY)
+
+        chart.legend().setVisible(True)
+        chart.legend().setAlignment(Qt.AlignBottom)
+
+        chartView = QChartView(chart)
+        chartView.setRenderHint(QPainter.Antialiasing)
+        
+        self.layout.addWidget(chartView)
+
 
 
 if __name__ == "__main__":

@@ -158,6 +158,8 @@ class searchForm(QtWidgets.QWidget):
 
 
 class chartTab(QtWidgets.QWidget):
+    procCaseDocs = QtCore.pyqtSignal(list)
+
     def __init__(self):
         super(chartTab, self).__init__()
         self.layout = QtWidgets.QVBoxLayout()
@@ -207,6 +209,7 @@ class chartTab(QtWidgets.QWidget):
                 importBtn.setStyleSheet("QPushButton {background-color: cornflowerblue;} QPushButton:hover{background-color: rgb(90, 138, 226);}")
                 self.form.tableWidget.setCellWidget(idx, 4,importBtn)
                 importBtn.clicked.connect(partial(self.create_linebarchart , child['document']))
+
         else:
             informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
@@ -262,7 +265,7 @@ class chartTab(QtWidgets.QWidget):
     #     chartview = QChartView(chart)
     #     chartview.setRenderHint(QPainter.Antialiasing)
     #     self.layout.addWidget(chartview)
-    
+
     # #清除原本layout裡的Widget
     def clearLayout(self):
         for i in reversed(range(self.layout.count()-1)):
@@ -271,11 +274,14 @@ class chartTab(QtWidgets.QWidget):
 
 
     def create_linebarchart(self, doc):
+        self.procCaseDocs.emit(doc)
+        print(type(doc))
         # if Doc['transcription']['analysis'] == None: #是否已分析過
         #     return
         self.clearLayout()
         # caseDocs = db.findDocsByCaseID(caseID) #查詢個案紀錄
         caseDocs = doc
+        print(type(caseDocs))
 
         chart =  QChart()
         chart.setTitle("個案" + caseDocs[0]['caseID'] + "就診紀錄")
@@ -298,7 +304,7 @@ class chartTab(QtWidgets.QWidget):
         chart.addSeries(barSeries)
         for index in caseDocs:
             if index['transcription']['analysis'] != None:
-                strDate = index['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
+                strDate = index['date'].strftime("%Y-%m-%d %H:%M")
                 set = QBarSet(strDate)
                 set.setLabelFont(font)
                 for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
