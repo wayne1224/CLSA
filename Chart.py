@@ -275,13 +275,11 @@ class chartTab(QtWidgets.QWidget):
 
     def create_linebarchart(self, doc):
         self.procCaseDocs.emit(doc)
-        print(type(doc))
         # if Doc['transcription']['analysis'] == None: #是否已分析過
         #     return
         self.clearLayout()
         # caseDocs = db.findDocsByCaseID(caseID) #查詢個案紀錄
         caseDocs = doc
-        print(type(caseDocs))
 
         chart =  QChart()
         chart.setTitle("個案" + caseDocs[0]['caseID'] + "就診紀錄")
