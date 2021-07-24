@@ -10,6 +10,7 @@
 
 import sys
 import os
+import re
 import database.DatabaseApi
 from Mytable import Mytable
 from functools import partial
@@ -191,8 +192,8 @@ class Tab2(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.input_utterance.sizePolicy().hasHeightForWidth())
         self.input_utterance.setSizePolicy(sizePolicy)
-        self.input_utterance.setMinimumSize(QtCore.QSize(400, 0))
-        self.input_utterance.setMaximumSize(QtCore.QSize(400, 16777215))
+        self.input_utterance.setMinimumSize(QtCore.QSize(500, 0))
+        self.input_utterance.setMaximumSize(QtCore.QSize(500, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.input_utterance.setFont(font)
@@ -218,8 +219,8 @@ class Tab2(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.input_scenario.sizePolicy().hasHeightForWidth())
         self.input_scenario.setSizePolicy(sizePolicy)
-        self.input_scenario.setMinimumSize(QtCore.QSize(400, 0))
-        self.input_scenario.setMaximumSize(QtCore.QSize(400, 16777215))
+        self.input_scenario.setMinimumSize(QtCore.QSize(500, 0))
+        self.input_scenario.setMaximumSize(QtCore.QSize(500, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.input_scenario.setFont(font)
@@ -336,7 +337,10 @@ class Tab2(QtWidgets.QWidget):
         self.btn_generateAndSave.clicked.connect(self._generateAndSave)
         #self.cmb_caseDates.activated.connect(self._searchCmbDate)
         self.tableWidget.tableWidget.cellClicked.connect(self._syncTableCmbRoleNum)
-        self.procAdultID.connect(self.tableWidget.getAdultID)
+
+        #signal
+        self.tableWidget.procAllID.connect(self.getAllID)
+        self.tableWidget.procChange.connect(self.roleChangeCheck)
 
         self.caseID = ''    #個案編號
         self.caseData = {}  #用caseID查的個案紀錄{'dates', 'transcriber', 'FirstContent'}
@@ -455,16 +459,22 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def emitChildUtter(self, utterance):
         self.procChildUtter.emit(utterance)
-        
+
     #傳個案編號、日期給Tab1和Tab3
     @QtCore.pyqtSlot()
     def emitKey(self, key):
         self.procKey.emit(key)
 
-    #傳AdultID給MyTable
+    #Table角色切換
     @QtCore.pyqtSlot()
-    def emitID(self, adultID):
-        self.procAdultID.emit(adultID)
+    def roleChangeCheck(self):
+        self._syncTableCmbRoleNum()
+
+    #從Table拿兒童、成人編號
+    @QtCore.pyqtSlot(dict)
+    def getAllID(self, IDDict):
+        self.childNum = IDDict['childID']
+        self.adultNums = IDDict['adultID']
 
     #清空、復原輸入欄
     @QtCore.pyqtSlot()
@@ -528,37 +538,38 @@ class Tab2(QtWidgets.QWidget):
     def _getCurrentContent(self):
         content = []
         for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
+            adultID = self.tableWidget.tableWidget.item(rowIndex, 0)
+            adultUtter = self.tableWidget.tableWidget.item(rowIndex, 1)
+            scenario = self.tableWidget.tableWidget.item(rowIndex, 2)
+            childID = self.tableWidget.tableWidget.item(rowIndex, 3)
+            childUtter = self.tableWidget.tableWidget.item(rowIndex, 4)
             data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
+
             #adult
-            if self.tableWidget.tableWidget.item(rowIndex, 1) and not self.tableWidget.tableWidget.item(rowIndex, 1).text() == '':
-                if self.tableWidget.tableWidget.item(rowIndex, 0) == None or self.tableWidget.tableWidget.item(rowIndex, 0).text() == '':
-                    self.msg_noAdultNum.exec_()
-                    return "NoAdultID"
-                else:
-                    data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 0).text()
-                    data['role'] = 'adult'
-                    if self.tableWidget.tableWidget.item(rowIndex, 1) == None:
-                        item = QtWidgets.QTableWidgetItem()
-                        item.setText('')
-                        self.tableWidget.tableWidget.setItem(rowIndex, 1, item)
-                    data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
+            if adultUtter and not adultUtter.text() == '':
+                if adultID == None:
+                    item = QtWidgets.QTableWidgetItem()
+                    item.setText('')
+                    self.tableWidget.tableWidget.setItem(rowIndex, 0, item)
+                data['ID'] = adultID.text()
+                data['role'] = 'adult'
+                data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 1).text()
             #child
-            elif self.tableWidget.tableWidget.item(rowIndex, 4) and not self.tableWidget.tableWidget.item(rowIndex, 4).text() == '':
-                data['ID'] = self.tableWidget.tableWidget.item(rowIndex, 3).text()
+            elif childUtter and not childUtter.text() == '':
+                if childID == None:
+                    item = QtWidgets.QTableWidgetItem()
+                    item.setText('')
+                    self.tableWidget.tableWidget.setItem(rowIndex, 3, item)
+                data['ID'] = childID.text()
                 data['role'] = 'child'
-                if self.tableWidget.tableWidget.item(rowIndex, 4) == None:
-                    item = QtWidgets.QTableWidgetItem()
-                    item.setText('')
-                    self.tableWidget.tableWidget.setItem(rowIndex, 4, item)
                 data['utterance'] = self.tableWidget.tableWidget.item(rowIndex, 4).text()
-            if self.tableWidget.tableWidget.item(rowIndex, 2):
-                if self.tableWidget.tableWidget.item(rowIndex, 2) == None:
-                    item = QtWidgets.QTableWidgetItem()
-                    item.setText('')
-                    self.tableWidget.tableWidget.setItem(rowIndex, 2, item)
-                data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
+            if scenario == None:
+                item = QtWidgets.QTableWidgetItem()
+                item.setText('')
+                self.tableWidget.tableWidget.setItem(rowIndex, 2, item)
+            data['scenario'] = self.tableWidget.tableWidget.item(rowIndex, 2).text()
             content.append(data)
-        
+
         return content
 
     #set table
@@ -578,11 +589,13 @@ class Tab2(QtWidgets.QWidget):
 
             if content[i]["role"] == "adult":  #成人
                 if content[i]["ID"]:   #如果有編號(有採計)
-                    if not content[i]["ID"][0] in self.adultNums:  #新的成人編號
-                        self.adultNums[content[i]["ID"][0]] = 1
+                    pattern = r"[a-zA-Z]+"
+                    key = re.search(pattern,content[i]["ID"]).group()
+                    if not key in self.adultNums:  #新的成人編號
+                        self.adultNums[key] = 1
                         self._updateCmbRole()  #更新編號選單
                     else:   #已有的成人編號
-                        self.adultNums[content[i]["ID"][0]] += 1
+                        self.adultNums[key] += 1
                 else:
                     font = utterance.font()
                     font.setBold(True)
@@ -601,6 +614,8 @@ class Tab2(QtWidgets.QWidget):
                 self.tableWidget.tableWidget.setItem(rowCount, 3, role)
                 self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
             self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
+
+        self.tableWidget.checkAllID()
 
     #用Thread呼叫匯入錄音檔
     def _tranferAudio(self):
@@ -650,7 +665,7 @@ class Tab2(QtWidgets.QWidget):
 
         #傳signal給MainWindow: 關閉Loading頁
         self.procMain.emit(6)
-    
+
     #新增列
     def _addRow(self):
         data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
@@ -661,7 +676,7 @@ class Tab2(QtWidgets.QWidget):
                 if not self.cbx_notCount.isChecked():   #此句採計
                     self.childNum += 1
                     data['ID'] = self.childNum.__str__()
-                    data['role'] = 'child'
+                data['role'] = 'child'
                 data['utterance'] = self.input_utterance.text()
 
                 content = self._getCurrentContent()
@@ -685,7 +700,7 @@ class Tab2(QtWidgets.QWidget):
                 self.input_utterance.setFocus()     #focus到語句欄
             else:
                 self._setInpBorderColorAndJumpMsg('NoScenario')
-        
+
         else:   #新增成人語句
             if self.cmb_role.currentText().encode( 'UTF-8' ).isalpha():
                 if self.input_utterance.text():  #檢查有輸入句子
@@ -696,7 +711,7 @@ class Tab2(QtWidgets.QWidget):
                             self.adultNums[self.cmb_role.currentText()] += 1
                         ID = self.cmb_role.currentText() + self.adultNums[self.cmb_role.currentText()].__str__()
                         data['ID'] = ID
-                        data['role'] = 'adult'
+                    data['role'] = 'adult'
                     data['utterance'] = self.input_utterance.text()
 
                     content = self._getCurrentContent()
@@ -710,8 +725,6 @@ class Tab2(QtWidgets.QWidget):
                     self._setInpBorderColorAndJumpMsg('NoUtter')
             else:   #編號不是英文
                 self.msg_roleNotAlpha.exec_()
-        
-        self.emitID(self.adultNums) #傳成人編號給Table
 
     # #新增列
     # def _addRow(self):
@@ -735,7 +748,7 @@ class Tab2(QtWidgets.QWidget):
     #                 font.setBold(True)
     #                 utterance.setFont(font)
     #                 self.tableWidget.tableWidget.setItem(rowCount, 4, utterance)
-                
+
     #             self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
     #             self.tableWidget.tableWidget.scrollToBottom() #新增完會保持置底
 
@@ -802,15 +815,21 @@ class Tab2(QtWidgets.QWidget):
         indexes = self.tableWidget.tableWidget.selectionModel().selectedRows()
         if indexes:
             for index in sorted(indexes, reverse = True):
+                adultUtter = self.tableWidget.tableWidget.item(index.row(), 1)
+                childUtter = self.tableWidget.tableWidget.item(index.row(), 4)
+
                 #刪除成人語句
-                if self.tableWidget.tableWidget.item(index.row(), 0) and not self.tableWidget.tableWidget.item(index.row(), 0).text() == '':
-                    self.adultNums[self.tableWidget.tableWidget.item(index.row(), 0).text()[0]] -= 1   #成人編號-1
-                    if self.adultNums[self.tableWidget.tableWidget.item(index.row(), 0).text()[0]] == 0:
-                        self.cmb_role.removeItem(self.cmb_role.findText(self.tableWidget.tableWidget.item(index.row(), 0).text()[0]))
+                if adultUtter and not adultUtter.text() == '':
+                    pattern = r"[a-zA-Z]+"
+                    key = re.search(pattern,self.tableWidget.tableWidget.item(index.row(), 0).text()).group()
+                    self.adultNums[key] -= 1   #成人編號-1
+                    if self.adultNums[key] == 0:
+                        self.cmb_role.removeItem(self.cmb_role.findText(key))
                 #刪除兒童語句
-                if self.tableWidget.tableWidget.item(index.row(), 4) and not self.tableWidget.tableWidget.item(index.row(), 4).text() == '':
+                if childUtter and not childUtter.text() == '':
                     self.childNum -= 1  #兒童編號-1
                 self.tableWidget.tableWidget.removeRow(index.row())
+            self.tableWidget.checkAllID()
             self._syncTableCmbRoleNum()
         else:
             self.msg_deleteNotSelect.exec_()
@@ -838,37 +857,40 @@ class Tab2(QtWidgets.QWidget):
     #                 if not self.tableWidget.tableWidget.item(index, 3).text() == checkChildNum.__str__():
     #                     currectNum = QtWidgets.QTableWidgetItem(checkChildNum.__str__())
     #                     self.tableWidget.tableWidget.setItem(index, 3, currectNum)
-        
+
     #     print('check')
     #     self.emitID(self.adultNums)
-    
+
     #更改table時同步更新comboBox編號
     def _syncTableCmbRoleNum(self):
         checkAdultNum = {}
         checkChildNum = 0
         for index in range(self.tableWidget.tableWidget.rowCount()):
-            if self.tableWidget.tableWidget.item(index, 0):   #成人語句
-                if not self.tableWidget.tableWidget.item(index, 0).text().__len__() == 0:   #不是空字串
-                    if not self.tableWidget.tableWidget.item(index, 0).text()[0] in checkAdultNum:
-                        checkAdultNum[self.tableWidget.tableWidget.item(index, 0).text()[0]] = 1
-                        if not self.tableWidget.tableWidget.item(index, 0).text()[0] in self.adultNums: #此編號不在原本的成人編號裡
-                            self.cmb_role.addItem(self.tableWidget.tableWidget.item(index, 0).text()[0])    #加進comboBox
+            adultID = self.tableWidget.tableWidget.item(index, 0)
+            childID = self.tableWidget.tableWidget.item(index, 3)
+
+            if adultID:   #成人語句
+                if not adultID.text().__len__() == 0:   #不是空字串
+                    pattern = r"[a-zA-Z]+"
+                    key = re.search(pattern,adultID.text()).group()
+                    if not key in checkAdultNum:
+                        checkAdultNum[key] = 1
+                        if not key in self.adultNums: #此編號不在原本的成人編號裡
+                            self.cmb_role.addItem(key)    #加進comboBox
                     else:
-                        checkAdultNum[self.tableWidget.tableWidget.item(index, 0).text()[0]] += 1
-            if self.tableWidget.tableWidget.item(index, 3): #兒童語句
-                if not self.tableWidget.tableWidget.item(index, 3).text().__len__() == 0:   #不是空字串
+                        checkAdultNum[key] += 1
+            if childID: #兒童語句
+                if not childID.text().__len__() == 0:   #不是空字串
                     checkChildNum += 1
         self.adultNums = checkAdultNum  #更新成人編號
         self.childNum = checkChildNum   #更新兒童編號
 
         self._updateCmbRole()  #更新編號選單
-        
-        self.emitID(self.adultNums)
 
     #檢查有無更改content
     def isEdit(self):
         content = self._getCurrentContent()
-        
+
         if self.content == [] and content == []:
             return False
         elif self.content == content:
@@ -884,7 +906,7 @@ class Tab2(QtWidgets.QWidget):
                 self._save(True)
             elif action == QtWidgets.QMessageBox.Cancel:
                 return
-        
+
         self.clearTab()    #清空、復原頁面
 
         self.caseData = database.DatabaseApi.findContent(caseID, date)
@@ -917,7 +939,7 @@ class Tab2(QtWidgets.QWidget):
     #         #將cmb_caseDates設定到tab0匯入的日期
     #         self.cmb_caseDates.setCurrentIndex(self.cmb_caseDates.findText(date.strftime("%Y-%m-%d %H:%M")))
     #         self.caseDate = date
-            
+
     #         self.dateSearchData = database.DatabaseApi.findContent(caseID, date)
     #         self.content = self.dateSearchData['FirstContent']
     #         if self.dateSearchData['transcriber']:  #轉錄者
@@ -984,7 +1006,7 @@ class Tab2(QtWidgets.QWidget):
                             validUtterance += 1
                         totalUtterance += 1
                         childUtterance.append(self.tableWidget.tableWidget.item(rowIndex, 4).text()) # 傳給Tab3
-                
+
                 database.DatabaseApi.updateContent(self.caseID, self.caseDate, self.transcriber, content, totalUtterance, validUtterance)
                 utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
                 self.emitUtterNum(utteranceNum)
@@ -1000,7 +1022,7 @@ class Tab2(QtWidgets.QWidget):
                 self._setInpBorderColorAndJumpMsg('NoTrans')
         else:   #尚未查詢個案
             self.msg_saveNotSearch.exec_()
-          
+
     #產生彙整表並儲存至資料庫
     def _generateAndSave(self):
         if self.caseData:   #已查詢個案
@@ -1009,7 +1031,7 @@ class Tab2(QtWidgets.QWidget):
 
                 #傳signal給MainWindow
                 self.procMain.emit(2)
-                
+
                 key = {'caseID':self.caseID,
                         'date':self.caseDate }
                 self.emitKey(key)
