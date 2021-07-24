@@ -157,7 +157,7 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.setItem(idx , 2 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                time = datetime.strftime(doc['recording']['date'],'%Y-%m-%d %H:%M')
+                time = datetime.strftime(doc['date'],'%Y-%m-%d %H:%M')
                 item.setText(time)
                 self.tableWidget.setItem(idx , 3 , item)
                 
