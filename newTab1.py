@@ -911,7 +911,6 @@ class Myform(QtWidgets.QWidget):
                 'birthday' : birthday
             }
             recording = {
-                'date' : DateTimeRecordDate,
                 'SLP': self.input_SLP.text(),
                 'scenario': self.input_scenario.text(),
                 'fileName' : self.input_recordDataName.text(),
