@@ -262,6 +262,7 @@ class chartTab(QtWidgets.QWidget):
     #     chartview = QChartView(chart)
     #     chartview.setRenderHint(QPainter.Antialiasing)
     #     self.layout.addWidget(chartview)
+    
     # #清除原本layout裡的Widget
     def clearLayout(self):
         for i in reversed(range(self.layout.count()-1)):
@@ -287,34 +288,34 @@ class chartTab(QtWidgets.QWidget):
         chart.addAxis(axisX, Qt.AlignBottom)
         axisY = QValueAxis()
         chart.addAxis(axisY, Qt.AlignLeft)
-        axisY.setRange(0, 20)
+        axisY.setRange(0.0, 20.0)
         axisX.setRange("名詞", "副詞")
         axisY.setTitleText("詞的個數")
         axisY.setTitleFont(font)
         sumContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
         recordCount = 0
+        barSeries = QBarSeries(self)
+        chart.addSeries(barSeries)
         for index in caseDocs:
             if index['transcription']['analysis'] != None:
-                barSeries = QBarSeries(self)
                 strDate = index['recording']['date'].strftime("%Y-%m-%d %H:%M:%S")
-                set0 = QBarSet(strDate)
-                set0.setLabelFont(font)
+                set = QBarSet(strDate)
+                set.setLabelFont(font)
                 for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
                     # print(str(key) + ' ' + str(value))
                     if key != 'percentage':
                         if key == 'sum': recordCount += 1
                         else : sumContent[key] += value
-                set0<< index['transcription']['analysis']['Content']['N']\
+                set<< index['transcription']['analysis']['Content']['N']\
                     <<  index['transcription']['analysis']['Content']['V']\
                     << index['transcription']['analysis']['Content']['VH']\
                     << index['transcription']['analysis']['Content']['Neu']\
                     << index['transcription']['analysis']['Content']['Nf']\
                     << index['transcription']['analysis']['Content']['Nh']\
                     << index['transcription']['analysis']['Content']['D']
-                barSeries.append(set0)
-                chart.addSeries(barSeries)
-                barSeries.attachAxis(axisX)
-                barSeries.attachAxis(axisY)
+                barSeries.append(set)
+        barSeries.attachAxis(axisX)
+        barSeries.attachAxis(axisY)
         lineSeries = QLineSeries(self)
         lineSeries.setName("平均值")
         for i, (key, value) in enumerate(sumContent.items()):
@@ -325,8 +326,9 @@ class chartTab(QtWidgets.QWidget):
         chart.addSeries(lineSeries)
         lineSeries.attachAxis(axisX)
         lineSeries.attachAxis(axisY)
+        lineSeries.setColor(Qt.red)
         pen = lineSeries.pen()
-        pen.setWidth(4)
+        pen.setWidth(3)
         lineSeries.setPen(pen)
 
         chart.legend().setVisible(True)
