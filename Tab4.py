@@ -117,6 +117,7 @@ class searchForm(QtWidgets.QWidget):
         self.input_name.setMaximumSize(QtCore.QSize(16777215, 50))
         self.input_name.setObjectName("input_name")
         self.input_name.setFont(font)
+
         #提示字
         self.remindText = QtWidgets.QLabel()
         self.remindText.setMaximumSize(QtCore.QSize(16777215, 25))
@@ -149,8 +150,6 @@ class searchForm(QtWidgets.QWidget):
         # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Chart.qss", "r").read())
         self.setStyleSheet(open("QSS/Chart.qss", "r").read())
         
-
-
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         item = self.tableWidget.horizontalHeaderItem(0)
@@ -176,10 +175,22 @@ class chartTab(QtWidgets.QWidget):
         self.layout.setAlignment(QtCore.Qt.AlignTop)
         self.setLayout(self.layout)
         self.form = searchForm()
+
         #add searchForm
         self.layout.addWidget(self.form)
         self.form.search_btn.clicked.connect(self.search)
 
+        #ScrollArea
+        self.scroll = QtWidgets.QScrollArea()
+        self.virtualWidget = QtWidgets.QWidget() #Widget that contains collection of VBOX
+        self.scroll_vbox = QtWidgets.QVBoxLayout()
+        self.virtualWidget.setLayout(self.scroll_vbox)
+        ## Properties
+        self.scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.virtualWidget)
+        ##
+        
 
     def search(self):
         #移除提示
@@ -350,5 +361,14 @@ class chartTab(QtWidgets.QWidget):
 
         chartView = QChartView(chart)
         chartView.setRenderHint(QPainter.Antialiasing)
+        chartView.setMinimumSize(800, 500)
         
-        self.layout.addWidget(chartView)
+        #self.layout.addWidget(chartView)
+        self.scroll_vbox.addWidget(chartView)
+        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
+        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
+        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
+        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
+        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
+        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
+        self.layout.addWidget(self.scroll)

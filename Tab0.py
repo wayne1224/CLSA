@@ -90,7 +90,7 @@ class SearchTab(QtWidgets.QWidget):
 
         #提示字
         self.icon = QtWidgets.QLabel()
-        self.icon.setPixmap(qta.icon('fa.info-circle').pixmap(QtCore.QSize(30, 30)))
+        self.icon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(30, 30)))
         self.icon.setMaximumSize(QtCore.QSize(30, 30))
         self.remindText = QtWidgets.QLabel()
         self.remindText.setMaximumSize(QtCore.QSize(16777215, 40))
@@ -239,7 +239,7 @@ class SearchTab(QtWidgets.QWidget):
         item.setText(_translate("Form", "收錄地點"))
         item = self.tableWidget.horizontalHeaderItem(6)
         item.setText(_translate("Form", "誘發題材"))
-        self.remindText.setText(_translate("", "都不輸入則顯示所有孩童"))
+        self.remindText.setText(_translate("", "都不輸入則顯示所有紀錄"))
 
 
 if __name__ == "__main__":
