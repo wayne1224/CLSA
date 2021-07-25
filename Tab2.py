@@ -12,11 +12,11 @@ import sys
 import os
 import re
 import database.DatabaseApi
-from Mytable import Mytable
+from components.Mytable import Mytable
 from functools import partial
 from PyQt5 import QtCore, QtGui, QtWidgets
-import AudioConvert.audio
-from Worker import Worker
+from utils.audio import importAudio
+from utils.worker import Worker
 from collections import OrderedDict
 
 
@@ -647,7 +647,8 @@ class Tab2(QtWidgets.QWidget):
 
     #匯入錄音檔
     def _importAudio(self, filePath):
-        text = AudioConvert.audio.importAudio(filePath)
+        print(filePath)
+        text = importAudio(filePath)
         print(text)
 
         content = []
