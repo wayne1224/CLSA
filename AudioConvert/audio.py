@@ -1,5 +1,6 @@
 import time
 import os
+import re
 from PyQt5 import QtWidgets 
 from pydub import AudioSegment
 import azure.cognitiveservices.speech as speechsdk
@@ -15,7 +16,9 @@ def STT_from_file(filePath):
     all_results = []
 
     def handle_final_result(evt):
-        all_results.append(evt.result.text) 
+        remove_punct = re.split('[，。、？！]+', evt.result.text)
+        print(remove_punct)
+        all_results.extend(remove_punct[:-1]) 
 
     done = False #檢查stt是否完成了
 
