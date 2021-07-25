@@ -9,7 +9,7 @@ from statistics import mean
 from datetime import datetime
 from sympy import solve, symbols, sqrt, sympify
 from functools import partial
-from Worker import Worker
+from utils.worker import Worker
 
 class AnalysisTab(QtWidgets.QWidget):
     procMain = QtCore.pyqtSignal(int)

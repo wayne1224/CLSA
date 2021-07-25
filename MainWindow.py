@@ -1,56 +1,9 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
+from components.loading import LoadingScreen
 import database.DatabaseApi
 import DistilTag
-
-class LoadingScreen(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-        layout = QtWidgets.QVBoxLayout()
-        self.setLayout(layout)
-        self.setStyleSheet("background-color:#c7daed")
-        #self.setFixedSize(200,200)
-        self.label1 = QtWidgets.QLabel('<p style="font-size:10pt; color: black; font-weight: bold;">彙整中...</p>')
-        self.label1.setAlignment(QtCore.Qt.AlignCenter)
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint|QtCore.Qt.CustomizeWindowHint)
-        self.label = QtWidgets.QLabel(self)
-        self.movie = QtGui.QMovie('image/loading.gif')
-        self.label.setMovie(self.movie)
-        self.setWindowModality(QtCore.Qt.ApplicationModal)
-        layout.addWidget(self.label1)
-        layout.addWidget(self.label)
-
-        radius = 40.0
-        path = QtGui.QPainterPath()
-        self.resize(220,250)
-        path.addRoundedRect(QtCore.QRectF(self.rect()), radius, radius)
-        mask = QtGui.QRegion(path.toFillPolygon().toPolygon())
-        self.setMask(mask)
-        #self.move(QtGui.QCursor.pos())
-    
-    def startAnimation(self, info):
-        self.label1.setText('<p style="font-size:10pt; color: black; font-weight: bold;">'+ info +'</p>')
-        self.show()
-        self.movie.start()
-
-    def stopAnimation(self):
-        self.movie.stop()
-        self.close()
-
-class Worker(QtCore.QObject):
-    finished = QtCore.pyqtSignal()
-    progress = QtCore.pyqtSignal(int)
-
-    def __init__(self, fn):
-        super(Worker, self).__init__()
-        self.func = fn
-
-    def run(self):
-        if not self.func():
-            print("Database Failed")
-            quit()  
-        self.finished.emit()
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -138,6 +91,21 @@ class MainWindow(QtWidgets.QMainWindow):
                     event.accept()
                 else:
                     event.ignore()
+
+class Worker(QtCore.QObject):
+    finished = QtCore.pyqtSignal()
+    progress = QtCore.pyqtSignal(int)
+
+    def __init__(self, fn):
+        super(Worker, self).__init__()
+        self.func = fn
+
+    def run(self):
+        if not self.func():
+            print("Database Failed")
+            quit()  
+        self.finished.emit()
+
 
 if __name__ == '__main__':
     try:

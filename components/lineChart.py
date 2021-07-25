@@ -16,9 +16,9 @@ class lineChartTab(QtWidgets.QWidget):
 
     # #清除原本layout裡的Widget
     def clearLayout(self):
-        for i in reversed(range(self.layout.count()-1)):
+        for i in reversed(range(self.layout.count())):
             print(self.layout.count())
-            self.layout.removeItem(self.layout.itemAt(i+1))
+            self.layout.removeItem(self.layout.itemAt(i))
 
     @QtCore.pyqtSlot(list)
     def lineChart(self, caseDocs):
@@ -39,14 +39,15 @@ class lineChartTab(QtWidgets.QWidget):
         lineSeriesVOCD_w.setName("VOCD-w")
         lineSeriesVOCD_c = QLineSeries(self)
         lineSeriesVOCD_c.setName("VOCD-c")
+        analsisfail = 0
         for i, index in enumerate(caseDocs):
             if index['transcription']['analysis'] != None:
-                strDate = index['date'].strftime("%Y-%m-%d %H:%M")
-                categories.append(strDate)
                 if (index['transcription']['analysis']['VOCD-w'] != '樣本數不足') :
-                    lineSeriesVOCD_w.append(QPoint(i, index['transcription']['analysis']['VOCD-w']))
-                    lineSeriesVOCD_c.append(QPoint(i, index['transcription']['analysis']['VOCD-c']))
-
+                    strDate = index['date'].strftime("%Y-%m-%d %H:%M")
+                    categories.append(strDate)
+                    lineSeriesVOCD_w.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-w']))
+                    lineSeriesVOCD_c.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-c']))
+                else : analsisfail += 1
         axisX.append(categories)
         chart.addAxis(axisX, Qt.AlignBottom)
         axisX.setRange(categories[0], categories[len(categories) - 1])
@@ -66,8 +67,6 @@ class lineChartTab(QtWidgets.QWidget):
         chartView.setRenderHint(QPainter.Antialiasing)
         
         self.layout.addWidget(chartView)
-
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
