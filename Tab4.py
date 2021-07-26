@@ -15,10 +15,10 @@ class Tab4(QtWidgets.QTabWidget):
         self.tab0 = chartTab()
         self.tab1 = lineChartTab()
 
-        self.addTab(self.tab0, "個案查詢")
-        self.addTab(self.tab1, "個案分析")
+        self.addTab(self.tab0, "個案分析圖表")
+        self.addTab(self.tab1, "各年齡層分析圖表")
 
-        self.tab0.procCaseDocs.connect(self.tab1.lineChart)
+        #self.tab0.procCaseDocs.connect(self.tab1.lineChart)
 
 class searchForm(QtWidgets.QWidget):
     def __init__(self):
@@ -171,7 +171,7 @@ class searchForm(QtWidgets.QWidget):
         item.setText(_translate("", "就診次數"))
         self.label_2.setText(_translate("", "個案編號："))
         self.label.setText(_translate("", "個案姓名："))
-        self.search_btn.setText(_translate("", "查詢"))
+        self.search_btn.setText(_translate("", "  查詢個案  "))
         self.remindText.setText(_translate("", "都不輸入則顯示所有孩童"))
 
 
@@ -201,8 +201,8 @@ class chartTab(QtWidgets.QWidget):
 
     def search(self):
         #移除提示
-        self.form.remindText.setHidden(True)
-        self.form.icon.setHidden(True)
+        # self.form.remindText.setHidden(True)
+        # self.form.icon.setHidden(True)
 
         cursor = db.findChildren(self.form.input_caseID.text() , self.form.input_name.text())
         print(self.form.input_caseID.text(),self.form.input_name.text())
@@ -235,7 +235,7 @@ class chartTab(QtWidgets.QWidget):
                 item.setText(str(len(child['document'])))
                 self.form.tableWidget.setItem(idx , 3 , item)
                 
-                importBtn = QtWidgets.QPushButton('確認')
+                importBtn = QtWidgets.QPushButton('顯示圖表')
                 importBtn.setStyleSheet("QPushButton {background-color: cornflowerblue;} QPushButton:hover{background-color: rgb(90, 138, 226);}")
                 self.form.tableWidget.setCellWidget(idx, 4,importBtn)
                 importBtn.clicked.connect(partial(self.create_linebarchart , child['document']))
@@ -253,7 +253,7 @@ class chartTab(QtWidgets.QWidget):
 
 
     def create_linebarchart(self, doc):
-        self.procCaseDocs.emit(doc)
+        #self.procCaseDocs.emit(doc)
 
         #檢查是否轉錄過
         count = 0
