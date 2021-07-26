@@ -289,9 +289,9 @@ class chartTab(QtWidgets.QWidget):
 
     # #清除原本layout裡的Widget
     def clearLayout(self):
-        for i in reversed(range(self.layout.count()-1)):
-            print(self.layout.count())
-            self.layout.removeItem(self.layout.itemAt(i+1))
+        for i in reversed(range(self.scroll_vbox.count())):
+            print(self.scroll_vbox.count())
+            self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
 
 
     def create_linebarchart(self, doc):
@@ -363,12 +363,53 @@ class chartTab(QtWidgets.QWidget):
         chartView.setRenderHint(QPainter.Antialiasing)
         chartView.setMinimumSize(800, 500)
         
+        chart =  QChart()
+        chart.setTitle(caseDocs[0]['caseID'] + "個案分析")
+        font = QtGui.QFont()
+        font.setPixelSize(24)
+        chart.setTitleFont(font)
+
+        axisX = QBarCategoryAxis()
+        axisY = QValueAxis()
+        chart.addAxis(axisY, Qt.AlignLeft)
+        axisY.setRange(0.0, 100.0)
+
+        categories = []
+        lineSeriesVOCD_w = QLineSeries(self)
+        lineSeriesVOCD_w.setName("VOCD-w")
+        lineSeriesVOCD_c = QLineSeries(self)
+        lineSeriesVOCD_c.setName("VOCD-c")
+        analsisfail = 0
+        for i, index in enumerate(caseDocs):
+            if index['transcription']['analysis'] != None:
+                if (index['transcription']['analysis']['VOCD-w'] != '樣本數不足') :
+                    strDate = index['date'].strftime("%Y-%m-%d %H:%M")
+                    categories.append(strDate)
+                    lineSeriesVOCD_w.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-w']))
+                    lineSeriesVOCD_c.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-c']))
+                else : analsisfail += 1
+        axisX.append(categories)
+        chart.addAxis(axisX, Qt.AlignBottom)
+        print(analsisfail)
+        print(categories)
+        if len(categories) - 1 > 0 :
+            axisX.setRange(categories[0], categories[len(categories) - 1])
+        
+        chart.addSeries(lineSeriesVOCD_w)
+        chart.addSeries(lineSeriesVOCD_c)
+        lineSeriesVOCD_w.attachAxis(axisX)
+        lineSeriesVOCD_w.attachAxis(axisY)
+        lineSeriesVOCD_c.attachAxis(axisX)
+        lineSeriesVOCD_c.attachAxis(axisY)
+
+        chart.legend().setVisible(True)
+        chart.legend().setAlignment(Qt.AlignBottom)
+
+        chartView2 = QChartView(chart)
+        chartView2.setRenderHint(QPainter.Antialiasing)
+        chartView2.setMinimumSize(800, 500)
+
         #self.layout.addWidget(chartView)
         self.scroll_vbox.addWidget(chartView)
-        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
-        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
-        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
-        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
-        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
-        self.scroll_vbox.addWidget(QtWidgets.QPushButton())
+        self.scroll_vbox.addWidget(chartView2)
         self.layout.addWidget(self.scroll)

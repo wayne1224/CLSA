@@ -17,7 +17,7 @@ class lineChartTab(QtWidgets.QWidget):
     # #清除原本layout裡的Widget
     def clearLayout(self):
         for i in reversed(range(self.layout.count())):
-            print(self.layout.count())
+            # print(self.layout.count())
             self.layout.removeItem(self.layout.itemAt(i))
 
     @QtCore.pyqtSlot(list)
@@ -50,8 +50,10 @@ class lineChartTab(QtWidgets.QWidget):
                 else : analsisfail += 1
         axisX.append(categories)
         chart.addAxis(axisX, Qt.AlignBottom)
-        axisX.setRange(categories[0], categories[len(categories) - 1])
+        print(analsisfail)
         print(categories)
+        if len(categories) - 1 > 0 :
+            axisX.setRange(categories[0], categories[len(categories) - 1])
         
         chart.addSeries(lineSeriesVOCD_w)
         chart.addSeries(lineSeriesVOCD_c)
