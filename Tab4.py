@@ -1,4 +1,5 @@
 import database.DatabaseApi as db
+import qtawesome as qta
 from functools import partial
 from datetime import datetime
 from PyQt5 import QtCore, QtGui, QtWidgets, QtChart
@@ -119,9 +120,17 @@ class searchForm(QtWidgets.QWidget):
         self.input_name.setFont(font)
 
         #提示字
+        self.icon = QtWidgets.QLabel()
+        self.icon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(25, 25)))
+        self.icon.setMaximumSize(QtCore.QSize(25, 25))
         self.remindText = QtWidgets.QLabel()
         self.remindText.setMaximumSize(QtCore.QSize(16777215, 25))
-        self.gridLayout.addWidget(self.remindText, 2, 0, 1, 1)
+        self.remindHorizontal = QtWidgets.QHBoxLayout()
+        self.remindHorizontal.addWidget(self.icon)
+        self.remindHorizontal.addWidget(self.remindText)
+        spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        self.remindHorizontal.addItem(spacerItem)
+        self.gridLayout.addLayout(self.remindHorizontal, 2, 0, 1, 1)
 
         self.horizontalLayout_3.addWidget(self.input_name)
         self.search_btn = QtWidgets.QPushButton()
@@ -163,7 +172,7 @@ class searchForm(QtWidgets.QWidget):
         self.label_2.setText(_translate("", "個案編號："))
         self.label.setText(_translate("", "個案姓名："))
         self.search_btn.setText(_translate("", "查詢"))
-        self.remindText.setText(_translate("", "  提示:都不輸入則顯示所有孩童"))
+        self.remindText.setText(_translate("", "都不輸入則顯示所有孩童"))
 
 
 class chartTab(QtWidgets.QWidget):
@@ -195,6 +204,7 @@ class chartTab(QtWidgets.QWidget):
     def search(self):
         #移除提示
         self.form.remindText.setHidden(True)
+        self.form.icon.setHidden(True)
 
         cursor = db.findChildren(self.form.input_caseID.text() , self.form.input_name.text())
         print(self.form.input_caseID.text(),self.form.input_name.text())
