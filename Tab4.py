@@ -18,7 +18,7 @@ class Tab4(QtWidgets.QTabWidget):
         self.addTab(self.tab0, "個案查詢")
         self.addTab(self.tab1, "個案分析")
 
-        self.tab0.procCaseDocs.connect(self.tab1.lineChart)
+        # self.tab0.procCaseDocs.connect(self.tab1.lineChart)
 
 class searchForm(QtWidgets.QWidget):
     def __init__(self):
@@ -176,8 +176,6 @@ class searchForm(QtWidgets.QWidget):
 
 
 class chartTab(QtWidgets.QWidget):
-    procCaseDocs = QtCore.pyqtSignal(list)
-
     def __init__(self):
         super(chartTab, self).__init__()
         self.layout = QtWidgets.QVBoxLayout()
@@ -244,59 +242,6 @@ class chartTab(QtWidgets.QWidget):
         else:
             informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
-
-
-    # @QtCore.pyqtSlot(dict)
-    # def create_piechart(self, Doc):
-    #     if Doc['transcription']['analysis'] == None:
-    #         return
-    #     self.clearlayout()
-    #     series = QPieSeries()
-    #     series.append("名詞", Doc['transcription']['analysis']['Content']['N'])
-    #     series.append("動詞", Doc['transcription']['analysis']['Content']['V'])
-    #     series.append("形容詞", Doc['transcription']['analysis']['Content']['VH'])
-    #     series.append("數詞", Doc['transcription']['analysis']['Content']['Neu'])
-    #     series.append("量詞", Doc['transcription']['analysis']['Content']['Nf'])
-    #     series.append("代詞", Doc['transcription']['analysis']['Content']['Nh'])
-    #     series.append("副詞", Doc['transcription']['analysis']['Content']['D'])
- 
-    #     #adding slice
-    #     slice = QPieSlice()
-    #     slice = series.slices()[3]
-    #     slice.setExploded(True)
-    #     # slice.setPen(QPen(Qt.darkGreen, 6))
-    #     # slice.setBrush(Qt.green)
-
-    #     # series.setLabelsPosition(QtChart.QPieSlice.LabelInsideHorizontal)
-    #     for slice in series.slices():
-    #         slice.setLabel("{:.2f}%".format(100 * slice.percentage()))
-    #         slice.setLabelVisible(True)
-
-    #     chart = QChart()
-    #     chart.legend().hide()
-    #     chart.addSeries(series)
-    #     chart.createDefaultAxes()
-    #     chart.setAnimationOptions(QChart.SeriesAnimations)
-    #     chart.setTitle("實詞百分比")
-    #     font = QtGui.QFont()
-    #     font.setPixelSize(24)
-    #     chart.setTitleFont(font)
-        
-    #     chart.legend().markers(series)[0].setLabel("名詞")
-    #     chart.legend().markers(series)[1].setLabel("動詞")
-    #     chart.legend().markers(series)[2].setLabel("形容詞")
-    #     chart.legend().markers(series)[3].setLabel("數詞")
-    #     chart.legend().markers(series)[4].setLabel("量詞")
-    #     chart.legend().markers(series)[5].setLabel("代詞")
-    #     chart.legend().markers(series)[6].setLabel("副詞")
-
-    #     chart.legend().setVisible(True)
-    #     chart.legend().setAlignment(Qt.AlignBottom)
- 
-    #     chartview = QChartView(chart)
-    #     chartview.setRenderHint(QPainter.Antialiasing)
-    #     self.layout.addWidget(chartview)
-
     # #清除原本layout裡的Widget
     def clearLayout(self):
         for i in reversed(range(self.scroll_vbox.count())):
@@ -305,7 +250,6 @@ class chartTab(QtWidgets.QWidget):
 
 
     def create_linebarchart(self, doc):
-        self.procCaseDocs.emit(doc)
         # if Doc['transcription']['analysis'] == None: #是否已分析過
         #     return
         self.clearLayout()
@@ -323,12 +267,13 @@ class chartTab(QtWidgets.QWidget):
         chart.addAxis(axisX, Qt.AlignBottom)
         axisY = QValueAxis()
         chart.addAxis(axisY, Qt.AlignLeft)
-        axisY.setRange(0.0, 20.0)
+        # axisY.setRange(0.0, 20.0)
+        biggestValue = 20.0
         axisX.setRange("名詞", "副詞")
         axisY.setTitleText("詞的個數")
         axisY.setTitleFont(font)
-        sumContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
-        recordCount = 0
+        # sumContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
+        # recordCount = 0
         barSeries = QBarSeries(self)
         chart.addSeries(barSeries)
         for index in caseDocs:
@@ -336,11 +281,10 @@ class chartTab(QtWidgets.QWidget):
                 strDate = index['date'].strftime("%Y-%m-%d %H:%M")
                 set = QBarSet(strDate)
                 set.setLabelFont(font)
-                for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
-                    # print(str(key) + ' ' + str(value))
-                    if key != 'percentage':
-                        if key == 'sum': recordCount += 1
-                        else : sumContent[key] += value
+                # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
+                #     if key != 'percentage':
+                #         if key == 'sum': recordCount += 1
+                #         else : sumContent[key] += value
                 set<< index['transcription']['analysis']['Content']['N']\
                     <<  index['transcription']['analysis']['Content']['V']\
                     << index['transcription']['analysis']['Content']['VH']\
@@ -348,23 +292,29 @@ class chartTab(QtWidgets.QWidget):
                     << index['transcription']['analysis']['Content']['Nf']\
                     << index['transcription']['analysis']['Content']['Nh']\
                     << index['transcription']['analysis']['Content']['D']
+                for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()):
+                    while(value > biggestValue and key != 'sum') :
+                        # print(str(i) + str(key)+ str(value)) 
+                        biggestValue+=10.0
                 barSeries.append(set)
+        axisY.setRange(0, biggestValue)
+        # print('last:' + str(biggestValue))
         barSeries.attachAxis(axisX)
         barSeries.attachAxis(axisY)
-        lineSeries = QLineSeries(self)
-        lineSeries.setName("平均值")
-        for i, (key, value) in enumerate(sumContent.items()):
-            if recordCount > 0:
-                lineSeries.append(QPoint(i, value/recordCount))
-            else :
-                lineSeries.append(QPoint(i, 0))
-        chart.addSeries(lineSeries)
-        lineSeries.attachAxis(axisX)
-        lineSeries.attachAxis(axisY)
-        lineSeries.setColor(Qt.red)
-        pen = lineSeries.pen()
-        pen.setWidth(3)
-        lineSeries.setPen(pen)
+        # lineSeries = QLineSeries(self)
+        # lineSeries.setName("平均值")
+        # for i, (key, value) in enumerate(sumContent.items()):
+        #     if recordCount > 0:
+        #         lineSeries.append(QPoint(i, value/recordCount))
+        #     else :
+        #         lineSeries.append(QPoint(i, 0))
+        # chart.addSeries(lineSeries)
+        # lineSeries.attachAxis(axisX)
+        # lineSeries.attachAxis(axisY)
+        # lineSeries.setColor(Qt.red)
+        # pen = lineSeries.pen()
+        # pen.setWidth(3)
+        # lineSeries.setPen(pen)
 
         chart.legend().setVisible(True)
         chart.legend().setAlignment(Qt.AlignBottom)
@@ -373,18 +323,16 @@ class chartTab(QtWidgets.QWidget):
         chartView.setRenderHint(QPainter.Antialiasing)
         chartView.setMinimumSize(800, 500)
         
-        chart =  QChart()
-        chart.setTitle(caseDocs[0]['caseID'] + "個案分析")
-        font = QtGui.QFont()
-        font.setPixelSize(24)
-        chart.setTitleFont(font)
+        chart2 =  QChart()
+        chart2.setTitle("詞彙多樣性/字的多樣性")
+        chart2.setTitleFont(font)
 
-        axisX = QBarCategoryAxis()
-        axisY = QValueAxis()
-        chart.addAxis(axisY, Qt.AlignLeft)
-        axisY.setRange(0.0, 100.0)
+        axisX2 = QBarCategoryAxis()
+        axisY2 = QValueAxis()
+        chart2.addAxis(axisY2, Qt.AlignLeft)
+        axisY2.setRange(0.0, 100.0)
 
-        categories = []
+        categories2 = []
         lineSeriesVOCD_w = QLineSeries(self)
         lineSeriesVOCD_w.setName("VOCD-w")
         lineSeriesVOCD_c = QLineSeries(self)
@@ -394,28 +342,34 @@ class chartTab(QtWidgets.QWidget):
             if index['transcription']['analysis'] != None:
                 if (index['transcription']['analysis']['VOCD-w'] != '樣本數不足') :
                     strDate = index['date'].strftime("%Y-%m-%d %H:%M")
-                    categories.append(strDate)
+                    categories2.append(strDate)
                     lineSeriesVOCD_w.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-w']))
                     lineSeriesVOCD_c.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-c']))
                 else : analsisfail += 1
-        axisX.append(categories)
-        chart.addAxis(axisX, Qt.AlignBottom)
+        axisX2.append(categories2)
+        chart2.addAxis(axisX2, Qt.AlignBottom)
         print(analsisfail)
-        print(categories)
-        if len(categories) - 1 > 0 :
-            axisX.setRange(categories[0], categories[len(categories) - 1])
+        print(categories2)
+        if len(categories2) - 1 > 0 :
+            axisX2.setRange(categories2[0], categories2[len(categories2) - 1])
         
-        chart.addSeries(lineSeriesVOCD_w)
-        chart.addSeries(lineSeriesVOCD_c)
-        lineSeriesVOCD_w.attachAxis(axisX)
-        lineSeriesVOCD_w.attachAxis(axisY)
-        lineSeriesVOCD_c.attachAxis(axisX)
-        lineSeriesVOCD_c.attachAxis(axisY)
+        chart2.addSeries(lineSeriesVOCD_w)
+        chart2.addSeries(lineSeriesVOCD_c)
+        lineSeriesVOCD_w.attachAxis(axisX2)
+        lineSeriesVOCD_w.attachAxis(axisY2)
+        lineSeriesVOCD_c.attachAxis(axisX2)
+        lineSeriesVOCD_c.attachAxis(axisY2)
+        pen1 = lineSeriesVOCD_w.pen()
+        pen2 = lineSeriesVOCD_c.pen()
+        pen1.setWidth(5)
+        pen2.setWidth(5)
+        lineSeriesVOCD_w.setPen(pen1)
+        lineSeriesVOCD_c.setPen(pen2)
+        
+        chart2.legend().setVisible(True)
+        chart2.legend().setAlignment(Qt.AlignBottom)
 
-        chart.legend().setVisible(True)
-        chart.legend().setAlignment(Qt.AlignBottom)
-
-        chartView2 = QChartView(chart)
+        chartView2 = QChartView(chart2)
         chartView2.setRenderHint(QPainter.Antialiasing)
         chartView2.setMinimumSize(800, 500)
 

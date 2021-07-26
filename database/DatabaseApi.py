@@ -281,6 +281,7 @@ def findAnalysis(caseID , date):
         return False
 
 def updateAnalysis(caseID , date , analysis):
+    # 
     try:
         query = dict()
         query["caseID"] = caseID
@@ -301,7 +302,13 @@ def updateAnalysis(caseID , date , analysis):
         return False
 
 # 圖表頁 api
-def findChildren(caseID , name): # true : return list 每個 element 都是一個child的dict 他們的document 在 [index]["document"] , false : return false
+def findChildren(caseID , name): 
+    # find : return list 
+    # 每個 element 都是一個 child(type == dict) 
+    # 他們的 document(type == list) 在 child[i]["document"]  
+    # 若要 access document 中的資料 child[i]["document"][j] 
+    # not find : return false
+
     try:  
         query = dict()
 
