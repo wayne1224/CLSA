@@ -50,8 +50,6 @@ class lineChartTab(QtWidgets.QWidget):
                 else : analsisfail += 1
         axisX.append(categories)
         chart.addAxis(axisX, Qt.AlignBottom)
-        print(analsisfail)
-        print(categories)
         if len(categories) - 1 > 0 :
             axisX.setRange(categories[0], categories[len(categories) - 1])
         
