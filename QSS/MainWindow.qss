@@ -7,7 +7,6 @@ QPushButton
 {
     border: 2px outset #CCCCCC;
     border-radius: 10px;
-    width: 100;
 }
 
 QPushButton:pressed
