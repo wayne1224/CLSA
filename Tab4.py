@@ -213,6 +213,7 @@ class chartTab(QtWidgets.QWidget):
             self.form.tableWidget.removeRow(self.form.tableWidget.rowCount()-1)
 
         if cursor:
+            idx = 0
             for idx, child in enumerate(cursor):
                 self.form.tableWidget.insertRow(idx)        
                 
@@ -240,9 +241,11 @@ class chartTab(QtWidgets.QWidget):
                 importBtn.setStyleSheet("QPushButton {background-color: cornflowerblue;} QPushButton:hover{background-color: rgb(90, 138, 226);}")
                 self.form.tableWidget.setCellWidget(idx, 4,importBtn)
                 importBtn.clicked.connect(partial(self.create_linebarchart , child['document']))
+            if idx == 0:
+                QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
         else:
-            informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, 'Database','資料庫讀取中', QtWidgets.QMessageBox.Ok)
 
 
 
@@ -306,6 +309,22 @@ class chartTab(QtWidgets.QWidget):
 
     def create_linebarchart(self, doc):
         self.procCaseDocs.emit(doc)
+
+        #檢查是否轉錄過
+        count = 0
+        tempDoc = doc.copy()
+        for b in tempDoc:
+            print(b['transcription']['analysis'])
+            if b['transcription']['analysis'] != None:
+                count += 1
+
+        if count == 0:
+            self.clearLayout()
+            QtWidgets.QMessageBox.information(self, '','尚未轉錄過無法生成資料', QtWidgets.QMessageBox.Ok)
+            return
+        
+
+        
         # if Doc['transcription']['analysis'] == None: #是否已分析過
         #     return
         self.clearLayout()
