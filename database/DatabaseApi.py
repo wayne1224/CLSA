@@ -301,27 +301,64 @@ def updateAnalysis(caseID , date , analysis):
         return False
 
 # 圖表頁 api
-def findChildren(caseID , name):
+def findChildren(caseID , name): # true : return list 每個 element 都是一個child的dict 他們的document 在 [index]["document"] , false : return false
     try:  
         query = dict()
+
         if caseID:
             query["caseID"] = caseID
         if name:
             query["name"] = name
 
         result = childDataDB.aggregate([
-                                {
-                                    '$lookup': {
-                                        'from': 'document', 
-                                        'localField': 'caseID', 
-                                        'foreignField': 'caseID', 
-                                        'as': 'document'
-                                    }
-                                }, 
-                                {
-                                    '$match': query
-                                }
-                            ])  
+            {
+                '$lookup': {
+                    'from': 'document', 
+                    'localField': 'caseID', 
+                    'foreignField': 'caseID', 
+                    'as': 'document'
+                }
+            }, 
+            {
+                '$match': query
+            }, 
+            {
+                '$unwind': {
+                    'path': '$document'
+                }
+            }, 
+            {
+                '$sort': {
+                    'document.date': 1
+                }
+            }, 
+            {
+                '$group': {
+                    '_id': '$_id', 
+                    'name': {
+                        '$first': '$name'
+                    }, 
+                    'caseID': {
+                        '$first': '$caseID'
+                    }, 
+                    'gender': {
+                        '$first': '$gender'
+                    }, 
+                    'birthday': {
+                        '$first': '$birthday'
+                    }, 
+                    'document': {
+                        '$push': '$document'
+                    }
+                }
+            }
+        ])
+
+        result = list(result)
+           
+        if len(result) == 0:
+            return False
+                 
         return result
     except Exception as e:
         print(e)
@@ -333,6 +370,11 @@ def findChildren(caseID , name):
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
 # connectDB()
+# result = findChildren("12312312" , "")
+
+# print(result)
+# for i in result:
+#     print(i)
 
 # findDocs return
 # [
