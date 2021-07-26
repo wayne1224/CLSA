@@ -32,7 +32,6 @@ class Tab2(QtWidgets.QWidget):
     def __init__(self):
         super(Tab2, self).__init__()
 
-        #self.setGeometry(QtCore.QRect(-1, 0, 1121, 801))
         layout = QtWidgets.QVBoxLayout()
         self.setLayout(layout)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -86,12 +85,6 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_impCaseID.setFont(font)
         self.lbl_impCaseID.setObjectName("lbl_impCaseID")
         self.horizontalLayout.addWidget(self.lbl_impCaseID)
-        # self.btn_searchCase = QtWidgets.QPushButton()
-        # font = QtGui.QFont()
-        # font.setPointSize(12)
-        # self.btn_searchCase.setFont(font)
-        # self.btn_searchCase.setObjectName("btn_searchCase")
-        # self.horizontalLayout.addWidget(self.btn_searchCase)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem2)
         layout.addLayout(self.horizontalLayout)
@@ -125,13 +118,6 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_caseDate.setVisible(False)
         self.lbl_caseDate.setAlignment(QtCore.Qt.AlignCenter)
         self.verticalLayout_6.addWidget(self.lbl_caseDate)
-        # self.cmb_caseDates = QtWidgets.QComboBox()
-        # font = QtGui.QFont()
-        # font.setPointSize(12)
-        # self.cmb_caseDates.setFont(font)
-        # self.cmb_caseDates.setObjectName("cmb_caseDates")
-        # self.cmb_caseDates.setVisible(False)
-        # self.verticalLayout_6.addWidget(self.cmb_caseDates)
         self.verticalLayout_3.addLayout(self.verticalLayout_6)
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()
         self.verticalLayout_5.setSpacing(2)
@@ -333,9 +319,7 @@ class Tab2(QtWidgets.QWidget):
         self.btn_delete.clicked.connect(self._deleteRow)
         self.btn_clearTab.clicked.connect(self.clearTab)
         self.btn_save.clicked.connect(partial(self._save, True))
-        #self.btn_searchCase.clicked.connect(self._searchID)
         self.btn_generateAndSave.clicked.connect(self._generateAndSave)
-        #self.cmb_caseDates.activated.connect(self._searchCmbDate)
         self.tableWidget.tableWidget.cellClicked.connect(self._syncTableCmbRoleNum)
 
         #signal
@@ -748,14 +732,14 @@ class Tab2(QtWidgets.QWidget):
                 childUtter = self.tableWidget.tableWidget.item(index.row(), 4)
 
                 #刪除成人語句
-                if adultUtter and not adultUtter.text() == '':
+                if adultUtter and adultUtter.text() != '':
                     pattern = r"[a-zA-Z]+"
                     key = re.search(pattern,self.tableWidget.tableWidget.item(index.row(), 0).text()).group()
                     self.adultNums[key] -= 1   #成人編號-1
                     if self.adultNums[key] == 0:
                         self.cmb_role.removeItem(self.cmb_role.findText(key))
                 #刪除兒童語句
-                if childUtter and not childUtter.text() == '':
+                if childUtter and childUtter.text() != '':
                     self.childNum -= 1  #兒童編號-1
                 self.tableWidget.tableWidget.removeRow(index.row())
             self.tableWidget.checkAllID()
@@ -772,17 +756,20 @@ class Tab2(QtWidgets.QWidget):
             childID = self.tableWidget.tableWidget.item(index, 3)
 
             if adultID:   #成人語句
-                if not adultID.text().__len__() == 0:   #不是空字串
-                    pattern = r"[a-zA-Z]+"
-                    key = re.search(pattern,adultID.text()).group()
-                    if not key in checkAdultNum:
-                        checkAdultNum[key] = 1
-                        if not key in self.adultNums: #此編號不在原本的成人編號裡
-                            self.cmb_role.addItem(key)    #加進comboBox
-                    else:
-                        checkAdultNum[key] += 1
+                if adultID.text().__len__() != 0:   #不是空字串
+                    try:
+                        pattern = r"[a-zA-Z]+"
+                        key = re.search(pattern,adultID.text()).group()
+                        if not key in checkAdultNum:
+                            checkAdultNum[key] = 1
+                            if not key in self.adultNums: #此編號不在原本的成人編號裡
+                                self.cmb_role.addItem(key)    #加進comboBox
+                        else:
+                            checkAdultNum[key] += 1
+                    except:
+                        print('')
             if childID: #兒童語句
-                if not childID.text().__len__() == 0:   #不是空字串
+                if childID.text().__len__() != 0:   #不是空字串
                     checkChildNum += 1
         self.adultNums = checkAdultNum  #更新成人編號
         self.childNum = checkChildNum   #更新兒童編號
