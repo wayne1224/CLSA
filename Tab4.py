@@ -287,7 +287,8 @@ class chartTab(QtWidgets.QWidget):
         chart.addAxis(axisX, Qt.AlignBottom)
         axisY = QValueAxis()
         chart.addAxis(axisY, Qt.AlignLeft)
-        axisY.setRange(0.0, 20.0)
+        # axisY.setRange(0.0, 20.0)
+        biggestValue = 20.0
         axisX.setRange("名詞", "副詞")
         axisY.setTitleText("詞的個數")
         axisY.setTitleFont(font)
@@ -311,7 +312,13 @@ class chartTab(QtWidgets.QWidget):
                     << index['transcription']['analysis']['Content']['Nf']\
                     << index['transcription']['analysis']['Content']['Nh']\
                     << index['transcription']['analysis']['Content']['D']
+                for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()):
+                    while(value > biggestValue and key != 'sum') :
+                        # print(str(i) + str(key)+ str(value)) 
+                        biggestValue+=10.0
                 barSeries.append(set)
+        axisY.setRange(0, biggestValue)
+        # print('last:' + str(biggestValue))
         barSeries.attachAxis(axisX)
         barSeries.attachAxis(axisY)
         # lineSeries = QLineSeries(self)
@@ -338,16 +345,14 @@ class chartTab(QtWidgets.QWidget):
         
         chart2 =  QChart()
         chart2.setTitle("詞彙多樣性/字的多樣性")
-        font = QtGui.QFont()
-        font.setPixelSize(24)
         chart2.setTitleFont(font)
 
-        axisX = QBarCategoryAxis()
-        axisY = QValueAxis()
-        chart2.addAxis(axisY, Qt.AlignLeft)
-        axisY.setRange(0.0, 100.0)
+        axisX2 = QBarCategoryAxis()
+        axisY2 = QValueAxis()
+        chart2.addAxis(axisY2, Qt.AlignLeft)
+        axisY2.setRange(0.0, 100.0)
 
-        categories = []
+        categories2 = []
         lineSeriesVOCD_w = QLineSeries(self)
         lineSeriesVOCD_w.setName("VOCD-w")
         lineSeriesVOCD_c = QLineSeries(self)
@@ -357,23 +362,23 @@ class chartTab(QtWidgets.QWidget):
             if index['transcription']['analysis'] != None:
                 if (index['transcription']['analysis']['VOCD-w'] != '樣本數不足') :
                     strDate = index['date'].strftime("%Y-%m-%d %H:%M")
-                    categories.append(strDate)
+                    categories2.append(strDate)
                     lineSeriesVOCD_w.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-w']))
                     lineSeriesVOCD_c.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-c']))
                 else : analsisfail += 1
-        axisX.append(categories)
-        chart2.addAxis(axisX, Qt.AlignBottom)
+        axisX2.append(categories2)
+        chart2.addAxis(axisX2, Qt.AlignBottom)
         print(analsisfail)
-        print(categories)
-        if len(categories) - 1 > 0 :
-            axisX.setRange(categories[0], categories[len(categories) - 1])
+        print(categories2)
+        if len(categories2) - 1 > 0 :
+            axisX2.setRange(categories2[0], categories2[len(categories2) - 1])
         
         chart2.addSeries(lineSeriesVOCD_w)
         chart2.addSeries(lineSeriesVOCD_c)
-        lineSeriesVOCD_w.attachAxis(axisX)
-        lineSeriesVOCD_w.attachAxis(axisY)
-        lineSeriesVOCD_c.attachAxis(axisX)
-        lineSeriesVOCD_c.attachAxis(axisY)
+        lineSeriesVOCD_w.attachAxis(axisX2)
+        lineSeriesVOCD_w.attachAxis(axisY2)
+        lineSeriesVOCD_c.attachAxis(axisX2)
+        lineSeriesVOCD_c.attachAxis(axisY2)
         pen1 = lineSeriesVOCD_w.pen()
         pen2 = lineSeriesVOCD_c.pen()
         pen1.setWidth(5)
