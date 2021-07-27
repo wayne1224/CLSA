@@ -149,20 +149,20 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.insertRow(idx)        
                 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['recording']['SLP'])
+                item.setText(doc['childData']['name'])
                 self.tableWidget.setItem(idx , 0 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['childData']['caseID'])
+                item.setText(doc['caseID'])
                 self.tableWidget.setItem(idx , 1 , item)
-
-                item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['childData']['name'])
-                self.tableWidget.setItem(idx , 2 , item)
 
                 item = QtWidgets.QTableWidgetItem()
                 time = datetime.strftime(doc['date'],'%Y-%m-%d %H:%M')
                 item.setText(time)
+                self.tableWidget.setItem(idx , 2 , item)
+
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(doc['recording']['SLP'])
                 self.tableWidget.setItem(idx , 3 , item)
                 
                 item = QtWidgets.QTableWidgetItem()
@@ -219,13 +219,13 @@ class SearchTab(QtWidgets.QWidget):
         self.label_3.setText(_translate("Form", "個案姓名："))
         self.searchBtn.setText(_translate("Form", "  查詢紀錄  "))
         item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("Form", "收錄者"))
+        item.setText(_translate("Form", "個案姓名"))
         item = self.tableWidget.horizontalHeaderItem(1)
         item.setText(_translate("Form", "個案編號"))
         item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("Form", "個案姓名"))
-        item = self.tableWidget.horizontalHeaderItem(3)
         item.setText(_translate("Form", "收錄日期"))
+        item = self.tableWidget.horizontalHeaderItem(3)
+        item.setText(_translate("Form", "收錄者"))
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("Form", "收錄情境"))
         item = self.tableWidget.horizontalHeaderItem(5)
