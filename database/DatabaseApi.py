@@ -68,6 +68,12 @@ def findDocs(SLP , caseID , name):
                 }
             }, {
                 '$match': query
+            },
+            {
+                '$sort': {
+                    'caseID': 1, 
+                    'date': 1
+                }
             }
         ])
 
