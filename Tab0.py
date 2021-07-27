@@ -8,7 +8,7 @@ from datetime import datetime
 class SearchTab(QtWidgets.QWidget):
     #用來傳Document到各頁
     procDoc = QtCore.pyqtSignal(dict)
-    procMain = QtCore.pyqtSignal(int)
+    procMain = QtCore.pyqtSignal(int, float)
     procFind = QtCore.pyqtSignal()
 
     def __init__(self):
@@ -196,7 +196,7 @@ class SearchTab(QtWidgets.QWidget):
         self.procDoc.emit(obj)
         #通知彙整完整
         informBox = QtWidgets.QMessageBox.information(self, '通知','匯入完成', QtWidgets.QMessageBox.Ok)
-        self.procMain.emit(1)
+        self.procMain.emit(1, 0)
         
 
     def deleteDoc(self , objID , idx):
