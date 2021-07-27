@@ -350,7 +350,8 @@ class chartTab(QtWidgets.QWidget):
         axisX2 = QBarCategoryAxis()
         axisY2 = QValueAxis()
         chart2.addAxis(axisY2, Qt.AlignLeft)
-        axisY2.setRange(0.0, 100.0)
+        # axisY2.setRange(0.0, 100.0)
+        biggestValue2 = 100.0
 
         categories2 = []
         lineSeriesVOCD_w = QLineSeries(self)
@@ -365,11 +366,13 @@ class chartTab(QtWidgets.QWidget):
                     categories2.append(strDate)
                     lineSeriesVOCD_w.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-w']))
                     lineSeriesVOCD_c.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-c']))
+                    while (index['transcription']['analysis']['VOCD-w'] > biggestValue2 or\
+                           index['transcription']['analysis']['VOCD-c'] > biggestValue2) :
+                        biggestValue2 += 20
                 else : analsisfail += 1
+        axisY2.setRange(0.0, biggestValue2)
         axisX2.append(categories2)
         chart2.addAxis(axisX2, Qt.AlignBottom)
-        print(analsisfail)
-        print(categories2)
         if len(categories2) - 1 > 0 :
             axisX2.setRange(categories2[0], categories2[len(categories2) - 1])
         
