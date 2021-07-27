@@ -54,6 +54,7 @@ class LoadingBar(QtWidgets.QWidget):
         self.pbar = QtWidgets.QProgressBar()
         self.pbar.setMinimum(0)
         self.pbar.setMaximum(100)
+        self.pbar.setFont(QtGui.QFont('Arial', 15))
         layout.addWidget(self.pbar)
 
         #SpacerItem
@@ -82,6 +83,7 @@ class LoadingBar(QtWidgets.QWidget):
         self.timer.start(time * 10) #每1秒
 
     def stop(self):
+        self.pbar.setValue(100)
         self.timer.stop()
         self.close()
         
