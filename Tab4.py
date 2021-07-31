@@ -248,7 +248,7 @@ class chartTab(QtWidgets.QWidget):
     # #清除原本layout裡的Widget
     def clearLayout(self):
         for i in reversed(range(self.scroll_vbox.count())):
-            print(self.scroll_vbox.count())
+            # print(self.scroll_vbox.count())
             self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
 
 
