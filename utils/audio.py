@@ -77,3 +77,8 @@ def importAudio(filePath):
     
     # 這個看你要存在哪
     return outputText
+
+def getAudioLength(filePath):
+    song = AudioSegment.from_file(filePath)
+    return song.duration_seconds
+

@@ -172,7 +172,7 @@ class searchForm(QtWidgets.QWidget):
         self.label_2.setText(_translate("", "個案編號："))
         self.label.setText(_translate("", "個案姓名："))
         self.search_btn.setText(_translate("", "  查詢個案  "))
-        self.remindText.setText(_translate("", "都不輸入則顯示所有孩童"))
+        self.remindText.setText(_translate("", "輸入欄都空白，則顯示所有孩童"))
 
 
 class chartTab(QtWidgets.QWidget):

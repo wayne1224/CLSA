@@ -1,7 +1,7 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
-from components.loading import LoadingScreen
+from components.loading import LoadingScreen, LoadingBar
 import database.DatabaseApi
 import DistilTag
 
@@ -32,6 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
         #Loading Screen
         self.load = LoadingScreen()
         self.load.setObjectName("loadScreen") 
+        self.load2 = LoadingBar()
         
         # 資料庫連接失敗 直接關閉程式
         self.thread = QtCore.QThread()
@@ -44,28 +45,27 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thread.start()
                 
 
-    @QtCore.pyqtSlot(int)
-    def getAction(self, key):
+    @QtCore.pyqtSlot(int, float)
+    def getAction(self, key, time):
         if key == 1:
             self.mainTab.setCurrentIndex(1)
-        #key(2~4) Tab3 使用
 
+        #key(2~4) Tab3 使用
         elif key == 2:
             self.load.startAnimation('彙整中...')
         elif key == 3:
             self.load.stopAnimation()
             self.mainTab.setCurrentIndex(3)
-            informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
         elif key == 4:
             self.load.stopAnimation()
-            informBox = QtWidgets.QMessageBox.warning(self, '警告','資料不足無法彙整', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.warning(self, '警告','資料不足無法彙整', QtWidgets.QMessageBox.Ok)
         
-        #key(5~7) Tab3 使用
-
+        #key(5~7) Tab2 使用
         elif key == 5:
-            self.load.startAnimation('轉錄中...')
+            self.load2.start(time)
         elif key == 6:
-            self.load.stopAnimation()
+            self.load2.stop()
             QtWidgets.QMessageBox.information(self, '通知','轉錄成功', QtWidgets.QMessageBox.Ok)
 
     def closeEvent(self, event):

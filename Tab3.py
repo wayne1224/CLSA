@@ -12,7 +12,7 @@ from functools import partial
 from utils.worker import Worker
 
 class AnalysisTab(QtWidgets.QWidget):
-    procMain = QtCore.pyqtSignal(int)
+    procMain = QtCore.pyqtSignal(int, float)
     def __init__(self):
         super(AnalysisTab, self).__init__()
         # self.setObjectName("Form")
@@ -324,7 +324,7 @@ class AnalysisTab(QtWidgets.QWidget):
         self.isEdit = False
         if not utterance:
             #傳signal給MainWindow
-            self.procMain.emit(4)
+            self.procMain.emit(4, 0)
             return 
         #try:
         print(utterance)
@@ -450,7 +450,7 @@ class AnalysisTab(QtWidgets.QWidget):
         self.setContent(Analysis)
 
         #傳signal給MainWindow
-        self.procMain.emit(3)
+        self.procMain.emit(3, 0)
 
         # except Exception as e:
         #     #傳signal給MainWindow
