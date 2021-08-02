@@ -450,8 +450,59 @@ class chartTab(QtWidgets.QWidget):
         chartView3.setRenderHint(QPainter.Antialiasing)
         chartView3.setMinimumSize(500, 500)
 
+        #MLU
+        chart3 =  QChart()
+        chart3.setTitle("平均語句長度")
+        chart3.setTitleFont(font)
+
+        axisX3 = QBarCategoryAxis()
+        axisY3 = QValueAxis()
+        chart3.addAxis(axisY3, Qt.AlignLeft)
+        biggestValue3 = 20.0
+
+        categories3 = []
+        lineSeriesMLU_w = QLineSeries(self)
+        lineSeriesMLU_w.setName("MLU-w")
+        lineSeriesMLU_c = QLineSeries(self)
+        lineSeriesMLU_c.setName("MLU-c")
+        for i, index in enumerate(caseDocs):
+            if index['transcription']['analysis'] != None:
+                strDate = index['date'].strftime("%Y-%m-%d %H:%M")
+                categories3.append(strDate)
+                lineSeriesMLU_w.append(QPoint(i, index['transcription']['analysis']['MLU-w']))
+                lineSeriesMLU_c.append(QPoint(i, index['transcription']['analysis']['MLU-c']))
+                while (index['transcription']['analysis']['MLU-w'] > biggestValue3 or\
+                        index['transcription']['analysis']['MLU-c'] > biggestValue3) :
+                    biggestValue3 += 10
+        axisY3.setRange(0.0, biggestValue3)
+        axisX3.append(categories3)
+        chart3.addAxis(axisX3, Qt.AlignBottom)
+        if len(categories3) - 1 > 0 :
+            axisX3.setRange(categories3[0], categories3[len(categories3) - 1])
+        
+        chart3.addSeries(lineSeriesMLU_w)
+        chart3.addSeries(lineSeriesMLU_c)
+        lineSeriesMLU_w.attachAxis(axisX3)
+        lineSeriesMLU_w.attachAxis(axisY3)
+        lineSeriesMLU_c.attachAxis(axisX3)
+        lineSeriesMLU_c.attachAxis(axisY3)
+        penMLU_w = lineSeriesMLU_w.pen()
+        penMLU_c = lineSeriesMLU_c.pen()
+        penMLU_w.setWidth(5)
+        penMLU_c.setWidth(5)
+        lineSeriesMLU_w.setPen(penMLU_w)
+        lineSeriesMLU_c.setPen(penMLU_c)
+        
+        chart3.legend().setVisible(True)
+        chart3.legend().setAlignment(Qt.AlignBottom)
+
+        chartView3 = QChartView(chart3)
+        chartView3.setRenderHint(QPainter.Antialiasing)
+        chartView3.setMinimumSize(800, 500)
+
         #self.layout.addWidget(chartView)
         self.scroll_vbox.addWidget(chartView)
+
 
         self.chartLayout = QtWidgets.QHBoxLayout()
         self.chartLayout.addWidget(chartView2)
