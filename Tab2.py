@@ -15,7 +15,7 @@ import database.DatabaseApi
 from components.Mytable import Mytable
 from functools import partial
 from PyQt5 import QtCore, QtGui, QtWidgets
-from utils.audio import importAudio
+from utils.audio import STT
 from utils.worker import Worker
 from collections import OrderedDict
 
@@ -24,7 +24,7 @@ class Tab2(QtWidgets.QWidget):
     procUtterNum = QtCore.pyqtSignal(dict)
     procChildUtter = QtCore.pyqtSignal(list)
     procKey = QtCore.pyqtSignal(dict)
-    procMain = QtCore.pyqtSignal(int)
+    procMain = QtCore.pyqtSignal(int, float)
     procEdit = QtCore.pyqtSignal()
     procClear = QtCore.pyqtSignal()
     procAdultID = QtCore.pyqtSignal(dict)
@@ -335,6 +335,7 @@ class Tab2(QtWidgets.QWidget):
         self.childUtterance = []    #兒童語句
         self.caseDate = None     #目前記錄日期
         self.cwd = os.getcwd() #目前檔案位置
+        self.audio = STT()
 
         #視窗
         #編號不是輸入字母
@@ -636,7 +637,8 @@ class Tab2(QtWidgets.QWidget):
             return
 
         #傳signal給MainWindow: 開啟Loading頁
-        self.procMain.emit(5)
+        audio_length = self.audio.getAudioLength(filePath)
+        self.procMain.emit(5, audio_length)
 
         #Create a QThread object
         self.thread = QtCore.QThread()
@@ -656,7 +658,7 @@ class Tab2(QtWidgets.QWidget):
     #匯入錄音檔
     def _importAudio(self, filePath):
         print(filePath)
-        text = importAudio(filePath)
+        text = self.audio.importAudio(filePath)
         print(text)
 
         content = []
@@ -673,7 +675,7 @@ class Tab2(QtWidgets.QWidget):
         self._setTable(self.content)
 
         #傳signal給MainWindow: 關閉Loading頁
-        self.procMain.emit(6)
+        self.procMain.emit(6, 0)
 
     #新增列
     def _addRow(self):
@@ -873,7 +875,7 @@ class Tab2(QtWidgets.QWidget):
                 self._save(False)
 
                 #傳signal給MainWindow
-                self.procMain.emit(2)
+                self.procMain.emit(2, 0)
 
                 key = {'caseID':self.caseID,
                         'date':self.caseDate }

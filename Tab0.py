@@ -8,7 +8,7 @@ from datetime import datetime
 class SearchTab(QtWidgets.QWidget):
     #用來傳Document到各頁
     procDoc = QtCore.pyqtSignal(dict)
-    procMain = QtCore.pyqtSignal(int)
+    procMain = QtCore.pyqtSignal(int, float)
     procFind = QtCore.pyqtSignal()
 
     def __init__(self):
@@ -84,11 +84,12 @@ class SearchTab(QtWidgets.QWidget):
         self.icon.setMaximumSize(QtCore.QSize(30, 30))
         self.remindText = QtWidgets.QLabel()
         self.remindText.setMaximumSize(QtCore.QSize(16777215, 40))
+
         self.remindHorizontal = QtWidgets.QHBoxLayout()
-        self.remindHorizontal.addWidget(self.icon)
-        self.remindHorizontal.addWidget(self.remindText)
         spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         self.remindHorizontal.addItem(spacerItem)
+        self.remindHorizontal.addWidget(self.icon)
+        self.remindHorizontal.addWidget(self.remindText)
         layout.addLayout(self.remindHorizontal)
         
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
@@ -149,20 +150,20 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.insertRow(idx)        
                 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['recording']['SLP'])
+                item.setText(doc['childData']['name'])
                 self.tableWidget.setItem(idx , 0 , item)
 
                 item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['childData']['caseID'])
+                item.setText(doc['caseID'])
                 self.tableWidget.setItem(idx , 1 , item)
-
-                item = QtWidgets.QTableWidgetItem()
-                item.setText(doc['childData']['name'])
-                self.tableWidget.setItem(idx , 2 , item)
 
                 item = QtWidgets.QTableWidgetItem()
                 time = datetime.strftime(doc['date'],'%Y-%m-%d %H:%M')
                 item.setText(time)
+                self.tableWidget.setItem(idx , 2 , item)
+
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(doc['recording']['SLP'])
                 self.tableWidget.setItem(idx , 3 , item)
                 
                 item = QtWidgets.QTableWidgetItem()
@@ -196,7 +197,7 @@ class SearchTab(QtWidgets.QWidget):
         self.procDoc.emit(obj)
         #通知彙整完整
         informBox = QtWidgets.QMessageBox.information(self, '通知','匯入完成', QtWidgets.QMessageBox.Ok)
-        self.procMain.emit(1)
+        self.procMain.emit(1, 0)
         
 
     def deleteDoc(self , objID , idx):
@@ -219,13 +220,13 @@ class SearchTab(QtWidgets.QWidget):
         self.label_3.setText(_translate("Form", "個案姓名："))
         self.searchBtn.setText(_translate("Form", "  查詢紀錄  "))
         item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("Form", "收錄者"))
+        item.setText(_translate("Form", "個案姓名"))
         item = self.tableWidget.horizontalHeaderItem(1)
         item.setText(_translate("Form", "個案編號"))
         item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("Form", "個案姓名"))
-        item = self.tableWidget.horizontalHeaderItem(3)
         item.setText(_translate("Form", "收錄日期"))
+        item = self.tableWidget.horizontalHeaderItem(3)
+        item.setText(_translate("Form", "收錄者"))
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("Form", "收錄情境"))
         item = self.tableWidget.horizontalHeaderItem(5)
