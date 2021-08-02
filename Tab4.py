@@ -126,10 +126,12 @@ class searchForm(QtWidgets.QWidget):
         self.remindText = QtWidgets.QLabel()
         self.remindText.setMaximumSize(QtCore.QSize(16777215, 25))
         self.remindHorizontal = QtWidgets.QHBoxLayout()
-        self.remindHorizontal.addWidget(self.icon)
-        self.remindHorizontal.addWidget(self.remindText)
+
         spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         self.remindHorizontal.addItem(spacerItem)
+        self.remindHorizontal.addWidget(self.icon)
+        self.remindHorizontal.addWidget(self.remindText)
+        
         self.gridLayout.addLayout(self.remindHorizontal, 2, 0, 1, 1)
 
         self.horizontalLayout_3.addWidget(self.input_name)
