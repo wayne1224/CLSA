@@ -145,7 +145,7 @@ class SearchTab(QtWidgets.QWidget):
         while self.tableWidget.rowCount() > 0:
             self.tableWidget.removeRow(self.tableWidget.rowCount()-1)
         if cursor:
-            idx = 0
+            idx = -1
             for idx, doc in enumerate(cursor):
                 self.tableWidget.insertRow(idx)        
                 
@@ -187,7 +187,7 @@ class SearchTab(QtWidgets.QWidget):
                 importBtn.clicked.connect(partial(self.importDoc , doc))
                 deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx)) # 只刪document
 
-            if idx == 0:
+            if idx == -1:
                 informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
         else:
             informBox = QtWidgets.QMessageBox.information(self, 'Database','資料庫讀取中', QtWidgets.QMessageBox.Ok)
