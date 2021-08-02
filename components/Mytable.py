@@ -61,7 +61,7 @@ class Mytable(QtWidgets.QWidget):
         #self.tableWidget.cellClicked['int','int'].connect(self._setChildID)
 
         #設成人編號
-        #self.tableWidget.cellClicked['int','int'].connect(self._setAdultID)
+        self.tableWidget.cellClicked['int','int'].connect(self._setAdultID)
         
         #防違法動作
         self.tableWidget.cellClicked['int','int'].connect(self._checkAll)
@@ -247,65 +247,46 @@ class Mytable(QtWidgets.QWidget):
         return True
 
 
-    # def _setAdultID(self):
-    #     selected = self.tableWidget.selectedIndexes()
-    #     x = selected[0].row()
-    #     y = selected[0].column()
+    def _setAdultID(self):
+        selected = self.tableWidget.selectedIndexes()
+        x = selected[0].row()
+        y = selected[0].column()
 
-    #     #將ComboBox編號存成一般儲存格
-    #     if self.id_x != -1 and self.tableWidget.cellWidget(self.id_x,0) != None:
-    #         print("yes")
-    #         num = self.tableWidget.cellWidget(self.id_x,0).currentText()
-    #         self.tableWidget.removeCellWidget(self.id_x,0)
-    #         item = QtWidgets.QTableWidgetItem()
-    #         item.setText(num)
-    #         self.tableWidget.setItem(self.id_x,0,item)
-    #         self.id_x = -1
+        #將ComboBox編號存成一般儲存格
+        if self.id_x != -1 and self.tableWidget.cellWidget(self.id_x,0) != None:
+            print("yes")
+            num = self.tableWidget.cellWidget(self.id_x,0).currentText()
+            self.tableWidget.removeCellWidget(self.id_x,0)
+            item = QtWidgets.QTableWidgetItem()
+            item.setText(num)
+            self.tableWidget.setItem(self.id_x,0,item)
+            self.id_x = -1
+
+        #設成人編號的Dict
+        idDict = self.adultID
+
+        #初始化ComboBox
+        if y == 0:
+            # if self.edit:
+            idBox = QtWidgets.QComboBox()
+            idBox.setEditable(True)
+
+            #若成人語句不採計，無法設成人編號
+            if self.tableWidget.item(x,1) and self.tableWidget.item(x,1).font().bold():
+                idBox.setEnabled(False)
+
+            opts = list(idDict)
+            idBox.addItems(opts)
+            idBox.clearEditText()
+
+            #檢查原格中是否有字
+            if self.tableWidget.item(x,0) and self.tableWidget.item(x,0).text() != '':
+                t = self.tableWidget.item(x,0).text()
+                idBox.setCurrentText(t)
                 
-
-    #     #設成人編號的Dict
-    #     idDict = {}
-    #     try:
-    #         for i in range(self.tableWidget.rowCount()):
-    #             if self.tableWidget.item(i,0) and self.tableWidget.item(i,0).text() != '':
-    #                 pattern = r"[a-zA-Z]+"   
-    #                 key = re.search(pattern,self.tableWidget.item(i,0).text()).group()
-    #                 if key in idDict:
-    #                     idDict[key] += 1
-    #                 else:
-    #                     idDict[key] = 1
-    #                 key += str(idDict[key])
-    #                 item = QtWidgets.QTableWidgetItem()
-    #                 item.setText(key)
-    #                 self.tableWidget.setItem(i,0,item)
-    #     except Exception as e:
-    #         print(e)
-    #         informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
-    #         item = QtWidgets.QTableWidgetItem('')
-    #         self.tableWidget.setItem(i,0,item)
-
-    #     #初始化ComboBox
-    #     if y == 0:
-    #         # if self.edit:
-    #         idBox = QtWidgets.QComboBox()
-    #         idBox.setEditable(True)
-
-    #         #若成人語句不採計，無法設成人編號
-    #         if self.tableWidget.item(x,1) and self.tableWidget.item(x,1).font().bold():
-    #             idBox.setEnabled(False)
-
-    #         opts = list(idDict)
-    #         idBox.addItems(opts)
-    #         idBox.clearEditText()
-
-    #         #檢查原格中是否有字
-    #         if self.tableWidget.item(x,0) and self.tableWidget.item(x,0).text() != '':
-    #             t = self.tableWidget.item(x,0).text()
-    #             idBox.setCurrentText(t)
-                
-    #         self.tableWidget.setCellWidget(x, y, idBox)
-    #         self.id_x = x
-    #         #self.last_x = x
+            self.tableWidget.setCellWidget(x, y, idBox)
+            self.id_x = x
+            #self.last_x = x
 
     # def _setChildID(self):
     #     #被選到的格子
@@ -364,17 +345,19 @@ class Mytable(QtWidgets.QWidget):
                 if adultID == None:
                     self.tableWidget.setItem(rowIndex, 0, empty)
                     adultID = self.tableWidget.item(rowIndex, 0)
-                try:
-                    pattern = r"[a-zA-Z]+"   
-                    key = re.search(pattern,adultID.text()).group()
-                    if key in checkAdultID:
-                        checkAdultID[key] += 1
-                    else:
-                        checkAdultID[key] = 1
-                    ID = key + str(checkAdultID[key])
-                    adultID.setText(ID)
-                except Exception as e:
-                    print('')
+                if self.tableWidget.item(rowIndex,0).text() != '':
+                    try:
+                        pattern = r"[a-zA-Z]+"   
+                        key = re.search(pattern,adultID.text()).group()
+                        if key in checkAdultID:
+                            checkAdultID[key] += 1
+                        else:
+                            checkAdultID[key] = 1
+                        ID = key + str(checkAdultID[key])
+                        adultID.setText(ID)
+                    except Exception as e:
+                        informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
+                        self.tableWidget.setItem(rowIndex,0,empty)
             #兒童語句
             if childUtter != None and childUtter.text() != '' and not childUtter.font().bold():
                 checkChildID += 1
@@ -486,12 +469,15 @@ class Mytable(QtWidgets.QWidget):
 
     def addNewID(self, item, index):
         if self.inputID.text() != '':
-            try:
-                pattern = r"[a-zA-Z]+"   
-                key = re.search(pattern,self.inputID.text()).group()
-                self.changeRole(item, index, self.inputID.text())
-            except Exception as e:
-                print(e)
+            if self.inputID.text().encode( 'UTF-8' ).isalpha():
+                try:
+                    pattern = r"[a-zA-Z]+"   
+                    key = re.search(pattern,self.inputID.text()).group()
+                    self.changeRole(item, index, self.inputID.text())
+                except Exception as e:
+                    print(e)
+                    informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
+            else:
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
 
     def changeRole(self, item, index, ID):
