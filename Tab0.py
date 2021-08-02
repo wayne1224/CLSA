@@ -84,11 +84,12 @@ class SearchTab(QtWidgets.QWidget):
         self.icon.setMaximumSize(QtCore.QSize(30, 30))
         self.remindText = QtWidgets.QLabel()
         self.remindText.setMaximumSize(QtCore.QSize(16777215, 40))
+
         self.remindHorizontal = QtWidgets.QHBoxLayout()
-        self.remindHorizontal.addWidget(self.icon)
-        self.remindHorizontal.addWidget(self.remindText)
         spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         self.remindHorizontal.addItem(spacerItem)
+        self.remindHorizontal.addWidget(self.icon)
+        self.remindHorizontal.addWidget(self.remindText)
         layout.addLayout(self.remindHorizontal)
         
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)

@@ -13,3 +13,8 @@ QPushButton:pressed
 {
     border: 2px inset #CCCCCC;
 }
+
+QMessageBox QPushButton
+{
+    width: 60;
+}
