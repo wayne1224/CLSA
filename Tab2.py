@@ -15,7 +15,7 @@ import database.DatabaseApi
 from components.Mytable import Mytable
 from functools import partial
 from PyQt5 import QtCore, QtGui, QtWidgets
-from utils.audio import importAudio, getAudioLength
+from utils.audio import STT
 from utils.worker import Worker
 from collections import OrderedDict
 
@@ -335,6 +335,7 @@ class Tab2(QtWidgets.QWidget):
         self.childUtterance = []    #兒童語句
         self.caseDate = None     #目前記錄日期
         self.cwd = os.getcwd() #目前檔案位置
+        self.audio = STT()
 
         #視窗
         #編號不是輸入字母
@@ -622,7 +623,7 @@ class Tab2(QtWidgets.QWidget):
             return
 
         #傳signal給MainWindow: 開啟Loading頁
-        audio_length = getAudioLength(filePath)
+        audio_length = self.audio.getAudioLength(filePath)
         self.procMain.emit(5, audio_length)
 
         #Create a QThread object
@@ -643,7 +644,7 @@ class Tab2(QtWidgets.QWidget):
     #匯入錄音檔
     def _importAudio(self, filePath):
         print(filePath)
-        text = importAudio(filePath)
+        text = self.audio.importAudio(filePath)
         print(text)
 
         content = []

@@ -28,6 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainTab.tab0.procMain.connect(self.getAction)
         self.mainTab.tab2.procMain.connect(self.getAction)
         self.mainTab.tab3.procMain.connect(self.getAction)
+        self.mainTab.tab2.audio.procMain.connect(self.getAction)
 
         #Loading Screen
         self.load = LoadingScreen()
@@ -63,10 +64,13 @@ class MainWindow(QtWidgets.QMainWindow):
         
         #key(5~7) Tab2 使用
         elif key == 5:
-            self.load2.start(time)
+            self.load2.wait(time)   
         elif key == 6:
             self.load2.stop()
             QtWidgets.QMessageBox.information(self, '通知','轉錄成功', QtWidgets.QMessageBox.Ok)
+        elif key == 7:
+            self.load2.start()
+        
 
     def closeEvent(self, event):
         checkTab1 = self.mainTab.tab1.saveExamination()
