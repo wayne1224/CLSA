@@ -90,11 +90,19 @@ class AnalysisTab(QtWidgets.QWidget):
         #initial Bold font
         font = QtGui.QFont()
         font.setBold(True)
+
+        # table font
+        tfont = QtGui.QFont()
+        tfont.setFamily("Agency FB")
+        tfont.setPointSize(12)
+
         self.tableWidget = QtWidgets.QTableWidget(self)
         #self.tableWidget.setGeometry(QtCore.QRect(270, 30, 481, 761))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(4)
         self.tableWidget.setRowCount(24)
+        self.tableWidget.setFont(tfont)
+
         layout.addWidget(self.tableWidget)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setVerticalHeaderItem(0, item)

@@ -37,11 +37,22 @@ class searchForm(QtWidgets.QWidget):
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tableWidget.sizePolicy().hasHeightForWidth())
+
+        # table font
+        tfont = QtGui.QFont()
+        tfont.setFamily("Agency FB")
+        tfont.setPointSize(10)
+
         self.tableWidget.setSizePolicy(sizePolicy)
         self.tableWidget.setMaximumSize(QtCore.QSize(16777215, 180))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(5)
         self.tableWidget.setRowCount(0)
+
+        #change font
+        self.tableWidget.horizontalHeader().setFont(tfont)
+        self.tableWidget.setFont(tfont)
+
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -214,7 +225,7 @@ class chartTab(QtWidgets.QWidget):
             self.form.tableWidget.removeRow(self.form.tableWidget.rowCount()-1)
 
         if cursor:
-            idx = 0
+            idx = -1
             for idx, child in enumerate(cursor):
                 self.form.tableWidget.insertRow(idx)        
                 
@@ -242,7 +253,7 @@ class chartTab(QtWidgets.QWidget):
                 importBtn.setStyleSheet("QPushButton {background-color: cornflowerblue;} QPushButton:hover{background-color: rgb(90, 138, 226);}")
                 self.form.tableWidget.setCellWidget(idx, 4,importBtn)
                 importBtn.clicked.connect(partial(self.create_linebarchart , child['document']))
-            if idx == 0:
+            if idx == -1:
                 QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
         else:
