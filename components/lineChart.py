@@ -22,7 +22,6 @@ class lineChartTab(QtWidgets.QWidget):
             # print(self.layout.count())
             self.layout.removeItem(self.layout.itemAt(i))
 
-    @QtCore.pyqtSlot()
     def lineChart(self):
         caseDocs = database.DatabaseApi.findDocs('','','')
         self.clearLayout()

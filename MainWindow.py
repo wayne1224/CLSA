@@ -43,8 +43,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
+        self.thread.finished.connect(self.mainTab.tab4.tab1.lineChart)
         self.thread.start()
-                
 
     @QtCore.pyqtSlot(int, float)
     def getAction(self, key, time):
