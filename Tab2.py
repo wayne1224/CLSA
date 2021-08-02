@@ -173,13 +173,13 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_utterance.setObjectName("lbl_utterance")
         self.horizontalLayout_5.addWidget(self.lbl_utterance)
         self.input_utterance = QtWidgets.QLineEdit()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.input_utterance.sizePolicy().hasHeightForWidth())
         self.input_utterance.setSizePolicy(sizePolicy)
-        self.input_utterance.setMinimumSize(QtCore.QSize(500, 0))
-        self.input_utterance.setMaximumSize(QtCore.QSize(500, 16777215))
+        self.input_utterance.setMinimumSize(QtCore.QSize(700, 0))
+        self.input_utterance.setMaximumSize(QtCore.QSize(700, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.input_utterance.setFont(font)
@@ -200,13 +200,13 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_scenario.setObjectName("lbl_scenario")
         self.horizontalLayout_6.addWidget(self.lbl_scenario)
         self.input_scenario = QtWidgets.QLineEdit()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.input_scenario.sizePolicy().hasHeightForWidth())
         self.input_scenario.setSizePolicy(sizePolicy)
-        self.input_scenario.setMinimumSize(QtCore.QSize(500, 0))
-        self.input_scenario.setMaximumSize(QtCore.QSize(500, 16777215))
+        self.input_scenario.setMinimumSize(QtCore.QSize(700, 0))
+        self.input_scenario.setMaximumSize(QtCore.QSize(700, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.input_scenario.setFont(font)
@@ -578,6 +578,11 @@ class Tab2(QtWidgets.QWidget):
             
             rowCount = self.tableWidget.tableWidget.rowCount()    #取得目前總列數
             self.tableWidget.tableWidget.insertRow(rowCount)  #插入一列
+
+            for columnIndex in range(5):
+                if self.tableWidget.tableWidget.item(rowCount, columnIndex) == None:
+                    self.tableWidget.tableWidget.setItem(rowCount, columnIndex, QtWidgets.QTableWidgetItem(''))
+            
             utterance = QtWidgets.QTableWidgetItem(content[i]["utterance"])
             scenario = QtWidgets.QTableWidgetItem(content[i]["scenario"])
 
@@ -610,6 +615,15 @@ class Tab2(QtWidgets.QWidget):
             self.tableWidget.tableWidget.setItem(rowCount, 2, scenario)
 
         self.tableWidget.checkAllID()
+        self._setColumnColor()
+
+    def _setColumnColor(self):
+        for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
+            self.tableWidget.tableWidget.item(rowIndex,0).setBackground(QtGui.QColor("#dbedf8"))
+            self.tableWidget.tableWidget.item(rowIndex,1).setBackground(QtGui.QColor("#dbedf8"))
+            self.tableWidget.tableWidget.item(rowIndex,2).setBackground(QtGui.QColor("#fffefeec"))
+            self.tableWidget.tableWidget.item(rowIndex,3).setBackground(QtGui.QColor("#cdf5d4"))
+            self.tableWidget.tableWidget.item(rowIndex,4).setBackground(QtGui.QColor("#cdf5d4"))
 
     #用Thread呼叫匯入錄音檔
     def _tranferAudio(self):

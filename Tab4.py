@@ -19,6 +19,7 @@ class Tab4(QtWidgets.QTabWidget):
         self.addTab(self.tab1, "各年齡層分析圖表")
 
         #self.tab0.procCaseDocs.connect(self.tab1.lineChart)
+        self.setStyleSheet(open("QSS/Tab4.qss", "r").read())
 
 class searchForm(QtWidgets.QWidget):
     def __init__(self):
