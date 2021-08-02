@@ -1,0 +1,21 @@
+QTabBar::tab
+{
+    font-size: 20px;
+    background-color: #dfdede;
+    height: 35px;
+    border: 1px solid #C4C4C3;
+    border-bottom-color: white; /* same as the pane color */
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    padding: 2px;
+}
+
+QTabBar::tab:selected
+{
+    background-color: white;
+}
+
+QMessageBox QPushButton
+{
+    width: 60;
+}
