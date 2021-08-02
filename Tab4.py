@@ -19,6 +19,7 @@ class Tab4(QtWidgets.QTabWidget):
         self.addTab(self.tab1, "各年齡層分析圖表")
 
         #self.tab0.procCaseDocs.connect(self.tab1.lineChart)
+        self.setStyleSheet(open("QSS/Tab4.qss", "r").read())
 
 class searchForm(QtWidgets.QWidget):
     def __init__(self):
@@ -126,10 +127,12 @@ class searchForm(QtWidgets.QWidget):
         self.remindText = QtWidgets.QLabel()
         self.remindText.setMaximumSize(QtCore.QSize(16777215, 25))
         self.remindHorizontal = QtWidgets.QHBoxLayout()
-        self.remindHorizontal.addWidget(self.icon)
-        self.remindHorizontal.addWidget(self.remindText)
+
         spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         self.remindHorizontal.addItem(spacerItem)
+        self.remindHorizontal.addWidget(self.icon)
+        self.remindHorizontal.addWidget(self.remindText)
+        
         self.gridLayout.addLayout(self.remindHorizontal, 2, 0, 1, 1)
 
         self.horizontalLayout_3.addWidget(self.input_name)
@@ -395,7 +398,7 @@ class chartTab(QtWidgets.QWidget):
 
         chartView2 = QChartView(chart2)
         chartView2.setRenderHint(QPainter.Antialiasing)
-        chartView2.setMinimumSize(800, 500)
+        chartView2.setMinimumSize(500, 500)
 
         #MLU
         chart3 =  QChart()
@@ -445,10 +448,14 @@ class chartTab(QtWidgets.QWidget):
 
         chartView3 = QChartView(chart3)
         chartView3.setRenderHint(QPainter.Antialiasing)
-        chartView3.setMinimumSize(800, 500)
+        chartView3.setMinimumSize(500, 500)
 
         #self.layout.addWidget(chartView)
         self.scroll_vbox.addWidget(chartView)
-        self.scroll_vbox.addWidget(chartView2)
-        self.scroll_vbox.addWidget(chartView3)
+
+        self.chartLayout = QtWidgets.QHBoxLayout()
+        self.chartLayout.addWidget(chartView2)
+        self.chartLayout.addWidget(chartView3)
+        self.scroll_vbox.addLayout(self.chartLayout)
+
         self.layout.addWidget(self.scroll)

@@ -18,9 +18,9 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab3 = AnalysisTab()
         self.tab4 = Tab4()
 
-        #tab4裡的tab自動填滿
-        self.tab4.tabBar().setDocumentMode(True)
-        self.tab4.tabBar().setExpanding(True)
+        # #tab4裡的tab自動填滿
+        # self.tab4.tabBar().setDocumentMode(True)
+        # self.tab4.tabBar().setExpanding(True)
 
         #模糊特效
         self.blur_effect = QtWidgets.QGraphicsBlurEffect()
@@ -33,7 +33,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.addTab(self.tab4, "圖表")
 
         #設定tab的css
-        self.setStyleSheet( "QTabBar::tab { height: 40px; width: 250px; }")
+        self.setStyleSheet(open("QSS/MainTabWidget.qss", "r").read())
 
         #設定Tab Signal
         self.currentChanged.connect(self.checkTab2Changed)

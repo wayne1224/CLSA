@@ -18,6 +18,12 @@ class Mytable(QtWidgets.QWidget):
         
         layout = QtWidgets.QGridLayout()
         self.setLayout(layout)
+
+        font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setWeight(50)
         
         self.tableWidget = QtWidgets.QTableWidget()
         self.tableWidget.setMinimumSize(QtCore.QSize(0, 0))
@@ -31,12 +37,6 @@ class Mytable(QtWidgets.QWidget):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
-        font = QtGui.QFont()
-        font.setFamily("微軟正黑體")
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setWeight(50)
-        item.setFont(font)
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(1, item)
@@ -46,6 +46,8 @@ class Mytable(QtWidgets.QWidget):
         self.tableWidget.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(4, item)
+        self.tableWidget.horizontalHeader().setFont(font)
+        self.tableWidget.setFont(font)
 
         #column size
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
