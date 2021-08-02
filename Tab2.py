@@ -454,6 +454,7 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def roleChangeCheck(self):
         self._syncTableCmbRoleNum()
+        self._setColumnColor()
 
     #從Table拿兒童、成人編號
     @QtCore.pyqtSlot(dict)
