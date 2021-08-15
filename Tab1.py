@@ -26,7 +26,7 @@ class DateEdit(QtWidgets.QDateTimeEdit):
 
 class Myform(QtWidgets.QWidget):
     procStart = QtCore.pyqtSignal(dict)
-
+    procClear = QtCore.pyqtSignal()
     def __init__(self):
         super(Myform, self).__init__()
 
@@ -727,7 +727,7 @@ class Myform(QtWidgets.QWidget):
         self.input_specialSit.setStyleSheet("border: 1px solid initial;")
         # self.horizontalLayout_8.setStyleSheet("border: 1px;")
 
-     #儲存資料到資料庫 
+    #儲存資料到資料庫 
     def save (self): 
         error = 0
 
@@ -1064,6 +1064,7 @@ class Myform(QtWidgets.QWidget):
         self.lbl_showTotalUtterNum.setText('')
         self.lbl_showValidUtterNum.setText('')
         self.saveForm =self.returnTab1Data()
+        self.procClear.emit()
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
