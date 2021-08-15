@@ -11,6 +11,7 @@ from collections import OrderedDict
 
 class Mytable(QtWidgets.QWidget):
     procChange = QtCore.pyqtSignal()
+    procInsertRowColor = QtCore.pyqtSignal()
     procAllID = QtCore.pyqtSignal(dict)
 
     def __init__(self):
@@ -465,9 +466,15 @@ class Mytable(QtWidgets.QWidget):
     
     def insertRow(self,index,opt):
         if opt == 'up':
-            self.tableWidget.insertRow(index.row())
+            row = index.row()
         if opt == 'down':
-            self.tableWidget.insertRow(index.row()+1)
+            row = index.row()+1
+        self.tableWidget.insertRow(row)
+        for columnIndex in range(5):
+            if self.tableWidget.item(row, columnIndex) == None:
+                self.tableWidget.setItem(row, columnIndex, QtWidgets.QTableWidgetItem(''))
+        #Tab2加上顏色
+        self.procInsertRowColor.emit()
 
     def addNewID(self, item, index):
         if self.inputID.text() != '':

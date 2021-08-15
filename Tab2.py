@@ -325,6 +325,7 @@ class Tab2(QtWidgets.QWidget):
         #signal
         self.tableWidget.procAllID.connect(self.getAllID)
         self.tableWidget.procChange.connect(self.roleChangeCheck)
+        self.tableWidget.procInsertRowColor.connect(self.insertRowColor)
 
         self.caseID = ''    #個案編號
         self.caseData = {}  #用caseID查的個案紀錄{'dates', 'transcriber', 'FirstContent'}
@@ -449,6 +450,11 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def emitKey(self, key):
         self.procKey.emit(key)
+
+    #Table插入列後加上顏色
+    @QtCore.pyqtSlot()
+    def insertRowColor(self):
+        self._setColumnColor()
 
     #Table角色切換
     @QtCore.pyqtSlot()
