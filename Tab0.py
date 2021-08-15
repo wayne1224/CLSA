@@ -105,9 +105,13 @@ class SearchTab(QtWidgets.QWidget):
 
         self.tableWidget = QtWidgets.QTableWidget()
         self.tableWidget.setObjectName("tableWidget")
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.tableWidget.setFont(font)
         self.tableWidget.setColumnCount(9)
         self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         
+        self.tableWidget.horizontalHeader().setFont(font)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -141,7 +145,6 @@ class SearchTab(QtWidgets.QWidget):
         self.retranslateUi()
 
         #QSS
-        
         # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Tab0.qss", "r").read())
         self.setStyleSheet(open("QSS/Tab0.qss", "r").read())
 
