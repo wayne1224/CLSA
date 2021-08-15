@@ -1,3 +1,8 @@
+QTableWidget QPushButton
+{
+    font-size: 20px;
+}
+
 QPushButton#searchBtn
 {
     background-color: indianred;

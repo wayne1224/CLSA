@@ -9,6 +9,11 @@ QTabBar::tab:selected
     background-color: rgb(99, 212, 216);
 }
 
+QTableWidget QPushButton
+{
+    font-size: 20px;
+}
+
 /*
 QTabWidget::tab-bar
 {
