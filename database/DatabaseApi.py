@@ -15,15 +15,16 @@ import calendar
 def connectDB():
     global childDataDB 
     global documentDB
-    global childJoinedDocumentDB
+    global normDB
     client = pymongo.MongoClient()
 
     try:
         host = "mongodb+srv://wayne1224:wayne1224@sandbox.qjd2q.mongodb.net/myFirstDatabase?authSource=admin&replicaSet=atlas-bu8995-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true"
         client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000) # Timeout 10s
-        db = client["CLSA"]         # choose database
+        db = client["CLSA"]           # choose database
         childDataDB = db["childData"] # choose collection
-        documentDB = db["document"]   # choose collection       
+        documentDB = db["document"]   # choose collection   
+        normDB = db["norm"]           # choose collection  
         client.server_info()
         return True
 
@@ -287,7 +288,6 @@ def findAnalysis(caseID , date):
         return False
 
 def updateAnalysis(caseID , date , analysis):
-    # 
     try:
         query = dict()
         query["caseID"] = caseID
@@ -377,13 +377,58 @@ def findChildren(caseID , name):
         print(e)
         return False
 
+def upsertNorm(age , data):
+    try:
+        query = dict()
+        query["age"] = age
+        
+        # insert
+        if normDB.count_documents(query) == 0:
+            normDB.insert_one(
+                {
+                    "age" : age,
+                    "data" : data
+                }
+            )
+        # update
+        else:
+            childDataDB.update_one(query , {"$set" : {
+                                                        "age" : age,
+                                                        "data" : data
+                                                    }})
+
+
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def findNorm(age):
+    try:
+        query = dict()
+        query["age"] = age
+        
+        if normDB.count_documents(query) == 0:
+            print("can not find this content")
+            return False
+        
+        return normDB.find_one(query)
+
+    except Exception as e:
+        print(e)
+        return False
 # childData = {   "caseID" : "00757025",
 #                 "name" : "Wayne",
 #                 "gender" : "male",
 #                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
 
+# data = {
+#     "VOCD-a" : 123,
+#     "VOCD-b" : 456
+# }
+
 # connectDB()
-# result = findChildren("12312312" , "")
+# upsertNorm("2" , data)
 
 # print(result)
 # for i in result:
