@@ -1,4 +1,17 @@
 QTabBar::tab
 {
     width: 200px;
+    background-color: rgb(190, 218, 219);
 }
+
+QTabBar::tab:selected
+{
+    background-color: rgb(99, 212, 216);
+}
+
+/*
+QTabWidget::tab-bar
+{
+    alignment: right;
+}
+*/
