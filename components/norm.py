@@ -160,8 +160,8 @@ class NormModifyTab(QtWidgets.QWidget):
         self.vocd_box.setMaximumSize(QtCore.QSize(16777215, 250))
 
         #SpacerItem
-        # spacerItemV = QtWidgets.QSpacerItem(40, 40, QtWidgets.QSizePolicy.Expanding)
-        # self.verticalLayout.addItem(spacerItemV)
+        spacerItemV = QtWidgets.QSpacerItem(40, 400, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItemV)
 
         #Store values
         self.lastIndex = 0
