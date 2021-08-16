@@ -149,7 +149,6 @@ class SearchTab(QtWidgets.QWidget):
         self.setStyleSheet(open("QSS/Tab0.qss", "r").read())
 
     def _search(self):
-        self.procFind.emit()
         cursor = database.DatabaseApi.findDocs(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
 
         # self.tableWidget.clear()

@@ -271,7 +271,7 @@ class AnalysisTab(QtWidgets.QWidget):
                 self.tableWidget.setItem(i, 3, item)
         
         #Class內變數宣告
-        self.caseID = ''
+        self.caseID = None
         self.date = None
         self.isEdit = False
 
@@ -492,8 +492,10 @@ class AnalysisTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot()
     def clearContent(self):
-        #self.caseID_label.setText('')
-        #self.date_label.setText('')
+        self.caseID = None
+        self.date = None
+        self.caseID_label.setText('')
+        self.date_label.setText('')
         
         self.tableWidget.item(1,3).setText('') 
         self.tableWidget.item(2,3).setText('') 

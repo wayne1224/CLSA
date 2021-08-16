@@ -54,9 +54,9 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #self.tab0.procDoc.connect(self.tab4.create_linebarchart)
 
         #搜尋頁面按下搜尋時，其他頁面清空
-        self.tab0.procFind.connect(self.tab1.clearContent)
-        self.tab0.procFind.connect(self.tab2.clearTab)
-        self.tab0.procFind.connect(self.tab3.clearContent)
+        #self.tab0.procClear.connect(self.tab1.clearContent)
+        self.tab1.procClear.connect(self.tab2.clearTab)
+        self.tab1.procClear.connect(self.tab3.clearContent)
         self.tab2.procClear.connect(self.tab3.clearContent)
 
     def leaveTab1(self) :
