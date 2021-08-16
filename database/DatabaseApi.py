@@ -418,7 +418,11 @@ def findNorm(age):
         return False
 
 def getNorms():
-    return normDB.find().sort("age").collation( { 'locale': 'zh'} )
+    try:
+        return normDB.find().sort("age").collation( { 'locale': 'zh'} )
+    except Exception as e:
+        print(e)
+        return False
 # childData = {   "caseID" : "00757025",
 #                 "name" : "Wayne",
 #                 "gender" : "male",
