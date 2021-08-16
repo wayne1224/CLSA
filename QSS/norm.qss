@@ -2,3 +2,8 @@ QPushButton#updateBtn
 {
     background-color: rgb(90, 138, 226);
 }
+
+QPushButton#newAgeBtn
+{
+    background-color: aquamarine;
+}

@@ -60,6 +60,48 @@ class NormModifyTab(QtWidgets.QWidget):
         self.horizontalLayout_8.addWidget(self.updateBtn)
         self.verticalLayout.addLayout(self.horizontalLayout_8)
 
+        #新增comboBox index
+        self.newAge_box = QtWidgets.QGroupBox("新增年齡")
+        self.newAge_box.setMaximumSize(QtCore.QSize(350, 140))
+        self.newAge_box.setFont(font)
+
+        self.hbox_newAge = QtWidgets.QHBoxLayout()
+
+        # self.label_newAge = QtWidgets.QLabel("新增年齡:")
+        # self.label_newAge.setMaximumSize(QtCore.QSize(250, 50))
+        # self.label_newAge.setFont(font)
+        # self.hbox_newAge.addWidget(self.label_newAge)
+        reg_ex = QtCore.QRegExp("[一二三四五六七八九十]+")
+        numValid = QtGui.QRegExpValidator(reg_ex)
+        
+        self.input_newAge = QtWidgets.QLineEdit()
+        self.input_newAge.setMaximumSize(QtCore.QSize(80, 50))
+        self.input_newAge.setFont(font)
+        self.input_newAge.setMaxLength(2)
+        self.input_newAge.setValidator(numValid)
+        self.hbox_newAge.addWidget(self.input_newAge)
+
+        self.label_Age = QtWidgets.QLabel("歲")
+        self.label_Age.setMaximumSize(QtCore.QSize(40, 50))
+        self.label_Age.setFont(font)
+        self.hbox_newAge.addWidget(self.label_Age)
+
+        self.comboBox_age = QtWidgets.QComboBox()
+        self.comboBox_age.setMaximumSize(QtCore.QSize(80, 50))
+        self.comboBox_age.setFont(font)
+        self.comboBox_age.addItems(["整", "半"])
+        self.hbox_newAge.addWidget(self.comboBox_age)
+
+        self.newAgeBtn = QtWidgets.QPushButton("新增")
+        self.newAgeBtn.setFont(font)
+        self.newAgeBtn.setObjectName("newAgeBtn")
+        self.hbox_newAge.addWidget(self.newAgeBtn)
+
+        self.newAge_box.setLayout(self.hbox_newAge)
+        self.horizontalLayout_7.addWidget(self.newAge_box)
+        
+        #Validator
+        valid = QtGui.QDoubleValidator(0, 10, 2, notation=QtGui.QDoubleValidator.StandardNotation)
 
         #MLU GroupBox layout
         self.mlu_vbox = QtWidgets.QVBoxLayout()
@@ -69,6 +111,8 @@ class NormModifyTab(QtWidgets.QWidget):
         self.label_mlu_c.setFont(font)
         self.input_mlu_c = QtWidgets.QLineEdit()
         self.input_mlu_c.setFont(font)
+        self.input_mlu_c.setValidator(valid)
+
         self.hbox_1.addWidget(self.label_mlu_c)
         self.hbox_1.addWidget(self.input_mlu_c)
 
@@ -77,6 +121,8 @@ class NormModifyTab(QtWidgets.QWidget):
         self.label_mlu_w.setFont(font)
         self.input_mlu_w = QtWidgets.QLineEdit()
         self.input_mlu_w.setFont(font)
+        self.input_mlu_w.setValidator(valid)
+
         self.hbox_2.addWidget(self.label_mlu_w)
         self.hbox_2.addWidget(self.input_mlu_w)
 
@@ -94,6 +140,7 @@ class NormModifyTab(QtWidgets.QWidget):
         self.label_vocd_c.setFont(font)
         self.input_vocd_c = QtWidgets.QLineEdit()
         self.input_vocd_c.setFont(font)
+        self.input_vocd_c.setValidator(valid)
         self.hbox_3.addWidget(self.label_vocd_c)
         self.hbox_3.addWidget(self.input_vocd_c)
 
@@ -102,6 +149,7 @@ class NormModifyTab(QtWidgets.QWidget):
         self.label_vocd_w.setFont(font)
         self.input_vocd_w = QtWidgets.QLineEdit()
         self.input_vocd_w.setFont(font)
+        self.input_vocd_w.setValidator(valid)
         self.hbox_4.addWidget(self.label_vocd_w)
         self.hbox_4.addWidget(self.input_vocd_w)
 
@@ -126,6 +174,7 @@ class NormModifyTab(QtWidgets.QWidget):
         #self.comboBox.currentIndexChanged.connect(self.getCurrentNorm)
         self.comboBox.textActivated.connect(self.getCurrentNorm)
         self.updateBtn.clicked.connect(self.save)
+        self.newAgeBtn.clicked.connect(self.addAge)
 
         self.retranslateUi()
         self.setStyleSheet(open("./QSS/norm.qss", "r").read())
@@ -156,6 +205,7 @@ class NormModifyTab(QtWidgets.QWidget):
 
     def getNorms(self):
         norms = db.getNorms()
+        self.comboBox.clear()
 
         for idx, n in enumerate(norms):
             if idx == 0:
@@ -194,7 +244,32 @@ class NormModifyTab(QtWidgets.QWidget):
         db.upsertNorm(self.comboBox.itemText(self.lastIndex), data)
         QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
 
+    def addAge(self):
+        newAge = ''
+        if self.input_newAge.text() == '':
+            return
+        else:
+            newAge += self.input_newAge.text() + '歲'
+            if self.comboBox_age.currentText() == '半':
+                newAge += '半'
+        
+        ages = [self.comboBox.itemText(i) for i in range(self.comboBox.count())]
+        if newAge in ages:
+            QtWidgets.QMessageBox.warning(self, '警告','年齡已存在', QtWidgets.QMessageBox.Ok)
+            return
+        else:
+            data = {
+                "mlu-c": "",
+                "mlu-w": "",
+                "vocd-c": "",
+                "vocd-w": ""
+            }
 
+            db.upsertNorm(newAge, data)
+            self.getNorms()
+
+            QtWidgets.QMessageBox.information(self, '警告','成功新增', QtWidgets.QMessageBox.Ok)
+        
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.label_5.setText(_translate("", "年齡: "))
