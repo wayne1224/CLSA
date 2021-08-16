@@ -8,12 +8,12 @@ QTabBar::tab
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     padding: 2px;
-    background-color: rgb(224, 245, 215);
+    background-color: rgb(223, 230, 233);
 }
 
 QTabBar::tab:selected
 {
-    background-color: rgb(159, 245, 119);
+    background-color: rgb(100, 158, 255);
 }
 
 QMessageBox QPushButton

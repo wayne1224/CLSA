@@ -1,8 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+import database.DatabaseApi as db
 
 class NormModifyTab(QtWidgets.QWidget):
     def __init__(self):
         super(NormModifyTab, self).__init__()
+
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.setLayout(self.verticalLayout)
@@ -22,110 +24,183 @@ class NormModifyTab(QtWidgets.QWidget):
         font.setPointSize(14)
         self.comboBox.setFont(font)
         self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
         self.horizontalLayout_7.addWidget(self.comboBox)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_7.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.mlu_box_2 = QtWidgets.QGroupBox()
-        font = QtGui.QFont()
-        font.setFamily("微軟正黑體")
-        font.setPointSize(14)
-        self.mlu_box_2.setFont(font)
-        self.mlu_box_2.setObjectName("mlu_box_2")
-        self.horizontalLayoutWidget_4 = QtWidgets.QWidget(self.mlu_box_2)
-        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(20, 60, 304, 51))
-        self.horizontalLayoutWidget_4.setObjectName("horizontalLayoutWidget_4")
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_4)
-        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.label_3 = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
-        self.label_3.setObjectName("label_3")
-        self.horizontalLayout_5.addWidget(self.label_3)
-        self.lineEdit_3 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_4)
-        self.lineEdit_3.setObjectName("lineEdit_3")
-        self.horizontalLayout_5.addWidget(self.lineEdit_3)
-        self.horizontalLayout_4.addLayout(self.horizontalLayout_5)
-        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        self.label_4 = QtWidgets.QLabel(self.horizontalLayoutWidget_4)
-        self.label_4.setObjectName("label_4")
-        self.horizontalLayout_6.addWidget(self.label_4)
-        self.lineEdit_4 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_4)
-        self.lineEdit_4.setObjectName("lineEdit_4")
-        self.horizontalLayout_6.addWidget(self.lineEdit_4)
-        self.horizontalLayout_4.addLayout(self.horizontalLayout_6)
-        self.horizontalLayout_9.addWidget(self.mlu_box_2)
         self.mlu_box = QtWidgets.QGroupBox()
         font = QtGui.QFont()
         font.setFamily("微軟正黑體")
         font.setPointSize(14)
         self.mlu_box.setFont(font)
         self.mlu_box.setObjectName("mlu_box")
-        self.horizontalLayoutWidget_3 = QtWidgets.QWidget(self.mlu_box)
-        self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(20, 60, 304, 51))
-        self.horizontalLayoutWidget_3.setObjectName("horizontalLayoutWidget_3")
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget_3)
-        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.label_2 = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label_2.setObjectName("label_2")
-        self.horizontalLayout_2.addWidget(self.label_2)
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.horizontalLayoutWidget_3)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.horizontalLayout_2.addWidget(self.lineEdit_2)
-        self.horizontalLayout_3.addLayout(self.horizontalLayout_2)
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.label = QtWidgets.QLabel(self.horizontalLayoutWidget_3)
-        self.label.setObjectName("label")
-        self.horizontalLayout.addWidget(self.label)
-        self.lineEdit = QtWidgets.QLineEdit(self.horizontalLayoutWidget_3)
-        self.lineEdit.setObjectName("lineEdit")
-        self.horizontalLayout.addWidget(self.lineEdit)
-        self.horizontalLayout_3.addLayout(self.horizontalLayout)
         self.horizontalLayout_9.addWidget(self.mlu_box)
-        self.verticalLayout.addLayout(self.horizontalLayout_9)
-        self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
-        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_8.addItem(spacerItem1)
-        self.pushButton_2 = QtWidgets.QPushButton()
+        self.vocd_box = QtWidgets.QGroupBox()
         font = QtGui.QFont()
         font.setFamily("微軟正黑體")
         font.setPointSize(14)
-        self.pushButton_2.setFont(font)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout_8.addWidget(self.pushButton_2)
+        self.vocd_box.setFont(font)
+        self.vocd_box.setObjectName("vocd_box")
+        self.horizontalLayout_9.addWidget(self.vocd_box)
+        self.verticalLayout.addLayout(self.horizontalLayout_9)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.verticalLayout.addItem(spacerItem1)
+        self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
+        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_8.addItem(spacerItem2)
+        self.updateBtn = QtWidgets.QPushButton()
+        font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(14)
+        self.updateBtn.setFont(font)
+        self.updateBtn.setObjectName("updateBtn")
+        self.horizontalLayout_8.addWidget(self.updateBtn)
         self.verticalLayout.addLayout(self.horizontalLayout_8)
 
-        self.retranslateUi()
 
-    def retranslateUi(self, ):
+        #MLU GroupBox layout
+        self.mlu_vbox = QtWidgets.QVBoxLayout()
+
+        self.hbox_1 = QtWidgets.QHBoxLayout()
+        self.label_mlu_c = QtWidgets.QLabel("MLU-c: ")
+        self.label_mlu_c.setFont(font)
+        self.input_mlu_c = QtWidgets.QLineEdit()
+        self.input_mlu_c.setFont(font)
+        self.hbox_1.addWidget(self.label_mlu_c)
+        self.hbox_1.addWidget(self.input_mlu_c)
+
+        self.hbox_2 = QtWidgets.QHBoxLayout()
+        self.label_mlu_w = QtWidgets.QLabel("MLU-w: ")
+        self.label_mlu_w.setFont(font)
+        self.input_mlu_w = QtWidgets.QLineEdit()
+        self.input_mlu_w.setFont(font)
+        self.hbox_2.addWidget(self.label_mlu_w)
+        self.hbox_2.addWidget(self.input_mlu_w)
+
+        self.mlu_vbox.addLayout(self.hbox_1)
+        self.mlu_vbox.addLayout(self.hbox_2)
+
+        self.mlu_box.setLayout(self.mlu_vbox)
+        self.mlu_box.setMaximumSize(QtCore.QSize(16777215, 250))
+
+        #VOCD GroupBox Layout
+        self.vocd_vbox = QtWidgets.QVBoxLayout()
+
+        self.hbox_3 = QtWidgets.QHBoxLayout()
+        self.label_vocd_c = QtWidgets.QLabel("VOCD-c: ")
+        self.label_vocd_c.setFont(font)
+        self.input_vocd_c = QtWidgets.QLineEdit()
+        self.input_vocd_c.setFont(font)
+        self.hbox_3.addWidget(self.label_vocd_c)
+        self.hbox_3.addWidget(self.input_vocd_c)
+
+        self.hbox_4 = QtWidgets.QHBoxLayout()
+        self.label_vocd_w = QtWidgets.QLabel("VOCD-w: ")
+        self.label_vocd_w.setFont(font)
+        self.input_vocd_w = QtWidgets.QLineEdit()
+        self.input_vocd_w.setFont(font)
+        self.hbox_4.addWidget(self.label_vocd_w)
+        self.hbox_4.addWidget(self.input_vocd_w)
+
+        self.vocd_vbox.addLayout(self.hbox_3)
+        self.vocd_vbox.addLayout(self.hbox_4)
+
+        self.vocd_box.setLayout(self.vocd_vbox)
+        self.vocd_box.setMaximumSize(QtCore.QSize(16777215, 250))
+
+        #SpacerItem
+        # spacerItemV = QtWidgets.QSpacerItem(40, 40, QtWidgets.QSizePolicy.Expanding)
+        # self.verticalLayout.addItem(spacerItemV)
+
+        #Store values
+        self.lastIndex = 0
+        self.mluC = ""
+        self.mluW = ""
+        self.vocdC = ""
+        self.vocdW = ""
+
+        #Signal
+        #self.comboBox.currentIndexChanged.connect(self.getCurrentNorm)
+        self.comboBox.textActivated.connect(self.getCurrentNorm)
+        self.updateBtn.clicked.connect(self.save)
+
+        self.retranslateUi()
+        self.setStyleSheet(open("./QSS/norm.qss", "r").read())
+
+    def getCurrentNorm(self):
+        #check if change value didn't store
+        if self.comboBox.currentIndex() != self.lastIndex:
+            if (self.mluC != self.input_mlu_c.text()) or (self.mluW != self.input_mlu_w.text()) or (self.vocdC != self.input_vocd_c.text()) or (self.vocdW != self.input_vocd_w.text()):
+                warnText = f'<p style="font-size:13pt; color: #3778bf;">要儲存 {self.comboBox.itemText(self.lastIndex)} 的變更嗎?</p>\n'
+                close = QtWidgets.QMessageBox.warning(self,
+                                "CLSA",
+                                warnText,
+                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
+                
+                if close == QtWidgets.QMessageBox.Yes:
+                    self.save()
+                if close == QtWidgets.QMessageBox.Cancel:
+                    self.comboBox.setCurrentIndex(self.lastIndex)
+                    return
+
+        #store index 
+        self.lastIndex = self.comboBox.currentIndex()
+
+        #Value
+        key = self.comboBox.currentText()
+        n = db.findNorm(key)
+        self.storeValue(n)
+
+    def getNorms(self):
+        norms = db.getNorms()
+
+        for idx, n in enumerate(norms):
+            if idx == 0:
+                self.storeValue(n)
+
+            self.comboBox.addItem(n['age'])
+    
+    def storeValue(self, n):  #將值存在格子和變數中
+        
+        self.input_mlu_c.setText(n['data']['mlu-c'])
+        self.mluC = n['data']['mlu-c']
+    
+        self.input_mlu_w.setText(n['data']['mlu-w'])
+        self.mluW = n['data']['mlu-w']
+    
+        self.input_vocd_c.setText(n['data']['vocd-c'])
+        self.vocdC = n['data']['vocd-c']
+    
+        self.input_vocd_w.setText(n['data']['vocd-w'])
+        self.vocdW = n['data']['vocd-w']
+    
+    def save(self):
+        data = {
+            "mlu-c": self.input_mlu_c.text(),
+            "mlu-w": self.input_mlu_w.text(),
+            "vocd-c": self.input_vocd_c.text(),
+            "vocd-w": self.input_vocd_w.text()
+        }
+
+        #更新暫存值
+        self.mluC = data['mlu-c']
+        self.mluW = data['mlu-w']
+        self.vocdC = data['vocd-c']
+        self.vocdW = data['vocd-w']
+
+        db.upsertNorm(self.comboBox.itemText(self.lastIndex), data)
+        QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
+
+
+    def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.label_5.setText(_translate("", "年齡: "))
-        self.comboBox.setItemText(0, _translate("", "二歲半"))
-        self.comboBox.setItemText(1, _translate("", "三歲"))
-        self.comboBox.setItemText(2, _translate("", "三歲半"))
-        self.comboBox.setItemText(3, _translate("", "四歲"))
-        self.comboBox.setItemText(4, _translate("", "四歲半"))
-        self.mlu_box_2.setTitle(_translate("", "平均語句長度"))
-        self.label_3.setText(_translate("", "MLU-c: "))
-        self.label_4.setText(_translate("", "MLU-w: "))
-        self.mlu_box.setTitle(_translate("", "詞彙多樣性"))
-        self.label_2.setText(_translate("", "VOCD-c: "))
-        self.label.setText(_translate("", "VOCD-w: "))
-        self.pushButton_2.setText(_translate("", "更新"))
+        self.mlu_box.setTitle(_translate("", "平均語句長度"))
+        self.vocd_box.setTitle(_translate("", "詞彙多樣性"))
+        self.updateBtn.setText(_translate("", "    更新    "))
 
 
 if __name__ == "__main__":

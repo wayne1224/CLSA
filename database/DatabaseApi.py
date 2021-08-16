@@ -392,8 +392,7 @@ def upsertNorm(age , data):
             )
         # update
         else:
-            childDataDB.update_one(query , {"$set" : {
-                                                        "age" : age,
+            normDB.update_one(query , {"$set" : {
                                                         "data" : data
                                                     }})
 
@@ -417,6 +416,9 @@ def findNorm(age):
     except Exception as e:
         print(e)
         return False
+
+def getNorms():
+    return normDB.find().sort("age").collation( { 'locale': 'zh'} )
 # childData = {   "caseID" : "00757025",
 #                 "name" : "Wayne",
 #                 "gender" : "male",

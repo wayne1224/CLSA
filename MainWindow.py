@@ -43,7 +43,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
+
+        #讀取資料並產生圖表
         self.thread.finished.connect(self.mainTab.tab4.tab1.lineChart)
+
+        #讀取NORM
+        self.thread.finished.connect(self.mainTab.tab4.tab2.getNorms)
         self.thread.start()
 
     @QtCore.pyqtSlot(int, float)
