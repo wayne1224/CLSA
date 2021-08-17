@@ -30,8 +30,8 @@ class Myform(QtWidgets.QWidget):
     def __init__(self):
         super(Myform, self).__init__()
 
-        layout = QtWidgets.QVBoxLayout()
-        self.setLayout(layout)
+        self.layout = QtWidgets.QVBoxLayout()
+        self.setLayout(self.layout)
         self.lbl_title = QtWidgets.QLabel()
         font = QtGui.QFont()
         font.setPointSize(18)
@@ -39,7 +39,7 @@ class Myform(QtWidgets.QWidget):
         self.lbl_title.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.lbl_title.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_title.setObjectName("lbl_title")
-        layout.addWidget(self.lbl_title)
+        self.layout.addWidget(self.lbl_title)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -158,6 +158,7 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_female.setFont(font)
         self.rbtn_female.setObjectName("rbtn_female")
         self.horizontalLayout_3.addWidget(self.rbtn_female)
+
         self.verticalLayout_4.addLayout(self.horizontalLayout_3)
         self.horizontalLayout.addLayout(self.verticalLayout_4)
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()
@@ -192,12 +193,19 @@ class Myform(QtWidgets.QWidget):
         self.dateEdit_birthday.setObjectName("dateEdit_birthday")
         self.verticalLayout_6.addWidget(self.dateEdit_birthday)
         self.horizontalLayout.addLayout(self.verticalLayout_6)
-        layout.addLayout(self.horizontalLayout)
+        
+        # self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        # self.layoutGender = QtWidgets.QGroupBox()
+        # self.layoutGender.setLayout(self.horizontalLayout)
+        # self.layoutGender.setStyleSheet("border: 1px solid red;")
+        # self.layout.addWidget(self.layoutGender)
+
+        self.layout.addLayout(self.horizontalLayout)
         self.line = QtWidgets.QFrame()
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
-        layout.addWidget(self.line)
+        self.layout.addWidget(self.line)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout()
@@ -314,7 +322,12 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_narrative.setFont(font)
         self.rbtn_narrative.setObjectName("rbtn_narrative")
         self.horizontalLayout_5.addWidget(self.rbtn_narrative)
-        self.verticalLayout_10.addLayout(self.horizontalLayout_5)
+
+        self.layoutInteraction = QtWidgets.QGroupBox()
+        self.layoutInteraction.setLayout(self.horizontalLayout_5)
+        self.layoutInteraction.setStyleSheet("border: 1px")
+        self.verticalLayout_10.addWidget(self.layoutInteraction)
+
         self.horizontalLayout_12 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_12.setObjectName("horizontalLayout_12")
         self.lbl_showTotalUtterNum = QtWidgets.QLabel()
@@ -337,7 +350,7 @@ class Myform(QtWidgets.QWidget):
         self.horizontalLayout_12.addWidget(self.lbl_showValidUtterNum)
         self.verticalLayout_10.addLayout(self.horizontalLayout_12)
         self.horizontalLayout_4.addLayout(self.verticalLayout_10)
-        layout.addLayout(self.horizontalLayout_4)
+        self.layout.addLayout(self.horizontalLayout_4)
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.lbl_participants = QtWidgets.QLabel()
@@ -395,7 +408,10 @@ class Myform(QtWidgets.QWidget):
         self.input_others.setFont(font)
         self.input_others.setObjectName("input_others")
         self.horizontalLayout_6.addWidget(self.input_others)
-        layout.addLayout(self.horizontalLayout_6)
+        self.layoutParticipants = QtWidgets.QGroupBox()
+        self.layoutParticipants.setLayout(self.horizontalLayout_6)
+        self.layoutParticipants.setStyleSheet("border: 1px;")
+        self.layout.addWidget(self.layoutParticipants)
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         self.lbl_equipment = QtWidgets.QLabel()
@@ -423,7 +439,7 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_otherEquip.setFont(font)
         self.rbtn_otherEquip.setObjectName("rbtn_otherEquip")
         self.horizontalLayout_7.addWidget(self.rbtn_otherEquip)
-        layout.addLayout(self.horizontalLayout_7)
+        self.layout.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_8.setObjectName("horizontalLayout_8")
         self.lbl_help = QtWidgets.QLabel()
@@ -457,7 +473,12 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_always.setFont(font)
         self.rbtn_always.setObjectName("rbtn_always")
         self.horizontalLayout_8.addWidget(self.rbtn_always)
-        layout.addLayout(self.horizontalLayout_8)
+        self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.layoutNeedhelp = QtWidgets.QGroupBox()
+        self.layoutNeedhelp.setLayout(self.horizontalLayout_8)
+        self.layoutNeedhelp.setStyleSheet("border: 1px;")
+        self.layout.addWidget(self.layoutNeedhelp)
+        # self.layout.addLayout(self.horizontalLayout_8)
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.lbl_specialSit = QtWidgets.QLabel()
@@ -473,7 +494,7 @@ class Myform(QtWidgets.QWidget):
         self.input_specialSit.setFont(font)
         self.input_specialSit.setObjectName("input_specialSit")
         self.horizontalLayout_9.addWidget(self.input_specialSit)
-        layout.addLayout(self.horizontalLayout_9)
+        self.layout.addLayout(self.horizontalLayout_9)
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.lbl_anxietySit = QtWidgets.QLabel()
@@ -489,7 +510,7 @@ class Myform(QtWidgets.QWidget):
         self.input_anxietySit.setFont(font)
         self.input_anxietySit.setObjectName("input_anxietySit")
         self.horizontalLayout_10.addWidget(self.input_anxietySit)
-        layout.addLayout(self.horizontalLayout_10)
+        self.layout.addLayout(self.horizontalLayout_10)
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -518,10 +539,15 @@ class Myform(QtWidgets.QWidget):
         self.btn_save.clicked.connect(self.save)
         self.btn_save.setObjectName("btn_save")
         self.horizontalLayout_11.addWidget(self.btn_save)
-        layout.addLayout(self.horizontalLayout_11)
+        self.layout.addLayout(self.horizontalLayout_11)
 
         self.retranslateUi()
         self.saveForm = self.returnTab1Data()
+        # self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
+        # self.test = QtWidgets.QGroupBox()
+        # self.test.setLayout(self.horizontalLayout_8)
+        # self.test.setStyleSheet("border: 1px solid red;")
+        # self.layout.addWidget(self.test)
         # self.redWidget = QtGui.QFrame()
         # self.redWidget.setStyleSheet("#myWidget {background-color:red;}")
         # self.eraseWidget.setStyleSheet("#myWidget {background-color:red;}")  
@@ -719,13 +745,13 @@ class Myform(QtWidgets.QWidget):
         # self.horizontalLayout_3.setStyleSheet("border: 1px;")
         self.input_location.setStyleSheet("border: 1px solid initial;")
         self.input_scenario.setStyleSheet("border: 1px solid initial;")
-        # self.horizontalLayout_5.setStyleSheet("border: 1px;")
-        # self.horizontalLayout_6.setStyleSheet("border: 1px;")
+        self.layoutInteraction.setStyleSheet("border: 1px; solid initial;")
+        self.layoutParticipants.setStyleSheet("border: 1px;")
         self.input_others.setStyleSheet("border: 1px solid initial;")
         self.input_inducement.setStyleSheet("border: 1px solid initial;")
         self.input_recordDataName.setStyleSheet("border: 1px solid initial;")
         self.input_specialSit.setStyleSheet("border: 1px solid initial;")
-        # self.horizontalLayout_8.setStyleSheet("border: 1px;")
+        self.layoutNeedhelp.setStyleSheet("border: 1px ")
 
     #儲存資料到資料庫 
     def save (self, event): 
@@ -755,13 +781,11 @@ class Myform(QtWidgets.QWidget):
         #性別
         if not (self.rbtn_male.isChecked() or self.rbtn_female.isChecked()): 
             error += 1
-            # self.horizontalLayout_3.setStyleSheet("border: 1px solid red;")
+            self.rbtn_male.setStyleSheet("border: 1px solid red;")
+            self.rbtn_female.setStyleSheet("border: 1px solid red;")
+        else:
             self.rbtn_male.setStyleSheet("border: 1px;")
-            self.rbtn_female.setStyleSheet("border: 1px;")
-            self.lbl_gender.setStyleSheet("border: 1px;")
-        # else:
-            # self.horizontalLayout_3.setStyleSheet("border: 1px;")
-        
+            self.rbtn_female.setStyleSheet("border: 1px;")        
         #收錄地點
         if not self.input_location.text(): 
             error +=1
@@ -779,26 +803,28 @@ class Myform(QtWidgets.QWidget):
         #互動形式
         if not (self.rbtn_conversation.isChecked() or self.rbtn_game.isChecked() or self.rbtn_narrative.isChecked()):
             error += 1
-            # self.horizontalLayout_5.setStyleSheet("border: 1px solid red;")
+            self.layoutInteraction.setStyleSheet("border: 1px solid red;")
             self.rbtn_conversation.setStyleSheet("border: 1px;")
             self.rbtn_game.setStyleSheet("border: 1px;")
             self.rbtn_narrative.setStyleSheet("border: 1px;")
             self.lbl_interType.setStyleSheet("border: 1px;")
-        # else :
-            # self.horizontalLayout_5.setStyleSheet("border: 1px;")
+        else :
+            self.layoutInteraction.setStyleSheet("border: 1px;")
         
         #參與人員
         if not (self.ckb_child.isChecked() or self.ckb_dad.isChecked() or self.ckb_mom.isChecked() or self.ckb_teacher.isChecked() or self.ckb_tester.isChecked() or self.ckb_others.isChecked()):
             error +=1
-            # self.horizontalLayout_6.setStyleSheet("border: 1px solid red;")
+            self.layoutParticipants.setStyleSheet("border: 1px solid red;")
+            self.lbl_participants.setStyleSheet("border: 1px;")
             self.ckb_child.setStyleSheet("border: 1px;")
             self.ckb_dad.setStyleSheet("border: 1px;")
             self.ckb_mom.setStyleSheet("border: 1px;")
             self.ckb_teacher.setStyleSheet("border: 1px;")
             self.ckb_tester.setStyleSheet("border: 1px;")
             self.ckb_others.setStyleSheet("border: 1px;")    
+            self.input_others.setStyleSheet("border: 1px solid initial;")
         else :
-            # self.horizontalLayout_6.setStyleSheet("border: 1px;")
+            self.layoutParticipants.setStyleSheet("border: 1px;")
             self.input_others.setStyleSheet("border: 1px solid initial;")
 
         #誘發題材
@@ -825,13 +851,14 @@ class Myform(QtWidgets.QWidget):
         #需要引導協助
         if not (self.rbtn_always.isChecked()  or self.rbtn_usually.isChecked() or self.rbtn_sometimes.isChecked() or self.rbtn_few.isChecked()):
             error +=1
-            # self.horizontalLayout_8.setStyleSheet("border: 1px solid red;")
+            self.layoutNeedhelp.setStyleSheet("border: 1px solid red;")
+            self.lbl_help.setStyleSheet("border: 1px;")
             self.rbtn_always.setStyleSheet("border: 1px;")
             self.rbtn_usually.setStyleSheet("border: 1px;")
             self.rbtn_sometimes.setStyleSheet("border: 1px;")
             self.rbtn_few.setStyleSheet("border: 1px;")
-        # else :
-        #     self.horizontalLayout_8.setStyleSheet("border: 1px;")
+        else :
+            self.layoutNeedhelp.setStyleSheet("border: 1px;")
 
 
         #如果有必填欄位沒填跳提示視窗
@@ -922,7 +949,7 @@ class Myform(QtWidgets.QWidget):
                 'others' : self.input_specialSit.toPlainText(),
                 'situation' : self.input_anxietySit.toPlainText()
             }
-            if (self.saveExamination):
+            if (self.saveExamination()):
                 close = QtWidgets.QMessageBox.warning(self,
                                 "CLSA",
                                 "確定要更新舊的資料?",
@@ -1035,6 +1062,7 @@ class Myform(QtWidgets.QWidget):
         self.input_SLP.setText('')
         self.input_recordDataName.setText('')
         self.input_inducement.setText('')
+        self.input_others.setText('')
 
         self.input_anxietySit.setPlainText('')
         self.input_specialSit.setPlainText('')
