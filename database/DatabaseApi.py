@@ -377,7 +377,7 @@ def findChildren(caseID , name):
         print(e)
         return False
 
-def upsertNorm(age , data):
+def upsertNorm(age, ageNum, data):
     try:
         query = dict()
         query["age"] = age
@@ -387,7 +387,8 @@ def upsertNorm(age , data):
             normDB.insert_one(
                 {
                     "age" : age,
-                    "data" : data
+                    "data" : data,
+                    "ageNum" : ageNum,
                 }
             )
         # update
@@ -419,7 +420,7 @@ def findNorm(age):
 
 def getNorms():
     try:
-        return normDB.find().sort("age").collation( { 'locale': 'zh'} )
+        return normDB.find().sort("ageNum")
     except Exception as e:
         print(e)
         return False

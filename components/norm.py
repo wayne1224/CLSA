@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+import qtawesome as qta
 import database.DatabaseApi as db
 
 class NormModifyTab(QtWidgets.QWidget):
@@ -8,6 +9,22 @@ class NormModifyTab(QtWidgets.QWidget):
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.setLayout(self.verticalLayout)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+
+        #Title
+        self.hbox_title = QtWidgets.QHBoxLayout()
+
+        title_font = QtGui.QFont()
+        title_font.setFamily("微軟正黑體")
+        title_font.setPointSize(20)
+        title_font.setBold(True)
+        self.title = QtWidgets.QLabel("常模設定頁面")
+        self.title.setFont(title_font)
+
+        self.hbox_title.addItem(spacerItem)
+        self.hbox_title.addWidget(self.title)
+        self.hbox_title.addItem(spacerItem)
+        self.verticalLayout.addLayout(self.hbox_title)
 
         self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
@@ -64,14 +81,14 @@ class NormModifyTab(QtWidgets.QWidget):
         self.newAge_box = QtWidgets.QGroupBox("新增年齡")
         self.newAge_box.setMaximumSize(QtCore.QSize(350, 140))
         self.newAge_box.setFont(font)
-
+        
         self.hbox_newAge = QtWidgets.QHBoxLayout()
-
+        
         # self.label_newAge = QtWidgets.QLabel("新增年齡:")
         # self.label_newAge.setMaximumSize(QtCore.QSize(250, 50))
         # self.label_newAge.setFont(font)
         # self.hbox_newAge.addWidget(self.label_newAge)
-        reg_ex = QtCore.QRegExp("[一二三四五六七八九十]+")
+        reg_ex = QtCore.QRegExp("[一兩三四五六七八九十]+")
         numValid = QtGui.QRegExpValidator(reg_ex)
         
         self.input_newAge = QtWidgets.QLineEdit()
@@ -97,9 +114,23 @@ class NormModifyTab(QtWidgets.QWidget):
         self.newAgeBtn.setObjectName("newAgeBtn")
         self.hbox_newAge.addWidget(self.newAgeBtn)
 
-        self.newAge_box.setLayout(self.hbox_newAge)
-        self.horizontalLayout_7.addWidget(self.newAge_box)
+        #Remind Text
+        self.hbox_age_reminder = QtWidgets.QHBoxLayout()
+        self.icon = QtWidgets.QLabel()
+        self.icon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(25, 25)))
+        self.icon.setMaximumSize(QtCore.QSize(25, 25))
+        self.remindText = QtWidgets.QLabel("空格只能輸入中文數字")
+        self.remindText.setMaximumSize(QtCore.QSize(16777215, 25))
+        self.hbox_age_reminder.addWidget(self.icon)
+        self.hbox_age_reminder.addWidget(self.remindText)
         
+        #Set Gropubox layout
+        self.vbox_addAge = QtWidgets.QVBoxLayout() #GroupBox Layout
+        self.vbox_addAge.addLayout(self.hbox_newAge)
+        self.vbox_addAge.addLayout(self.hbox_age_reminder)
+        self.newAge_box.setLayout(self.vbox_addAge)
+        self.horizontalLayout_7.addWidget(self.newAge_box)
+
         #Validator
         valid = QtGui.QDoubleValidator(0, 10, 2, notation=QtGui.QDoubleValidator.StandardNotation)
 
@@ -265,10 +296,25 @@ class NormModifyTab(QtWidgets.QWidget):
                 "vocd-w": ""
             }
 
-            db.upsertNorm(newAge, data)
+            db.upsertNorm(newAge, self.chineseToNum(newAge) ,data)
             self.getNorms()
 
             QtWidgets.QMessageBox.information(self, '警告','成功新增', QtWidgets.QMessageBox.Ok)
+
+    def chineseToNum(self, text):
+        numToChinese = {
+            "一": 1,"兩": 2,"三": 3,"四": 4,"五": 5,"六": 6,"七": 7,"八": 8,"九": 9,"十": 10
+        }
+
+        if len(text) == 2: #兩歲, 三歲...十歲
+            return numToChinese[text[0]]
+        elif len(text) == 3:  # (1)兩歲半, 三歲半...十歲半 (2) 十一歲, 十二歲...
+            if text[2] == '半':
+                return numToChinese[text[0]] + 0.5
+            elif text[2] == '歲':
+                return 10 + numToChinese[text[1]]
+        elif len(text) == 4:
+                return 10 + numToChinese[text[1]] + 0.5
         
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate

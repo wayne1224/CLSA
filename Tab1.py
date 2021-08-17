@@ -616,7 +616,7 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_always.setText(_translate("", "總是"))
         self.lbl_specialSit.setText(_translate("", "其他特殊情況："))
         self.lbl_anxietySit.setText(_translate("", "兒童焦慮情形："))
-        self.btn_empty.setText(_translate("", "清空資料"))
+        self.btn_empty.setText(_translate("", "清空欄位"))
         self.btn_save.setText(_translate("", "儲存資料"))
 
     # #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
