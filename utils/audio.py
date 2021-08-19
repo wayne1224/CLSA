@@ -10,7 +10,7 @@ class STT(QtCore.QObject):
     procMain = QtCore.pyqtSignal(int, float)
 
     def STT_from_file(self, filePath):
-        speech_key, service_region = "a6db1d8286b84a1489c92a88184f57a6", "eastus"
+        speech_key, service_region = "492ba6cf3f004e52b19908ab189514c7", "eastus"
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
         speech_config.speech_recognition_language="zh-TW"
         audio_config = speechsdk.audio.AudioConfig(filename=filePath)
