@@ -481,13 +481,13 @@ class Myform(QtWidgets.QWidget):
         # self.layout.addLayout(self.horizontalLayout_8)
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
-        self.lbl_specialSit = QtWidgets.QLabel()
+        self.lbl_participation = QtWidgets.QLabel()
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.lbl_specialSit.setFont(font)
-        self.lbl_specialSit.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_specialSit.setObjectName("lbl_specialSit")
-        self.horizontalLayout_9.addWidget(self.lbl_specialSit)
+        self.lbl_participation.setFont(font)
+        self.lbl_participation.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_participation.setObjectName("lbl_participation")
+        self.horizontalLayout_9.addWidget(self.lbl_participation)
         self.input_specialSit = QtWidgets.QPlainTextEdit()
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -495,22 +495,22 @@ class Myform(QtWidgets.QWidget):
         self.input_specialSit.setObjectName("input_specialSit")
         self.horizontalLayout_9.addWidget(self.input_specialSit)
         self.layout.addLayout(self.horizontalLayout_9)
-        self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.lbl_anxietySit = QtWidgets.QLabel()
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.lbl_anxietySit.setFont(font)
-        self.lbl_anxietySit.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_anxietySit.setObjectName("lbl_anxietySit")
-        self.horizontalLayout_10.addWidget(self.lbl_anxietySit)
-        self.input_anxietySit = QtWidgets.QPlainTextEdit()
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.input_anxietySit.setFont(font)
-        self.input_anxietySit.setObjectName("input_anxietySit")
-        self.horizontalLayout_10.addWidget(self.input_anxietySit)
-        self.layout.addLayout(self.horizontalLayout_10)
+        # self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
+        # self.horizontalLayout_10.setObjectName("horizontalLayout_10")
+        # self.lbl_anxietySit = QtWidgets.QLabel()
+        # font = QtGui.QFont()
+        # font.setPointSize(14)
+        # self.lbl_anxietySit.setFont(font)
+        # self.lbl_anxietySit.setAlignment(QtCore.Qt.AlignCenter)
+        # self.lbl_anxietySit.setObjectName("lbl_anxietySit")
+        # self.horizontalLayout_10.addWidget(self.lbl_anxietySit)
+        # self.input_anxietySit = QtWidgets.QPlainTextEdit()
+        # font = QtGui.QFont()
+        # font.setPointSize(14)
+        # self.input_anxietySit.setFont(font)
+        # self.input_anxietySit.setObjectName("input_anxietySit")
+        # self.horizontalLayout_10.addWidget(self.input_anxietySit)
+        # self.layout.addLayout(self.horizontalLayout_10)
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -614,9 +614,15 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_sometimes.setText(_translate("", "有時 (2~5次)"))
         self.rbtn_usually.setText(_translate("", "經常 (6~9次)"))
         self.rbtn_always.setText(_translate("", "總是"))
+<<<<<<< Updated upstream
         self.lbl_specialSit.setText(_translate("", "其他特殊情況："))
         self.lbl_anxietySit.setText(_translate("", "兒童焦慮情形："))
         self.btn_empty.setText(_translate("", "清空欄位"))
+=======
+        self.lbl_participation.setText(_translate("", "配合參與度："))
+        # self.lbl_anxietySit.setText(_translate("", "兒童焦慮情形："))
+        self.btn_empty.setText(_translate("", "清空資料"))
+>>>>>>> Stashed changes
         self.btn_save.setText(_translate("", "儲存資料"))
 
     # #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
@@ -733,7 +739,7 @@ class Myform(QtWidgets.QWidget):
             'equipment' :equipment,
             'help' : needhelp,
             'others' : self.input_specialSit.toPlainText(),
-            'situation' : self.input_anxietySit.toPlainText()
+            # 'situation' : self.input_anxietySit.toPlainText()
         }
         return data
 
@@ -742,7 +748,8 @@ class Myform(QtWidgets.QWidget):
         self.input_SLP.setStyleSheet("border: 1px solid initial;" )
         self.input_caseID.setStyleSheet("border: 1px solid initial;" )
         self.input_caseName.setStyleSheet("border: 1px solid initial;" )
-        # self.horizontalLayout_3.setStyleSheet("border: 1px;")
+        self.rbtn_male.setStyleSheet("border: 1px;")
+        self.rbtn_female.setStyleSheet("border: 1px;")   
         self.input_location.setStyleSheet("border: 1px solid initial;")
         self.input_scenario.setStyleSheet("border: 1px solid initial;")
         self.layoutInteraction.setStyleSheet("border: 1px; solid initial;")
@@ -947,7 +954,7 @@ class Myform(QtWidgets.QWidget):
                 'equipment' :equipment,
                 'help' : needhelp,
                 'others' : self.input_specialSit.toPlainText(),
-                'situation' : self.input_anxietySit.toPlainText()
+                # 'situation' : self.input_anxietySit.toPlainText()
             }
             if (self.saveExamination()):
                 close = QtWidgets.QMessageBox.warning(self,
@@ -1035,7 +1042,7 @@ class Myform(QtWidgets.QWidget):
         if Doc['recording']['help'] == '有時 (2~5次)':
             self.rbtn_sometimes.setChecked(True)
         self.input_specialSit.setPlainText(Doc['recording']['others'])
-        self.input_anxietySit.setPlainText(Doc['recording']['situation'])
+        # self.input_anxietySit.setPlainText(Doc['recording']['situation'])
 
         for i in Doc['recording']['participants'] :
             if i == '兒童' :
@@ -1064,7 +1071,7 @@ class Myform(QtWidgets.QWidget):
         self.input_inducement.setText('')
         self.input_others.setText('')
 
-        self.input_anxietySit.setPlainText('')
+        # self.input_anxietySit.setPlainText('')
         self.input_specialSit.setPlainText('')
  
         self.ckb_child.setChecked(False)
