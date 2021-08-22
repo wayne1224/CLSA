@@ -36,6 +36,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.setStyleSheet(open("QSS/MainTabWidget.qss", "r").read())
 
         #設定Tab Signal
+        self.currentChanged.connect(self.checkTab2Case)
         self.currentChanged.connect(self.checkTab2Changed)
         self.currentChanged.connect(self.leaveTab1)
         self.tab1.procStart.connect(self.tab2.setCaseRecord)
@@ -62,6 +63,10 @@ class MainTabWidget(QtWidgets.QTabWidget):
     def leaveTab1(self) :
         if (self.currentIndex() != 1) :
             self.tab1.clearRedFrame()
+
+    def checkTab2Case(self):
+        if self.currentIndex() == 2 and not self.tab2.caseID:
+            informBox = QtWidgets.QMessageBox.warning(self, '警告','請先儲存收錄表或匯入個案', QtWidgets.QMessageBox.Ok)
 
     def checkTab2Changed(self):
         if ((self.currentIndex() == 3 and self.tab2.isEdit()) or (self.currentIndex() == 3 and self.tab3.getEdit())):
