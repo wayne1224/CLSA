@@ -403,7 +403,7 @@ def upsertNorm(age, ageNum, data):
         print(e)
         return False
 
-def findNorm(age):
+def findNormByAge(age): ## age是中文
     try:
         query = dict()
         query["age"] = age
@@ -418,12 +418,29 @@ def findNorm(age):
         print(e)
         return False
 
-def getNorms():
+def findNormByAgeNum(ageNum): ## ageNum是中文
+    try:
+        query = dict()
+        query["ageNum"] = ageNum
+        
+        if normDB.count_documents(query) == 0:
+            print("can not find this content")
+            return False
+        
+        return normDB.find_one(query)
+
+    except Exception as e:
+        print(e)
+        return False
+
+def getNormAgeNums():
     try:
         return normDB.find().sort("ageNum")
     except Exception as e:
         print(e)
         return False
+
+
 # childData = {   "caseID" : "00757025",
 #                 "name" : "Wayne",
 #                 "gender" : "male",
