@@ -112,7 +112,7 @@ class Worker(QtCore.QObject):
     def run(self):
         if not self.func():
             print("Database Failed")
-            quit()  
+            sys.quit()  
         self.finished.emit()
 
 

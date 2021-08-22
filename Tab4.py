@@ -1,5 +1,6 @@
 import database.DatabaseApi as db
 import qtawesome as qta
+from datetime import date
 from functools import partial
 from datetime import datetime
 from PyQt5 import QtCore, QtGui, QtWidgets, QtChart
@@ -256,7 +257,7 @@ class chartTab(QtWidgets.QWidget):
                 importBtn = QtWidgets.QPushButton('顯示圖表')
                 importBtn.setStyleSheet("QPushButton {background-color: cornflowerblue;} QPushButton:hover{background-color: rgb(90, 138, 226);}")
                 self.form.tableWidget.setCellWidget(idx, 4,importBtn)
-                importBtn.clicked.connect(partial(self.create_linebarchart , child['document']))
+                importBtn.clicked.connect(partial(self.create_linebarchart , child['document'], child['birthday']))
             if idx == -1:
                 QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
@@ -269,9 +270,16 @@ class chartTab(QtWidgets.QWidget):
             # print(self.scroll_vbox.count())
             self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
 
-
-    def create_linebarchart(self, doc):
+   
+    def create_linebarchart(self, doc, birthday):
         #self.procCaseDocs.emit(doc)
+
+        #算年紀
+        today = date.today()
+        ageNum = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+        if birthday.month >= 6:
+            ageNum += 0.5
+        norm = db.findNormByAgeNum(ageNum)
 
         #檢查是否轉錄過
         count = 0
