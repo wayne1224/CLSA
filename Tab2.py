@@ -377,12 +377,6 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noTrans.setText('未輸入轉錄者！')
         self.msg_noTrans.setIcon(QtWidgets.QMessageBox.Warning)
         # self.msg_noTrans.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
-        #查詢無此個案
-        self.msg_noCaseData = QtWidgets.QMessageBox()
-        self.msg_noCaseData.setWindowTitle("提示")
-        self.msg_noCaseData.setText("查無此個案！")
-        self.msg_noCaseData.setIcon(QtWidgets.QMessageBox.Warning)
-        # self.msg_noCaseData.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
         #未選取刪除列
         self.msg_deleteNotSelect = QtWidgets.QMessageBox()
         self.msg_deleteNotSelect.setWindowTitle("提示")
@@ -403,18 +397,6 @@ class Tab2(QtWidgets.QWidget):
         self.msg_notSave.setIcon(QtWidgets.QMessageBox.Information)
         self.msg_notSave.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
         # self.msg_notSave.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
-        #按儲存時尚未查詢
-        self.msg_saveNotSearch = QtWidgets.QMessageBox()
-        self.msg_saveNotSearch.setWindowTitle("提示")
-        self.msg_saveNotSearch.setText("尚未查詢個案！")
-        self.msg_saveNotSearch.setIcon(QtWidgets.QMessageBox.Warning)
-        # self.msg_saveNotSearch.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
-        #未輸入成人編號
-        self.msg_noAdultNum = QtWidgets.QMessageBox()
-        self.msg_noAdultNum.setWindowTitle("提示")
-        self.msg_noAdultNum.setText("請輸入成人編號！")
-        self.msg_noAdultNum.setIcon(QtWidgets.QMessageBox.Information)
-        # self.msg_noAdultNum.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
 
         # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Tab2.qss", "r").read())
         self.setStyleSheet(open("QSS/Tab2.qss", "r").read())
@@ -875,58 +857,52 @@ class Tab2(QtWidgets.QWidget):
 
     #儲存至資料庫
     def _save(self, isBtn):
-        if self.caseData:   #已查詢個案
-            if self.input_trans.text():
-                self.tableWidget.checkAllID()
-                
-                self.transcriber = self.input_trans.text()
-                content = self._getCurrentContent()    #對話內容
-                childUtterance = [] #兒童語句
-                totalUtterance = 0  #總語句數
-                validUtterance = 0  #採計語句數
+        if self.input_trans.text():
+            self.tableWidget.checkAllID()
+            
+            self.transcriber = self.input_trans.text()
+            content = self._getCurrentContent()    #對話內容
+            childUtterance = [] #兒童語句
+            totalUtterance = 0  #總語句數
+            validUtterance = 0  #採計語句數
 
-                for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
-                    #child
-                    if self.tableWidget.tableWidget.item(rowIndex, 4) and not self.tableWidget.tableWidget.item(rowIndex, 4).text() == '':
-                        if not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':    #採計語句
-                            validUtterance += 1
-                        totalUtterance += 1
-                        childUtterance.append(self.tableWidget.tableWidget.item(rowIndex, 4).text()) # 傳給Tab3
+            for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
+                #child
+                if self.tableWidget.tableWidget.item(rowIndex, 4) and not self.tableWidget.tableWidget.item(rowIndex, 4).text() == '':
+                    if not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':    #採計語句
+                        validUtterance += 1
+                    totalUtterance += 1
+                    childUtterance.append(self.tableWidget.tableWidget.item(rowIndex, 4).text()) # 傳給Tab3
 
-                database.DatabaseApi.updateContent(self.caseID, self.caseDate, self.transcriber, content, totalUtterance, validUtterance)
-                utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
-                self.emitUtterNum(utteranceNum)
-                self.content = content    #更新內容
-                self.childUtterance = childUtterance
+            database.DatabaseApi.updateContent(self.caseID, self.caseDate, self.transcriber, content, totalUtterance, validUtterance)
+            utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
+            self.emitUtterNum(utteranceNum)
+            self.content = content    #更新內容
+            self.childUtterance = childUtterance
 
-                self.clearInput()  #清空、復原輸入欄
+            self.clearInput()  #清空、復原輸入欄
 
-                if isBtn:
-                    self.msg_save.exec_()
-                    if self.isEdit():
-                        self.procEdit.emit()
-            else:   #未輸入轉錄者
-                self._setInpBorderColorAndJumpMsg('NoTrans')
-        else:   #尚未查詢個案
-            self.msg_saveNotSearch.exec_()
+            if isBtn:
+                self.msg_save.exec_()
+                if self.isEdit():
+                    self.procEdit.emit()
+        else:   #未輸入轉錄者
+            self._setInpBorderColorAndJumpMsg('NoTrans')
 
     #產生彙整表並儲存至資料庫
     def _generateAndSave(self):
-        if self.caseData:   #已查詢個案
-            if self.input_trans.text():
-                self._save(False)
+        if self.input_trans.text():
+            self._save(False)
 
-                #傳signal給MainWindow
-                self.procMain.emit(2, 0)
+            #傳signal給MainWindow
+            self.procMain.emit(2, 0)
 
-                key = {'caseID':self.caseID,
-                        'date':self.caseDate }
-                self.emitKey(key)
-                self.emitChildUtter(self.childUtterance)
-            else:   #未輸入轉錄者
-                self._setInpBorderColorAndJumpMsg('NoTrans')
-        else:   #尚未查詢個案
-            self.msg_saveNotSearch.exec_()
+            key = {'caseID':self.caseID,
+                    'date':self.caseDate }
+            self.emitKey(key)
+            self.emitChildUtter(self.childUtterance)
+        else:   #未輸入轉錄者
+            self._setInpBorderColorAndJumpMsg('NoTrans')
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
