@@ -272,7 +272,9 @@ class NormModifyTab(QtWidgets.QWidget):
         self.vocdC = data['vocd-c']
         self.vocdW = data['vocd-w']
 
-        db.upsertNorm(self.comboBox.itemText(self.lastIndex), data)
+        age = self.comboBox.itemText(self.lastIndex)
+
+        db.upsertNorm(age, self.chineseToNum(age), data)
         QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
 
     def addAge(self):
