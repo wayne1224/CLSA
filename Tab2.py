@@ -317,7 +317,7 @@ class Tab2(QtWidgets.QWidget):
         self.input_utterance.returnPressed.connect(self._addRow)
         self.input_scenario.returnPressed.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
-        self.btn_clearTab.clicked.connect(self.clearTab)
+        self.btn_clearTab.clicked.connect(partial(self.clearTab, False))
         self.btn_save.clicked.connect(partial(self._save, True))
         self.btn_generateAndSave.clicked.connect(self._generateAndSave)
         self.tableWidget.tableWidget.cellClicked.connect(self._syncTableCmbRoleNum)
@@ -328,6 +328,7 @@ class Tab2(QtWidgets.QWidget):
         self.tableWidget.procInsertRowColor.connect(self.insertRowColor)
 
         self.caseID = ''    #個案編號
+        self.isCase = False #是否已有個案在轉錄表
         self.caseData = {}  #用caseID查的個案紀錄{'dates', 'transcriber', 'FirstContent'}
         self.content = []   #查詢到、已儲存的內容
         self.transcriber = ''
@@ -440,13 +441,13 @@ class Tab2(QtWidgets.QWidget):
     #接收tab0接收查詢的資料
     @QtCore.pyqtSlot(dict)
     def getDoc(self, doc):
-        self.clearTab()
+        self.clearTab(True)
         self._importCase(doc['childData']['caseID'], doc['date'])
 
     #從Tab1接收個案編號和日期
     @QtCore.pyqtSlot(dict)
     def setCaseRecord(self, caseIDAndDate):
-        self.clearTab()
+        self.clearTab(True)
         self._importCase(caseIDAndDate['caseID'], caseIDAndDate['date'])
 
     #傳總語句數和有效語句數給Tab1
@@ -492,12 +493,10 @@ class Tab2(QtWidgets.QWidget):
 
     #全部清空
     @QtCore.pyqtSlot()
-    def clearTab(self):
+    def clearTab(self, isAllClear):
         self.clearInput()
-        self.caseID = ''
         self.caseData = {}
         self.content = []
-        self.transcriber = ''
         self.childNum = 0
         self.adultNums = {}
         self.childUtterance = []
@@ -507,8 +506,12 @@ class Tab2(QtWidgets.QWidget):
         self.cmb_role.addItem("語境")
         self.tableWidget.tableWidget.setRowCount(0)
         self.lbl_caseDate.setVisible(False)
-        self.input_trans.clear()
-        self.lbl_impCaseID.clear()
+
+        if isAllClear:
+            self.caseID = ''
+            self.transcriber = ''
+            self.input_trans.clear()
+            self.lbl_impCaseID.clear()
 
         #讓Tab3也clear
         self.procClear.emit()
@@ -847,7 +850,7 @@ class Tab2(QtWidgets.QWidget):
             elif action == QtWidgets.QMessageBox.Cancel:
                 return
 
-        self.clearTab()    #清空、復原頁面
+        self.clearTab(True)    #清空、復原頁面
 
         self.caseData = database.DatabaseApi.findContent(caseID, date)
         if self.caseData['transcriber']:
