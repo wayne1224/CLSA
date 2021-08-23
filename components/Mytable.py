@@ -275,16 +275,17 @@ class Mytable(QtWidgets.QWidget):
 
                         #是否採計
                         f = item.font()
-                        if f.bold():
-                            self.setValid = QtWidgets.QAction('採計')
-                            self.setValid.setObjectName("setValid")
-                            self.setValid.triggered.connect(partial(self.toValid,f,item,index))
-                            self.menu.addAction(self.setValid)
-                        else:
-                            self.setNotValid = QtWidgets.QAction('不採計')
-                            self.setNotValid.setObjectName("setNotValid")
-                            self.setNotValid.triggered.connect(partial(self.toNotValid,f,item,index))
-                            self.menu.addAction(self.setNotValid)
+                        if index.column() != 2:
+                            if f.bold():
+                                self.setValid = QtWidgets.QAction('採計')
+                                self.setValid.setObjectName("setValid")
+                                self.setValid.triggered.connect(partial(self.toValid,f,item,index))
+                                self.menu.addAction(self.setValid)
+                            else:
+                                self.setNotValid = QtWidgets.QAction('不採計')
+                                self.setNotValid.setObjectName("setNotValid")
+                                self.setNotValid.triggered.connect(partial(self.toNotValid,f,item,index))
+                                self.menu.addAction(self.setNotValid)
 
                         #插入選項
                         self.insert = QtWidgets.QMenu('插入', self)
