@@ -325,7 +325,7 @@ class Tab2(QtWidgets.QWidget):
         #signal
         self.tableWidget.procAllID.connect(self.getAllID)
         self.tableWidget.procChange.connect(self.roleChangeCheck)
-        self.tableWidget.procInsertRowColor.connect(self.insertRowColor)
+        self.tableWidget.procInsertRow_editAdultID_setColor.connect(self.insertRow_editAdultID_setColor)
 
         self.caseID = ''    #個案編號
         self.isCase = False #是否已有個案在轉錄表
@@ -465,9 +465,9 @@ class Tab2(QtWidgets.QWidget):
     def emitKey(self, key):
         self.procKey.emit(key)
 
-    #Table插入列後加上顏色
+    #Table插入列或更改成編號後加上顏色
     @QtCore.pyqtSlot()
-    def insertRowColor(self):
+    def insertRow_editAdultID_setColor(self):
         self._setColumnColor()
 
     #Table角色切換
@@ -784,12 +784,15 @@ class Tab2(QtWidgets.QWidget):
                 childUtter = self.tableWidget.tableWidget.item(index.row(), 4)
 
                 #刪除成人語句
-                if adultUtter and adultUtter.text() != '':
-                    pattern = r"[a-zA-Z]+"
-                    key = re.search(pattern,self.tableWidget.tableWidget.item(index.row(), 0).text()).group()
-                    self.adultNums[key] -= 1   #成人編號-1
-                    if self.adultNums[key] == 0:
-                        self.cmb_role.removeItem(self.cmb_role.findText(key))
+                if adultUtter != None and adultUtter.text() != '':
+                    try:
+                        pattern = r"[a-zA-Z]+"
+                        key = re.search(pattern,self.tableWidget.tableWidget.item(index.row(), 0).text()).group()
+                        self.adultNums[key] -= 1   #成人編號-1
+                        if self.adultNums[key] == 0:
+                            self.cmb_role.removeItem(self.cmb_role.findText(key))
+                    except:
+                        print('刪除成人不採計')
                 #刪除兒童語句
                 if childUtter and childUtter.text() != '':
                     self.childNum -= 1  #兒童編號-1
@@ -900,7 +903,8 @@ class Tab2(QtWidgets.QWidget):
 
                 if isBtn:
                     self.msg_save.exec_()
-                    self.procEdit.emit()
+                    if self.isEdit():
+                        self.procEdit.emit()
             else:   #未輸入轉錄者
                 self._setInpBorderColorAndJumpMsg('NoTrans')
         else:   #尚未查詢個案
