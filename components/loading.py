@@ -1,11 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from random import randint
 
 class LoadingScreen(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         layout = QtWidgets.QVBoxLayout()
         self.setLayout(layout)
-        self.setStyleSheet("background-color:#dde6f0")
         #self.setFixedSize(200,200)
         self.label1 = QtWidgets.QLabel('<p style="font-size:10pt; color: black; font-weight: bold;">彙整中...</p>')
         self.label1.setAlignment(QtCore.Qt.AlignCenter)
@@ -34,8 +34,6 @@ class LoadingScreen(QtWidgets.QWidget):
         self.movie.stop()
         self.close()
 
-
-
 class LoadingBar(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -51,7 +49,7 @@ class LoadingBar(QtWidgets.QWidget):
         layout.addWidget(self.label)
 
         #Qbar
-        self.pbar = QtWidgets.QProgressBar()
+        self.pbar = QtWidgets.QProgressBar(objectName="AzureBar")
         self.pbar.setMinimum(0)
         self.pbar.setMaximum(100)
         self.pbar.setFont(QtGui.QFont('Arial', 15))
@@ -102,9 +100,50 @@ class LoadingBar(QtWidgets.QWidget):
     def stop(self):
         self.pbar.setValue(100)
         self.timer.stop()
-        self.close()
+        self.close()   
+
+class ProgressBar(QtWidgets.QProgressBar):
+    
+    def __init__(self, *args, **kwargs):
+        super(ProgressBar, self).__init__(*args, **kwargs)
+        self.setValue(0)
+        if self.minimum() != self.maximum():
+            self.timer = QtCore.QTimer(self, timeout=self.onTimeout)
+            self.timer.start(randint(1, 3) * 1000)
+
+    def onTimeout(self):
+        if self.value() >= 100:
+            self.timer.stop()
+            self.timer.deleteLater()
+            del self.timer
+            return
+        self.setValue(self.value() + 1)
+
+class DownloadScreen(QtWidgets.QFrame):
+    def __init__(self):
+        super(DownloadScreen, self).__init__()
+        self.resize(250, 180)
+        self.setObjectName("Download")
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint|QtCore.Qt.CustomizeWindowHint)
+        self.setWindowModality(QtCore.Qt.ApplicationModal)
+        self.setStyleSheet(open("./QSS/loading.qss", "r").read())
+
+        layout = QtWidgets.QVBoxLayout(self)
+        font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(12)
+
+        self.bar = ProgressBar(self, minimum=0, maximum=0, textVisible=False,
+                        objectName="GreenProgressBar")
+        self.title = QtWidgets.QLabel('第一次使用\n下載斷詞模型...')
+        self.title.setAlignment(QtCore.Qt.AlignCenter)
+        self.title.setFont(font)
+        self.title.setStyleSheet('background-color:#f5fffa')
+        spacerItem = QtWidgets.QSpacerItem(20, 10, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
         
-       
+        layout.addWidget(self.title)
+        layout.addItem(spacerItem)
+        layout.addWidget(self.bar)      
         
 
 if __name__ == '__main__':

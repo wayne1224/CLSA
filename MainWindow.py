@@ -1,7 +1,10 @@
 import sys
+import os
+import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
-from components.loading import LoadingScreen, LoadingBar
+from components.loading import LoadingScreen, LoadingBar, DownloadScreen
+from utils.worker import Worker_DB
 import database.DatabaseApi
 import DistilTag
 
@@ -9,7 +12,7 @@ import DistilTag
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.resize(1393, 870)
+        self.resize(1400, 700)
         self.setWindowTitle("CLSA")
         self.mainTab = MainTabWidget()
         self.mainTab.tabBar().setDocumentMode(True)
@@ -34,23 +37,28 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load = LoadingScreen()
         self.load.setObjectName("loadScreen") 
         self.load2 = LoadingBar()
-        
+
         # 資料庫連接失敗 直接關閉程式
-        self.thread = QtCore.QThread()
-        self.worker = Worker(database.DatabaseApi.connectDB)
-        self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.run)
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
+        self.thread_DB = QtCore.QThread()
+        self.worker_DB = Worker_DB(database.DatabaseApi.connectDB)
+        self.worker_DB.moveToThread(self.thread_DB)
+        self.thread_DB.started.connect(self.worker_DB.run)
+        self.worker_DB.finished.connect(self.thread_DB.quit)
+        self.worker_DB.finished.connect(self.worker_DB.deleteLater)
+        self.thread_DB.finished.connect(self.thread_DB.deleteLater)
 
         #讀取資料並產生圖表
-        self.thread.finished.connect(self.mainTab.tab4.tab1.lineChart)
+        self.thread_DB.finished.connect(self.mainTab.tab4.tab1.lineChart)
 
         #讀取NORM
-        self.thread.finished.connect(self.mainTab.tab4.tab2.getNorms)
-        self.thread.start()
+        self.thread_DB.finished.connect(self.mainTab.tab4.tab2.getNorms)
+        self.thread_DB.start()
 
+        self.window = DownloadScreen()
+        if os.path.exists(self.get_model_path()) == False:
+            self.window.show()
+        
+            
     @QtCore.pyqtSlot(int, float)
     def getAction(self, key, time):
         if key == 1:
@@ -101,27 +109,25 @@ class MainWindow(QtWidgets.QMainWindow):
                 else:
                     event.ignore()
 
-class Worker(QtCore.QObject):
-    finished = QtCore.pyqtSignal()
-    progress = QtCore.pyqtSignal(int)
+    def get_model_path(self):
+        home_dir = os.path.expanduser("~")
+        cache_dir = os.path.join(home_dir, ".cwn_graph")
+        model_path = os.path.join(cache_dir, "tagmodel")
+        return model_path
 
-    def __init__(self, fn):
-        super(Worker, self).__init__()
-        self.func = fn
-
-    def run(self):
-        if not self.func():
-            print("Database Failed")
-            sys.quit()  
-        self.finished.emit()
-
-
-if __name__ == '__main__':
-    try:
+    def download_model(self):
+        import time
+        time.sleep(2)
         DistilTag.download()
-    except:
-        print('模型下載失敗')
+        self.window.close()
+
+def main():
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()
+    t = threading.Thread(target=window.download_model)
+    t.start()
     app.exec_()
+    
+if __name__ == '__main__':
+    main()
