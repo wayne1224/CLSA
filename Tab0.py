@@ -229,8 +229,8 @@ class SearchTab(QtWidgets.QWidget):
         _translate = QtCore.QCoreApplication.translate
         # Form.setWindowTitle(_translate("Form", "Form"))
         self.label.setText(_translate("Form", "收錄者："))
-        self.label_2.setText(_translate("Form", "個案編號："))
-        self.label_3.setText(_translate("Form", "個案姓名："))
+        self.label_2.setText(_translate("Form", "個案姓名："))
+        self.label_3.setText(_translate("Form", "個案編號："))
         self.searchBtn.setText(_translate("Form", "  查詢紀錄  "))
         item = self.tableWidget.horizontalHeaderItem(0)
         item.setText(_translate("Form", "個案姓名"))
