@@ -1,4 +1,16 @@
-QProgressBar
+QProgressBar#GreenProgressBar {
+    border: 2px solid #2196F3;
+    min-height: 15px;
+    max-height: 15px;
+    border-radius: 6px;
+}
+
+QProgressBar#GreenProgressBar::chunk {
+    border-radius: 6px;
+    background-color: #009688;
+}
+
+QProgressBar#AzureBar
 {
       border:none; 
       background:rgb(54,54,54);
@@ -8,9 +20,15 @@ QProgressBar
       height:35px;
 }
  
-QProgressBar::chunk 
+QProgressBar #AzureBar::chunk 
 {
       background-color:rgb(58, 154, 255);
       border-radius:4px;
-
 }
+
+QFrame#Download {
+    background-color:#f5fffa;
+    border:2px solid #009688;
+    border-radius: 30px;
+}
+

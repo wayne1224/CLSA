@@ -1,4 +1,5 @@
 from PyQt5 import QtCore
+import sys
 
 class Worker(QtCore.QObject):
     finished = QtCore.pyqtSignal()
@@ -10,4 +11,18 @@ class Worker(QtCore.QObject):
 
     def run(self):
         self.func()
+        self.finished.emit()
+
+class Worker_DB(QtCore.QObject):
+    finished = QtCore.pyqtSignal()
+    progress = QtCore.pyqtSignal(int)
+
+    def __init__(self, fn):
+        super(Worker_DB, self).__init__()
+        self.func = fn
+
+    def run(self):
+        if not self.func():
+            print("Database Failed")
+            sys.quit()  
         self.finished.emit()

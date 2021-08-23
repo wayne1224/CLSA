@@ -231,11 +231,11 @@ class NormModifyTab(QtWidgets.QWidget):
 
         #Value
         key = self.comboBox.currentText()
-        n = db.findNorm(key)
+        n = db.findNormByAge(key)
         self.storeValue(n)
 
     def getNorms(self):
-        norms = db.getNorms()
+        norms = db.getNormAgeNums()
         self.comboBox.clear()
 
         for idx, n in enumerate(norms):
