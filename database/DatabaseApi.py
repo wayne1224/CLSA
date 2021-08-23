@@ -418,15 +418,20 @@ def findNormByAge(age): ## age是中文
         print(e)
         return False
 
-def findNormByAgeNum(ageNum): ## ageNum是中文
+def findClosestNorm(ageNum): ## 往前找最近的年齡檔案
     try:
         query = dict()
-        query["ageNum"] = ageNum
-        
-        if normDB.count_documents(query) == 0:
-            print("can not find this content")
-            return False
-        
+
+        while True:
+            query["ageNum"] = ageNum
+            
+            if normDB.count_documents(query) == 0:
+                print("can not find {} year old Norm".format(ageNum))
+                ageNum = ageNum - 0.5
+                continue
+            
+            break
+
         return normDB.find_one(query)
 
     except Exception as e:
