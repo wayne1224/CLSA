@@ -359,37 +359,37 @@ class Myform(QtWidgets.QWidget):
         self.lbl_participants.setFont(font)
         self.lbl_participants.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.lbl_participants.setObjectName("lbl_participants")
-        self.horizontalLayout_6.addWidget(self.lbl_participants)
-        self.ckb_teacher = QtWidgets.QCheckBox()
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.ckb_teacher.setFont(font)
-        self.ckb_teacher.setObjectName("ckb_teacher")
-        self.horizontalLayout_6.addWidget(self.ckb_teacher)
-        self.ckb_dad = QtWidgets.QCheckBox()
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.ckb_dad.setFont(font)
-        self.ckb_dad.setObjectName("ckb_dad")
-        self.horizontalLayout_6.addWidget(self.ckb_dad)
-        self.ckb_mom = QtWidgets.QCheckBox()
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.ckb_mom.setFont(font)
-        self.ckb_mom.setObjectName("ckb_mom")
-        self.horizontalLayout_6.addWidget(self.ckb_mom)
+        self.horizontalLayout_6.addWidget(self.lbl_participants)    
         self.ckb_tester = QtWidgets.QCheckBox()
         font = QtGui.QFont()
         font.setPointSize(14)
         self.ckb_tester.setFont(font)
         self.ckb_tester.setObjectName("ckb_tester")
         self.horizontalLayout_6.addWidget(self.ckb_tester)
-        self.ckb_child = QtWidgets.QCheckBox()
+        self.ckb_mom = QtWidgets.QCheckBox()
         font = QtGui.QFont()
         font.setPointSize(14)
-        self.ckb_child.setFont(font)
-        self.ckb_child.setObjectName("ckb_child")
-        self.horizontalLayout_6.addWidget(self.ckb_child)
+        self.ckb_mom.setFont(font)
+        self.ckb_mom.setObjectName("ckb_mom")
+        self.horizontalLayout_6.addWidget(self.ckb_mom)
+        self.ckb_dad = QtWidgets.QCheckBox()
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.ckb_dad.setFont(font)
+        self.ckb_dad.setObjectName("ckb_dad")
+        self.horizontalLayout_6.addWidget(self.ckb_dad)
+        self.ckb_teacher = QtWidgets.QCheckBox()
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.ckb_teacher.setFont(font)
+        self.ckb_teacher.setObjectName("ckb_teacher")
+        self.horizontalLayout_6.addWidget(self.ckb_teacher)
+        # self.ckb_child = QtWidgets.QCheckBox()
+        # font = QtGui.QFont()
+        # font.setPointSize(14)
+        # self.ckb_child.setFont(font)
+        # self.ckb_child.setObjectName("ckb_child")
+        # self.horizontalLayout_6.addWidget(self.ckb_child)
         self.ckb_others = QtWidgets.QCheckBox()
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -408,6 +408,7 @@ class Myform(QtWidgets.QWidget):
         self.input_others.setFont(font)
         self.input_others.setObjectName("input_others")
         self.horizontalLayout_6.addWidget(self.input_others)
+        self.input_others.setStyleSheet("border: 1px solid initial;")
         self.layoutParticipants = QtWidgets.QGroupBox()
         self.layoutParticipants.setLayout(self.horizontalLayout_6)
         self.layoutParticipants.setStyleSheet("border: 1px;")
@@ -421,12 +422,21 @@ class Myform(QtWidgets.QWidget):
         self.lbl_equipment.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.lbl_equipment.setObjectName("lbl_equipment")
         self.horizontalLayout_7.addWidget(self.lbl_equipment)
+
+        self.rbtn_cellphone = QtWidgets.QRadioButton()
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.rbtn_cellphone.setFont(font)
+        self.rbtn_cellphone.setObjectName("rbtn_cellphone")
+        self.horizontalLayout_7.addWidget(self.rbtn_cellphone)
+
         self.rbtn_pen = QtWidgets.QRadioButton()
         font = QtGui.QFont()
         font.setPointSize(14)
         self.rbtn_pen.setFont(font)
         self.rbtn_pen.setObjectName("rbtn_pen")
         self.horizontalLayout_7.addWidget(self.rbtn_pen)
+
         self.rbtn_camera = QtWidgets.QRadioButton()
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -571,6 +581,7 @@ class Myform(QtWidgets.QWidget):
         self.group_gender.addButton(self.rbtn_female)
         self.group_recordType = QtWidgets.QButtonGroup()
         self.group_recordType.addButton(self.rbtn_otherEquip)
+        self.group_recordType.addButton(self.rbtn_cellphone)
         self.group_recordType.addButton(self.rbtn_pen)
         self.group_recordType.addButton(self.rbtn_camera)
 
@@ -603,9 +614,9 @@ class Myform(QtWidgets.QWidget):
         self.ckb_dad.setText(_translate("", "爸爸"))
         self.ckb_mom.setText(_translate("", "媽媽"))
         self.ckb_tester.setText(_translate("", "施測者"))
-        self.ckb_child.setText(_translate("", " 兒童"))
         self.ckb_others.setText(_translate("", " 其他"))
         self.lbl_equipment.setText(_translate("", "記錄方式："))
+        self.rbtn_cellphone.setText(_translate("", "手機"))
         self.rbtn_pen.setText(_translate("", "錄音筆"))
         self.rbtn_camera.setText(_translate("", "攝影機"))
         self.rbtn_otherEquip.setText(_translate("", "其他錄音設備"))
@@ -616,7 +627,7 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_always.setText(_translate("", "總是"))
         self.lbl_participation.setText(_translate("", "配合參與度："))
         # self.lbl_anxietySit.setText(_translate("", "兒童焦慮情形："))
-        self.btn_empty.setText(_translate("", "清空資料"))
+        self.btn_empty.setText(_translate("", "清空欄位"))
         self.btn_save.setText(_translate("", "儲存資料"))
 
     # #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
@@ -684,6 +695,8 @@ class Myform(QtWidgets.QWidget):
         
         #判斷記錄方式
         equipment = ''
+        if self.rbtn_cellphone.isChecked():
+            equipment = '手機'
         if self.rbtn_pen.isChecked():
             equipment = '錄音筆'
         if self.rbtn_otherEquip.isChecked():
@@ -704,8 +717,6 @@ class Myform(QtWidgets.QWidget):
 
         #判斷參與人員
         participants = []
-        if self.ckb_child.isChecked():
-            participants.append("兒童")
         if self.ckb_dad.isChecked():
             participants.append("爸爸")
         if self.ckb_tester.isChecked():
@@ -750,7 +761,6 @@ class Myform(QtWidgets.QWidget):
         self.layoutParticipants.setStyleSheet("border: 1px;")
         self.input_others.setStyleSheet("border: 1px solid initial;")
         self.input_inducement.setStyleSheet("border: 1px solid initial;")
-        self.input_recordDataName.setStyleSheet("border: 1px solid initial;")
         self.input_specialSit.setStyleSheet("border: 1px solid initial;")
         self.layoutNeedhelp.setStyleSheet("border: 1px ")
 
@@ -813,11 +823,10 @@ class Myform(QtWidgets.QWidget):
             self.layoutInteraction.setStyleSheet("border: 1px;")
         
         #參與人員
-        if not (self.ckb_child.isChecked() or self.ckb_dad.isChecked() or self.ckb_mom.isChecked() or self.ckb_teacher.isChecked() or self.ckb_tester.isChecked() or self.ckb_others.isChecked()):
+        if not (self.ckb_dad.isChecked() or self.ckb_mom.isChecked() or self.ckb_teacher.isChecked() or self.ckb_tester.isChecked() or self.ckb_others.isChecked()):
             error +=1
             self.layoutParticipants.setStyleSheet("border: 1px solid red;")
             self.lbl_participants.setStyleSheet("border: 1px;")
-            self.ckb_child.setStyleSheet("border: 1px;")
             self.ckb_dad.setStyleSheet("border: 1px;")
             self.ckb_mom.setStyleSheet("border: 1px;")
             self.ckb_teacher.setStyleSheet("border: 1px;")
@@ -835,12 +844,6 @@ class Myform(QtWidgets.QWidget):
         else :
             self.input_inducement.setStyleSheet("border: 1px solid initial;")
 
-        #錄影錄音檔名
-        if not self.input_recordDataName.text():
-            error += 1
-            self.input_recordDataName.setStyleSheet("border: 1px solid red;")
-        else :
-            self.input_recordDataName.setStyleSheet("border: 1px solid initial;")
         
         #其他特殊情況
         if not self.input_specialSit.toPlainText():
@@ -898,6 +901,8 @@ class Myform(QtWidgets.QWidget):
 
             equipment = ''
             #判斷記錄方式
+            if self.rbtn_cellphone.isChecked():
+                equipment = '手機'
             if self.rbtn_pen.isChecked():
                 equipment = '錄音筆'
             if self.rbtn_otherEquip.isChecked():
@@ -918,8 +923,6 @@ class Myform(QtWidgets.QWidget):
 
             #判斷參與人員
             participants = []
-            if self.ckb_child.isChecked():
-                participants.append("兒童")
             if self.ckb_dad.isChecked():
                 participants.append("爸爸")
             if self.ckb_tester.isChecked():
@@ -1020,6 +1023,8 @@ class Myform(QtWidgets.QWidget):
 
         self.input_inducement.setText(Doc['recording']['inducement'])
         
+        if Doc['recording']['equipment'] == '手機':
+            self.rbtn_cellphone.setChecked(True)
         if Doc['recording']['equipment'] == '其他錄音設備':
             self.rbtn_otherEquip.setChecked(True)
         if Doc['recording']['equipment'] == '錄音筆' :
@@ -1039,9 +1044,7 @@ class Myform(QtWidgets.QWidget):
         # self.input_anxietySit.setPlainText(Doc['recording']['situation'])
 
         for i in Doc['recording']['participants'] :
-            if i == '兒童' :
-                self.ckb_child.setChecked(True)
-            elif i == '爸爸' :
+            if i == '爸爸' :
                 self.ckb_dad.setChecked(True)
             elif i == '施測者' :
                 self.ckb_tester.setChecked(True)
@@ -1068,7 +1071,6 @@ class Myform(QtWidgets.QWidget):
         # self.input_anxietySit.setPlainText('')
         self.input_specialSit.setPlainText('')
  
-        self.ckb_child.setChecked(False)
         self.ckb_dad.setChecked(False)
         self.ckb_mom.setChecked(False)
         self.ckb_others.setChecked(False)
@@ -1088,6 +1090,7 @@ class Myform(QtWidgets.QWidget):
 
         self.group_recordType.setExclusive(False)
         self.rbtn_camera.setChecked(False)
+        self.rbtn_cellphone.setCheckable(False)
         self.rbtn_pen.setChecked(False)
         self.rbtn_otherEquip.setChecked(False)
         self.group_recordType.setExclusive(True)
