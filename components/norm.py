@@ -78,7 +78,7 @@ class NormModifyTab(QtWidgets.QWidget):
         self.verticalLayout.addLayout(self.horizontalLayout_8)
 
         #新增comboBox index
-        self.newAge_box = QtWidgets.QGroupBox("新增左欄選項")
+        self.newAge_box = QtWidgets.QGroupBox("新增常模年紀選項")
         self.newAge_box.setMaximumSize(QtCore.QSize(350, 140))
         self.newAge_box.setFont(font)
         
@@ -318,7 +318,7 @@ class NormModifyTab(QtWidgets.QWidget):
         
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.label_5.setText(_translate("", "欲設定之常模年齡: "))
+        self.label_5.setText(_translate("", "欲設定之常模年紀: "))
         self.mlu_box.setTitle(_translate("", "平均語句長度"))
         self.vocd_box.setTitle(_translate("", "詞彙多樣性"))
         self.updateBtn.setText(_translate("", "    更新    "))

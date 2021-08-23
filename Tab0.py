@@ -208,7 +208,10 @@ class SearchTab(QtWidgets.QWidget):
         #通知彙整完整
         informBox = QtWidgets.QMessageBox.information(self, '通知','匯入完成', QtWidgets.QMessageBox.Ok)
         self.procMain.emit(1, 0)
-        
+
+        #清空Table
+        while self.tableWidget.rowCount() > 0:
+            self.tableWidget.removeRow(self.tableWidget.rowCount()-1)
 
     def deleteDoc(self , objID , idx):
         delete = QtWidgets.QMessageBox.warning(self,

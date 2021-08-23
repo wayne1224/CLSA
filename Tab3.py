@@ -302,13 +302,13 @@ class AnalysisTab(QtWidgets.QWidget):
                 self.date_label.setText(date_time)
 
                 #呼叫過去的Analysis
-                analysis = db.findAnalysis(self.caseID,self.date)
-                if analysis:
-                    self.clearContent()
-                    self.setContent(analysis)
-                else:
-                    self.clearContent()
-                    print("No data")
+                # analysis = db.findAnalysis(self.caseID,self.date)
+                # if analysis:
+                #     self.clearContent()
+                #     self.setContent(analysis)
+                # else:
+                #     self.clearContent()
+                #     print("No data")
             
 
     @QtCore.pyqtSlot(list)
