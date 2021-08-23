@@ -306,6 +306,7 @@ class chartTab(QtWidgets.QWidget):
         chart.setTitle(name + " 就診紀錄")
         font = QtGui.QFont()
         font.setPixelSize(24)
+        font.setBold(True)
         chart.setTitleFont(font)
         categories = ["名詞", "動詞", "形容詞", "數詞", "量詞", "代詞", "副詞"]
         axisX = QBarCategoryAxis()
@@ -407,21 +408,26 @@ class chartTab(QtWidgets.QWidget):
         if len(categories2) - 1 > 0 :
             axisX2.setRange(categories2[0], categories2[len(categories2) - 1])
         
-        chart2.addSeries(lineSeriesAverageVOCD_w)
+
         chart2.addSeries(lineSeriesVOCD_w)
         chart2.addSeries(lineSeriesVOCD_c)
+        chart2.addSeries(lineSeriesAverageVOCD_w)
         lineSeriesAverageVOCD_w.attachAxis(axisX2)
         lineSeriesAverageVOCD_w.attachAxis(axisY2)
         lineSeriesVOCD_w.attachAxis(axisX2)
         lineSeriesVOCD_w.attachAxis(axisY2)
         lineSeriesVOCD_c.attachAxis(axisX2)
         lineSeriesVOCD_c.attachAxis(axisY2)
+        penAverageVOCD_w = lineSeriesVOCD_w.pen()
         penVOCD_w = lineSeriesVOCD_w.pen()
         penVOCD_c = lineSeriesVOCD_c.pen()
+        penAverageVOCD_w.setWidth(5)
         penVOCD_w.setWidth(5)
         penVOCD_c.setWidth(5)
+        lineSeriesAverageVOCD_w.setPen(penAverageVOCD_w)
         lineSeriesVOCD_w.setPen(penVOCD_w)
         lineSeriesVOCD_c.setPen(penVOCD_c)
+        lineSeriesAverageVOCD_w.setColor(Qt.red)
         
         chart2.legend().setVisible(True)
         chart2.legend().setAlignment(Qt.AlignBottom)
@@ -463,22 +469,27 @@ class chartTab(QtWidgets.QWidget):
         if len(categories3) - 1 > 0 :
             axisX3.setRange(categories3[0], categories3[len(categories3) - 1])
         
-        chart3.addSeries(lineSeriesAverageMLU_w)
         chart3.addSeries(lineSeriesMLU_w)
         chart3.addSeries(lineSeriesMLU_c)
+        chart3.addSeries(lineSeriesAverageMLU_w)
         lineSeriesAverageMLU_w.attachAxis(axisX3)
         lineSeriesAverageMLU_w.attachAxis(axisY3)
+
         lineSeriesMLU_w.attachAxis(axisX3)
         lineSeriesMLU_w.attachAxis(axisY3)
         lineSeriesMLU_c.attachAxis(axisX3)
         lineSeriesMLU_c.attachAxis(axisY3)
+        penAverageMLU_w = lineSeriesMLU_w.pen()
         penMLU_w = lineSeriesMLU_w.pen()
         penMLU_c = lineSeriesMLU_c.pen()
+        penAverageMLU_w.setWidth(5)
         penMLU_w.setWidth(5)
         penMLU_c.setWidth(5)
+        lineSeriesAverageMLU_w.setPen(penAverageMLU_w)
         lineSeriesMLU_w.setPen(penMLU_w)
         lineSeriesMLU_c.setPen(penMLU_c)
-        
+        lineSeriesAverageMLU_w.setColor(Qt.red)
+
         chart3.legend().setVisible(True)
         chart3.legend().setAlignment(Qt.AlignBottom)
 
