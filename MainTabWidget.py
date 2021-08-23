@@ -1,5 +1,6 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
+from functools import partial
 from Tab0 import SearchTab
 from Tab2 import Tab2
 from Tab1 import Myform
@@ -56,7 +57,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
 
         #搜尋頁面按下搜尋時，其他頁面清空
         #self.tab0.procClear.connect(self.tab1.clearContent)
-        self.tab1.procClear.connect(self.tab2.clearTab)
+        self.tab1.procClear.connect(partial(self.tab2.clearTab, True))
         self.tab1.procClear.connect(self.tab3.clearContent)
         self.tab2.procClear.connect(self.tab3.clearContent)
 
