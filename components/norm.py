@@ -235,7 +235,7 @@ class NormModifyTab(QtWidgets.QWidget):
         self.storeValue(n)
 
     def getNorms(self):
-        norms = db.getNormAgeNums()
+        norms = db.getNormAges()
         self.comboBox.clear()
 
         for idx, n in enumerate(norms):

@@ -279,7 +279,7 @@ class chartTab(QtWidgets.QWidget):
         ageNum = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
         if birthday.month >= 6:
             ageNum += 0.5
-        norm = db.findNormByAgeNum(ageNum)
+        norm = db.findClosestNorm(ageNum) 
 
         #檢查是否轉錄過
         count = 0

@@ -438,7 +438,7 @@ def findClosestNorm(ageNum): ## 往前找最近的年齡檔案
         print(e)
         return False
 
-def getNormAgeNums():
+def getNormAges():
     try:
         return normDB.find().sort("ageNum")
     except Exception as e:
