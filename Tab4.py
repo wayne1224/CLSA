@@ -257,7 +257,7 @@ class chartTab(QtWidgets.QWidget):
                 importBtn = QtWidgets.QPushButton('顯示圖表')
                 importBtn.setStyleSheet("QPushButton {background-color: cornflowerblue;} QPushButton:hover{background-color: rgb(90, 138, 226);}")
                 self.form.tableWidget.setCellWidget(idx, 4,importBtn)
-                importBtn.clicked.connect(partial(self.create_linebarchart , child['document'], child['birthday']))
+                importBtn.clicked.connect(partial(self.create_linebarchart , child['document'], child['name'], child['birthday']))
             if idx == -1:
                 QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
@@ -271,16 +271,8 @@ class chartTab(QtWidgets.QWidget):
             self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
 
    
-    def create_linebarchart(self, doc, birthday):
+    def create_linebarchart(self, doc, name, birthday):
         #self.procCaseDocs.emit(doc)
-
-        #算年紀
-        today = date.today()
-        ageNum = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
-        if birthday.month >= 6:
-            ageNum += 0.5
-        norm = db.findClosestNorm(ageNum) 
-        print(norm)
 
         #檢查是否轉錄過
         count = 0
@@ -290,11 +282,18 @@ class chartTab(QtWidgets.QWidget):
             if b['transcription']['analysis'] != None:
                 count += 1
 
+        #尚未轉錄過無法生成資料
         if count == 0:
             self.clearLayout()
             QtWidgets.QMessageBox.information(self, '','尚未轉錄過無法生成資料', QtWidgets.QMessageBox.Ok)
             return
         
+        #算年紀
+        today = date.today()
+        ageNum = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+        if birthday.month >= 6:
+            ageNum += 0.5
+        norm = db.findClosestNorm(ageNum) 
 
         
         # if Doc['transcription']['analysis'] == None: #是否已分析過
@@ -304,7 +303,7 @@ class chartTab(QtWidgets.QWidget):
         caseDocs = doc
 
         chart =  QChart()
-        chart.setTitle("個案" + caseDocs[0]['caseID'] + "就診紀錄")
+        chart.setTitle(name + " 就診紀錄")
         font = QtGui.QFont()
         font.setPixelSize(24)
         chart.setTitleFont(font)
@@ -383,7 +382,7 @@ class chartTab(QtWidgets.QWidget):
 
         categories2 = []
         lineSeriesAverageVOCD_w = QLineSeries(self)
-        lineSeriesAverageVOCD_w.setName(norm['age'])
+        lineSeriesAverageVOCD_w.setName('VOCD-w('+ norm['age'] + ')')
         lineSeriesVOCD_w = QLineSeries(self)
         lineSeriesVOCD_w.setName("VOCD-w")
         lineSeriesVOCD_c = QLineSeries(self)

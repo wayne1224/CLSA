@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from random import randint
+import time
 
 class LoadingScreen(QtWidgets.QWidget):
     def __init__(self):
@@ -99,6 +100,7 @@ class LoadingBar(QtWidgets.QWidget):
 
     def stop(self):
         self.pbar.setValue(100)
+        time.sleep(2)
         self.timer.stop()
         self.close()   
 
