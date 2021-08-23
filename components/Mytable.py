@@ -11,7 +11,7 @@ from collections import OrderedDict
 
 class Mytable(QtWidgets.QWidget):
     procChange = QtCore.pyqtSignal()
-    procInsertRowColor = QtCore.pyqtSignal()
+    procInsertRow_editAdultID_setColor = QtCore.pyqtSignal()
     procAllID = QtCore.pyqtSignal(dict)
 
     def __init__(self):
@@ -192,6 +192,7 @@ class Mytable(QtWidgets.QWidget):
             item.setText(num)
             self.tableWidget.setItem(self.id_x,0,item)
             self.id_x = -1
+            self.procInsertRow_editAdultID_setColor.emit()
 
         #設成人編號的Dict
         idDict = self.adultID
@@ -299,34 +300,43 @@ class Mytable(QtWidgets.QWidget):
                         if index.column() == 1:
                             self.toChild = QtWidgets.QAction('轉成兒童語句')
                             self.toChild.setObjectName("toChild")
-                            self.toChild.triggered.connect(partial(self.changeRole,item,index,None))
+                            if f.bold():    #不採計的語句轉換
+                                self.toChild.triggered.connect(partial(self.changeRole,item,index,None,False))
+                            else:           #採計的語句轉換
+                                self.toChild.triggered.connect(partial(self.changeRole,item,index,None,True))
                             self.menu.addAction(self.toChild)
                         elif index.column() == 4:
-                            self.toAdult = QtWidgets.QMenu('轉成成人語句', self)
-                            self.toAdult.setObjectName("toAdult")
-                            #已有的成人編號
-                            self.oldID = []
-                            for ID in self.adultID.keys():
-                                self.temp = QtWidgets.QAction(ID)
-                                self.oldID.append(self.temp)
-                                self.oldID[len(self.oldID)-1].triggered.connect(partial(self.changeRole,item,index,ID))
-                                self.toAdult.addAction(self.oldID[len(self.oldID)-1])
-                            #新增編號輸入欄
-                            self.inputID = QtWidgets.QLineEdit()
-                            self.inputID.setPlaceholderText('新增編號')
-                            self.inputID.setMaximumWidth(70)
-                            self.addID = QtWidgets.QWidgetAction(self)
-                            self.addID.setDefaultWidget(self.inputID)
-                            self.toAdult.addAction(self.addID)
-                            #確認按鈕
-                            self.btnConfirmID = QtWidgets.QPushButton('確認')
-                            self.btnConfirmID.setMaximumWidth(70)
-                            self.btnConfirmID.clicked.connect(partial(self.addNewID,item,index))
-                            self.confirmID = QtWidgets.QWidgetAction(self)
-                            self.confirmID.setDefaultWidget(self.btnConfirmID)
-                            self.toAdult.addAction(self.confirmID)
-                            #將子menu加入原本的menu裡
-                            self.menu.addMenu(self.toAdult)
+                            if f.bold():    #不採計的語句轉換
+                                self.toAdultNotValid = QtWidgets.QAction('轉成成人語句')
+                                self.toAdultNotValid.setObjectName("toAdultNotValid")
+                                self.toAdultNotValid.triggered.connect(partial(self.changeRole,item,index,'',False))
+                                self.menu.addAction(self.toAdultNotValid)
+                            else:           #採計的語句轉換
+                                self.toAdult = QtWidgets.QMenu('轉成成人語句', self)
+                                self.toAdult.setObjectName("toAdult")
+                                #已有的成人編號
+                                self.oldID = []
+                                for ID in self.adultID.keys():
+                                    self.temp = QtWidgets.QAction(ID)
+                                    self.oldID.append(self.temp)
+                                    self.oldID[len(self.oldID)-1].triggered.connect(partial(self.changeRole,item,index,ID,True))
+                                    self.toAdult.addAction(self.oldID[len(self.oldID)-1])
+                                #新增編號輸入欄
+                                self.inputID = QtWidgets.QLineEdit()
+                                self.inputID.setPlaceholderText('新增編號')
+                                self.inputID.setMaximumWidth(70)
+                                self.addID = QtWidgets.QWidgetAction(self)
+                                self.addID.setDefaultWidget(self.inputID)
+                                self.toAdult.addAction(self.addID)
+                                #確認按鈕
+                                self.btnConfirmID = QtWidgets.QPushButton('確認')
+                                self.btnConfirmID.setMaximumWidth(70)
+                                self.btnConfirmID.clicked.connect(partial(self.addNewID,item,index))
+                                self.confirmID = QtWidgets.QWidgetAction(self)
+                                self.confirmID.setDefaultWidget(self.btnConfirmID)
+                                self.toAdult.addAction(self.confirmID)
+                                #將子menu加入原本的menu裡
+                                self.menu.addMenu(self.toAdult)
 
                         self.menu.exec_(event.globalPos())
 
@@ -362,7 +372,7 @@ class Mytable(QtWidgets.QWidget):
             if self.tableWidget.item(row, columnIndex) == None:
                 self.tableWidget.setItem(row, columnIndex, QtWidgets.QTableWidgetItem(''))
         #Tab2加上顏色
-        self.procInsertRowColor.emit()
+        self.procInsertRow_editAdultID_setColor.emit()
 
     def addNewID(self, item, index):
         if self.inputID.text() != '':
@@ -370,17 +380,22 @@ class Mytable(QtWidgets.QWidget):
                 try:
                     pattern = r"[a-zA-Z]+"   
                     key = re.search(pattern,self.inputID.text()).group()
-                    self.changeRole(item, index, self.inputID.text())
+                    self.changeRole(item, index, self.inputID.text(), True)
                 except Exception as e:
                     print(e)
                     informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
             else:
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
 
-    def changeRole(self, item, index, ID):
+    def changeRole(self, item, index, ID, isValid):
         text = item.text()
         item.setText("")
         itemCopy = QtWidgets.QTableWidgetItem(text)
+        #如果轉換的語句不採計
+        if not isValid:
+            f = QtGui.QFont()
+            f.setBold(True)
+            itemCopy.setFont(f)
         #toChild
         if ID == None:
             self.tableWidget.setItem(index.row(), 4, itemCopy)
