@@ -585,6 +585,9 @@ class Myform(QtWidgets.QWidget):
         self.group_recordType.addButton(self.rbtn_pen)
         self.group_recordType.addButton(self.rbtn_camera)
 
+        self.importSingal = 0
+
+
         self.setStyleSheet(open("QSS/Tab1.qss", "r").read())
 
     def retranslateUi(self, ):
@@ -914,7 +917,7 @@ class Myform(QtWidgets.QWidget):
             #判斷需要引導協助
             if self.rbtn_always.isChecked():
                 needhelp = '總是'
-            if self.rbtn_sometimes.isChecked():
+            if self.rbtn_few.isChecked():
                 needhelp = '很少 (幾乎不需要引導)'
             if self.rbtn_usually.isChecked():
                 needhelp = '經常 (6~9次)'
@@ -954,11 +957,34 @@ class Myform(QtWidgets.QWidget):
                 # 'situation' : self.input_anxietySit.toPlainText()
             }
             if (self.saveExamination()):
-                close = QtWidgets.QMessageBox.warning(self,
-                                "CLSA",
-                                "確定要更新舊的資料?",
-                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-                if close == QtWidgets.QMessageBox.Yes :
+                if (self.importSingal) : 
+                    close = QtWidgets.QMessageBox.warning(self,
+                                    "CLSA",
+                                    "確定要更新舊的資料?",
+                                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+                    if close == QtWidgets.QMessageBox.Yes :
+                        upsert1 = database.DatabaseApi.upsertChildData(childData)
+                        upsert2 = database.DatabaseApi.upsertRecording(self.input_caseID.text(), DateTimeRecordDate, recording)
+
+                        if upsert2[1] and upsert1[1]:
+                            print(upsert2[0] and upsert1[1])
+                            if upsert2[0] == 'update':
+                                self.saveForm = self.returnTab1Data()
+                                win32api.MessageBox(0, '更新成功', '提示')
+                            if upsert2[0] == 'insert' :
+                                self.saveForm = self.returnTab1Data()
+                                win32api.MessageBox(0, '新增成功', '提示')
+                            caseIDandDate = {'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
+                            self.procStart.emit(caseIDandDate)
+                            return True
+                        else :
+                            win32api.MessageBox(0, '新增失敗', '提示')
+                            return False
+                    elif close == QtWidgets.QMessageBox.No :
+                        event.ignore()
+                    else:
+                        event.ignore()
+                else :
                     upsert1 = database.DatabaseApi.upsertChildData(childData)
                     upsert2 = database.DatabaseApi.upsertRecording(self.input_caseID.text(), DateTimeRecordDate, recording)
 
@@ -976,9 +1002,8 @@ class Myform(QtWidgets.QWidget):
                     else :
                         win32api.MessageBox(0, '新增失敗', '提示')
                         return False
-                elif close == QtWidgets.QMessageBox.No :
-                    event.ignore()
-            
+            else:
+                win32api.MessageBox(0, '資料已更新', '提示')
 
     #檢查是否有變更
     def saveExamination (self) :
@@ -991,6 +1016,7 @@ class Myform(QtWidgets.QWidget):
     #接收來自Tab0的所有資料
     @QtCore.pyqtSlot(dict)
     def getDoc(self, Doc):
+        self.importSingal = 1
         #設定childData
         if Doc == None:
             return
@@ -1035,7 +1061,7 @@ class Myform(QtWidgets.QWidget):
         if Doc['recording']['help'] == '總是':
             self.rbtn_always.setChecked(True)
         if Doc['recording']['help'] == '很少 (幾乎不需要引導)':
-            self.rbtn_sometimes.setChecked(True)
+            self.rbtn_few.setChecked(True)
         if Doc['recording']['help'] == '經常 (6~9次)':
             self.rbtn_usually.setChecked(True)
         if Doc['recording']['help'] == '有時 (2~5次)':
@@ -1059,6 +1085,7 @@ class Myform(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot()
     def clearContent(self) :
+        self.importSingal = 0
         self.input_caseID.setText('')
         self.input_caseName.setText('')
         self.input_location.setText('')
