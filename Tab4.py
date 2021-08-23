@@ -280,6 +280,7 @@ class chartTab(QtWidgets.QWidget):
         if birthday.month >= 6:
             ageNum += 0.5
         norm = db.findClosestNorm(ageNum) 
+        print(norm)
 
         #檢查是否轉錄過
         count = 0
@@ -381,16 +382,20 @@ class chartTab(QtWidgets.QWidget):
         biggestValue2 = 100.0
 
         categories2 = []
+        lineSeriesAverageVOCD_w = QLineSeries(self)
+        lineSeriesAverageVOCD_w.setName(norm['age'])
         lineSeriesVOCD_w = QLineSeries(self)
         lineSeriesVOCD_w.setName("VOCD-w")
         lineSeriesVOCD_c = QLineSeries(self)
         lineSeriesVOCD_c.setName("VOCD-c")
         analsisfail = 0
+        print(norm['data']['vocd-w'])
         for i, index in enumerate(caseDocs):
             if index['transcription']['analysis'] != None:
                 if (index['transcription']['analysis']['VOCD-w'] != '樣本數不足') :
                     strDate = index['date'].strftime("%Y-%m-%d %H:%M")
                     categories2.append(strDate)
+                    lineSeriesAverageVOCD_w.append(QPoint(i - analsisfail, float(norm['data']['vocd-w'])))
                     lineSeriesVOCD_w.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-w']))
                     lineSeriesVOCD_c.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-c']))
                     while (index['transcription']['analysis']['VOCD-w'] > biggestValue2 or\
@@ -403,8 +408,11 @@ class chartTab(QtWidgets.QWidget):
         if len(categories2) - 1 > 0 :
             axisX2.setRange(categories2[0], categories2[len(categories2) - 1])
         
+        chart2.addSeries(lineSeriesAverageVOCD_w)
         chart2.addSeries(lineSeriesVOCD_w)
         chart2.addSeries(lineSeriesVOCD_c)
+        lineSeriesAverageVOCD_w.attachAxis(axisX2)
+        lineSeriesAverageVOCD_w.attachAxis(axisY2)
         lineSeriesVOCD_w.attachAxis(axisX2)
         lineSeriesVOCD_w.attachAxis(axisY2)
         lineSeriesVOCD_c.attachAxis(axisX2)
@@ -434,6 +442,8 @@ class chartTab(QtWidgets.QWidget):
         biggestValue3 = 20.0
 
         categories3 = []
+        lineSeriesAverageMLU_w = QLineSeries(self)
+        lineSeriesAverageMLU_w.setName(norm['age'])
         lineSeriesMLU_w = QLineSeries(self)
         lineSeriesMLU_w.setName("MLU-w")
         lineSeriesMLU_c = QLineSeries(self)
@@ -442,6 +452,7 @@ class chartTab(QtWidgets.QWidget):
             if index['transcription']['analysis'] != None:
                 strDate = index['date'].strftime("%Y-%m-%d %H:%M")
                 categories3.append(strDate)
+                lineSeriesAverageMLU_w.append(QPoint(i, float(norm['data']['mlu-w'])))
                 lineSeriesMLU_w.append(QPoint(i, index['transcription']['analysis']['MLU-w']))
                 lineSeriesMLU_c.append(QPoint(i, index['transcription']['analysis']['MLU-c']))
                 while (index['transcription']['analysis']['MLU-w'] > biggestValue3 or\
@@ -453,8 +464,11 @@ class chartTab(QtWidgets.QWidget):
         if len(categories3) - 1 > 0 :
             axisX3.setRange(categories3[0], categories3[len(categories3) - 1])
         
+        chart3.addSeries(lineSeriesAverageMLU_w)
         chart3.addSeries(lineSeriesMLU_w)
         chart3.addSeries(lineSeriesMLU_c)
+        lineSeriesAverageMLU_w.attachAxis(axisX3)
+        lineSeriesAverageMLU_w.attachAxis(axisY3)
         lineSeriesMLU_w.attachAxis(axisX3)
         lineSeriesMLU_w.attachAxis(axisY3)
         lineSeriesMLU_c.attachAxis(axisX3)
@@ -472,56 +486,6 @@ class chartTab(QtWidgets.QWidget):
         chartView3 = QChartView(chart3)
         chartView3.setRenderHint(QPainter.Antialiasing)
         chartView3.setMinimumSize(500, 500)
-
-        #MLU
-        chart3 =  QChart()
-        chart3.setTitle("平均語句長度")
-        chart3.setTitleFont(font)
-
-        axisX3 = QBarCategoryAxis()
-        axisY3 = QValueAxis()
-        chart3.addAxis(axisY3, Qt.AlignLeft)
-        biggestValue3 = 20.0
-
-        categories3 = []
-        lineSeriesMLU_w = QLineSeries(self)
-        lineSeriesMLU_w.setName("MLU-w")
-        lineSeriesMLU_c = QLineSeries(self)
-        lineSeriesMLU_c.setName("MLU-c")
-        for i, index in enumerate(caseDocs):
-            if index['transcription']['analysis'] != None:
-                strDate = index['date'].strftime("%Y-%m-%d %H:%M")
-                categories3.append(strDate)
-                lineSeriesMLU_w.append(QPoint(i, index['transcription']['analysis']['MLU-w']))
-                lineSeriesMLU_c.append(QPoint(i, index['transcription']['analysis']['MLU-c']))
-                while (index['transcription']['analysis']['MLU-w'] > biggestValue3 or\
-                        index['transcription']['analysis']['MLU-c'] > biggestValue3) :
-                    biggestValue3 += 10
-        axisY3.setRange(0.0, biggestValue3)
-        axisX3.append(categories3)
-        chart3.addAxis(axisX3, Qt.AlignBottom)
-        if len(categories3) - 1 > 0 :
-            axisX3.setRange(categories3[0], categories3[len(categories3) - 1])
-        
-        chart3.addSeries(lineSeriesMLU_w)
-        chart3.addSeries(lineSeriesMLU_c)
-        lineSeriesMLU_w.attachAxis(axisX3)
-        lineSeriesMLU_w.attachAxis(axisY3)
-        lineSeriesMLU_c.attachAxis(axisX3)
-        lineSeriesMLU_c.attachAxis(axisY3)
-        penMLU_w = lineSeriesMLU_w.pen()
-        penMLU_c = lineSeriesMLU_c.pen()
-        penMLU_w.setWidth(5)
-        penMLU_c.setWidth(5)
-        lineSeriesMLU_w.setPen(penMLU_w)
-        lineSeriesMLU_c.setPen(penMLU_c)
-        
-        chart3.legend().setVisible(True)
-        chart3.legend().setAlignment(Qt.AlignBottom)
-
-        chartView3 = QChartView(chart3)
-        chartView3.setRenderHint(QPainter.Antialiasing)
-        chartView3.setMinimumSize(800, 500)
 
         #self.layout.addWidget(chartView)
         self.scroll_vbox.addWidget(chartView)
