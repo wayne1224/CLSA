@@ -224,7 +224,7 @@ class chartTab(QtWidgets.QWidget):
         # self.form.icon.setHidden(True)
 
         cursor = db.findChildren(self.form.input_caseID.text() , self.form.input_name.text())
-        print(self.form.input_caseID.text(),self.form.input_name.text())
+        # print(self.form.input_caseID.text(),self.form.input_name.text())
     
         while self.form.tableWidget.rowCount() > 0:
             self.form.tableWidget.removeRow(self.form.tableWidget.rowCount()-1)
@@ -278,7 +278,7 @@ class chartTab(QtWidgets.QWidget):
         count = 0
         tempDoc = doc.copy()
         for b in tempDoc:
-            print(b['transcription']['analysis'])
+            # print(b['transcription']['analysis'])
             if b['transcription']['analysis'] != None:
                 count += 1
 
@@ -308,16 +308,16 @@ class chartTab(QtWidgets.QWidget):
         font.setPixelSize(24)
         font.setBold(True)
         chart.setTitleFont(font)
-        categories = ["名詞", "動詞", "形容詞", "數詞", "量詞", "代詞", "副詞"]
+        categories = ["名詞", "動詞", "形容詞", "數詞", "量詞", "代詞", "副詞", "虛詞"]
         axisX = QBarCategoryAxis()
         axisX.append(categories)
         chart.addAxis(axisX, Qt.AlignBottom)
         axisY = QValueAxis()
         chart.addAxis(axisY, Qt.AlignLeft)
         # axisY.setRange(0.0, 20.0)
-        biggestValue = 20.0
-        axisX.setRange("名詞", "副詞")
-        axisY.setTitleText("詞的個數")
+        biggestValue = 50.0
+        axisX.setRange("名詞", "虛詞")
+        axisY.setTitleText("詞性百分比")
         axisY.setTitleFont(font)
         # sumContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
         # recordCount = 0
@@ -332,17 +332,21 @@ class chartTab(QtWidgets.QWidget):
                 #     if key != 'percentage':
                 #         if key == 'sum': recordCount += 1
                 #         else : sumContent[key] += value
-                set<< index['transcription']['analysis']['Content']['N']\
-                    <<  index['transcription']['analysis']['Content']['V']\
-                    << index['transcription']['analysis']['Content']['VH']\
-                    << index['transcription']['analysis']['Content']['Neu']\
-                    << index['transcription']['analysis']['Content']['Nf']\
-                    << index['transcription']['analysis']['Content']['Nh']\
-                    << index['transcription']['analysis']['Content']['D']
-                for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()):
-                    while(value > biggestValue and key != 'sum') :
-                        # print(str(i) + str(key)+ str(value)) 
-                        biggestValue+=10.0
+                set<< index['transcription']['analysis']['Content']['N'] / index['transcription']['analysis']['wordCount'] * 100.0\
+                    <<  index['transcription']['analysis']['Content']['V'] / index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['VH'] / index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['Neu']/ index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['Nf']/ index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['Nh']/ index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['D']/ index['transcription']['analysis']['wordCount']  * 100.0\
+                    << index['transcription']['analysis']['Function']['sum']/ index['transcription']['analysis']['wordCount'] * 100.0
+                # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()):
+                #     while(value > biggestValue and key != 'sum') :
+                #         # print(str(i) + str(key)+ str(value)) 
+                #         biggestValue+=10.0
+                for i in set:
+                    while(i > biggestValue) :
+                        biggestValue+=25.0
                 barSeries.append(set)
         axisY.setRange(0, biggestValue)
         # print('last:' + str(biggestValue))
@@ -389,7 +393,7 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesVOCD_c = QLineSeries(self)
         lineSeriesVOCD_c.setName("VOCD-c")
         analsisfail = 0
-        print(norm['data']['vocd-w'])
+        # print(norm['data']['vocd-w'])
         for i, index in enumerate(caseDocs):
             if index['transcription']['analysis'] != None:
                 if (index['transcription']['analysis']['VOCD-w'] != '樣本數不足') :
