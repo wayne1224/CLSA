@@ -412,7 +412,6 @@ class chartTab(QtWidgets.QWidget):
         if len(categories2) - 1 > 0 :
             axisX2.setRange(categories2[0], categories2[len(categories2) - 1])
         
-
         chart2.addSeries(lineSeriesVOCD_w)
         chart2.addSeries(lineSeriesVOCD_c)
         chart2.addSeries(lineSeriesAverageVOCD_w)
@@ -431,8 +430,8 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesAverageVOCD_w.setPen(penAverageVOCD_w)
         lineSeriesVOCD_w.setPen(penVOCD_w)
         lineSeriesVOCD_c.setPen(penVOCD_c)
-        lineSeriesAverageVOCD_w.setColor(Qt.red)
-        
+        lineSeriesAverageVOCD_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
+
         chart2.legend().setVisible(True)
         chart2.legend().setAlignment(Qt.AlignBottom)
 
@@ -492,7 +491,7 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesAverageMLU_w.setPen(penAverageMLU_w)
         lineSeriesMLU_w.setPen(penMLU_w)
         lineSeriesMLU_c.setPen(penMLU_c)
-        lineSeriesAverageMLU_w.setColor(Qt.red)
+        lineSeriesAverageMLU_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
 
         chart3.legend().setVisible(True)
         chart3.legend().setAlignment(Qt.AlignBottom)
