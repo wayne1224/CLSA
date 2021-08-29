@@ -391,7 +391,7 @@ def upsertNorm(age , ageNum , data):
                     "ageNum" : ageNum,
                 }
             )
-            
+
         # update
         else:
             normDB.update_one(query , {"$set" : {
