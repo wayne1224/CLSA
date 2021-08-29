@@ -404,7 +404,23 @@ def upsertNorm(age , ageNum , data):
         print(e)
         return False
 
-def findNormByAge(age): ## age是中文
+def deleteNorm(age): # age是中文
+    try:
+        query = dict()
+        query["age"] = age
+        
+        if normDB.count_documents(query) == 0:
+            print("can not find this content")
+            return False
+        
+        normDB.delete_one(query)
+        return True
+
+    except Exception as e:
+        print(e)
+        return False
+
+def findNormByAge(age): # age是中文
     try:
         query = dict()
         query["age"] = age
@@ -426,7 +442,7 @@ def findClosestNorm(ageNum): ## 往前找最近的年齡檔案
         
         while True:
             for doc in reversed(data):
-                if doc["ageNum"] == ageNum:
+                if doc["ageNum"] == ageNum and (doc["data"]["mlu-c"] or doc["data"]["mlu-w"] or doc["data"]["vocd-c"] or doc["data"]["vocd-w"]):
                     return doc
 
             ageNum = ageNum - 0.5
@@ -444,6 +460,7 @@ def getNormAges():
     except Exception as e:
         print(e)
         return False
+
 
 # childData = {   "caseID" : "00757025",
 #                 "name" : "Wayne",
