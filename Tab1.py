@@ -666,7 +666,7 @@ class Myform(QtWidgets.QWidget):
                 self.rbtn_female.setChecked(True)
             self.dateEdit_birthday.setDate(caseData['birthday'])
         else :
-            win32api.MessageBox(0, '查無此個案資料', '提示')
+            informBox = QtWidgets.QMessageBox.information(self, '查詢','查無此個案編號', QtWidgets.QMessageBox.Ok)
         self.saveForm = self.returnTab1Data()
 
     #回傳現在Tab1的所有資料
@@ -756,6 +756,7 @@ class Myform(QtWidgets.QWidget):
         self.input_SLP.setStyleSheet("border: 1px solid initial;" )
         self.input_caseID.setStyleSheet("border: 1px solid initial;" )
         self.input_caseName.setStyleSheet("border: 1px solid initial;" )
+        self.dateEdit_birthday.setStyleSheet("border: 1px solid initial;" )
         self.rbtn_male.setStyleSheet("border: 1px;")
         self.rbtn_female.setStyleSheet("border: 1px;")   
         self.input_location.setStyleSheet("border: 1px solid initial;")
@@ -769,32 +770,33 @@ class Myform(QtWidgets.QWidget):
 
     #儲存資料到資料庫 
     def save (self, event): 
-        error = 0
+        inputError = 0
+        ageError = 0
 
         #收錄者
         if not self.input_SLP.text(): 
-            error+=1
+            inputError+=1
             self.input_SLP.setStyleSheet("border: 1px solid red;" )
         else :
             self.input_SLP.setStyleSheet("border: 1px solid initial;" )
         
         #個案編號
         if not self.input_caseID.text(): 
-            error+=1
+            inputError+=1
             self.input_caseID.setStyleSheet("border: 1px solid red;" )
         else :
             self.input_caseID.setStyleSheet("border: 1px solid initial;" )
         
         #個案姓名
         if not self.input_caseName.text(): 
-            error+=1
+            inputError+=1
             self.input_caseName.setStyleSheet("border: 1px solid red;")
         else:
             self.input_caseName.setStyleSheet("border: 1px solid initial;" )
         
         #性別
         if not (self.rbtn_male.isChecked() or self.rbtn_female.isChecked()): 
-            error += 1
+            inputError += 1
             self.rbtn_male.setStyleSheet("border: 1px solid red;")
             self.rbtn_female.setStyleSheet("border: 1px solid red;")
         else:
@@ -802,21 +804,21 @@ class Myform(QtWidgets.QWidget):
             self.rbtn_female.setStyleSheet("border: 1px;")        
         #收錄地點
         if not self.input_location.text(): 
-            error +=1
+            inputError +=1
             self.input_location.setStyleSheet("border: 1px solid red;")
         else:
             self.input_location.setStyleSheet("border: 1px solid initial;")
         
         #收錄情境
         if not self.input_scenario.text(): 
-            error += 1
+            inputError += 1
             self.input_scenario.setStyleSheet("border: 1px solid red;")
         else :
             self.input_scenario.setStyleSheet("border: 1px solid initial;")
         
         #互動形式
         if not (self.rbtn_conversation.isChecked() or self.rbtn_game.isChecked() or self.rbtn_narrative.isChecked()):
-            error += 1
+            inputError += 1
             self.layoutInteraction.setStyleSheet("border: 1px solid red;")
             self.rbtn_conversation.setStyleSheet("border: 1px;")
             self.rbtn_game.setStyleSheet("border: 1px;")
@@ -827,7 +829,7 @@ class Myform(QtWidgets.QWidget):
         
         #參與人員
         if not (self.ckb_dad.isChecked() or self.ckb_mom.isChecked() or self.ckb_teacher.isChecked() or self.ckb_tester.isChecked() or self.ckb_others.isChecked()):
-            error +=1
+            inputError +=1
             self.layoutParticipants.setStyleSheet("border: 1px solid red;")
             self.lbl_participants.setStyleSheet("border: 1px;")
             self.ckb_dad.setStyleSheet("border: 1px;")
@@ -842,7 +844,7 @@ class Myform(QtWidgets.QWidget):
 
         #誘發題材
         if not self.input_inducement.text():
-            error += 1
+            inputError += 1
             self.input_inducement.setStyleSheet("border: 1px solid red;")
         else :
             self.input_inducement.setStyleSheet("border: 1px solid initial;")
@@ -850,14 +852,14 @@ class Myform(QtWidgets.QWidget):
         
         #其他特殊情況
         if not self.input_specialSit.toPlainText():
-            error +=1
+            inputError +=1
             self.input_specialSit.setStyleSheet("border: 1px solid red;")
         else :
             self.input_specialSit.setStyleSheet("border: 1px solid initial;")
 
         #需要引導協助
         if not (self.rbtn_always.isChecked()  or self.rbtn_usually.isChecked() or self.rbtn_sometimes.isChecked() or self.rbtn_few.isChecked()):
-            error +=1
+            inputError +=1
             self.layoutNeedhelp.setStyleSheet("border: 1px solid red;")
             self.lbl_help.setStyleSheet("border: 1px;")
             self.rbtn_always.setStyleSheet("border: 1px;")
@@ -867,12 +869,28 @@ class Myform(QtWidgets.QWidget):
         else :
             self.layoutNeedhelp.setStyleSheet("border: 1px;")
 
+        #年齡判定
+        today = datetime.today()
+        #將dateEdit變成dateTime型態
+        date = str(self.dateEdit_birthday.date().toPyDate())
+        birthday = datetime.strptime(date, "%Y-%m-%d")
+        age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+        if age >= 13:
+            self.dateEdit_birthday.setStyleSheet("border: 1px solid red;")
+            inputError += 1
+            ageError = 1
+        else:
+            self.dateEdit_birthday.setStyleSheet("border: 1px solid initial;")
 
         #如果有必填欄位沒填跳提示視窗
-        if  error > 0: 
+        if  inputError > 0 : 
             self.saveForm = self.returnTab1Data()
             print ("save fail")
-            win32api.MessageBox(0, '紅色框為必填欄位', '警告')
+            warnText = '紅色框為必填欄位\n'
+            if ageError > 0:
+                warnText += '生日日期請修正'
+            informBox = QtWidgets.QMessageBox.warning(self, '警告',warnText, QtWidgets.QMessageBox.Ok)
+            # win32api.MessageBox(0, '紅色框為必填欄位', '警告')
             return False
         else :
             #將dateEdit變成dateTime型態
