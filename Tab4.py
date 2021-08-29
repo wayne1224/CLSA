@@ -451,7 +451,7 @@ class chartTab(QtWidgets.QWidget):
 
         categories3 = []
         lineSeriesAverageMLU_w = QLineSeries(self)
-        lineSeriesAverageMLU_w.setName(norm['age'])
+        lineSeriesAverageMLU_w.setName('MLU-w('+ norm['age'] + ')')
         lineSeriesMLU_w = QLineSeries(self)
         lineSeriesMLU_w.setName("MLU-w")
         lineSeriesMLU_c = QLineSeries(self)

@@ -77,7 +77,7 @@ class NormModifyTab(QtWidgets.QWidget):
         self.horizontalLayout_8.addWidget(self.updateBtn)
         self.verticalLayout.addLayout(self.horizontalLayout_8)
 
-        #新增comboBox index
+        #新增GroupBox
         self.newAge_box = QtWidgets.QGroupBox("新增常模年紀選項")
         self.newAge_box.setMaximumSize(QtCore.QSize(350, 140))
         self.newAge_box.setFont(font)
@@ -88,7 +88,7 @@ class NormModifyTab(QtWidgets.QWidget):
         # self.label_newAge.setMaximumSize(QtCore.QSize(250, 50))
         # self.label_newAge.setFont(font)
         # self.hbox_newAge.addWidget(self.label_newAge)
-        reg_ex = QtCore.QRegExp("[一兩三四五六七八九十]+")
+        reg_ex = QtCore.QRegExp("十[一二三四五六七八九]|[一兩二三四五六七八九]")
         numValid = QtGui.QRegExpValidator(reg_ex)
         
         self.input_newAge = QtWidgets.QLineEdit()
@@ -130,6 +130,40 @@ class NormModifyTab(QtWidgets.QWidget):
         self.vbox_addAge.addLayout(self.hbox_age_reminder)
         self.newAge_box.setLayout(self.vbox_addAge)
         self.horizontalLayout_7.addWidget(self.newAge_box)
+
+        #Horizontal Line
+        # self.line = QtWidgets.QFrame()
+        # self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        # self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        # self.verticalLayout.addWidget(self.line)
+        
+
+        #NEW delete GroupBox
+        self.deleteAge_box = QtWidgets.QGroupBox("刪除常模年紀選項")
+        self.deleteAge_box.setMaximumSize(QtCore.QSize(350, 140))
+        self.deleteAge_box.setFont(font)
+        
+        self.hbox_deleteAge = QtWidgets.QHBoxLayout()
+
+        ## delete comboBox
+        self.comboBox_delete = QtWidgets.QComboBox()
+        self.comboBox_delete.setFont(font)
+        self.hbox_deleteAge.addWidget(self.comboBox_delete)
+
+        ##delete button
+        self.deleteAgeBtn = QtWidgets.QPushButton("刪除")
+        self.deleteAgeBtn.setFont(font)
+        self.deleteAgeBtn.setObjectName("deleteAgeBtn")
+        self.hbox_deleteAge.addWidget(self.deleteAgeBtn)
+
+        self.deleteAge_box.setLayout(self.hbox_deleteAge)
+        self.horizontalLayout_7.addWidget(self.deleteAge_box)
+
+        #New and Delete Area
+        # self.new_delete_hbox = QtWidgets.QHBoxLayout()
+        # self.new_delete_hbox.addWidget(self.newAge_box)
+        # self.new_delete_hbox.addWidget(self.deleteAge_box)
+        # self.verticalLayout.addLayout(self.new_delete_hbox)
 
         #Validator
         valid = QtGui.QDoubleValidator(0, 10, 2, notation=QtGui.QDoubleValidator.StandardNotation)
@@ -243,6 +277,7 @@ class NormModifyTab(QtWidgets.QWidget):
                 self.storeValue(n)
 
             self.comboBox.addItem(n['age'])
+            self.comboBox_delete.addItem(n['age'])
     
     def storeValue(self, n):  #將值存在格子和變數中
         
@@ -282,7 +317,10 @@ class NormModifyTab(QtWidgets.QWidget):
         if self.input_newAge.text() == '':
             return
         else:
-            newAge += self.input_newAge.text() + '歲'
+            if self.input_newAge.text() == '兩': #特例
+                newAge = '二歲'
+            else:
+                newAge += (self.input_newAge.text() + '歲')
             if self.comboBox_age.currentText() == '半':
                 newAge += '半'
         
@@ -305,7 +343,7 @@ class NormModifyTab(QtWidgets.QWidget):
 
     def chineseToNum(self, text):
         numToChinese = {
-            "一": 1,"兩": 2,"三": 3,"四": 4,"五": 5,"六": 6,"七": 7,"八": 8,"九": 9,"十": 10
+            "一": 1,"二": 2,"三": 3,"四": 4,"五": 5,"六": 6,"七": 7,"八": 8,"九": 9,"十": 10
         }
 
         if len(text) == 2: #兩歲, 三歲...十歲
