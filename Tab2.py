@@ -675,9 +675,7 @@ class Tab2(QtWidgets.QWidget):
 
     #匯入錄音檔
     def _importAudio(self, filePath):
-        print(filePath)
         text = self.audio.importAudio(filePath)
-        print(text)
 
         content = []
         if text:
