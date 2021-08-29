@@ -1,9 +1,29 @@
 QPushButton#updateBtn
 {
-    background-color: rgb(90, 138, 226);
+    background-color: cornflowerblue;
 }
 
 QPushButton#newAgeBtn
 {
     background-color: aquamarine;
+}
+
+QPushButton#deleteAgeBtn
+{
+    background-color: rgb(235, 38, 78);
+}
+
+QPushButton#updateBtn:hover
+{
+    background-color: rgb(90, 138, 226);
+}
+
+QPushButton#newAgeBtn:hover
+{
+    background-color: rgb(106, 236, 193);
+}
+
+QPushButton#deleteAgeBtn:hover
+{
+    background-color: rgb(219, 26, 65);
 }
