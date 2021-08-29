@@ -442,7 +442,7 @@ def findClosestNorm(ageNum): ## 往前找最近的年齡檔案
         
         while True:
             for doc in reversed(data):
-                if doc["ageNum"] == ageNum and (doc["data"]["mlc-c"] or doc["data"]["mlc-w"] or doc["data"]["vocd-c"] or doc["data"]["vocd-w"]):
+                if doc["ageNum"] == ageNum and (doc["data"]["mlu-c"] or doc["data"]["mlu-w"] or doc["data"]["vocd-c"] or doc["data"]["vocd-w"]):
                     return doc
 
             ageNum = ageNum - 0.5
