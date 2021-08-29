@@ -267,9 +267,18 @@ class chartTab(QtWidgets.QWidget):
     # #清除原本layout裡的Widget
     def clearLayout(self):
         for i in reversed(range(self.scroll_vbox.count())):
-            # print(self.scroll_vbox.count())
-            self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
-
+            #print(self.scroll_vbox.itemAt(i))
+            #self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+            if self.scroll_vbox.itemAt(i).layout():
+                self.chartView2.hide()
+                self.chartView3.hide()
+                self.scroll_vbox.itemAt(i).layout().deleteLater()
+                self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+                
+            elif self.scroll_vbox.itemAt(i).widget():
+                self.scroll_vbox.itemAt(i).widget().deleteLater()
+                self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+            
    
     def create_linebarchart(self, doc, name, birthday):
         #self.procCaseDocs.emit(doc)
@@ -283,10 +292,11 @@ class chartTab(QtWidgets.QWidget):
                 count += 1
 
         #尚未轉錄過無法生成資料
+        self.clearLayout()
         if count == 0:
-            self.clearLayout()
             QtWidgets.QMessageBox.information(self, '','尚未轉錄過無法生成資料', QtWidgets.QMessageBox.Ok)
             return
+        
         
         #算年紀
         today = date.today()
@@ -375,13 +385,13 @@ class chartTab(QtWidgets.QWidget):
         chartView.setMinimumSize(800, 500)
         
         #VOCD
-        chart2 =  QChart()
-        chart2.setTitle("詞彙多樣性/字的多樣性")
-        chart2.setTitleFont(font)
+        self.chart2 =  QChart()
+        self.chart2.setTitle("詞彙多樣性/字的多樣性")
+        self.chart2.setTitleFont(font)
 
         axisX2 = QBarCategoryAxis()
         axisY2 = QValueAxis()
-        chart2.addAxis(axisY2, Qt.AlignLeft)
+        self.chart2.addAxis(axisY2, Qt.AlignLeft)
         # axisY2.setRange(0.0, 100.0)
         biggestValue2 = 100.0
 
@@ -408,13 +418,13 @@ class chartTab(QtWidgets.QWidget):
                 else : analsisfail += 1
         axisY2.setRange(0.0, biggestValue2)
         axisX2.append(categories2)
-        chart2.addAxis(axisX2, Qt.AlignBottom)
+        self.chart2.addAxis(axisX2, Qt.AlignBottom)
         if len(categories2) - 1 > 0 :
             axisX2.setRange(categories2[0], categories2[len(categories2) - 1])
         
-        chart2.addSeries(lineSeriesVOCD_w)
-        chart2.addSeries(lineSeriesVOCD_c)
-        chart2.addSeries(lineSeriesAverageVOCD_w)
+        self.chart2.addSeries(lineSeriesVOCD_w)
+        self.chart2.addSeries(lineSeriesVOCD_c)
+        self.chart2.addSeries(lineSeriesAverageVOCD_w)
         lineSeriesAverageVOCD_w.attachAxis(axisX2)
         lineSeriesAverageVOCD_w.attachAxis(axisY2)
         lineSeriesVOCD_w.attachAxis(axisX2)
@@ -432,26 +442,26 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesVOCD_c.setPen(penVOCD_c)
         lineSeriesAverageVOCD_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
 
-        chart2.legend().setVisible(True)
-        chart2.legend().setAlignment(Qt.AlignBottom)
+        self.chart2.legend().setVisible(True)
+        self.chart2.legend().setAlignment(Qt.AlignBottom)
 
-        chartView2 = QChartView(chart2)
-        chartView2.setRenderHint(QPainter.Antialiasing)
-        chartView2.setMinimumSize(500, 500)
+        self.chartView2 = QChartView(self.chart2)
+        self.chartView2.setRenderHint(QPainter.Antialiasing)
+        self.chartView2.setMinimumSize(500, 500)
 
         #MLU
-        chart3 =  QChart()
-        chart3.setTitle("平均語句長度")
-        chart3.setTitleFont(font)
+        self.chart3 =  QChart()
+        self.chart3.setTitle("平均語句長度")
+        self.chart3.setTitleFont(font)
 
         axisX3 = QBarCategoryAxis()
         axisY3 = QValueAxis()
-        chart3.addAxis(axisY3, Qt.AlignLeft)
+        self.chart3.addAxis(axisY3, Qt.AlignLeft)
         biggestValue3 = 20.0
 
         categories3 = []
         lineSeriesAverageMLU_w = QLineSeries(self)
-        lineSeriesAverageMLU_w.setName(norm['age'])
+        lineSeriesAverageMLU_w.setName('MLU-w('+ norm['age'] + ')')
         lineSeriesMLU_w = QLineSeries(self)
         lineSeriesMLU_w.setName("MLU-w")
         lineSeriesMLU_c = QLineSeries(self)
@@ -468,13 +478,13 @@ class chartTab(QtWidgets.QWidget):
                     biggestValue3 += 10
         axisY3.setRange(0.0, biggestValue3)
         axisX3.append(categories3)
-        chart3.addAxis(axisX3, Qt.AlignBottom)
+        self.chart3.addAxis(axisX3, Qt.AlignBottom)
         if len(categories3) - 1 > 0 :
             axisX3.setRange(categories3[0], categories3[len(categories3) - 1])
         
-        chart3.addSeries(lineSeriesMLU_w)
-        chart3.addSeries(lineSeriesMLU_c)
-        chart3.addSeries(lineSeriesAverageMLU_w)
+        self.chart3.addSeries(lineSeriesMLU_w)
+        self.chart3.addSeries(lineSeriesMLU_c)
+        self.chart3.addSeries(lineSeriesAverageMLU_w)
         lineSeriesAverageMLU_w.attachAxis(axisX3)
         lineSeriesAverageMLU_w.attachAxis(axisY3)
 
@@ -493,20 +503,20 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesMLU_c.setPen(penMLU_c)
         lineSeriesAverageMLU_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
 
-        chart3.legend().setVisible(True)
-        chart3.legend().setAlignment(Qt.AlignBottom)
+        self.chart3.legend().setVisible(True)
+        self.chart3.legend().setAlignment(Qt.AlignBottom)
 
-        chartView3 = QChartView(chart3)
-        chartView3.setRenderHint(QPainter.Antialiasing)
-        chartView3.setMinimumSize(500, 500)
+        self.chartView3 = QChartView(self.chart3)
+        self.chartView3.setRenderHint(QPainter.Antialiasing)
+        self.chartView3.setMinimumSize(500, 500)
 
         #self.layout.addWidget(chartView)
         self.scroll_vbox.addWidget(chartView)
 
 
         self.chartLayout = QtWidgets.QHBoxLayout()
-        self.chartLayout.addWidget(chartView2)
-        self.chartLayout.addWidget(chartView3)
+        self.chartLayout.addWidget(self.chartView2)
+        self.chartLayout.addWidget(self.chartView3)
         self.scroll_vbox.addLayout(self.chartLayout)
 
         self.layout.addWidget(self.scroll)
