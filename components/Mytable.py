@@ -154,7 +154,8 @@ class Mytable(QtWidgets.QWidget):
                         self.tableWidget.setCurrentCell(i,1)
                         return False
 
-            if ((self.tableWidget.item(i,0) != None and self.tableWidget.item(i,0).text() != '') and
+            if (((self.tableWidget.item(i,0) != None and self.tableWidget.item(i,0).text() != '') or
+                (self.tableWidget.item(i,1) != None and self.tableWidget.item(i,1).text() != '')) and
                 (x == i) and (y == 3 or y == 4)):
                 msgBox = QtWidgets.QMessageBox()
                 msgBox.setIcon(QtWidgets.QMessageBox.Warning)
