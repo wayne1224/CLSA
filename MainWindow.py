@@ -98,7 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 if checkTab2:
                     warnText += '轉錄表'
 
-                close = QtWidgets.QMessageBox.warning(self,
+                close = QtWidgets.QMessageBox.question(self,
                                 "CLSA",
                                 warnText,
                                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)

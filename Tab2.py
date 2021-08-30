@@ -149,6 +149,7 @@ class Tab2(QtWidgets.QWidget):
         font.setPointSize(14)
         self.cmb_role.setFont(font)
         self.cmb_role.setEditable(True)
+        self.cmb_role.lineEdit().setFont(font)
         self.cmb_role.setObjectName("cmb_role")
         self.cmb_role.addItem("")
         self.cmb_role.addItem("")
