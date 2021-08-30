@@ -18,6 +18,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from utils.audio import STT
 from utils.worker import Worker
 from collections import OrderedDict
+import qtawesome as qta
 
 
 class Tab2(QtWidgets.QWidget):
@@ -122,10 +123,16 @@ class Tab2(QtWidgets.QWidget):
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()
         self.verticalLayout_5.setSpacing(2)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
+        self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
+        self.icon = QtWidgets.QLabel()
+        self.icon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(20, 20)))
+        self.icon.setMaximumSize(QtCore.QSize(20, 20))
+        self.horizontalLayout_8.addWidget(self.icon)
         self.lbl_rolePrompt = QtWidgets.QLabel()
-        self.lbl_rolePrompt.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.lbl_rolePrompt.setObjectName("lbl_rolePrompt")
-        self.verticalLayout_5.addWidget(self.lbl_rolePrompt)
+        self.horizontalLayout_8.addWidget(self.lbl_rolePrompt)
+        self.verticalLayout_5.addLayout(self.horizontalLayout_8)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.lbl_role = QtWidgets.QLabel()
@@ -407,7 +414,7 @@ class Tab2(QtWidgets.QWidget):
         self.lbl_trans.setText(_translate("", "轉錄者："))
         self.lbl_caseID.setText(_translate("", "個案編號："))
         #self.btn_searchCase.setText(_translate("", "查詢"))
-        self.lbl_rolePrompt.setText(_translate("", "成人請自行輸入編號 ex: A, B"))
+        self.lbl_rolePrompt.setText(_translate("", "成人請自行輸入英文編號 ex: A, B"))
         self.lbl_role.setText(_translate("", "編號："))
         self.cmb_role.setItemText(0, _translate("Form", "兒童"))
         self.cmb_role.setItemText(1, _translate("Form", "語境"))
