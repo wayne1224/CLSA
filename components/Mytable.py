@@ -233,6 +233,16 @@ class Mytable(QtWidgets.QWidget):
             childID = self.tableWidget.item(rowIndex,3)
             childUtter = self.tableWidget.item(rowIndex,4)
 
+            #阻擋使用者強行輸入
+            if((childID != None and childID.text() != '' and childUtter != None and childUtter.text() != '') or
+                childUtter.font().bold()):
+                adultID.setText('')
+                adultUtter.setText('')
+            if((adultID != None and adultID.text() != '' and adultUtter != None and adultUtter.text() != '') or
+                adultUtter.font().bold()):
+                childID.setText('')
+                childUtter.setText('')
+
             #成人語句
             if adultUtter != None and adultUtter.text() != '' and not adultUtter.font().bold():
                 #檢查是否強行輸入
