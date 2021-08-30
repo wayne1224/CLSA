@@ -67,7 +67,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
 
     def checkTab2Case(self):
         if self.currentIndex() == 2 and not self.tab2.caseID:
-            informBox = QtWidgets.QMessageBox.warning(self, '警告','請先儲存收錄表或匯入個案', QtWidgets.QMessageBox.Ok)
+            informBox = QtWidgets.QMessageBox.warning(self, '警告','請先建立新個案或匯入個案', QtWidgets.QMessageBox.Ok)
 
     def checkTab2Changed(self):
         if ((self.currentIndex() == 3 and self.tab2.isEdit()) or (self.currentIndex() == 3 and self.tab3.getEdit())):

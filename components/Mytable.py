@@ -273,20 +273,6 @@ class Mytable(QtWidgets.QWidget):
                     if item is not None:
                         self.menu = QtWidgets.QMenu(self)
 
-                        #是否採計
-                        f = item.font()
-                        if index.column() != 2:
-                            if f.bold():
-                                self.setValid = QtWidgets.QAction('採計')
-                                self.setValid.setObjectName("setValid")
-                                self.setValid.triggered.connect(partial(self.toValid,f,item,index))
-                                self.menu.addAction(self.setValid)
-                            else:
-                                self.setNotValid = QtWidgets.QAction('不採計')
-                                self.setNotValid.setObjectName("setNotValid")
-                                self.setNotValid.triggered.connect(partial(self.toNotValid,f,item,index))
-                                self.menu.addAction(self.setNotValid)
-
                         #插入選項
                         self.insert = QtWidgets.QMenu('插入', self)
                         self.insertUp = QtWidgets.QAction('向上插入一列')
@@ -296,48 +282,63 @@ class Mytable(QtWidgets.QWidget):
                         self.insertDown.triggered.connect(partial(self.insertRow,index,'down'))
                         self.insert.addAction(self.insertDown)
                         self.menu.addMenu(self.insert)
-                        
-                        #兒童、成人語句轉換
-                        if index.column() == 1:
-                            self.toChild = QtWidgets.QAction('轉成兒童語句')
-                            self.toChild.setObjectName("toChild")
-                            if f.bold():    #不採計的語句轉換
-                                self.toChild.triggered.connect(partial(self.changeRole,item,index,None,False))
-                            else:           #採計的語句轉換
-                                self.toChild.triggered.connect(partial(self.changeRole,item,index,None,True))
-                            self.menu.addAction(self.toChild)
-                        elif index.column() == 4:
-                            if f.bold():    #不採計的語句轉換
-                                self.toAdultNotValid = QtWidgets.QAction('轉成成人語句')
-                                self.toAdultNotValid.setObjectName("toAdultNotValid")
-                                self.toAdultNotValid.triggered.connect(partial(self.changeRole,item,index,'',False))
-                                self.menu.addAction(self.toAdultNotValid)
-                            else:           #採計的語句轉換
-                                self.toAdult = QtWidgets.QMenu('轉成成人語句', self)
-                                self.toAdult.setObjectName("toAdult")
-                                #已有的成人編號
-                                self.oldID = []
-                                for ID in self.adultID.keys():
-                                    self.temp = QtWidgets.QAction(ID)
-                                    self.oldID.append(self.temp)
-                                    self.oldID[len(self.oldID)-1].triggered.connect(partial(self.changeRole,item,index,ID,True))
-                                    self.toAdult.addAction(self.oldID[len(self.oldID)-1])
-                                #新增編號輸入欄
-                                self.inputID = QtWidgets.QLineEdit()
-                                self.inputID.setPlaceholderText('新增編號')
-                                self.inputID.setMaximumWidth(70)
-                                self.addID = QtWidgets.QWidgetAction(self)
-                                self.addID.setDefaultWidget(self.inputID)
-                                self.toAdult.addAction(self.addID)
-                                #確認按鈕
-                                self.btnConfirmID = QtWidgets.QPushButton('確認')
-                                self.btnConfirmID.setMaximumWidth(70)
-                                self.btnConfirmID.clicked.connect(partial(self.addNewID,item,index))
-                                self.confirmID = QtWidgets.QWidgetAction(self)
-                                self.confirmID.setDefaultWidget(self.btnConfirmID)
-                                self.toAdult.addAction(self.confirmID)
-                                #將子menu加入原本的menu裡
-                                self.menu.addMenu(self.toAdult)
+
+                        if item.text():
+                            #是否採計
+                            f = item.font()
+                            if index.column() != 2:
+                                if f.bold():
+                                    self.setValid = QtWidgets.QAction('採計')
+                                    self.setValid.setObjectName("setValid")
+                                    self.setValid.triggered.connect(partial(self.toValid,f,item,index))
+                                    self.menu.addAction(self.setValid)
+                                else:
+                                    self.setNotValid = QtWidgets.QAction('不採計')
+                                    self.setNotValid.setObjectName("setNotValid")
+                                    self.setNotValid.triggered.connect(partial(self.toNotValid,f,item,index))
+                                    self.menu.addAction(self.setNotValid)
+                            
+                            #兒童、成人語句轉換
+                            if index.column() == 1:
+                                self.toChild = QtWidgets.QAction('轉成兒童語句')
+                                self.toChild.setObjectName("toChild")
+                                if f.bold():    #不採計的語句轉換
+                                    self.toChild.triggered.connect(partial(self.changeRole,item,index,None,False))
+                                else:           #採計的語句轉換
+                                    self.toChild.triggered.connect(partial(self.changeRole,item,index,None,True))
+                                self.menu.addAction(self.toChild)
+                            elif index.column() == 4:
+                                if f.bold():    #不採計的語句轉換
+                                    self.toAdultNotValid = QtWidgets.QAction('轉成成人語句')
+                                    self.toAdultNotValid.setObjectName("toAdultNotValid")
+                                    self.toAdultNotValid.triggered.connect(partial(self.changeRole,item,index,'',False))
+                                    self.menu.addAction(self.toAdultNotValid)
+                                else:           #採計的語句轉換
+                                    self.toAdult = QtWidgets.QMenu('轉成成人語句', self)
+                                    self.toAdult.setObjectName("toAdult")
+                                    #已有的成人編號
+                                    self.oldID = []
+                                    for ID in self.adultID.keys():
+                                        self.temp = QtWidgets.QAction(ID)
+                                        self.oldID.append(self.temp)
+                                        self.oldID[len(self.oldID)-1].triggered.connect(partial(self.changeRole,item,index,ID,True))
+                                        self.toAdult.addAction(self.oldID[len(self.oldID)-1])
+                                    #新增編號輸入欄
+                                    self.inputID = QtWidgets.QLineEdit()
+                                    self.inputID.setPlaceholderText('新增編號')
+                                    self.inputID.setMaximumWidth(70)
+                                    self.addID = QtWidgets.QWidgetAction(self)
+                                    self.addID.setDefaultWidget(self.inputID)
+                                    self.toAdult.addAction(self.addID)
+                                    #確認按鈕
+                                    self.btnConfirmID = QtWidgets.QPushButton('確認')
+                                    self.btnConfirmID.setMaximumWidth(70)
+                                    self.btnConfirmID.clicked.connect(partial(self.addNewID,item,index))
+                                    self.confirmID = QtWidgets.QWidgetAction(self)
+                                    self.confirmID.setDefaultWidget(self.btnConfirmID)
+                                    self.toAdult.addAction(self.confirmID)
+                                    #將子menu加入原本的menu裡
+                                    self.menu.addMenu(self.toAdult)
 
                         self.menu.exec_(event.globalPos())
 
