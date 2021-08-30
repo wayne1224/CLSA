@@ -525,6 +525,12 @@ class chartTab(QtWidgets.QWidget):
         #self.layout.addWidget(chartView)
         self.scroll_vbox.addWidget(chartView)
 
+        #如果樣本數不足，則須提示
+        if analysisFail != 0:
+            self.hintArea = QtWidgets.QHBoxLayout()
+            self.hintArea.addWidget(self.graph_hint_icon)
+            self.hintArea.addWidget(self.graph_hint_text)
+            self.scroll_vbox.addLayout(self.hintArea) 
 
         self.chartLayout = QtWidgets.QHBoxLayout()
         self.chartLayout.addWidget(self.chartView2)
@@ -533,8 +539,4 @@ class chartTab(QtWidgets.QWidget):
 
         self.layout.addWidget(self.scroll)
 
-        if analysisFail != 0:
-            self.hintArea = QtWidgets.QHBoxLayout()
-            self.hintArea.addWidget(self.graph_hint_icon)
-            self.hintArea.addWidget(self.graph_hint_text)
-            self.scroll_vbox.addLayout(self.hintArea) 
+        

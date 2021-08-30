@@ -151,7 +151,7 @@ class NormModifyTab(QtWidgets.QWidget):
         self.hbox_deleteAge.addWidget(self.comboBox_delete)
 
         ##delete button
-        self.deleteAgeBtn = QtWidgets.QPushButton("刪除")
+        self.deleteAgeBtn = QtWidgets.QPushButton("  刪除  ")
         self.deleteAgeBtn.setFont(font)
         self.deleteAgeBtn.setObjectName("deleteAgeBtn")
         self.hbox_deleteAge.addWidget(self.deleteAgeBtn)
@@ -346,7 +346,7 @@ class NormModifyTab(QtWidgets.QWidget):
 
     def deleteAge(self):
         warnText = f'<p style="font-size:13pt; color: #525252;">確定要刪除 {self.comboBox_delete.currentText()}嗎?</p>\n'
-        delete = QtWidgets.QMessageBox.warning(self,
+        delete = QtWidgets.QMessageBox.question(self,
                                 "CLSA",
                                 warnText,
                                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)

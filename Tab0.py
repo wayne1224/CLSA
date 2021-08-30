@@ -213,6 +213,11 @@ class SearchTab(QtWidgets.QWidget):
         while self.tableWidget.rowCount() > 0:
             self.tableWidget.removeRow(self.tableWidget.rowCount()-1)
 
+        #清空所有input欄
+        self.input_caseID.setText("")
+        self.input_Name.setText("")
+        self.input_SLP.setText("")
+
     def deleteDoc(self , objID , idx):
         delete = QtWidgets.QMessageBox.warning(self,
                             "CLSA",
