@@ -512,6 +512,12 @@ class Tab2(QtWidgets.QWidget):
         self.btn_save.setEnabled(True)
         self.btn_generateAndSave.setEnabled(True)
 
+    def _setTableChildIDUneditable(self):
+        rows = self.tableWidget.tableWidget.rowCount()
+        for i in range(rows):
+            item = self.tableWidget.tableWidget.item(i,3)
+            item.setFlags(item.flags() & ~QtCore.Qt.ItemIsEditable)
+
     #將欄位邊框設成紅色並跳出提示視窗
     def _setInpBorderColorAndJumpMsg(self, opt):
         #復原所有欄位邊框顏色
@@ -636,6 +642,7 @@ class Tab2(QtWidgets.QWidget):
 
         self.tableWidget.checkAllID()
         self._setColumnColor()
+        self._setTableChildIDUneditable()
 
     def _setColumnColor(self):
         for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
