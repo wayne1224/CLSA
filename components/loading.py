@@ -12,7 +12,7 @@ class LoadingScreen(QtWidgets.QWidget):
         self.label1.setAlignment(QtCore.Qt.AlignCenter)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint|QtCore.Qt.CustomizeWindowHint)
         self.label = QtWidgets.QLabel(self)
-        self.movie = QtGui.QMovie('./image/loading2.gif')
+        self.movie = QtGui.QMovie('./image/loading.gif')
         self.label.setMovie(self.movie)
         self.setWindowModality(QtCore.Qt.ApplicationModal)
         layout.addWidget(self.label1)
