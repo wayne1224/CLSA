@@ -215,7 +215,14 @@ class chartTab(QtWidgets.QWidget):
         self.scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.scroll.setWidgetResizable(True)
         self.scroll.setWidget(self.virtualWidget)
-        ##
+        
+        # Hint Widget Under Graphs
+        self.graph_hint_icon = QtWidgets.QLabel()
+        self.graph_hint_icon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(25, 25)))
+        self.graph_hint_icon.setMaximumSize(QtCore.QSize(25, 25))
+        self.graph_hint_text = QtWidgets.QLabel("樣本數不足無法產生圖表")
+        self.graph_hint_text.setMaximumSize(QtCore.QSize(16777215, 25))
+        
         
 
     def search(self):
@@ -266,20 +273,23 @@ class chartTab(QtWidgets.QWidget):
 
     # #清除原本layout裡的Widget
     def clearLayout(self):
+        
+        if self.scroll_vbox.count() > 0:
+            self.chartView2.hide()
+            self.chartView3.hide()
+            #self.hintArea.hide()
+
         for i in reversed(range(self.scroll_vbox.count())):
             #print(self.scroll_vbox.itemAt(i))
             #self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
             if self.scroll_vbox.itemAt(i).layout():
-                self.chartView2.hide()
-                self.chartView3.hide()
                 self.scroll_vbox.itemAt(i).layout().deleteLater()
                 self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
                 
             elif self.scroll_vbox.itemAt(i).widget():
                 self.scroll_vbox.itemAt(i).widget().deleteLater()
                 self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
-            
-   
+
     def create_linebarchart(self, doc, name, birthday):
         #self.procCaseDocs.emit(doc)
 
@@ -402,20 +412,22 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesVOCD_w.setName("VOCD-w")
         lineSeriesVOCD_c = QLineSeries(self)
         lineSeriesVOCD_c.setName("VOCD-c")
-        analsisfail = 0
+        analysisFail = 0
         # print(norm['data']['vocd-w'])
         for i, index in enumerate(caseDocs):
             if index['transcription']['analysis'] != None:
                 if (index['transcription']['analysis']['VOCD-w'] != '樣本數不足') :
                     strDate = index['date'].strftime("%Y-%m-%d %H:%M")
                     categories2.append(strDate)
-                    lineSeriesAverageVOCD_w.append(QPoint(i - analsisfail, float(norm['data']['vocd-w'])))
-                    lineSeriesVOCD_w.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-w']))
-                    lineSeriesVOCD_c.append(QPoint(i - analsisfail, index['transcription']['analysis']['VOCD-c']))
+                    lineSeriesAverageVOCD_w.append(QPoint(i - analysisFail, float(norm['data']['vocd-w'])))
+                    lineSeriesVOCD_w.append(QPoint(i - analysisFail, index['transcription']['analysis']['VOCD-w']))
+                    lineSeriesVOCD_c.append(QPoint(i - analysisFail, index['transcription']['analysis']['VOCD-c']))
                     while (index['transcription']['analysis']['VOCD-w'] > biggestValue2 or\
                            index['transcription']['analysis']['VOCD-c'] > biggestValue2) :
                         biggestValue2 += 20
-                else : analsisfail += 1
+                else: 
+                    analysisFail += 1
+
         axisY2.setRange(0.0, biggestValue2)
         axisX2.append(categories2)
         self.chart2.addAxis(axisX2, Qt.AlignBottom)
@@ -520,3 +532,9 @@ class chartTab(QtWidgets.QWidget):
         self.scroll_vbox.addLayout(self.chartLayout)
 
         self.layout.addWidget(self.scroll)
+
+        if analysisFail != 0:
+            self.hintArea = QtWidgets.QHBoxLayout()
+            self.hintArea.addWidget(self.graph_hint_icon)
+            self.hintArea.addWidget(self.graph_hint_text)
+            self.scroll_vbox.addLayout(self.hintArea) 
