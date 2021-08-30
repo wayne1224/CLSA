@@ -45,7 +45,7 @@ class searchForm(QtWidgets.QWidget):
 
         # table font
         tfont = QtGui.QFont()
-        tfont.setFamily("Agency FB")
+        tfont.setFamily("微軟正黑體")
         tfont.setPointSize(10)
 
         self.tableWidget.setSizePolicy(sizePolicy)
@@ -325,6 +325,7 @@ class chartTab(QtWidgets.QWidget):
         chart =  QChart()
         chart.setTitle(name + " 就診紀錄")
         font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
         font.setPixelSize(28)
         font.setBold(True)
         chart.setTitleFont(font)
@@ -342,6 +343,7 @@ class chartTab(QtWidgets.QWidget):
         # sumContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
         # recordCount = 0
         labelFont = QtGui.QFont()
+        labelFont.setFamily("微軟正黑體")
         labelFont.setBold(True)
         labelFont.setPixelSize(20)
         barSeries = QBarSeries(self)
@@ -396,6 +398,7 @@ class chartTab(QtWidgets.QWidget):
 
         barFont =  QtGui.QFont()
         barFont.setPixelSize(20)
+        barFont.setFamily("微軟正黑體")
         barFont.setBold(True)
         chart.legend().setFont(barFont)
         chart.legend().setVisible(True)
