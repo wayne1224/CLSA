@@ -245,16 +245,6 @@ class Mytable(QtWidgets.QWidget):
 
             #成人語句
             if adultUtter != None and adultUtter.text() != '' and not adultUtter.font().bold():
-                #檢查是否強行輸入
-                if((childID != None and childID.text() != '' and childUtter != None and childUtter.text() != '') or
-                    childUtter.font().bold()):
-                    adultID.setText('')
-                    adultUtter.setText('')
-                if((adultID != None and adultID.text() != '' and adultUtter != None and adultUtter.text() != '') or
-                    adultUtter.font().bold()):
-                    childID.setText('')
-                    childUtter.setText('')
-
                 if adultID == None:
                     self.tableWidget.setItem(rowIndex, 0, empty)
                     adultID = self.tableWidget.item(rowIndex, 0)
@@ -273,16 +263,6 @@ class Mytable(QtWidgets.QWidget):
                         self.tableWidget.setItem(rowIndex,0,empty)
             #兒童語句
             if childUtter != None and childUtter.text() != '' and not childUtter.font().bold():
-                #阻擋使用者強行輸入
-                if((childID != None and childID.text() != '' and childUtter != None and childUtter.text() != '') or
-                    childUtter.font().bold()):
-                    adultID.setText('')
-                    adultUtter.setText('')
-                if((adultID != None and adultID.text() != '' and adultUtter != None and adultUtter.text() != '') or
-                    adultUtter.font().bold()):
-                    childID.setText('')
-                    childUtter.setText('')
-                
                 checkChildID += 1
                 if childID == None:
                     self.tableWidget.setItem(rowIndex, 3, empty)
