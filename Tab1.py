@@ -976,8 +976,8 @@ class Myform(QtWidgets.QWidget):
             }
             if (self.saveExamination()):
                 if (self.importSingal) : 
-                    close = QtWidgets.QMessageBox.warning(self,
-                                    "CLSA",
+                    close = QtWidgets.QMessageBox.question(self,
+                                    "更新",
                                     "確定要更新舊的資料?",
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                     if close == QtWidgets.QMessageBox.Yes :
@@ -988,15 +988,15 @@ class Myform(QtWidgets.QWidget):
                             # print(upsert2[0] and upsert1[1])
                             if upsert2[0] == 'update':
                                 self.saveForm = self.returnTab1Data()
-                                win32api.MessageBox(0, '更新成功', '提示')
+                                informBox = QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
                             if upsert2[0] == 'insert' :
                                 self.saveForm = self.returnTab1Data()
-                                win32api.MessageBox(0, '新增成功', '提示')
-                            caseIDandDate = {'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
-                            self.procStart.emit(caseIDandDate)
+                                informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
+                                caseIDandDate = {'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
+                                self.procStart.emit(caseIDandDate)
                             return True
                         else :
-                            win32api.MessageBox(0, '新增失敗', '提示')
+                            informBox = QtWidgets.QMessageBox.information(self, '通知','新增失敗', QtWidgets.QMessageBox.Ok)
                             return False
                     elif close == QtWidgets.QMessageBox.No :
                         event.ignore()
@@ -1010,18 +1010,18 @@ class Myform(QtWidgets.QWidget):
                         # print(upsert2[0] and upsert1[1])
                         if upsert2[0] == 'update':
                             self.saveForm = self.returnTab1Data()
-                            win32api.MessageBox(0, '更新成功', '提示')
+                            informBox = QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
                         if upsert2[0] == 'insert' :
                             self.saveForm = self.returnTab1Data()
-                            win32api.MessageBox(0, '新增成功', '提示')
-                        caseIDandDate = {'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
-                        self.procStart.emit(caseIDandDate)
+                            informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
+                            caseIDandDate = {'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
+                            self.procStart.emit(caseIDandDate)
                         return True
                     else :
-                        win32api.MessageBox(0, '新增失敗', '提示')
+                        informBox = QtWidgets.QMessageBox.information(self, '通知','新增失敗', QtWidgets.QMessageBox.Ok)
                         return False
             else:
-                win32api.MessageBox(0, '資料已更新', '提示')
+                informBox = QtWidgets.QMessageBox.information(self, '通知','資料已更新', QtWidgets.QMessageBox.Ok)
 
     #檢查是否有變更
     def saveExamination (self) :
@@ -1103,6 +1103,7 @@ class Myform(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot()
     def clearContent(self) :
+        self.clearRedFrame()
         self.importSingal = 0
         self.input_caseID.setText('')
         self.input_caseName.setText('')
