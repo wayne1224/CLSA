@@ -325,7 +325,7 @@ class chartTab(QtWidgets.QWidget):
         chart =  QChart()
         chart.setTitle(name + " 就診紀錄")
         font = QtGui.QFont()
-        font.setPixelSize(24)
+        font.setPixelSize(28)
         font.setBold(True)
         chart.setTitleFont(font)
         categories = ["名詞", "動詞", "形容詞", "數詞", "量詞", "代詞", "副詞", "虛詞"]
@@ -341,13 +341,16 @@ class chartTab(QtWidgets.QWidget):
         axisY.setTitleFont(font)
         # sumContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
         # recordCount = 0
+        labelFont = QtGui.QFont()
+        labelFont.setBold(True)
+        labelFont.setPixelSize(20)
         barSeries = QBarSeries(self)
         chart.addSeries(barSeries)
         for index in caseDocs:
             if index['transcription']['analysis'] != None:
                 strDate = index['date'].strftime("%Y-%m-%d %H:%M")
                 set = QBarSet(strDate)
-                set.setLabelFont(font)
+                set.setLabelFont(labelFont)
                 # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
                 #     if key != 'percentage':
                 #         if key == 'sum': recordCount += 1
@@ -372,6 +375,10 @@ class chartTab(QtWidgets.QWidget):
         # print('last:' + str(biggestValue))
         barSeries.attachAxis(axisX)
         barSeries.attachAxis(axisY)
+
+        axisX.setLabelsFont(labelFont)
+        axisY.setLabelsFont(labelFont)
+
         # lineSeries = QLineSeries(self)
         # lineSeries.setName("平均值")
         # for i, (key, value) in enumerate(sumContent.items()):
@@ -387,6 +394,10 @@ class chartTab(QtWidgets.QWidget):
         # pen.setWidth(3)
         # lineSeries.setPen(pen)
 
+        barFont =  QtGui.QFont()
+        barFont.setPixelSize(20)
+        barFont.setBold(True)
+        chart.legend().setFont(barFont)
         chart.legend().setVisible(True)
         chart.legend().setAlignment(Qt.AlignBottom)
 
@@ -453,7 +464,10 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesVOCD_w.setPen(penVOCD_w)
         lineSeriesVOCD_c.setPen(penVOCD_c)
         lineSeriesAverageVOCD_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
+        axisX2.setLabelsFont(labelFont)
+        axisY2.setLabelsFont(labelFont)
 
+        self.chart2.legend().setFont(barFont)
         self.chart2.legend().setVisible(True)
         self.chart2.legend().setAlignment(Qt.AlignBottom)
 
@@ -514,7 +528,10 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesMLU_w.setPen(penMLU_w)
         lineSeriesMLU_c.setPen(penMLU_c)
         lineSeriesAverageMLU_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
+        axisX3.setLabelsFont(labelFont)
+        axisY3.setLabelsFont(labelFont)
 
+        self.chart3.legend().setFont(barFont)
         self.chart3.legend().setVisible(True)
         self.chart3.legend().setAlignment(Qt.AlignBottom)
 
