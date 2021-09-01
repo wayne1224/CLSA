@@ -998,10 +998,6 @@ class Myform(QtWidgets.QWidget):
                         else :
                             informBox = QtWidgets.QMessageBox.information(self, '通知','新增失敗', QtWidgets.QMessageBox.Ok)
                             return False
-                    elif close == QtWidgets.QMessageBox.No :
-                        event.ignore()
-                    else:
-                        event.ignore()
                 else :
                     upsert1 = database.DatabaseApi.upsertChildData(childData)
                     upsert2 = database.DatabaseApi.upsertRecording(self.input_caseID.text(), DateTimeRecordDate, recording)
