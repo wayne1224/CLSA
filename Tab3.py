@@ -539,12 +539,21 @@ class AnalysisTab(QtWidgets.QWidget):
         self.tableWidget.item(15,3).setText(str(Analysis['Function']['T']))
         self.tableWidget.item(16,3).setText(str(Analysis['Function']['I']))
         self.tableWidget.item(17,3).setText('{:.1%}'.format(Analysis['Function']['percentage']))
-        self.tableWidget.item(18,3).setText(str(Analysis['VOCD-w']))
-        self.tableWidget.item(19,3).setText(str(Analysis['VOCD-c']))
         self.tableWidget.item(20,3).setText(str(Analysis['MLU-w']))
         self.tableWidget.item(21,3).setText(str(Analysis['MLU-c']))
         self.tableWidget.item(22,3).setText(str(Analysis['MLU5-w']))
         self.tableWidget.item(23,3).setText(str(Analysis['MLU5-c']))
+
+        if Analysis['VOCD-c'] == "樣本數不足":
+            self.tableWidget.item(19,3).setText("字數不足50個無法計算")
+        else:
+            self.tableWidget.item(19,3).setText(str(Analysis['VOCD-c']))
+
+        if Analysis['VOCD-w'] == "樣本數不足":
+            self.tableWidget.item(18,3).setText("詞數不足50個無法計算")
+        else:
+            self.tableWidget.item(18,3).setText(str(Analysis['VOCD-w']))
+        
         
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
