@@ -730,6 +730,7 @@ class Myform(QtWidgets.QWidget):
             participants.append("媽媽")
         if self.ckb_others.isChecked() and self.input_others.text():
             participants.append(self.input_others.text())
+
         
         data = {
             'caseID' : self.input_caseID.text(),
@@ -770,8 +771,9 @@ class Myform(QtWidgets.QWidget):
 
     #儲存資料到資料庫 
     def save (self, event): 
-        inputError = 0
+        inputError = 0 
         ageError = 0
+        otherError = 0
 
         #收錄者
         if not self.input_SLP.text(): 
@@ -839,8 +841,11 @@ class Myform(QtWidgets.QWidget):
             self.ckb_others.setStyleSheet("border: 1px;")    
             self.input_others.setStyleSheet("border: 1px solid initial;")
         else :
-            self.layoutParticipants.setStyleSheet("border: 1px;")
-            self.input_others.setStyleSheet("border: 1px solid initial;")
+            if (self.ckb_others.isChecked() and not(self.input_others.text())):
+                otherError = 1
+            else:
+                self.layoutParticipants.setStyleSheet("border: 1px;")
+                self.input_others.setStyleSheet("border: 1px solid initial;")
 
         #誘發題材
         if not self.input_inducement.text():
@@ -888,7 +893,9 @@ class Myform(QtWidgets.QWidget):
             # print ("save fail")
             warnText = '紅色框為必填欄位\n'
             if ageError > 0:
-                warnText += '生日日期請修正'
+                warnText += '請確認生日日期與收錄日期是否正確(經計算個案年齡已超過13歲)\n'
+            if otherError > 0:
+                warnText += '其他欄位有勾選但未填值'
             informBox = QtWidgets.QMessageBox.warning(self, '警告',warnText, QtWidgets.QMessageBox.Ok)
             # win32api.MessageBox(0, '紅色框為必填欄位', '警告')
             return False
@@ -1144,6 +1151,7 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_few.setChecked(False)
         self.group_needHelp.setExclusive(True)
 
+        self.dateEdit_recordDate.setDateTime(QtCore.QDateTime.currentDateTime())
         self.dateEdit_birthday.setDate(QtCore.QDate(2000, 1, 1))
         self.lbl_showTotalUtterNum.setText('')
         self.lbl_showValidUtterNum.setText('')
