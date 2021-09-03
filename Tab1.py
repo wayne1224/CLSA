@@ -443,6 +443,7 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_camera.setFont(font)
         self.rbtn_camera.setObjectName("rbtn_camera")
         self.horizontalLayout_7.addWidget(self.rbtn_camera)
+
         self.rbtn_otherEquip = QtWidgets.QRadioButton()
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -597,7 +598,7 @@ class Myform(QtWidgets.QWidget):
         self.lbl_caseName.setText(_translate("", "個案姓名："))
         self.lbl_caseID.setText(_translate("", "個案編號："))
         self.lbl_gender.setText(_translate("", "性別："))
-        self.btn_search.setText(_translate("", "查詢"))
+        self.btn_search.setText(_translate("", "查詢個案並帶入"))
         self.rbtn_male.setText(_translate("", "男"))
         self.rbtn_female.setText(_translate("", "女"))
         self.lbl_recordDate.setText(_translate("", "收錄日期："))
@@ -1140,7 +1141,7 @@ class Myform(QtWidgets.QWidget):
 
         self.group_recordType.setExclusive(False)
         self.rbtn_camera.setChecked(False)
-        self.rbtn_cellphone.setCheckable(False)
+        self.rbtn_cellphone.setChecked(False)
         self.rbtn_pen.setChecked(False)
         self.rbtn_otherEquip.setChecked(False)
         self.group_recordType.setExclusive(True)
