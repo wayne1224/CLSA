@@ -443,6 +443,7 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_camera.setFont(font)
         self.rbtn_camera.setObjectName("rbtn_camera")
         self.horizontalLayout_7.addWidget(self.rbtn_camera)
+
         self.rbtn_otherEquip = QtWidgets.QRadioButton()
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -604,7 +605,7 @@ class Myform(QtWidgets.QWidget):
         self.lbl_caseName.setText(_translate("", "個案姓名："))
         self.lbl_caseID.setText(_translate("", "個案編號："))
         self.lbl_gender.setText(_translate("", "性別："))
-        self.btn_search.setText(_translate("", "查詢"))
+        self.btn_search.setText(_translate("", "查詢個案並帶入"))
         self.rbtn_male.setText(_translate("", "男"))
         self.rbtn_female.setText(_translate("", "女"))
         self.lbl_recordDate.setText(_translate("", "收錄日期："))
@@ -738,6 +739,7 @@ class Myform(QtWidgets.QWidget):
             participants.append("媽媽")
         if self.ckb_others.isChecked() and self.input_others.text():
             participants.append(self.input_others.text())
+
         
         data = {
             'caseID' : self.input_caseID.text(),
@@ -778,8 +780,9 @@ class Myform(QtWidgets.QWidget):
 
     #儲存資料到資料庫 
     def save (self, event): 
-        inputError = 0
+        inputError = 0 
         ageError = 0
+        otherError = 0
 
         #收錄者
         if not self.input_SLP.text(): 
@@ -847,8 +850,11 @@ class Myform(QtWidgets.QWidget):
             self.ckb_others.setStyleSheet("border: 1px;")    
             self.input_others.setStyleSheet("border: 1px solid initial;")
         else :
-            self.layoutParticipants.setStyleSheet("border: 1px;")
-            self.input_others.setStyleSheet("border: 1px solid initial;")
+            if (self.ckb_others.isChecked() and not(self.input_others.text())):
+                otherError = 1
+            else:
+                self.layoutParticipants.setStyleSheet("border: 1px;")
+                self.input_others.setStyleSheet("border: 1px solid initial;")
 
         #誘發題材
         if not self.input_inducement.text():
@@ -896,7 +902,9 @@ class Myform(QtWidgets.QWidget):
             # print ("save fail")
             warnText = '紅色框為必填欄位\n'
             if ageError > 0:
-                warnText += '生日日期請修正'
+                warnText += '請確認生日日期與收錄日期是否正確(經計算個案年齡已超過13歲)\n'
+            if otherError > 0:
+                warnText += '其他欄位有勾選但未填值'
             informBox = QtWidgets.QMessageBox.warning(self, '警告',warnText, QtWidgets.QMessageBox.Ok)
             # win32api.MessageBox(0, '紅色框為必填欄位', '警告')
             return False
@@ -1141,7 +1149,7 @@ class Myform(QtWidgets.QWidget):
 
         self.group_recordType.setExclusive(False)
         self.rbtn_camera.setChecked(False)
-        self.rbtn_cellphone.setCheckable(False)
+        self.rbtn_cellphone.setChecked(False)
         self.rbtn_pen.setChecked(False)
         self.rbtn_otherEquip.setChecked(False)
         self.group_recordType.setExclusive(True)
@@ -1153,6 +1161,7 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_few.setChecked(False)
         self.group_needHelp.setExclusive(True)
 
+        self.dateEdit_recordDate.setDateTime(QtCore.QDateTime.currentDateTime())
         self.dateEdit_birthday.setDate(QtCore.QDate(2000, 1, 1))
         self.lbl_showTotalUtterNum.setText('')
         self.lbl_showValidUtterNum.setText('')
