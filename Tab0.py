@@ -9,7 +9,7 @@ class SearchTab(QtWidgets.QWidget):
     #用來傳Document到各頁
     procDoc = QtCore.pyqtSignal(dict)
     procMain = QtCore.pyqtSignal(int, float)
-    procFind = QtCore.pyqtSignal()
+    procClear = QtCore.pyqtSignal()
 
     def __init__(self):
         super(SearchTab, self).__init__()
@@ -145,8 +145,10 @@ class SearchTab(QtWidgets.QWidget):
         self.retranslateUi()
 
         #QSS
-        # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Tab0.qss", "r").read())
         self.setStyleSheet(open("QSS/Tab0.qss", "r").read())
+
+        #紀錄當下會匯入的objectID
+        self.currentDoc_id = None
 
     def _search(self):
         cursor = database.DatabaseApi.findDocs(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
@@ -204,10 +206,15 @@ class SearchTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot()
     def importDoc(self , obj):
+        #紀錄當下document id
+        self.currentDoc_id = obj['_id']
+
+        #將Document傳到收錄表, 轉錄表, 彙整表
         self.procDoc.emit(obj)
+
         #通知彙整完整
         informBox = QtWidgets.QMessageBox.information(self, '通知','匯入完成', QtWidgets.QMessageBox.Ok)
-        self.procMain.emit(1, 0)
+        self.procMain.emit(1, 0) #切換到收錄表
 
         #清空Table
         while self.tableWidget.rowCount() > 0:
@@ -218,18 +225,34 @@ class SearchTab(QtWidgets.QWidget):
         self.input_Name.setText("")
         self.input_SLP.setText("")
 
+    @QtCore.pyqtSlot()
     def deleteDoc(self , objID , idx):
-        delete = QtWidgets.QMessageBox.warning(self,
+        warnText = ""
+
+        #若已匯入這筆紀錄
+        if objID == self.currentDoc_id:
+            warnText = "<p style='font-size:13pt; color: red;'>您正在修改這筆紀錄<br/>確定要刪除嗎?</p> \
+                            <p style='font-size:10pt; color: #f25f5c;'>刪除後就永遠無法回復</p>"
+        else:
+            warnText = "<p style='font-size:13pt; color: red;'>確定要刪除此資料嗎?</p> \
+                            <p style='font-size:10pt; color: #f25f5c;'>刪除後就永遠無法回復</p>"
+
+        delete = QtWidgets.QMessageBox.question(self,
                             "CLSA",
-                            '<p style="font-size:13pt; color: red;">確定要刪除此資料嗎?</p>',
-                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel)
+                            warnText,
+                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         if delete == QtWidgets.QMessageBox.Yes:
             if database.DatabaseApi.deleteDoc(objID):
                 self.tableWidget.removeRow(idx)
-                informBox = QtWidgets.QMessageBox.information(self, '成功','成功刪除個案', QtWidgets.QMessageBox.Ok)
+                QtWidgets.QMessageBox.information(self, '成功','成功刪除個案', QtWidgets.QMessageBox.Ok)
             else:
-                informBox = QtWidgets.QMessageBox.critical(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
-    
+                QtWidgets.QMessageBox.critical(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
+
+        if objID == self.currentDoc_id:
+            currentDoc_id = None
+            self.procClear.emit()
+
+
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         # Form.setWindowTitle(_translate("Form", "Form"))
