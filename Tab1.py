@@ -531,7 +531,7 @@ class Myform(QtWidgets.QWidget):
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_empty.sizePolicy().hasHeightForWidth())
-        self.btn_empty.setSizePolicy(sizePolicy)
+        #self.btn_empty.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(14)
         self.btn_empty.setFont(font)
@@ -543,9 +543,16 @@ class Myform(QtWidgets.QWidget):
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_save.sizePolicy().hasHeightForWidth())
-        self.btn_save.setSizePolicy(sizePolicy)
+        #self.btn_save.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(14)
+
+        self.btn_modify = QtWidgets.QPushButton()
+        self.btn_modify.setFont(font)
+        self.btn_modify.setObjectName("btn_modify")
+        self.btn_modify.setEnabled(False) #預設無法點擊
+        self.horizontalLayout_11.addWidget(self.btn_modify)
+
         self.btn_save.setFont(font)
         self.btn_save.clicked.connect(self.save)
         self.btn_save.setObjectName("btn_save")
@@ -631,8 +638,9 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_always.setText(_translate("", "總是"))
         self.lbl_participation.setText(_translate("", "配合參與度："))
         # self.lbl_anxietySit.setText(_translate("", "兒童焦慮情形："))
-        self.btn_empty.setText(_translate("", "清空欄位"))
-        self.btn_save.setText(_translate("", "儲存資料"))
+        self.btn_empty.setText(_translate("", "  清空欄位  "))
+        self.btn_save.setText(_translate("", "  新增一筆紀錄  "))
+        self.btn_modify.setText(_translate("", "  更新紀錄  "))
 
     # #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
     # @QtCore.pyqtSlot(dict)
