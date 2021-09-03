@@ -6,13 +6,16 @@ QPushButton#btn_search
 QPushButton#btn_empty
 {
     background-color: rgb(235, 38, 78);
-    width: 120;
 }
 
 QPushButton#btn_save
 {
     background-color: cornflowerblue;
-    width: 120;
+}
+
+QPushButton#btn_modify
+{
+    background-color: rgb(255, 202, 40);
 }
 
 QPushButton#btn_search:hover
@@ -28,4 +31,9 @@ QPushButton#btn_empty:hover
 QPushButton#btn_save:hover
 {
     background-color: rgb(90, 138, 226);
+}
+
+QPushButton#btn_modify:hover
+{
+    background-color: rgb(232, 185, 25);
 }
