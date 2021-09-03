@@ -19,9 +19,6 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab3 = AnalysisTab()
         self.tab4 = Tab4()
 
-        # #tab4裡的tab自動填滿
-        # self.tab4.tabBar().setDocumentMode(True)
-        # self.tab4.tabBar().setExpanding(True)
 
         #模糊特效
         self.blur_effect = QtWidgets.QGraphicsBlurEffect()
@@ -36,10 +33,11 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #設定tab的css
         self.setStyleSheet(open("QSS/MainTabWidget.qss", "r").read())
 
-        #設定Tab Signal
-        self.currentChanged.connect(self.checkTab2Case)
-        self.currentChanged.connect(self.checkTab2Changed)
-        self.currentChanged.connect(self.leaveTab1)
+        #切換Tab時，進行檢查
+        self.currentChanged.connect(self.checkTab2Case) #檢查是否已有紀錄匯入
+        self.currentChanged.connect(self.checkTab2Changed) #檢查TAB2是否有更動
+        self.currentChanged.connect(self.leaveTab1) 
+
         self.tab1.procStart.connect(self.tab2.setCaseRecord)
         self.tab2.procUtterNum.connect(self.tab1.getUtterNum)
         self.tab2.procChildUtter.connect(self.tab3.getChildUtterance)
@@ -51,18 +49,15 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab0.procDoc.connect(self.tab1.getDoc)
         self.tab0.procDoc.connect(self.tab2.getDoc)
         self.tab0.procDoc.connect(self.tab3.getDoc)
-        # self.tab0.procDoc.connect(self.tab4.create_piechart)
-        # self.tab0.procDoc.connect(self.tab4.create_linechart)
-        #self.tab0.procDoc.connect(self.tab4.create_linebarchart)
 
         #搜尋頁面按下搜尋時，其他頁面清空
-        #self.tab0.procClear.connect(self.tab1.clearContent)
+        self.tab0.procClear.connect(self.tab1.clearContent)
         self.tab1.procClear.connect(partial(self.tab2.clearTab, True))
         self.tab1.procClear.connect(self.tab3.clearContent)
         self.tab2.procClear.connect(self.tab3.clearContent)
 
-    def leaveTab1(self) :
-        if (self.currentIndex() != 1) :
+    def leaveTab1(self) : #用途???
+        if (self.currentIndex() != 1):
             self.tab1.clearRedFrame()
 
     def checkTab2Case(self):
