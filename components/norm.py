@@ -77,87 +77,87 @@ class NormModifyTab(QtWidgets.QWidget):
         self.horizontalLayout_8.addWidget(self.updateBtn)
         self.verticalLayout.addLayout(self.horizontalLayout_8)
 
-        #新增GroupBox
-        self.newAge_box = QtWidgets.QGroupBox("新增常模年紀選項")
-        self.newAge_box.setMaximumSize(QtCore.QSize(350, 140))
-        self.newAge_box.setFont(font)
+        # #新增GroupBox
+        # self.newAge_box = QtWidgets.QGroupBox("新增常模年紀選項")
+        # self.newAge_box.setMaximumSize(QtCore.QSize(350, 140))
+        # self.newAge_box.setFont(font)
         
-        self.hbox_newAge = QtWidgets.QHBoxLayout()
+        # self.hbox_newAge = QtWidgets.QHBoxLayout()
         
-        # self.label_newAge = QtWidgets.QLabel("新增年齡:")
-        # self.label_newAge.setMaximumSize(QtCore.QSize(250, 50))
-        # self.label_newAge.setFont(font)
-        # self.hbox_newAge.addWidget(self.label_newAge)
-        reg_ex = QtCore.QRegExp("十[一二]|[一兩二三四五六七八九]")
-        numValid = QtGui.QRegExpValidator(reg_ex)
+        # # self.label_newAge = QtWidgets.QLabel("新增年齡:")
+        # # self.label_newAge.setMaximumSize(QtCore.QSize(250, 50))
+        # # self.label_newAge.setFont(font)
+        # # self.hbox_newAge.addWidget(self.label_newAge)
+        # reg_ex = QtCore.QRegExp("十[一二]|[一兩二三四五六七八九]")
+        # numValid = QtGui.QRegExpValidator(reg_ex)
         
-        self.input_newAge = QtWidgets.QLineEdit()
-        self.input_newAge.setMaximumSize(QtCore.QSize(80, 50))
-        self.input_newAge.setFont(font)
-        self.input_newAge.setMaxLength(2)
-        self.input_newAge.setValidator(numValid)
-        self.hbox_newAge.addWidget(self.input_newAge)
+        # self.input_newAge = QtWidgets.QLineEdit()
+        # self.input_newAge.setMaximumSize(QtCore.QSize(80, 50))
+        # self.input_newAge.setFont(font)
+        # self.input_newAge.setMaxLength(2)
+        # self.input_newAge.setValidator(numValid)
+        # self.hbox_newAge.addWidget(self.input_newAge)
 
-        self.label_Age = QtWidgets.QLabel("歲")
-        self.label_Age.setMaximumSize(QtCore.QSize(40, 50))
-        self.label_Age.setFont(font)
-        self.hbox_newAge.addWidget(self.label_Age)
+        # self.label_Age = QtWidgets.QLabel("歲")
+        # self.label_Age.setMaximumSize(QtCore.QSize(40, 50))
+        # self.label_Age.setFont(font)
+        # self.hbox_newAge.addWidget(self.label_Age)
 
-        self.comboBox_age = QtWidgets.QComboBox()
-        self.comboBox_age.setMaximumSize(QtCore.QSize(80, 50))
-        self.comboBox_age.setFont(font)
-        self.comboBox_age.addItems(["整", "半"])
-        self.hbox_newAge.addWidget(self.comboBox_age)
+        # self.comboBox_age = QtWidgets.QComboBox()
+        # self.comboBox_age.setMaximumSize(QtCore.QSize(80, 50))
+        # self.comboBox_age.setFont(font)
+        # self.comboBox_age.addItems(["整", "半"])
+        # self.hbox_newAge.addWidget(self.comboBox_age)
 
-        self.newAgeBtn = QtWidgets.QPushButton("新增")
-        self.newAgeBtn.setFont(font)
-        self.newAgeBtn.setObjectName("newAgeBtn")
-        self.hbox_newAge.addWidget(self.newAgeBtn)
+        # self.newAgeBtn = QtWidgets.QPushButton("新增")
+        # self.newAgeBtn.setFont(font)
+        # self.newAgeBtn.setObjectName("newAgeBtn")
+        # self.hbox_newAge.addWidget(self.newAgeBtn)
 
-        #Remind Text
-        self.hbox_age_reminder = QtWidgets.QHBoxLayout()
-        self.icon = QtWidgets.QLabel()
-        self.icon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(25, 25)))
-        self.icon.setMaximumSize(QtCore.QSize(25, 25))
-        self.remindText = QtWidgets.QLabel("空格只能輸入二到十二的中文數字")
-        self.remindText.setMaximumSize(QtCore.QSize(16777215, 25))
-        self.hbox_age_reminder.addWidget(self.icon)
-        self.hbox_age_reminder.addWidget(self.remindText)
+        # #Remind Text
+        # self.hbox_age_reminder = QtWidgets.QHBoxLayout()
+        # self.icon = QtWidgets.QLabel()
+        # self.icon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(25, 25)))
+        # self.icon.setMaximumSize(QtCore.QSize(25, 25))
+        # self.remindText = QtWidgets.QLabel("空格只能輸入二到十二的中文數字")
+        # self.remindText.setMaximumSize(QtCore.QSize(16777215, 25))
+        # self.hbox_age_reminder.addWidget(self.icon)
+        # self.hbox_age_reminder.addWidget(self.remindText)
         
-        #Set Gropubox layout
-        self.vbox_addAge = QtWidgets.QVBoxLayout() #GroupBox Layout
-        self.vbox_addAge.addLayout(self.hbox_newAge)
-        self.vbox_addAge.addLayout(self.hbox_age_reminder)
-        self.newAge_box.setLayout(self.vbox_addAge)
-        self.horizontalLayout_7.addWidget(self.newAge_box)
+        # #Set Gropubox layout
+        # self.vbox_addAge = QtWidgets.QVBoxLayout() #GroupBox Layout
+        # self.vbox_addAge.addLayout(self.hbox_newAge)
+        # self.vbox_addAge.addLayout(self.hbox_age_reminder)
+        # self.newAge_box.setLayout(self.vbox_addAge)
+        # self.horizontalLayout_7.addWidget(self.newAge_box)
 
-        #Horizontal Line
-        # self.line = QtWidgets.QFrame()
-        # self.line.setFrameShape(QtWidgets.QFrame.HLine)
-        # self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        # self.verticalLayout.addWidget(self.line)
+        # #Horizontal Line
+        # # self.line = QtWidgets.QFrame()
+        # # self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        # # self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        # # self.verticalLayout.addWidget(self.line)
         
 
-        #NEW delete GroupBox
-        self.deleteAge_box = QtWidgets.QGroupBox("刪除常模年紀選項")
-        self.deleteAge_box.setMaximumSize(QtCore.QSize(350, 140))
-        self.deleteAge_box.setFont(font)
+        # #NEW delete GroupBox
+        # self.deleteAge_box = QtWidgets.QGroupBox("刪除常模年紀選項")
+        # self.deleteAge_box.setMaximumSize(QtCore.QSize(350, 140))
+        # self.deleteAge_box.setFont(font)
         
-        self.hbox_deleteAge = QtWidgets.QHBoxLayout()
+        # self.hbox_deleteAge = QtWidgets.QHBoxLayout()
 
-        ## delete comboBox
-        self.comboBox_delete = QtWidgets.QComboBox()
-        self.comboBox_delete.setFont(font)
-        self.hbox_deleteAge.addWidget(self.comboBox_delete)
+        # ## delete comboBox
+        # self.comboBox_delete = QtWidgets.QComboBox()
+        # self.comboBox_delete.setFont(font)
+        # self.hbox_deleteAge.addWidget(self.comboBox_delete)
 
-        ##delete button
-        self.deleteAgeBtn = QtWidgets.QPushButton("  刪除  ")
-        self.deleteAgeBtn.setFont(font)
-        self.deleteAgeBtn.setObjectName("deleteAgeBtn")
-        self.hbox_deleteAge.addWidget(self.deleteAgeBtn)
+        # ##delete button
+        # self.deleteAgeBtn = QtWidgets.QPushButton("  刪除  ")
+        # self.deleteAgeBtn.setFont(font)
+        # self.deleteAgeBtn.setObjectName("deleteAgeBtn")
+        # self.hbox_deleteAge.addWidget(self.deleteAgeBtn)
 
-        self.deleteAge_box.setLayout(self.hbox_deleteAge)
-        self.horizontalLayout_7.addWidget(self.deleteAge_box)
+        # self.deleteAge_box.setLayout(self.hbox_deleteAge)
+        # self.horizontalLayout_7.addWidget(self.deleteAge_box)
 
         #New and Delete Area
         # self.new_delete_hbox = QtWidgets.QHBoxLayout()
@@ -239,9 +239,9 @@ class NormModifyTab(QtWidgets.QWidget):
         #self.comboBox.currentIndexChanged.connect(self.getCurrentNorm)
         self.comboBox.textActivated.connect(self.getCurrentNorm)
         self.updateBtn.clicked.connect(self.save)
-        self.newAgeBtn.clicked.connect(self.addAge)
-        self.deleteAgeBtn.clicked.connect(self.deleteAge)
-        self.input_newAge.textChanged.connect(self.checkLimitAge)
+        #self.newAgeBtn.clicked.connect(self.addAge)
+        #self.deleteAgeBtn.clicked.connect(self.deleteAge)
+        #self.input_newAge.textChanged.connect(self.checkLimitAge)
 
         self.retranslateUi()
         self.setStyleSheet(open("./QSS/norm.qss", "r").read())
@@ -273,14 +273,14 @@ class NormModifyTab(QtWidgets.QWidget):
     def getNorms(self):
         norms = db.getNormAges()
         self.comboBox.clear()
-        self.comboBox_delete.clear()
+        #self.comboBox_delete.clear()
 
         for idx, n in enumerate(norms):
             if idx == 0:
                 self.storeValue(n)
 
             self.comboBox.addItem(n['age'])
-            self.comboBox_delete.addItem(n['age'])
+            #self.comboBox_delete.addItem(n['age'])
     
     def storeValue(self, n):  #將值存在格子和變數中
         
@@ -315,49 +315,49 @@ class NormModifyTab(QtWidgets.QWidget):
         db.upsertNorm(age, self.chineseToNum(age), data)
         QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
 
-    def addAge(self):
-        newAge = ''
-        if self.input_newAge.text() == '':
-            return
-        else:
-            if self.input_newAge.text() == '兩': #特例
-                newAge = '二歲'
-            else:
-                newAge += (self.input_newAge.text() + '歲')
-            if self.comboBox_age.currentText() == '半':
-                newAge += '半'
+    # def addAge(self):
+    #     newAge = ''
+    #     if self.input_newAge.text() == '':
+    #         return
+    #     else:
+    #         if self.input_newAge.text() == '兩': #特例
+    #             newAge = '二歲'
+    #         else:
+    #             newAge += (self.input_newAge.text() + '歲')
+    #         if self.comboBox_age.currentText() == '半':
+    #             newAge += '半'
         
-        ages = [self.comboBox.itemText(i) for i in range(self.comboBox.count())]
-        if newAge in ages:
-            QtWidgets.QMessageBox.warning(self, '警告','年齡已存在', QtWidgets.QMessageBox.Ok)
-            return
-        else:
-            data = {
-                "mlu-c": "",
-                "mlu-w": "",
-                "vocd-c": "",
-                "vocd-w": ""
-            }
+    #     ages = [self.comboBox.itemText(i) for i in range(self.comboBox.count())]
+    #     if newAge in ages:
+    #         QtWidgets.QMessageBox.warning(self, '警告','年齡已存在', QtWidgets.QMessageBox.Ok)
+    #         return
+    #     else:
+    #         data = {
+    #             "mlu-c": "",
+    #             "mlu-w": "",
+    #             "vocd-c": "",
+    #             "vocd-w": ""
+    #         }
 
-            db.upsertNorm(newAge, self.chineseToNum(newAge) ,data)
-            self.getNorms()
+    #         db.upsertNorm(newAge, self.chineseToNum(newAge) ,data)
+    #         self.getNorms()
 
-            QtWidgets.QMessageBox.information(self, '警告','成功新增', QtWidgets.QMessageBox.Ok)
+    #         QtWidgets.QMessageBox.information(self, '警告','成功新增', QtWidgets.QMessageBox.Ok)
 
-    def deleteAge(self):
-        warnText = f'<p style="font-size:13pt; color: #525252;">確定要刪除 {self.comboBox_delete.currentText()}嗎?</p>\n'
-        delete = QtWidgets.QMessageBox.question(self,
-                                "CLSA",
-                                warnText,
-                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+    # def deleteAge(self):
+    #     warnText = f'<p style="font-size:13pt; color: #525252;">確定要刪除 {self.comboBox_delete.currentText()}嗎?</p>\n'
+    #     delete = QtWidgets.QMessageBox.question(self,
+    #                             "CLSA",
+    #                             warnText,
+    #                             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 
-        if delete == QtWidgets.QMessageBox.Yes:
-            db.deleteNorm(self.comboBox_delete.currentText())
-            QtWidgets.QMessageBox.information(self, '警告','成功刪除', QtWidgets.QMessageBox.Ok)
-            #重刷
-            self.getNorms()
-        if delete == QtWidgets.QMessageBox.No:
-            pass
+    #     if delete == QtWidgets.QMessageBox.Yes:
+    #         db.deleteNorm(self.comboBox_delete.currentText())
+    #         QtWidgets.QMessageBox.information(self, '警告','成功刪除', QtWidgets.QMessageBox.Ok)
+    #         #重刷
+    #         self.getNorms()
+    #     if delete == QtWidgets.QMessageBox.No:
+    #         pass
 
 
     def chineseToNum(self, text):
@@ -375,13 +375,13 @@ class NormModifyTab(QtWidgets.QWidget):
         elif len(text) == 4:
                 return 10 + numToChinese[text[1]] + 0.5
     
-    def checkLimitAge(self):
-        if self.input_newAge.text() == '十二':
-            if self.comboBox_age.count() == 2:
-                self.comboBox_age.removeItem(1)
-        else:
-            if self.comboBox_age.count() == 1:
-                self.comboBox_age.addItem('半')
+    # def checkLimitAge(self):
+    #     if self.input_newAge.text() == '十二':
+    #         if self.comboBox_age.count() == 2:
+    #             self.comboBox_age.removeItem(1)
+    #     else:
+    #         if self.comboBox_age.count() == 1:
+    #             self.comboBox_age.addItem('半')
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate

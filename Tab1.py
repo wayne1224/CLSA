@@ -979,6 +979,7 @@ class Myform(QtWidgets.QWidget):
                 'equipment' :equipment,
                 'help' : needhelp,
                 'others' : self.input_specialSit.toPlainText(),
+                'age': round((DateTimeDate - birthday).days / 365, 1)
                 # 'situation' : self.input_anxietySit.toPlainText()
             }
             if (self.saveExamination()):
