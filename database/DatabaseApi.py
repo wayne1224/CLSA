@@ -49,7 +49,7 @@ def findDocs(SLP , caseID , name):
         result = documentDB.aggregate([
             {
                 '$lookup': {
-                    'from': 'childData', 
+                    'from': 'cildDhata', 
                     'localField': 'caseID', 
                     'foreignField': 'caseID', 
                     'as': 'childData'
@@ -271,7 +271,7 @@ def updateContent(caseID , date , transcriber , content , totalUtterance , valid
         print(e)
         return False
 
-# 彙錄表 api
+# 彙整表 api
 def findAnalysis(caseID , date):
     try:
         query = dict()
