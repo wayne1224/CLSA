@@ -42,7 +42,8 @@ class statChartTab(QtWidgets.QWidget):
 
         #共用字體
         font = QtGui.QFont()
-        font.setPixelSize(24)
+        font.setFamily("微軟正黑體")
+        font.setPixelSize(20)
         font.setBold(True)
 
         #建立barset (資料集)
@@ -106,17 +107,23 @@ class statChartTab(QtWidgets.QWidget):
         series.append(set_W)
         series.append(set_C)
 
-        #宣告vocd圖
+        #宣告barChart圖
         chart = QChart()
         chart.addSeries(series)
-        chart.setTitleFont(font)
+        chart.setFont(font)
         chart.setAnimationOptions(QChart.SeriesAnimations)
         chart.legend().setAlignment(Qt.AlignBottom)
+        chart.legend().setFont(font)
         chart.layout().setContentsMargins(0, 0, 0, 0)
-        chart.setBackgroundRoundness(0);
+        #設定title字體
+        tfont = QtGui.QFont()
+        tfont.setFamily("微軟正黑體")
+        tfont.setPixelSize(25)
+        tfont.setBold(True)
+        chart.setTitleFont(tfont)
 
         if title:
-            chart.setTitle('系統中各年齡層VOCD和MLU統計')
+            chart.setTitle('本系統中各年齡之平均字彙多樣性(VOCD)和平均語句長度(MLU)統計')
 
 
         ##建立x軸
@@ -128,6 +135,7 @@ class statChartTab(QtWidgets.QWidget):
 
         axisX.append(categories)
         axisX.setTitleText("歲數")
+        axisX.setLabelsFont(font)
         chart.addAxis(axisX, Qt.AlignBottom)
         series.attachAxis(axisX)
 
@@ -136,7 +144,7 @@ class statChartTab(QtWidgets.QWidget):
         axisY.setRange(0, maxValue)
         chart.addAxis(axisY, Qt.AlignLeft)
         series.attachAxis(axisY)
-        
+
         chartView = QChartView(chart)
         chartView.setMinimumSize(500, 200)
         self.layout.addWidget(chartView)
