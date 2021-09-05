@@ -48,7 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thread_DB.finished.connect(self.thread_DB.deleteLater)
 
         #讀取資料並產生圖表
-        self.thread_DB.finished.connect(self.mainTab.tab4.tab1.lineChart)
+        self.thread_DB.finished.connect(self.mainTab.tab4.tab1.createBarCharts)
 
         #讀取NORM
         self.thread_DB.finished.connect(self.mainTab.tab4.tab2.getNorms)

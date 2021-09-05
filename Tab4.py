@@ -8,14 +8,14 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtChart import QChart, QBarSeries, QLineSeries, QChartView, QPieSeries, QPieSlice, QBarSet, QPercentBarSeries, QBarCategoryAxis, QValueAxis
 from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtCore import QPoint, Qt, QPointF
-from components.lineChart import lineChartTab
+from components.statChart import statChartTab
 from components.norm import NormModifyTab
 
 class Tab4(QtWidgets.QTabWidget):
     def __init__(self):
         super(Tab4, self).__init__()
         self.tab0 = chartTab()
-        self.tab1 = lineChartTab()
+        self.tab1 = statChartTab()
         self.tab2 = NormModifyTab()
 
         self.addTab(self.tab0, "個案分析圖表")
