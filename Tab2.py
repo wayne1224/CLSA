@@ -335,6 +335,7 @@ class Tab2(QtWidgets.QWidget):
         self.tableWidget.procChange.connect(self.roleChangeCheck)
         self.tableWidget.procInsertRow_editAdultID_setColor.connect(self.insertRow_editAdultID_setColor)
 
+        self._id = ''       #objectID
         self.caseID = ''    #個案編號
         self.isCase = False #是否已有個案在轉錄表
         self.caseData = {}  #用caseID查的個案紀錄{'dates', 'transcriber', 'FirstContent'}
@@ -432,13 +433,13 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot(dict)
     def getDoc(self, doc):
         self.clearTab(True)
-        self._importCase(doc['childData']['caseID'], doc['date'])
+        self._importCase(doc['_id'], doc['childData']['caseID'], doc['date'])
 
     #從Tab1接收個案編號和日期
     @QtCore.pyqtSlot(dict)
     def setCaseRecord(self, caseIDAndDate):
         self.clearTab(True)
-        self._importCase(caseIDAndDate['caseID'], caseIDAndDate['date'])
+        self._importCase(caseIDAndDate['_id'], caseIDAndDate['caseID'], caseIDAndDate['date'])
 
     #傳總語句數和有效語句數給Tab1
     @QtCore.pyqtSlot()
@@ -838,7 +839,7 @@ class Tab2(QtWidgets.QWidget):
             return True
 
     #匯入個案紀錄
-    def _importCase(self, caseID, date):
+    def _importCase(self, _id, caseID, date):
         self._setWidgetEnabled()
         
         if self.isEdit():   #儲存變動內容視窗
@@ -850,7 +851,8 @@ class Tab2(QtWidgets.QWidget):
 
         self.clearTab(True)    #清空、復原頁面
 
-        self.caseData = database.DatabaseApi.findContent(caseID, date)
+        self.caseData = database.DatabaseApi.findContent(_id)
+        self._id = _id
         if self.caseData['transcriber']:
             self.transcriber = self.caseData['transcriber']
             self.input_trans.setText(self.transcriber)
@@ -887,7 +889,7 @@ class Tab2(QtWidgets.QWidget):
                     totalUtterance += 1
                     childUtterance.append(self.tableWidget.tableWidget.item(rowIndex, 4).text()) # 傳給Tab3
 
-            database.DatabaseApi.updateContent(self.caseID, self.caseDate, self.transcriber, content, totalUtterance, validUtterance)
+            database.DatabaseApi.updateContent(self._id, self.transcriber, content, totalUtterance, validUtterance)
             utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
             self.emitUtterNum(utteranceNum)
             self.content = content    #更新內容
@@ -910,7 +912,8 @@ class Tab2(QtWidgets.QWidget):
             #傳signal給MainWindow
             self.procMain.emit(2, 0)
 
-            key = {'caseID':self.caseID,
+            key = { '_id':self._id,
+                    'caseID':self.caseID,
                     'date':self.caseDate }
             self.emitKey(key)
             self.emitChildUtter(self.childUtterance)
