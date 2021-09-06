@@ -35,7 +35,7 @@ class statChartTab(QtWidgets.QWidget):
             color_w = QColor(37, 150, 190)
             color_c = QColor(143, 186, 82)
         else:
-            maxValue = 100
+            maxValue = 120
             color_w = QColor(246, 166, 38)
             color_c = QColor(191, 90, 63)
             
@@ -96,7 +96,9 @@ class statChartTab(QtWidgets.QWidget):
             else:
                 remove_C.append(idx)
         
-        #maxValue = round(max(list_C + list_W)) + 4
+        if type == "MLU":
+            while round(max(list_C + list_W)) >= maxValue:
+                maxValue += 4
        
         #載入barset資料
         set_W.append(list_W)
