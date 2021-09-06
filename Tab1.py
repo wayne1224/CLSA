@@ -926,6 +926,7 @@ class Myform(QtWidgets.QWidget):
             if (database.DatabaseApi.canUpdateDoc(self.input_caseID.text(), DateTimeRecordDate , self.currentDoc_id)):
                 if (database.DatabaseApi.findChildData(self.input_caseID.text())):
                     checkChildData = database.DatabaseApi.findChildData(self.input_caseID.text())
+                    del checkChildData['_id']
                     if childData == checkChildData :
                         updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , DateTimeRecordDate , recording)
                     else:
