@@ -437,9 +437,9 @@ class Tab2(QtWidgets.QWidget):
 
     #從Tab1接收個案編號和日期
     @QtCore.pyqtSlot(dict)
-    def setCaseRecord(self, caseIDAndDate):
+    def setCaseRecord(self, idAndDate):
         self.clearTab(True)
-        self._importCase(caseIDAndDate['_id'], caseIDAndDate['caseID'], caseIDAndDate['date'])
+        self._importCase(idAndDate['_id'], idAndDate['caseID'], idAndDate['date'])
 
     #傳總語句數和有效語句數給Tab1
     @QtCore.pyqtSlot()
@@ -507,18 +507,20 @@ class Tab2(QtWidgets.QWidget):
         #讓Tab3也clear
         self.procClear.emit()
 
-    def _setWidgetEnabled(self):
-        self.input_trans.setEnabled(True)
-        self.cmb_role.setEnabled(True)
-        self.input_utterance.setEnabled(True)
-        self.input_scenario.setEnabled(True)
-        self.cbx_notCount.setEnabled(True)
-        self.btn_add.setEnabled(True)
-        self.btn_importAudio.setEnabled(True)
-        self.btn_delete.setEnabled(True)
-        self.btn_clearTab.setEnabled(True)
-        self.btn_save.setEnabled(True)
-        self.btn_generateAndSave.setEnabled(True)
+    @QtCore.pyqtSlot()
+    def _setWidgetEnabled(self, opt):
+        # opt: True, False
+        self.input_trans.setEnabled(opt)
+        self.cmb_role.setEnabled(opt)
+        self.input_utterance.setEnabled(opt)
+        self.input_scenario.setEnabled(opt)
+        self.cbx_notCount.setEnabled(opt)
+        self.btn_add.setEnabled(opt)
+        self.btn_importAudio.setEnabled(opt)
+        self.btn_delete.setEnabled(opt)
+        self.btn_clearTab.setEnabled(opt)
+        self.btn_save.setEnabled(opt)
+        self.btn_generateAndSave.setEnabled(opt)
 
     def _setTableChildIDUneditable(self):
         rows = self.tableWidget.tableWidget.rowCount()
@@ -840,7 +842,7 @@ class Tab2(QtWidgets.QWidget):
 
     #匯入個案紀錄
     def _importCase(self, _id, caseID, date):
-        self._setWidgetEnabled()
+        self._setWidgetEnabled(True)
         
         if self.isEdit():   #儲存變動內容視窗
             action = self.msg_notSave.exec_()
