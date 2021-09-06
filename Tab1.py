@@ -961,6 +961,7 @@ class Myform(QtWidgets.QWidget):
 
             else :
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點個案已經做過治療了，請修正收錄時間或是個案編號', QtWidgets.QMessageBox.Ok)
+    
     def redFrameExamination(self):
         inputError = 0 
         ageError = 0
@@ -1156,7 +1157,6 @@ class Myform(QtWidgets.QWidget):
         if Doc['recording']['help'] == '有時 (2~5次)':
             self.rbtn_sometimes.setChecked(True)
         self.input_specialSit.setPlainText(Doc['recording']['others'])
-        # self.input_anxietySit.setPlainText(Doc['recording']['situation'])
 
         for i in Doc['recording']['participants'] :
             if i == '爸爸' :
@@ -1186,8 +1186,6 @@ class Myform(QtWidgets.QWidget):
         self.input_recordDataName.setText('')
         self.input_inducement.setText('')
         self.input_others.setText('')
-
-        # self.input_anxietySit.setPlainText('')
         self.input_specialSit.setPlainText('')
  
         self.ckb_dad.setChecked(False)
