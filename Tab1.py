@@ -538,25 +538,25 @@ class Myform(QtWidgets.QWidget):
         self.btn_empty.setObjectName("btn_empty")
         self.btn_empty.clicked.connect(self.clearContent)
         self.horizontalLayout_11.addWidget(self.btn_empty)
-        self.btn_save = QtWidgets.QPushButton()
+        self.btn_insert = QtWidgets.QPushButton()
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_save.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(self.btn_insert.sizePolicy().hasHeightForWidth())
         #self.btn_save.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(14)
 
-        self.btn_modify = QtWidgets.QPushButton()
-        self.btn_modify.setFont(font)
-        self.btn_modify.setObjectName("btn_modify")
-        self.btn_modify.setEnabled(False) #預設無法點擊
-        self.horizontalLayout_11.addWidget(self.btn_modify)
+        self.btn_update = QtWidgets.QPushButton()
+        self.btn_update.setFont(font)
+        self.btn_update.setObjectName("btn_update")
+        self.btn_update.setEnabled(False) #預設無法點擊
+        self.horizontalLayout_11.addWidget(self.btn_update)
 
-        self.btn_save.setFont(font)
-        self.btn_save.clicked.connect(self.save)
-        self.btn_save.setObjectName("btn_save")
-        self.horizontalLayout_11.addWidget(self.btn_save)
+        self.btn_insert.setFont(font)
+        self.btn_insert.clicked.connect(self.insert)
+        self.btn_insert.setObjectName("btn_insert")
+        self.horizontalLayout_11.addWidget(self.btn_insert)
         self.layout.addLayout(self.horizontalLayout_11)
 
         self.retranslateUi()
@@ -594,7 +594,7 @@ class Myform(QtWidgets.QWidget):
         self.group_recordType.addButton(self.rbtn_camera)
 
         self.importSingal = 0
-
+        self.currentDoc_id = None
 
         self.setStyleSheet(open("QSS/Tab1.qss", "r").read())
 
@@ -639,8 +639,8 @@ class Myform(QtWidgets.QWidget):
         self.lbl_participation.setText(_translate("", "配合參與度："))
         # self.lbl_anxietySit.setText(_translate("", "兒童焦慮情形："))
         self.btn_empty.setText(_translate("", "  清空欄位  "))
-        self.btn_save.setText(_translate("", "  新增一筆紀錄  "))
-        self.btn_modify.setText(_translate("", "  更新紀錄  "))
+        self.btn_insert.setText(_translate("", "  新增一筆紀錄  "))
+        self.btn_update.setText(_translate("", "  更新紀錄  "))
 
     # #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
     # @QtCore.pyqtSlot(dict)
@@ -739,7 +739,6 @@ class Myform(QtWidgets.QWidget):
             participants.append("媽媽")
         if self.ckb_others.isChecked() and self.input_others.text():
             participants.append(self.input_others.text())
-
         
         data = {
             'caseID' : self.input_caseID.text(),
@@ -777,9 +776,160 @@ class Myform(QtWidgets.QWidget):
         self.input_inducement.setStyleSheet("border: 1px solid initial;")
         self.input_specialSit.setStyleSheet("border: 1px solid initial;")
         self.layoutNeedhelp.setStyleSheet("border: 1px ")
+    #回傳Tab1中的childData欄位資料
+    def returnChildData(self):
+        #將dateEdit_birthday變成dateTime型態
+        date = str(self.dateEdit_birthday.date().toPyDate())
+        birthday = datetime.strptime(date, "%Y-%m-%d")
 
-    #儲存資料到資料庫 
-    def save (self, event): 
+        #判斷是男是女
+        gender = ''
+        if self.rbtn_male.isChecked():
+            gender = 'male'
+        else :
+            gender = 'female'
+
+        childData = {
+            'caseID' : self.input_caseID.text(),
+            'name': self.input_caseName.text(),
+            'gender' : gender,
+            'birthday' : birthday
+        }
+        return childData
+    #回傳Tab1中的recording欄位資料
+    def returnRecording(self) :
+        #將dateEdit變成dateTime型態
+        date = str(self.dateEdit_birthday.date().toPyDate())
+        birthday = datetime.strptime(date, "%Y-%m-%d")
+
+        #將dateEdit_3變成dateTime型態
+        strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
+        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+    
+        interactionType = ''
+        #判斷互動形式
+        if self.rbtn_conversation.isChecked():
+            interactionType = '交談'
+        if self.rbtn_game.isChecked():
+            interactionType = '自由遊戲'
+        if self.rbtn_narrative.isChecked():
+            interactionType = '敘事'
+
+        equipment = ''
+        #判斷記錄方式
+        if self.rbtn_cellphone.isChecked():
+            equipment = '手機'
+        if self.rbtn_pen.isChecked():
+            equipment = '錄音筆'
+        if self.rbtn_otherEquip.isChecked():
+            equipment = '其他錄音設備'
+        if self.rbtn_camera.isChecked():
+            equipment = '攝影機'
+
+        needhelp = ''
+        #判斷需要引導協助
+        if self.rbtn_always.isChecked():
+            needhelp = '總是'
+        if self.rbtn_few.isChecked():
+            needhelp = '很少 (幾乎不需要引導)'
+        if self.rbtn_usually.isChecked():
+            needhelp = '經常 (6~9次)'
+        if self.rbtn_sometimes.isChecked():
+            needhelp = '有時 (2~5次)'
+
+        #判斷參與人員
+        participants = []
+        if self.ckb_dad.isChecked():
+            participants.append("爸爸")
+        if self.ckb_tester.isChecked():
+            participants.append("施測者")
+        if self.ckb_teacher.isChecked():
+            participants.append("老師")
+        if self.ckb_mom.isChecked():
+            participants.append("媽媽")
+        if self.ckb_others.isChecked() and self.input_others.text():
+            participants.append(self.input_others.text())
+        
+        recording = {
+            'SLP': self.input_SLP.text(),
+            'scenario': self.input_scenario.text(),
+            'fileName' : self.input_recordDataName.text(),
+            'location' : self.input_location.text(),
+            'interactionType' : interactionType,
+            'inducement' : self.input_inducement.text(),
+            'participants' : participants,
+            'equipment' :equipment,
+            'help' : needhelp,
+            'others' : self.input_specialSit.toPlainText(),
+            'age': round((DateTimeDate - birthday).days / 365, 1)
+        }
+        return recording
+    #新增資料到資料庫 
+    def insert (self, event): 
+        if (self.redFrameExamination()):
+            #將dateEdit_recordDate變成dateTime型態
+            strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
+            DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+            strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+            DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+
+            childData = self.returnChildData()
+            recording = self.returnRecording()
+            if (database.DatabaseApi.findDocument(self.input_caseID.text() , DateTimeRecordDate)) :
+                informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點，個案已經做過治療了，請修正時間或是個案編號', QtWidgets.QMessageBox.Ok)
+            else:
+                if (database.DatabaseApi.findChildData(self.input_caseID.text())):
+                    database.DatabaseApi.insertChildData(childData)
+                    database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+                    informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
+                else:
+                    checkChildData = database.DatabaseApi.findChildData(self.input_caseID.text())
+                    if checkChildData != childData :
+                        database.DatabaseApi.insertRecording(self.input_caseID , DateTimeRecordDate , recording)
+                        informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
+                    else :
+                        questionBox = QtWidgets.QMessageBox.question(self, 
+                                    '更新','此個案資料已存在，請問是否要更新個案資料?', 
+                                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+                        if questionBox == QtWidgets.QMessageBox.Yes :
+                            database.DatabaseApi.updateChildData(self.input_caseID, childData)
+                            database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+                        else :
+                            database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+       
+    #更新紀錄
+    def updateRecord (self):
+        if (self.redFrameExamination()):
+             #將dateEdit_recordDate變成dateTime型態
+            strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
+            DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+            strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+            DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+
+            childData = self.returnChildData()
+            recording = self.returnRecording()
+            if (database.DatabaseApi.findDocument(self.input_caseID , DateTimeRecordDate , self.currentDoc_id)):
+                informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點，個案已經做過治療了，請修正時間或是個案編號', QtWidgets.QMessageBox.Ok)
+            else :
+                if (database.DatabaseApi.findChildData(self.input_caseID)):
+                    checkChildData = database.DatabaseApi.findChildData(self.input_caseID)
+                    if childData == checkChildData :
+                        database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID , DateTimeRecordDate , recording)
+                    else:
+                        questionBox = QtWidgets.QMessageBox.question(self, 
+                                    '更新','此個案資料已存在，請問是否要更新個案資料?', 
+                                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+                        if questionBox == QtWidgets.QMessageBox.Yes :
+                            database.DatabaseApi.updateChildData(self.input_caseID , childData)
+                            database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID , DateTimeRecordDate , recording)
+                        else:
+                            database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID , DateTimeRecordDate , recording)
+                else :
+                    database.DatabaseApi.insertChildData(childData)
+                    database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID , DateTimeRecordDate , recording)
+    def redFrameExamination(self):
         inputError = 0 
         ageError = 0
         otherError = 0
@@ -899,145 +1049,18 @@ class Myform(QtWidgets.QWidget):
         #如果有必填欄位沒填跳提示視窗
         if  inputError > 0 : 
             self.saveForm = self.returnTab1Data()
-            # print ("save fail")
             warnText = '紅色框為必填欄位\n'
             if ageError > 0:
                 warnText += '請確認生日日期與收錄日期是否正確(經計算個案年齡已超過13歲)\n'
             if otherError > 0:
                 warnText += '其他欄位有勾選但未填值'
             informBox = QtWidgets.QMessageBox.warning(self, '警告',warnText, QtWidgets.QMessageBox.Ok)
-            # win32api.MessageBox(0, '紅色框為必填欄位', '警告')
             return False
         else :
-            #將dateEdit變成dateTime型態
-            date = str(self.dateEdit_birthday.date().toPyDate())
-            birthday = datetime.strptime(date, "%Y-%m-%d")
-            
-            #將dateEdit_3變成dateTime型態
-            strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-            DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-            strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-            DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
-        
-
-            #判斷是男是女
-            gender = ''
-            if self.rbtn_male.isChecked():
-                gender = 'male'
-            else :
-                gender = 'female'
-
-            interactionType = ''
-            #判斷互動形式
-            if self.rbtn_conversation.isChecked():
-                interactionType = '交談'
-            if self.rbtn_game.isChecked():
-                interactionType = '自由遊戲'
-            if self.rbtn_narrative.isChecked():
-                interactionType = '敘事'
-
-            equipment = ''
-            #判斷記錄方式
-            if self.rbtn_cellphone.isChecked():
-                equipment = '手機'
-            if self.rbtn_pen.isChecked():
-                equipment = '錄音筆'
-            if self.rbtn_otherEquip.isChecked():
-                equipment = '其他錄音設備'
-            if self.rbtn_camera.isChecked():
-                equipment = '攝影機'
-
-            needhelp = ''
-            #判斷需要引導協助
-            if self.rbtn_always.isChecked():
-                needhelp = '總是'
-            if self.rbtn_few.isChecked():
-                needhelp = '很少 (幾乎不需要引導)'
-            if self.rbtn_usually.isChecked():
-                needhelp = '經常 (6~9次)'
-            if self.rbtn_sometimes.isChecked():
-                needhelp = '有時 (2~5次)'
-
-            #判斷參與人員
-            participants = []
-            if self.ckb_dad.isChecked():
-                participants.append("爸爸")
-            if self.ckb_tester.isChecked():
-                participants.append("施測者")
-            if self.ckb_teacher.isChecked():
-                participants.append("老師")
-            if self.ckb_mom.isChecked():
-                participants.append("媽媽")
-            if self.ckb_others.isChecked() and self.input_others.text():
-                participants.append(self.input_others.text())
-            
-            childData = {
-                'caseID' : self.input_caseID.text(),
-                'name': self.input_caseName.text(),
-                'gender' : gender,
-                'birthday' : birthday
-            }
-            recording = {
-                'SLP': self.input_SLP.text(),
-                'scenario': self.input_scenario.text(),
-                'fileName' : self.input_recordDataName.text(),
-                'location' : self.input_location.text(),
-                'interactionType' : interactionType,
-                'inducement' : self.input_inducement.text(),
-                'participants' : participants,
-                'equipment' :equipment,
-                'help' : needhelp,
-                'others' : self.input_specialSit.toPlainText(),
-                'age': round((DateTimeDate - birthday).days / 365, 1)
-                # 'situation' : self.input_anxietySit.toPlainText()
-            }
-            if (self.saveExamination()):
-                if (self.importSingal) : 
-                    close = QtWidgets.QMessageBox.question(self,
-                                    "更新",
-                                    "確定要更新舊的資料?",
-                                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-                    if close == QtWidgets.QMessageBox.Yes :
-                        upsert1 = database.DatabaseApi.upsertChildData(childData)
-                        upsert2 = database.DatabaseApi.upsertRecording(self.input_caseID.text(), DateTimeRecordDate, recording)
-
-                        if upsert2[1] and upsert1[1]:
-                            # print(upsert2[0] and upsert1[1])
-                            if upsert2[0] == 'update':
-                                self.saveForm = self.returnTab1Data()
-                                informBox = QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
-                            if upsert2[0] == 'insert' :
-                                self.saveForm = self.returnTab1Data()
-                                informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
-                                caseIDandDate = {'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
-                                self.procStart.emit(caseIDandDate)
-                            return True
-                        else :
-                            informBox = QtWidgets.QMessageBox.information(self, '通知','新增失敗', QtWidgets.QMessageBox.Ok)
-                            return False
-                else :
-                    upsert1 = database.DatabaseApi.upsertChildData(childData)
-                    upsert2 = database.DatabaseApi.upsertRecording(self.input_caseID.text(), DateTimeRecordDate, recording)
-
-                    if upsert2[1] and upsert1[1]:
-                        # print(upsert2[0] and upsert1[1])
-                        if upsert2[0] == 'update':
-                            self.saveForm = self.returnTab1Data()
-                            informBox = QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
-                        if upsert2[0] == 'insert' :
-                            self.saveForm = self.returnTab1Data()
-                            informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
-                            caseIDandDate = {'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
-                            self.procStart.emit(caseIDandDate)
-                        return True
-                    else :
-                        informBox = QtWidgets.QMessageBox.information(self, '通知','新增失敗', QtWidgets.QMessageBox.Ok)
-                        return False
-            else:
-                informBox = QtWidgets.QMessageBox.information(self, '通知','資料已更新', QtWidgets.QMessageBox.Ok)
+            return True
 
     #檢查是否有變更
-    def saveExamination (self) :
+    def isEdit (self) :
         tab1Changed = self.returnTab1Data()
         if tab1Changed == self.saveForm :
             return False
@@ -1048,6 +1071,8 @@ class Myform(QtWidgets.QWidget):
     @QtCore.pyqtSlot(dict)
     def getDoc(self, Doc):
         self.importSingal = 1
+        self.currentDoc_id = Doc['_id']
+        self.btn_update.setEnabled(True)
         #設定childData
         if Doc == None:
             return
@@ -1118,6 +1143,8 @@ class Myform(QtWidgets.QWidget):
     def clearContent(self) :
         self.clearRedFrame()
         self.importSingal = 0
+        self.currentDoc_id = None
+        self.btn_update.setEnabled(False)
         self.input_caseID.setText('')
         self.input_caseName.setText('')
         self.input_location.setText('')

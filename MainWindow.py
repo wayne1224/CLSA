@@ -86,7 +86,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
 
     def closeEvent(self, event):
-        checkTab1 = self.mainTab.tab1.saveExamination()
+        checkTab1 = self.mainTab.tab1.isEdit()
         checkTab2 = self.mainTab.tab2.isEdit()
         if checkTab2 == "NoAdultID":
             event.ignore()
