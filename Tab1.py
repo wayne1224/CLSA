@@ -896,7 +896,7 @@ class Myform(QtWidgets.QWidget):
                                     '更新','此個案資料已存在，請問是否要更新個案資料?',
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                         if questionBox == QtWidgets.QMessageBox.Yes :
-                            database.DatabaseApi.updateChildData(childData, self.currentDoc_id)
+                            database.DatabaseApi.updateChildData(childData)
                             database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
                             database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
@@ -932,7 +932,7 @@ class Myform(QtWidgets.QWidget):
                                     '更新','此個案資料已存在，請問是否要更新個案資料?', 
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                         if questionBox == QtWidgets.QMessageBox.Yes :
-                            database.DatabaseApi.updateChildData(self.input_caseID , childData)
+                            database.DatabaseApi.updateChildData(childData)
                             database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID , DateTimeRecordDate , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
                             database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID , DateTimeRecordDate , recording)
