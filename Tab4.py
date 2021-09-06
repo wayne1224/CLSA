@@ -457,6 +457,7 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesVOCD_w.attachAxis(axisY2)
         lineSeriesVOCD_c.attachAxis(axisX2)
         lineSeriesVOCD_c.attachAxis(axisY2)
+        #設線的寬度
         penAverageVOCD_w = lineSeriesVOCD_w.pen()
         penVOCD_w = lineSeriesVOCD_w.pen()
         penVOCD_c = lineSeriesVOCD_c.pen()
@@ -466,6 +467,7 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesAverageVOCD_w.setPen(penAverageVOCD_w)
         lineSeriesVOCD_w.setPen(penVOCD_w)
         lineSeriesVOCD_c.setPen(penVOCD_c)
+        #虛線
         lineSeriesAverageVOCD_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
         axisX2.setLabelsFont(labelFont)
         axisY2.setLabelsFont(labelFont)
@@ -521,6 +523,7 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesMLU_w.attachAxis(axisY3)
         lineSeriesMLU_c.attachAxis(axisX3)
         lineSeriesMLU_c.attachAxis(axisY3)
+        #設線的寬度
         penAverageMLU_w = lineSeriesMLU_w.pen()
         penMLU_w = lineSeriesMLU_w.pen()
         penMLU_c = lineSeriesMLU_c.pen()
@@ -530,6 +533,7 @@ class chartTab(QtWidgets.QWidget):
         lineSeriesAverageMLU_w.setPen(penAverageMLU_w)
         lineSeriesMLU_w.setPen(penMLU_w)
         lineSeriesMLU_c.setPen(penMLU_c)
+        #虛線
         lineSeriesAverageMLU_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
         axisX3.setLabelsFont(labelFont)
         axisY3.setLabelsFont(labelFont)
