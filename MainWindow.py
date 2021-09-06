@@ -12,7 +12,7 @@ import DistilTag
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.resize(1400, 700)
+        # self.resize(1400, 700)
         self.setWindowTitle("CLSA")
         self.mainTab = MainTabWidget()
         self.mainTab.tabBar().setDocumentMode(True)

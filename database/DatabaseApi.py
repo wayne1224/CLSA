@@ -257,18 +257,25 @@ def insertRecording(caseID , date , recording): # return boolean
         print(e)
         return False
 
-def updateRecording(documentID , recording): # return boolean ### unfinish !!!!!!!
+def updateRecording(documentID , caseID , date , recording): # return boolean ### unfinish !!!!!!!
     try:
         query = dict()
         query["_id"] = documentID
 
+        # 在 document 裡，找不到這個個案 , return False => 不能更新
         if documentDB.count_documents(query) == 0:
             print("can not find this document!!")
             return False
+        
+        # 在 document 裡，找到這個個案 , return True => 可以更新
+        else:
+            documentDB.update_one(query , {"$set" : {
+                                                        "caseID" : caseID,
+                                                        "date" : date,
+                                                        "recording" : recording
+                                                        }})
 
-        documentDB.update_one(query , {"$set" : {"recording" : recording}})
-
-        return True
+            return True
     except Exception as e:
         print("The error of function updateRecording() !!")
         print(e)   
