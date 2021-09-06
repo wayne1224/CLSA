@@ -106,14 +106,38 @@ def findChildData(caseID): # return child Data or False
     try:
         query = dict()
         query["caseID"] = caseID
-
+        
+        # 找不到 child data , return False
         if childDataDB.count_documents(query) == 0:
-            print("Can not find this Child Data")
+            print("can not find this Child Data")
             return False
 
-        return childDataDB.find_one(query)
+        # 找到 child data , return child data
+        else:
+            return childDataDB.find_one(query)
+
     except Exception as e:
         print("The error of function findChildData() !!")
+        print(e)
+        return False
+
+def findDocument(caseID , date): # return boolean
+    try:
+        query = dict()
+        query["caseID"] = caseID
+        query["date"] = date
+
+        # 找不到 document , return False
+        if documentDB.count_documents(query) == 0:
+            print("can not find this Child Data")
+            return False
+
+        # 找到 document , return True
+        else:
+            return True
+
+    except Exception as e:
+        print("The error of function findDocument() !!")
         print(e)
         return False
 
@@ -165,24 +189,23 @@ def canUpdateDoc(caseID , date , documentID): # return boolean , if error return
         print(e)
         return None
 
-def insertChildData(childData): # return boolean
+def insertChildData(childData): # return object ID or False
     try:
         # 此 child 已經在資料庫裡了 , return False => 不能新增 
         if findChildData(childData["caseID"]):
             print("This case ID already exists and can not insert to database !!")
             return False
 
-        # 此 child 沒有在資料庫裡了 , return True => 可以新增 
+        # 此 child 沒有在資料庫裡了 , return object ID => 可以新增 
         else:
-            childDataDB.insert_one(childData)
-            return True
+            return childDataDB.insert_one(childData).inserted_id
 
     except Exception as e:
         print("The error of function insertChildData() !!")
         print(e)     
         return False
 
-def updateChildData(childData , formerCaseID = None): # return boolean
+def updateChildData(childData): # return boolean
     try:
         query = dict()
         query["caseID"] = childData["caseID"]
@@ -194,19 +217,10 @@ def updateChildData(childData , formerCaseID = None): # return boolean
         
         # 在 child data 裡，找到這個個案，並且更改 , return True
         else:
-            childDataDB.update_many(query , {"$set" : {
-                                                        "caseID" : childData["caseID"],
+            childDataDB.update_many(query , {"$set" : {                                                       
                                                         "name" : childData["name"],
                                                         "gender" : childData["gender"],
                                                         "birthday" : childData["birthday"]
-                                                        }})
-
-            # 若使用更改了 child 的 caseID ， doc 的 former caseID 也要改成 new caseID
-            if formerCaseID != None:
-                query["caseID"] = formerCaseID # 用舊的 caseID 做 query
-
-                documentDB.update_many(query, {"$set" :{
-                                                        "caseID" : childData["caseID"]
                                                         }})
 
             return True
@@ -217,22 +231,27 @@ def updateChildData(childData , formerCaseID = None): # return boolean
 
 def insertRecording(caseID , date , recording): # return boolean
     try:
-        
-        data = {
-            "caseID" : caseID, 
-            "date" : date,
-            "recording" : recording,
-            "transcription" : { "transcriber" : None, 
-                                "content" : None,
-                                "analysis" : None,
-                                "totalUtterance" : None,
-                                "validUtterance" : None
-            } 
-        }
-        
-        documentDB.insert_one(data)
+        # 此 document 已經在資料庫裡了 , return False => 不能新增 
+        if findDocument(caseID , date):
+            print("This case ID and date already exists and can not insert to database !!")
+            return False
 
-        return True
+        # 此 document 沒有在資料庫裡了 , return object ID => 可以新增 
+        else:
+            data = {
+                "caseID" : caseID, 
+                "date" : date,
+                "recording" : recording,
+                "transcription" : { "transcriber" : None, 
+                                    "content" : None,
+                                    "analysis" : None,
+                                    "totalUtterance" : None,
+                                    "validUtterance" : None
+                } 
+            }
+            
+            return documentDB.insert_one(data).inserted_id
+
     except Exception as e:
         print("The error of function insertRecording() !!")
         print(e)
@@ -333,20 +352,20 @@ def updateContent(documentID , transcriber , content , totalUtterance , validUtt
         return False
 
 # 彙錄表 api
-def findAnalysis(caseID , date):
-    try:
-        query = dict()
-        query["caseID"] = caseID
-        query["date"] = date
+# def findAnalysis(caseID , date):
+#     try:
+#         query = dict()
+#         query["caseID"] = caseID
+#         query["date"] = date
 
-        if documentDB.count_documents(query) == 0:
-            print("can not find this analysis")
-            return False
+#         if documentDB.count_documents(query) == 0:
+#             print("can not find this analysis")
+#             return False
         
-        return documentDB.find_one(query)["transcription"]["analysis"]
-    except Exception as e:
-        print(e)
-        return False
+#         return documentDB.find_one(query)["transcription"]["analysis"]
+#     except Exception as e:
+#         print(e)
+#         return False
 
 def updateAnalysis(documentID , analysis): # return boolean
     try:
@@ -521,7 +540,6 @@ def getNormAges():
     except Exception as e:
         print(e)
         return False
-
 
 
 # childData = {   "caseID" : "00757025",
