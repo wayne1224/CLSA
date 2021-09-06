@@ -908,7 +908,7 @@ class Myform(QtWidgets.QWidget):
                 self.procStart.emit(caseIDandDate)
                 self.procID.emit({'_id': self.currentDoc_id})
                 self.btn_update.setEnabled(True)
-                self.btn_insert.setEnabled(True)
+                self.btn_insert.setEnabled(False)
             else :
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點個案已經做過治療了，請修正收錄時間或是個案編號', QtWidgets.QMessageBox.Ok)
     #更新紀錄
