@@ -52,8 +52,12 @@ class MainTabWidget(QtWidgets.QTabWidget):
         #搜尋頁面按下搜尋時，其他頁面清空
         self.tab0.procClear.connect(self.tab1.clearContent)
         self.tab1.procClear.connect(partial(self.tab2.clearTab, True))
+        self.tab1.procClear.connect(partial(self.tab2._setWidgetEnabled, False))
         self.tab1.procClear.connect(self.tab3.clearContent)
         self.tab2.procClear.connect(self.tab3.clearContent)
+
+        #Tab1新增一筆紀錄時，Tab1傳document ID給Tab0 : 避免刪到正在改的紀錄
+        self.tab1.procID.connect(self.tab0.getDocID)
 
     def leaveTab1(self) : #用途???
         if (self.currentIndex() != 1):

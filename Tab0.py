@@ -228,7 +228,6 @@ class SearchTab(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def deleteDoc(self , objID , idx):
         warnText = ""
-
         #若已匯入這筆紀錄
         if objID == self.currentDoc_id:
             warnText = "<p style='font-size:13pt; color: red;'>您正在修改這筆紀錄<br/>確定要刪除嗎?</p> \
@@ -249,9 +248,12 @@ class SearchTab(QtWidgets.QWidget):
                 QtWidgets.QMessageBox.critical(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
 
         if objID == self.currentDoc_id:
-            currentDoc_id = None
+            self.currentDoc_id = None
             self.procClear.emit()
-
+    
+    @QtCore.pyqtSlot() 
+    def getDocID(self, key):
+        self.currentDoc_id = key['_id']
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
