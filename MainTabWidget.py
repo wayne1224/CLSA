@@ -56,6 +56,9 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab1.procClear.connect(self.tab3.clearContent)
         self.tab2.procClear.connect(self.tab3.clearContent)
 
+        #Tab1新增一筆紀錄時，Tab1傳document ID給Tab0 : 避免刪到正在改的紀錄
+        self.tab1.procID.connect(self.tab0.getDocID)
+
     def leaveTab1(self) : #用途???
         if (self.currentIndex() != 1):
             self.tab1.clearRedFrame()
