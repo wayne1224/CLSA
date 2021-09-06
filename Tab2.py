@@ -866,10 +866,6 @@ class Tab2(QtWidgets.QWidget):
             self.content = []
         self._setTable(self.content)    #set table
 
-        #傳key給tab3
-        key = {'caseID':caseID, 'date':date}
-        self.emitKey(key)
-
     #儲存至資料庫
     def _save(self, isBtn):
         if self.input_trans.text():
