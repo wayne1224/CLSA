@@ -1177,6 +1177,7 @@ class Myform(QtWidgets.QWidget):
         self.clearRedFrame()
         self.currentDoc_id = None
         self.btn_update.setEnabled(False)
+        self.btn_insert.setEnabled(True)
         self.input_caseID.setText('')
         self.input_caseName.setText('')
         self.input_location.setText('')
