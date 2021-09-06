@@ -249,7 +249,7 @@ class SearchTab(QtWidgets.QWidget):
                 QtWidgets.QMessageBox.critical(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
 
         if objID == self.currentDoc_id:
-            currentDoc_id = None
+            self.currentDoc_id = None
             self.procClear.emit()
 
 

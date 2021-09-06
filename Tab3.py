@@ -285,7 +285,7 @@ class AnalysisTab(QtWidgets.QWidget):
     @QtCore.pyqtSlot(dict) 
     def getDoc(self, key): 
         if key != None:
-            if key['transcription']['analysis'] != None: #從Tab0收到整個Document
+            if key['recording'] != None: #從Tab0收到整個Document
                 self.clearContent()
                 # self.caseID = key['caseID']
                 # self.date = key['date']
