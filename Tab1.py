@@ -25,6 +25,7 @@ class DateEdit(QtWidgets.QDateTimeEdit):
         self.setDisplayFormat("yyyy-MM-dd HH:mm")
 
 class Myform(QtWidgets.QWidget):
+    procID = QtCore.pyqtSignal(dict)
     procStart = QtCore.pyqtSignal(dict)
     procClear = QtCore.pyqtSignal()
     def __init__(self):
@@ -665,6 +666,9 @@ class Myform(QtWidgets.QWidget):
     def sendCaseID(self, caseIDandDate):
         self.procStart.emit(caseIDandDate)
     
+    @QtCore.pyqtSlot() 
+    def sendDoc_id(self):
+        self.procID.emit(self.currentDoc_id)
     #查詢個案編號並把個案資料貼到Tab1
     def searchCaseID(self): 
         caseData = database.DatabaseApi.findChildData(self.input_caseID.text())
@@ -899,8 +903,10 @@ class Myform(QtWidgets.QWidget):
                     database.DatabaseApi.insertChildData(childData)
                     database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
                     informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
-                caseIDandDate = {'id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
+                caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
                 self.procStart.emit(caseIDandDate)
+                self.procID.emit(self.currentDoc_id)
+                
             else :
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點個案已經做過治療了，請修正時間或是個案編號', QtWidgets.QMessageBox.Ok)
     #更新紀錄
