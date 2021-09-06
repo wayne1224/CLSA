@@ -1,7 +1,5 @@
 import pymongo
-import datetime
-import time
-import calendar
+from bson.objectid import ObjectId
 
 # CLSA
 #     childData
@@ -257,7 +255,7 @@ def insertRecording(caseID , date , recording): # return boolean
         print(e)
         return False
 
-def updateRecording(documentID , caseID , date , recording): # return boolean ### unfinish !!!!!!!
+def updateRecording(documentID , caseID , date , recording): # return boolean 
     try:
         query = dict()
         query["_id"] = documentID
@@ -280,7 +278,7 @@ def updateRecording(documentID , caseID , date , recording): # return boolean ##
         print("The error of function updateRecording() !!")
         print(e)   
         return False
- 
+
 def findDoc(childDataID , documentID): # return {'childData' : childData , 'document' : document} or False
     try:
         query2ChildData = dict()
@@ -359,21 +357,6 @@ def updateContent(documentID , transcriber , content , totalUtterance , validUtt
         return False
 
 # 彙錄表 api
-# def findAnalysis(caseID , date):
-#     try:
-#         query = dict()
-#         query["caseID"] = caseID
-#         query["date"] = date
-
-#         if documentDB.count_documents(query) == 0:
-#             print("can not find this analysis")
-#             return False
-        
-#         return documentDB.find_one(query)["transcription"]["analysis"]
-#     except Exception as e:
-#         print(e)
-#         return False
-
 def updateAnalysis(documentID , analysis): # return boolean
     try:
         query = dict()
