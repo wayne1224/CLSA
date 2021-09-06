@@ -8,12 +8,12 @@ QPushButton#btn_empty
     background-color: rgb(235, 38, 78);
 }
 
-QPushButton#btn_save
+QPushButton#btn_insert
 {
     background-color: cornflowerblue;
 }
 
-QPushButton#btn_modify
+QPushButton#btn_update
 {
     background-color: rgb(255, 202, 40);
 }
@@ -28,12 +28,12 @@ QPushButton#btn_empty:hover
     background-color: rgb(219, 26, 65);
 }
 
-QPushButton#btn_save:hover
+QPushButton#btn_insert:hover
 {
     background-color: rgb(90, 138, 226);
 }
 
-QPushButton#btn_modify:hover
+QPushButton#btn_update:hover
 {
     background-color: rgb(232, 185, 25);
 }

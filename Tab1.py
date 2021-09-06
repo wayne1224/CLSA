@@ -539,6 +539,7 @@ class Myform(QtWidgets.QWidget):
         self.btn_empty.clicked.connect(self.clearContent)
         self.horizontalLayout_11.addWidget(self.btn_empty)
         self.btn_insert = QtWidgets.QPushButton()
+        self.btn_insert.setObjectName("btn_insert")
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
