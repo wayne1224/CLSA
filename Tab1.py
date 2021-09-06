@@ -1114,7 +1114,7 @@ class Myform(QtWidgets.QWidget):
         self.lbl_showValidUtterNum.setText(str(Doc['transcription']['validUtterance']))
         self.input_caseID.setText(Doc['childData']['caseID'])
         self.input_caseName.setText(Doc['childData']['name'])
-        if Doc['childData']['gender'] == '男':
+        if Doc['childData']['gender'] == 'male':
             self.rbtn_male.setChecked(True)
         else :
             self.rbtn_female.setChecked(True)

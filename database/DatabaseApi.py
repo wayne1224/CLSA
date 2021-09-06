@@ -226,7 +226,7 @@ def updateChildData(childData): # return boolean
         print(e) 
         return False
 
-def insertRecording(caseID , date , recording): # return boolean
+def insertRecording(caseID , date , recording): #0 return boolean
     try:
         # 此 document 已經在資料庫裡了 , return False => 不能新增 
         if findDocument(caseID , date):
