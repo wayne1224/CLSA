@@ -433,13 +433,13 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot(dict)
     def getDoc(self, doc):
         self.clearTab(True)
-        self._importCase(doc['_id'], doc['childData']['caseID'], doc['date'])
+        self._importCase(doc['_id'], doc['caseID'], doc['date'], doc['transcription'])
 
     #從Tab1接收個案編號和日期
     @QtCore.pyqtSlot(dict)
     def setCaseRecord(self, idAndDate):
         self.clearTab(True)
-        self._importCase(idAndDate['_id'], idAndDate['caseID'], idAndDate['date'])
+        self._importCase(idAndDate['_id'], idAndDate['caseID'], idAndDate['date'], None)
 
     #傳總語句數和有效語句數給Tab1
     @QtCore.pyqtSlot()
@@ -841,7 +841,7 @@ class Tab2(QtWidgets.QWidget):
             return True
 
     #匯入個案紀錄
-    def _importCase(self, _id, caseID, date):
+    def _importCase(self, _id, caseID, date, transcription):
         self._setWidgetEnabled(True)
         
         if self.isEdit():   #儲存變動內容視窗
@@ -853,17 +853,20 @@ class Tab2(QtWidgets.QWidget):
 
         self.clearTab(True)    #清空、復原頁面
 
-        self.caseData = database.DatabaseApi.findContent(_id)
+        # self.caseData = database.DatabaseApi.findContent(_id)
         self._id = _id
-        if self.caseData['transcriber']:
-            self.transcriber = self.caseData['transcriber']
-            self.input_trans.setText(self.transcriber)
         self.caseID = caseID
         self.lbl_impCaseID.setText(self.caseID)
         self.caseDate = date
         self.lbl_caseDate.setText('此個案收錄日期為\n' + date.strftime("%Y-%m-%d %H:%M"))
         self.lbl_caseDate.setVisible(True)
-        self.content = self.caseData['FirstContent']
+        self.content = []
+        if transcription:
+            self.caseData = transcription
+            if self.caseData['transcriber']:
+                self.transcriber = self.caseData['transcriber']
+                self.input_trans.setText(self.transcriber)
+            self.content = self.caseData['content']
         if self.content == None:
             self.content = []
         self._setTable(self.content)    #set table
