@@ -952,7 +952,7 @@ class Myform(QtWidgets.QWidget):
                         database.DatabaseApi.insertChildData(childData)
                         updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , DateTimeRecordDate , recording)
                     else:
-                        pass
+                        return
                 if updateSuccess:
                     informBox = QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
                 else:
