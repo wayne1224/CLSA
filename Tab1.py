@@ -666,9 +666,6 @@ class Myform(QtWidgets.QWidget):
     def sendCaseID(self, caseIDandDate):
         self.procStart.emit(caseIDandDate)
     
-    @QtCore.pyqtSlot() 
-    def sendDoc_id(self):
-        self.procID.emit(self.currentDoc_id)
     #查詢個案編號並把個案資料貼到Tab1
     def searchCaseID(self): 
         caseData = database.DatabaseApi.findChildData(self.input_caseID.text())
@@ -911,7 +908,8 @@ class Myform(QtWidgets.QWidget):
                 caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
                 self.procStart.emit(caseIDandDate)
                 self.procID.emit({'_id': self.currentDoc_id})
-                
+                self.btn_update.setEnabled(True)
+                self.btn_insert.setEnabled(True)
             else :
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點個案已經做過治療了，請修正時間或是個案編號', QtWidgets.QMessageBox.Ok)
     #更新紀錄
@@ -1055,7 +1053,7 @@ class Myform(QtWidgets.QWidget):
         date = str(self.dateEdit_birthday.date().toPyDate())
         birthday = datetime.strptime(date, "%Y-%m-%d")
         age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
-        if age >= 13:
+        if age >= 13 and age <2:
             self.dateEdit_birthday.setStyleSheet("border: 1px solid red;")
             inputError += 1
             ageError = 1
