@@ -441,6 +441,11 @@ class Tab2(QtWidgets.QWidget):
         self.clearTab(True)
         self._importCase(idAndDate['_id'], idAndDate['caseID'], idAndDate['date'], None)
 
+        key = { '_id':self._id,
+                'caseID':self.caseID,
+                'date':self.caseDate }
+        self.emitKey(key)
+
     #傳總語句數和有效語句數給Tab1
     @QtCore.pyqtSlot()
     def emitUtterNum(self, utteranceNum):
