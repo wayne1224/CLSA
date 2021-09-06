@@ -889,7 +889,7 @@ class Myform(QtWidgets.QWidget):
                     checkChildData = database.DatabaseApi.findChildData(self.input_caseID.text())
                     del checkChildData['_id']
                     if checkChildData == childData :
-                        database.DatabaseApi.insertRecording(self.input_caseID , DateTimeRecordDate , recording)
+                        self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID , DateTimeRecordDate , recording)
                         informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
                     else :
                         questionBox = QtWidgets.QMessageBox.question(self, 
@@ -897,12 +897,12 @@ class Myform(QtWidgets.QWidget):
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                         if questionBox == QtWidgets.QMessageBox.Yes :
                             database.DatabaseApi.updateChildData(childData)
-                            database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
-                            database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
                 else:
                     database.DatabaseApi.insertChildData(childData)
-                    database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+                    self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
                     informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
                 caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
                 self.procStart.emit(caseIDandDate)
