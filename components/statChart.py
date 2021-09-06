@@ -1,16 +1,17 @@
 import database.DatabaseApi as db
 import math
+import time
 from datetime import datetime
 from PyQt5 import QtGui, QtWidgets
-from PyQt5.QtChart import QChart, QBarSeries, QChartView, QBarSet, QBarCategoryAxis, QValueAxis
+from PyQt5.QtChart import QChart, QBarSeries, QChartView, QBarSet, QBarCategoryAxis, QValueAxis, QAbstractBarSeries
 from PyQt5.QtGui import QPainter, QColor
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 
 
 class statChartTab(QtWidgets.QWidget):
     def __init__(self):
         super(statChartTab, self).__init__()
-        self.layout = QtWidgets.QVBoxLayout()
+        self.layout = QtWidgets.QGridLayout()
         self.setLayout(self.layout)
 
     # #清除原本layout裡的Widget
@@ -21,6 +22,8 @@ class statChartTab(QtWidgets.QWidget):
     def createBarCharts(self):
         self.createBar("VOCD", title=True)
         self.createBar("MLU")
+        self.layout.addWidget(self.vocd_barChart)
+        self.layout.addWidget(self.mlu_barChart) 
 
     def createBar(self, type, title=False):
         #給定dict名稱
@@ -28,13 +31,14 @@ class statChartTab(QtWidgets.QWidget):
         c = type + '-c'
 
         if type == "MLU":
-            #maxValue = 25 #Y Range
+            maxValue = 12 #Y Range
             color_w = QColor(37, 150, 190)
             color_c = QColor(143, 186, 82)
         else:
+            maxValue = 100
             color_w = QColor(246, 166, 38)
             color_c = QColor(191, 90, 63)
-            #maxValue = 100
+            
 
         #讀取所有documents
         caseDocs = db.findDocs('','','')
@@ -78,34 +82,44 @@ class statChartTab(QtWidgets.QWidget):
         list_C = []
         remove_C = []
 
-        
-
         for idx, (v,n) in enumerate(zip(sum_W.values(),nums_W.values())):
             
             if n != 0:
                 
-                list_W.append(v/n)
+                list_W.append(round(v/n, 1))
             else:
                 remove_W.append(idx)
     
         for idx, (v,n) in enumerate(zip(sum_C.values(),nums_C.values())):
             if n != 0:
-                list_C.append(v/n)
+                list_C.append(round(v/n, 1))  #留一個小數點
             else:
                 remove_C.append(idx)
         
-        maxValue = max(list_C + list_W) + 5
-                
+        #maxValue = round(max(list_C + list_W)) + 4
+       
+        #載入barset資料
         set_W.append(list_W)
         set_C.append(list_C)
         #設顏色
         set_W.setColor(color_w)
+        set_W.setLabelColor(QColor('black'))
         set_C.setColor(color_c)
+        set_C.setLabelColor(QColor('black'))
+        #設字體
+        ## Bar Font
+        bfont = QtGui.QFont()
+        bfont.setFamily("微軟正黑體")
+        bfont.setBold(True)
+        set_W.setLabelFont(bfont)
+        set_C.setLabelFont(bfont)
 
         #Series
         series = QBarSeries()
         series.append(set_W)
         series.append(set_C)
+        series.setLabelsVisible(True)
+        series.setLabelsPosition(QAbstractBarSeries.LabelsOutsideEnd)
 
         #宣告barChart圖
         chart = QChart()
@@ -145,9 +159,14 @@ class statChartTab(QtWidgets.QWidget):
         chart.addAxis(axisY, Qt.AlignLeft)
         series.attachAxis(axisY)
 
-        chartView = QChartView(chart)
-        chartView.setMinimumSize(500, 200)
-        self.layout.addWidget(chartView)
+        
+        if type == "MLU":
+            self.mlu_barChart = QChartView(chart)
+            self.mlu_barChart.setMinimumSize(QSize(400, 400))
+        else:
+            self.vocd_barChart = QChartView(chart)
+            self.vocd_barChart.setMinimumSize(QSize(400, 400))
+        
  
 
 # if __name__ == "__main__":
