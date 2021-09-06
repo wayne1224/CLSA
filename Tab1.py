@@ -890,7 +890,6 @@ class Myform(QtWidgets.QWidget):
                     del checkChildData['_id']
                     if checkChildData == childData :
                         self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID , DateTimeRecordDate , recording)
-                        informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
                     else :
                         questionBox = QtWidgets.QMessageBox.question(self, 
                                     '更新','此個案資料已存在，請問是否要更新個案資料?',
@@ -903,7 +902,12 @@ class Myform(QtWidgets.QWidget):
                 else:
                     database.DatabaseApi.insertChildData(childData)
                     self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+                
+                print(self.currentDoc_id)
+                if self.currentDoc_id:
                     informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
+                else:
+                    informBox = QtWidgets.QMessageBox.information(self, '通知','新增失敗', QtWidgets.QMessageBox.Ok)
                 caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
                 self.procStart.emit(caseIDandDate)
                 self.procID.emit({'_id': self.currentDoc_id})
