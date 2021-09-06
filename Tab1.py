@@ -887,6 +887,7 @@ class Myform(QtWidgets.QWidget):
             if (database.DatabaseApi.canInsertDoc(self.input_caseID.text() , DateTimeRecordDate)):
                 if (database.DatabaseApi.findChildData(self.input_caseID.text())):
                     checkChildData = database.DatabaseApi.findChildData(self.input_caseID.text())
+                    del checkChildData['_id']
                     if checkChildData == childData :
                         database.DatabaseApi.insertRecording(self.input_caseID , DateTimeRecordDate , recording)
                         informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
@@ -897,7 +898,7 @@ class Myform(QtWidgets.QWidget):
                         if questionBox == QtWidgets.QMessageBox.Yes :
                             database.DatabaseApi.updateChildData(childData, self.currentDoc_id)
                             database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
-                        else :
+                        elif questionBox == QtWidgets.QMessageBox.No:
                             database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
                 else:
                     database.DatabaseApi.insertChildData(childData)
@@ -905,7 +906,7 @@ class Myform(QtWidgets.QWidget):
                     informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
                 caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
                 self.procStart.emit(caseIDandDate)
-                self.procID.emit(self.currentDoc_id)
+                self.procID.emit({'_id': self.currentDoc_id})
                 
             else :
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點個案已經做過治療了，請修正時間或是個案編號', QtWidgets.QMessageBox.Ok)
@@ -933,7 +934,7 @@ class Myform(QtWidgets.QWidget):
                         if questionBox == QtWidgets.QMessageBox.Yes :
                             database.DatabaseApi.updateChildData(self.input_caseID , childData)
                             database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID , DateTimeRecordDate , recording)
-                        else:
+                        elif questionBox == QtWidgets.QMessageBox.No:
                             database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID , DateTimeRecordDate , recording)
                 else :
                     database.DatabaseApi.insertChildData(childData)
