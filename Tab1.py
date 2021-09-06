@@ -889,19 +889,19 @@ class Myform(QtWidgets.QWidget):
                     checkChildData = database.DatabaseApi.findChildData(self.input_caseID.text())
                     del checkChildData['_id']
                     if checkChildData == childData :
-                        self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID , DateTimeRecordDate , recording)
+                        self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), DateTimeRecordDate , recording)
                     else :
                         questionBox = QtWidgets.QMessageBox.question(self, 
                                     '更新','此個案資料已存在，請問是否要更新個案資料?',
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                         if questionBox == QtWidgets.QMessageBox.Yes :
                             database.DatabaseApi.updateChildData(childData)
-                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), DateTimeRecordDate , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
-                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), DateTimeRecordDate , recording)
                 else:
                     database.DatabaseApi.insertChildData(childData)
-                    self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID, DateTimeRecordDate , recording)
+                    self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), DateTimeRecordDate , recording)
                 
                 print(self.currentDoc_id)
                 if self.currentDoc_id:
