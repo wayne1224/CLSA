@@ -1,4 +1,4 @@
-import database.DatabaseApi
+import database.DatabaseApi as db
 import sys
 import qtawesome as qta
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -151,7 +151,7 @@ class SearchTab(QtWidgets.QWidget):
         self.currentDoc_id = None
 
     def _search(self):
-        cursor = database.DatabaseApi.findDocs(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
+        cursor = db.findDocs(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
 
         # self.tableWidget.clear()
         while self.tableWidget.rowCount() > 0:
@@ -241,7 +241,7 @@ class SearchTab(QtWidgets.QWidget):
                             warnText,
                             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         if delete == QtWidgets.QMessageBox.Yes:
-            if database.DatabaseApi.deleteDoc(objID):
+            if db.deleteDoc(objID):
                 self.tableWidget.removeRow(idx)
                 QtWidgets.QMessageBox.information(self, '成功','成功刪除個案', QtWidgets.QMessageBox.Ok)
             else:
