@@ -251,7 +251,7 @@ class SearchTab(QtWidgets.QWidget):
             self.currentDoc_id = None
             self.procClear.emit()
     
-    @QtCore.pyqtSlot() 
+    @QtCore.pyqtSlot(dict) 
     def getDocID(self, key):
         self.currentDoc_id = key['_id']
 
