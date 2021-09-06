@@ -552,7 +552,7 @@ class Myform(QtWidgets.QWidget):
         self.btn_update = QtWidgets.QPushButton()
         self.btn_update.setFont(font)
         self.btn_update.setObjectName("btn_update")
-        self.btn_update.clicked.connect(self.update)
+        self.btn_update.clicked.connect(self.updateRecord)
         self.btn_update.setEnabled(False) #預設無法點擊
         self.horizontalLayout_11.addWidget(self.btn_update)
 
