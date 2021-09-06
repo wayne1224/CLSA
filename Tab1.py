@@ -934,6 +934,12 @@ class Myform(QtWidgets.QWidget):
                                     '更新','此個案資料已存在，請問是否要更新個案資料?', 
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                         if questionBox == QtWidgets.QMessageBox.Yes :
+                            # a = {'key_1': 1,'key_2': 2, 'key_3': 3}
+                            # b = {'key_1': 1,'key_2': 5}
+                            # i=[k for k in b if k in a if b[k]!=a[k]]
+                            # if i:
+                            #     for k in i:
+                            #         print('not equal:b[',k,']=',b[k],'and a[',k,']=',a[k])
                             database.DatabaseApi.updateChildData(childData)
                             updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , DateTimeRecordDate , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
@@ -1028,6 +1034,7 @@ class Myform(QtWidgets.QWidget):
             self.input_others.setStyleSheet("border: 1px solid initial;")
         else :
             if (self.ckb_others.isChecked() and not(self.input_others.text())):
+                inputError +=1
                 otherError = 1
             else:
                 self.layoutParticipants.setStyleSheet("border: 1px;")
