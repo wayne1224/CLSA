@@ -596,7 +596,6 @@ class Myform(QtWidgets.QWidget):
         self.group_recordType.addButton(self.rbtn_pen)
         self.group_recordType.addButton(self.rbtn_camera)
 
-        self.importSingal = 0
         self.currentDoc_id = None
 
         self.setStyleSheet(open("QSS/Tab1.qss", "r").read())
@@ -1104,9 +1103,9 @@ class Myform(QtWidgets.QWidget):
     #接收來自Tab0的所有資料
     @QtCore.pyqtSlot(dict)
     def getDoc(self, Doc):
-        self.importSingal = 1
         self.currentDoc_id = Doc['_id']
         self.btn_update.setEnabled(True)
+        self.btn_insert.setEnabled(False)
         #設定childData
         if Doc == None:
             return
@@ -1114,7 +1113,7 @@ class Myform(QtWidgets.QWidget):
         self.lbl_showValidUtterNum.setText(str(Doc['transcription']['validUtterance']))
         self.input_caseID.setText(Doc['childData']['caseID'])
         self.input_caseName.setText(Doc['childData']['name'])
-        if Doc['childData']['gender'] == '男':
+        if Doc['childData']['gender'] == 'male':
             self.rbtn_male.setChecked(True)
         else :
             self.rbtn_female.setChecked(True)
@@ -1176,7 +1175,6 @@ class Myform(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def clearContent(self) :
         self.clearRedFrame()
-        self.importSingal = 0
         self.currentDoc_id = None
         self.btn_update.setEnabled(False)
         self.input_caseID.setText('')
