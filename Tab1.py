@@ -1022,7 +1022,7 @@ class Myform(QtWidgets.QWidget):
             self.layoutInteraction.setStyleSheet("border: 1px;")
         
         #參與人員
-        if not (self.ckb_dad.isChecked() or self.ckb_mom.isChecked() or self.ckb_teacher.isChecked() or self.ckb_tester.isChecked() or self.ckb_others.isChecked()):
+        if not (self.ckb_dad.isChecked() or self.ckb_mom.isChecked() or self.ckb_teacher.isChecked() or self.ckb_tester.isChecked() or self.ckb_others.isChecked() or self.input_others.text()):
             inputError +=1
             self.layoutParticipants.setStyleSheet("border: 1px solid red;")
             self.lbl_participants.setStyleSheet("border: 1px;")
@@ -1034,10 +1034,18 @@ class Myform(QtWidgets.QWidget):
             self.input_others.setStyleSheet("border: 1px solid initial;")
         else :
             if (self.ckb_others.isChecked() and not(self.input_others.text())):
-                inputError +=1
-                otherError = 1
+                otherError = 1 #其他欄位有勾選但未填值
+                self.layoutParticipants.setStyleSheet("border: 1px")
+                self.ckb_others.setStyleSheet("border: 1px;")    
+                self.input_others.setStyleSheet("border: 1px solid red;")
+            elif (not(self.ckb_others.isChecked()) and (self.input_others.text())):
+                otherError = 2 #其他欄位有填值但未勾選
+                self.layoutParticipants.setStyleSheet("border: 1px")
+                self.input_others.setStyleSheet("border: 1px solid initial;")
+                self.ckb_others.setStyleSheet("border: 1px solid red;")
             else:
                 self.layoutParticipants.setStyleSheet("border: 1px;")
+                self.ckb_others.setStyleSheet("border: 1px;")    
                 self.input_others.setStyleSheet("border: 1px solid initial;")
 
         #誘發題材
@@ -1081,13 +1089,17 @@ class Myform(QtWidgets.QWidget):
             self.dateEdit_birthday.setStyleSheet("border: 1px solid initial;")
 
         #如果有必填欄位沒填跳提示視窗
-        if  inputError > 0 : 
+        if  inputError > 0 or otherError > 0: 
             self.saveForm = self.returnTab1Data()
-            warnText = '紅色框為必填欄位\n'
+            warnText = ''
+            if inputError > 0:
+                warnText += '紅色框為必填欄位\n'
             if ageError > 0:
                 warnText += '請確認生日日期與收錄日期是否正確(經計算個案年齡已超過13歲)\n'
-            if otherError > 0:
-                warnText += '其他欄位有勾選但未填值'
+            if otherError == 1:
+                warnText += '其他欄位有勾選但未填值\n'
+            if otherError == 2:
+                warnText += '其他欄位有填值但未勾選'
             informBox = QtWidgets.QMessageBox.warning(self, '警告',warnText, QtWidgets.QMessageBox.Ok)
             return False
         else :
