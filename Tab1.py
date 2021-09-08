@@ -1076,30 +1076,44 @@ class Myform(QtWidgets.QWidget):
             self.layoutNeedhelp.setStyleSheet("border: 1px;")
 
         #年齡判定
-        today = datetime.today()
         #將dateEdit變成dateTime型態
         date = str(self.dateEdit_birthday.date().toPyDate())
         birthday = datetime.strptime(date, "%Y-%m-%d")
-        age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
-        if age >= 13 and age <2:
+        #將dateEdit_3變成dateTime型態
+        strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
+        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+
+        age = DateTimeRecordDate.year - birthday.year - ((DateTimeRecordDate.month, DateTimeRecordDate.day) < (birthday.month, birthday.day))
+        if age >= 13:
             self.dateEdit_birthday.setStyleSheet("border: 1px solid red;")
-            inputError += 1
+            self.dateEdit_recordDate.setStyleSheet("border: 1px solid red;")
             ageError = 1
+        elif age <2:
+            self.dateEdit_birthday.setStyleSheet("border: 1px solid red;")
+            self.dateEdit_recordDate.setStyleSheet("border: 1px solid red;")
+            ageError = 2
         else:
             self.dateEdit_birthday.setStyleSheet("border: 1px solid initial;")
+            self.dateEdit_recordDate.setStyleSheet("border: 1px solid initial;")
+
 
         #如果有必填欄位沒填跳提示視窗
-        if  inputError > 0 or otherError > 0: 
+        if  inputError > 0 or otherError > 0 or ageError > 0: 
             self.saveForm = self.returnTab1Data()
-            warnText = ''
+            warnText = "<p style='font-size:12pt;'>"
             if inputError > 0:
-                warnText += '紅色框為必填欄位\n'
-            if ageError > 0:
-                warnText += '請確認生日日期與收錄日期是否正確(經計算個案年齡已超過13歲)\n'
+                warnText += '紅色框為必填欄位<br/>'
+            if ageError ==1:
+                warnText += '請確認生日日期與收錄日期是否正確(經計算個案年齡已超過13歲)<br/>'
+            if ageError ==2:
+                warnText += '請確認生日日期與收錄日期是否正確(經計算個案年齡小於2歲)<br/>'
             if otherError == 1:
-                warnText += '其他欄位有勾選但未填值\n'
+                warnText += '其他欄位有勾選但未填值<br/>'
             if otherError == 2:
                 warnText += '其他欄位有填值但未勾選'
+            warnText += "</p>"
             informBox = QtWidgets.QMessageBox.warning(self, '警告',warnText, QtWidgets.QMessageBox.Ok)
             return False
         else :
