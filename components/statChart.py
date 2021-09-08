@@ -3,9 +3,9 @@ import math
 import time
 from datetime import datetime
 from PyQt5 import QtGui, QtWidgets
-from PyQt5.QtChart import QChart, QBarSeries, QChartView, QBarSet, QBarCategoryAxis, QValueAxis, QAbstractBarSeries
+from PyQt5.QtChart import QChart, QBarSeries, QChartView, QBarSet, QBarCategoryAxis, QValueAxis, QAbstractBarSeries, QLineSeries, QScatterSeries
 from PyQt5.QtGui import QPainter, QColor
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, QDateTime, QDate
 
 
 class statChartTab(QtWidgets.QWidget):
@@ -123,7 +123,7 @@ class statChartTab(QtWidgets.QWidget):
         series.setLabelsVisible(True)
         series.setLabelsPosition(QAbstractBarSeries.LabelsOutsideEnd)
 
-        #宣告barChart圖
+        #宣告Chart
         chart = QChart()
         chart.addSeries(series)
         chart.setFont(font)
@@ -169,10 +169,188 @@ class statChartTab(QtWidgets.QWidget):
             self.vocd_barChart = QChartView(chart)
             self.vocd_barChart.setMinimumSize(QSize(400, 400))
         
- 
+def createBarChart_POS(doc, name): #建立詞性的柱狀圖
+    caseDocs = doc
+    chart = QChart()
+    chart.setTitle(name + " 就診紀錄")
+    font = QtGui.QFont()
+    font.setFamily("微軟正黑體")
+    font.setPixelSize(28)
+    font.setBold(True)
+    chart.setTitleFont(font)
+    categories = ["名詞", "動詞", "形容詞", "數詞", "量詞", "代詞", "副詞", "虛詞"]
+    axisX = QBarCategoryAxis()
+    axisX.append(categories)
+    chart.addAxis(axisX, Qt.AlignBottom)
+    axisY = QValueAxis()
+    chart.addAxis(axisY, Qt.AlignLeft)
+    # axisY.setRange(0.0, 20.0)
+    biggestValue = 50.0
+    axisX.setRange("名詞", "虛詞")
+    axisY.setTitleText("詞性百分比")
+    axisY.setTitleFont(font)
+    # sumContent = {'N': 0, 'V': 0, 'VH': 0, 'Neu' : 0, 'Nf': 0, 'Nh' : 0, 'D' : 0}
+    # recordCount = 0
+    labelFont = QtGui.QFont()
+    labelFont.setFamily("微軟正黑體")
+    labelFont.setBold(True)
+    labelFont.setPixelSize(20)
+    barSeries = QBarSeries()
+    chart.addSeries(barSeries)
+    for index in caseDocs:
+        if index['transcription']['analysis'] != None:
+            strDate = index['date'].strftime("%Y-%m-%d %H:%M")
+            set = QBarSet(strDate)
+            set.setLabelFont(labelFont)
+            # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
+            #     if key != 'percentage':
+            #         if key == 'sum': recordCount += 1
+            #         else : sumContent[key] += value
+            set << index['transcription']['analysis']['Content']['N'] / index['transcription']['analysis']['wordCount'] * 100.0\
+                <<  index['transcription']['analysis']['Content']['V'] / index['transcription']['analysis']['wordCount'] * 100.0\
+                << index['transcription']['analysis']['Content']['VH'] / index['transcription']['analysis']['wordCount'] * 100.0\
+                << index['transcription']['analysis']['Content']['Neu']/ index['transcription']['analysis']['wordCount'] * 100.0\
+                << index['transcription']['analysis']['Content']['Nf']/ index['transcription']['analysis']['wordCount'] * 100.0\
+                << index['transcription']['analysis']['Content']['Nh']/ index['transcription']['analysis']['wordCount'] * 100.0\
+                << index['transcription']['analysis']['Content']['D']/ index['transcription']['analysis']['wordCount']  * 100.0\
+                << index['transcription']['analysis']['Function']['sum']/ index['transcription']['analysis']['wordCount'] * 100.0
+            # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()):
+            #     while(value > biggestValue and key != 'sum') :
+            #         # print(str(i) + str(key)+ str(value)) 
+            #         biggestValue+=10.0
+            for i in set:
+                while(i > biggestValue) :
+                    biggestValue+=25.0
+            barSeries.append(set)
+    axisY.setRange(0, biggestValue)
+    # print('last:' + str(biggestValue))
+    barSeries.attachAxis(axisX)
+    barSeries.attachAxis(axisY)
 
-# if __name__ == "__main__":
-#     app = QtWidgets.QApplication(sys.argv)
-#     screen = lineChartTab()
-#     screen.show()
-#     sys.exit(app.exec_())
+    axisX.setLabelsFont(labelFont)
+    axisY.setLabelsFont(labelFont)
+
+    # lineSeries = QLineSeries(self)
+    # lineSeries.setName("平均值")
+    # for i, (key, value) in enumerate(sumContent.items()):
+    #     if recordCount > 0:
+    #         lineSeries.append(QPoint(i, value/recordCount))
+    #     else :
+    #         lineSeries.append(QPoint(i, 0))
+    # chart.addSeries(lineSeries)
+    # lineSeries.attachAxis(axisX)
+    # lineSeries.attachAxis(axisY)
+    # lineSeries.setColor(Qt.red)
+    # pen = lineSeries.pen()
+    # pen.setWidth(3)
+    # lineSeries.setPen(pen)
+
+    barFont =  QtGui.QFont()
+    barFont.setPixelSize(20)
+    barFont.setFamily("微軟正黑體")
+    barFont.setBold(True)
+    chart.legend().setFont(barFont)
+    chart.legend().setVisible(True)
+    chart.legend().setAlignment(Qt.AlignBottom)
+
+    chartView = QChartView(chart)
+    chartView.setRenderHint(QPainter.Antialiasing)
+    chartView.setMinimumSize(800, 500)
+
+    return chartView  
+
+def createLineChart(type, documents):
+    w = type + '-w'
+    c = type + '-c'
+
+    title = ""
+    if type == "MLU":
+        maxValue = 12 #Y Range
+        title = "平均語句長度"
+    elif type == "VOCD":
+        maxValue = 100
+        title = "詞彙多樣性/字的多樣性"
+
+    #共用字體
+    font = QtGui.QFont()
+    font.setFamily("微軟正黑體")
+    font.setPixelSize(20)
+    font.setBold(True)
+
+    #建立資料series
+    seriesW = QLineSeries()
+    seriesW.setName(w)
+    seriesC = QLineSeries()
+    seriesC.setName(c)
+
+    #載入資料
+    dates = []
+    i = 0
+    for doc in documents:
+        if doc['transcription']['analysis']:
+            if type == "MLU":
+                dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
+                seriesW.append(i, doc['transcription']['analysis'][w])
+                seriesC.append(i, doc['transcription']['analysis'][c])
+                i += 1
+            elif type == "VOCD":
+                if doc['transcription']['analysis'][w] != "樣本數不足":
+                    dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
+                    seriesW.append(i, doc['transcription']['analysis'][w])
+                    seriesC.append(i, doc['transcription']['analysis'][c])
+                    i += 1
+        else:
+            print("沒彙整過:",doc['date'].year, doc['date'].month, doc['date'].day)
+    
+
+    if len(seriesC) == 1 and len(seriesW) == 1:
+        #暫存原本的資料
+        tempW = seriesW.at(0)
+        tempC = seriesC.at(0)
+        #並改用QScatter
+        seriesW = QScatterSeries()
+        seriesW.setName(w)
+        seriesC = QScatterSeries()
+        seriesC.setName(c)
+        seriesW.setMarkerShape(QScatterSeries.MarkerShapeCircle)
+        seriesC.setMarkerShape(QScatterSeries.MarkerShapeCircle)
+        seriesW.append(tempW)
+        seriesC.append(tempC)
+       
+    
+    #宣告Chart
+    chart = QChart()
+    chart.setFont(font)
+    chart.setAnimationOptions(QChart.SeriesAnimations)
+    chart.legend().setAlignment(Qt.AlignBottom)
+    chart.legend().setFont(font)
+    chart.layout().setContentsMargins(0, 0, 0, 0)
+    chart.setTitle(title)
+    #設定title字體
+    tfont = QtGui.QFont()
+    tfont.setFamily("微軟正黑體")
+    tfont.setPixelSize(25)
+    tfont.setBold(True)
+    chart.setTitleFont(tfont)
+
+    #加入資料集
+    chart.addSeries(seriesW)
+    chart.addSeries(seriesC)
+
+    ##建立x軸
+    axisX = QBarCategoryAxis()
+    axisX.append(dates)
+    chart.setAxisX(axisX, seriesW)
+    chart.setAxisX(axisX, seriesC)
+    #axisX.setRange(dates[0], dates[-1])
+    
+    ##建立y軸
+    axisY = QValueAxis()
+    axisY.setRange(0, maxValue)
+    chart.setAxisY(axisY, seriesW)
+    chart.setAxisY(axisY, seriesC)
+
+    chartView = QChartView(chart)
+    chartView.setMinimumSize(QSize(400, 400))
+    chartView.setRenderHint(QPainter.Antialiasing)
+    return chartView  

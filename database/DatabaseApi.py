@@ -403,6 +403,23 @@ def findChildren(caseID , name):
                         '$push': '$document'
                     }
                 }
+            },
+            {
+                '$project': {
+                    'name': 1, 
+                    'caseID': 1, 
+                    'gender': 1, 
+                    'birthday': 1, 
+                    'document': 1, 
+                    'length': {
+                        '$size': '$document'
+                    }
+                }
+            }, 
+            {
+                '$sort': {
+                    'length': -1
+                }
             }
         ])
 
