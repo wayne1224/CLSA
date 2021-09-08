@@ -191,18 +191,20 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.setItem(idx , 6 , item)
         
                 importBtn = QtWidgets.QPushButton('匯入')
-                deleteBtn = QtWidgets.QPushButton('刪除')
                 importBtn.setStyleSheet("QPushButton {background-color: sandybrown;} QPushButton:hover {background-color: rgb(226, 149, 82);}")
-                deleteBtn.setStyleSheet("QPushButton {background-color: rgb(235, 38, 78);} QPushButton:hover {background-color: rgb(219, 26, 65);}")
                 self.tableWidget.setCellWidget(idx,7,importBtn)
-                self.tableWidget.setCellWidget(idx,8,deleteBtn)
                 importBtn.clicked.connect(partial(self.importDoc , doc))
-                deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx)) # 只刪document
+
+                #暫時移除刪除功能
+                # deleteBtn = QtWidgets.QPushButton('刪除')
+                # deleteBtn.setStyleSheet("QPushButton {background-color: rgb(235, 38, 78);} QPushButton:hover {background-color: rgb(219, 26, 65);}")
+                # self.tableWidget.setCellWidget(idx,8,deleteBtn)
+                # deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx)) # 只刪document
 
             if idx == -1:
-                informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
+                QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
         else:
-            informBox = QtWidgets.QMessageBox.information(self, 'Database','資料庫讀取中', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, 'Database','資料庫讀取中', QtWidgets.QMessageBox.Ok)
 
     @QtCore.pyqtSlot()
     def importDoc(self , obj):
@@ -226,30 +228,30 @@ class SearchTab(QtWidgets.QWidget):
         self.input_SLP.setText("")
 
     @QtCore.pyqtSlot()
-    def deleteDoc(self , objID , idx):
-        warnText = ""
-        #若已匯入這筆紀錄
-        if objID == self.currentDoc_id:
-            warnText = "<p style='font-size:13pt; color: red;'>您正在修改這筆紀錄<br/>確定要刪除嗎?</p> \
-                            <p style='font-size:10pt; color: #f25f5c;'>刪除後就永遠無法回復</p>"
-        else:
-            warnText = "<p style='font-size:13pt; color: red;'>確定要刪除此資料嗎?</p> \
-                            <p style='font-size:10pt; color: #f25f5c;'>刪除後就永遠無法回復</p>"
+    # def deleteDoc(self , objID , idx):
+    #     warnText = ""
+    #     #若已匯入這筆紀錄
+    #     if objID == self.currentDoc_id:
+    #         warnText = "<p style='font-size:13pt; color: red;'>您正在修改這筆紀錄<br/>確定要刪除嗎?</p> \
+    #                         <p style='font-size:10pt; color: #f25f5c;'>刪除後就永遠無法回復</p>"
+    #     else:
+    #         warnText = "<p style='font-size:13pt; color: red;'>確定要刪除此資料嗎?</p> \
+    #                         <p style='font-size:10pt; color: #f25f5c;'>刪除後就永遠無法回復</p>"
 
-        delete = QtWidgets.QMessageBox.question(self,
-                            "CLSA",
-                            warnText,
-                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        if delete == QtWidgets.QMessageBox.Yes:
-            if db.deleteDoc(objID):
-                self.tableWidget.removeRow(idx)
-                QtWidgets.QMessageBox.information(self, '成功','成功刪除個案', QtWidgets.QMessageBox.Ok)
-            else:
-                QtWidgets.QMessageBox.critical(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
+    #     delete = QtWidgets.QMessageBox.question(self,
+    #                         "CLSA",
+    #                         warnText,
+    #                         QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+    #     if delete == QtWidgets.QMessageBox.Yes:
+    #         if db.deleteDoc(objID):
+    #             self.tableWidget.removeRow(idx)
+    #             QtWidgets.QMessageBox.information(self, '成功','成功刪除個案', QtWidgets.QMessageBox.Ok)
+    #         else:
+    #             QtWidgets.QMessageBox.critical(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
 
-        if objID == self.currentDoc_id:
-            self.currentDoc_id = None
-            self.procClear.emit()
+    #     if objID == self.currentDoc_id:
+    #         self.currentDoc_id = None
+    #         self.procClear.emit()
     
     @QtCore.pyqtSlot(dict) 
     def getDocID(self, key):
