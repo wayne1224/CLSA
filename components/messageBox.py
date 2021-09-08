@@ -44,14 +44,12 @@ class Table_MessageBox(QtWidgets.QMessageBox):
         self.tableWidget.setVerticalHeaderItem(2, item)
         
         self.layout().addWidget(self.tableWidget, 1, 0 ,1 ,3)
+        # if currentClick==0 :
+        #     print ('Accept')
+        # if currentClick==1 :
+        #     print ('Reject')
 
-        currentClick = self.exec_()
-
-        if currentClick==0 :
-            print ('Accept')
-        if currentClick==1 :
-            print ('Reject')
-
+        #載入資料
         if before and after:
             item = QtWidgets.QTableWidgetItem()
             item.setText(before['name'])
@@ -71,6 +69,8 @@ class Table_MessageBox(QtWidgets.QMessageBox):
             item = QtWidgets.QTableWidgetItem()
             item.setText(after['birthday'])
             self.tableWidget.setItem(2, 1, item)
+
+        self.exec_()
 
     def event(self, e):
         result = QtWidgets.QMessageBox.event(self, e)
