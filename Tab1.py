@@ -17,12 +17,14 @@ import database.DatabaseApi
 class BirthdayEdit(QtWidgets.QDateEdit):
     def __init__(self, parent=None):
         super().__init__(parent, calendarPopup=True)
+        self.setMaximumDate(QtCore.QDate(datetime.now().year, datetime.now().month, datetime.now().day))
 
 class DateEdit(QtWidgets.QDateTimeEdit):
     def __init__(self, parent=None):
         super().__init__(parent, calendarPopup=True)
         self.setDateTime(QtCore.QDateTime.currentDateTime())
         self.setDisplayFormat("yyyy-MM-dd HH:mm")
+        self.setMaximumDate(QtCore.QDate(datetime.now().year, datetime.now().month, datetime.now().day))
 
 class Myform(QtWidgets.QWidget):
     procID = QtCore.pyqtSignal(dict)
@@ -881,38 +883,40 @@ class Myform(QtWidgets.QWidget):
     def insert (self, event): 
         if (self.redFrameExamination()):
             #將dateEdit_recordDate變成dateTime型態
-            strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-            DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-            strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-            DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+            # strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
+            # DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+            # strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+            # DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
 
             childData = self.returnChildData()
             recording = self.returnRecording()
+
+            date = self.dateEdit_recordDate.dateTime().toPyDateTime().replace(second=0, microsecond=0)
         
-            if (database.DatabaseApi.canInsertDoc(self.input_caseID.text() , DateTimeRecordDate)):
+            if (database.DatabaseApi.canInsertDoc(self.input_caseID.text() , date)):
                 if (database.DatabaseApi.findChildData(self.input_caseID.text())):
                     checkChildData = database.DatabaseApi.findChildData(self.input_caseID.text())
                     del checkChildData['_id']
                     if checkChildData == childData :
-                        self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), DateTimeRecordDate , recording)
+                        self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
                     else :
                         questionBox = QtWidgets.QMessageBox.question(self, 
                                     '更新','此個案資料已存在，請問是否要更新個案資料?',
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                         if questionBox == QtWidgets.QMessageBox.Yes :
                             database.DatabaseApi.updateChildData(childData)
-                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), DateTimeRecordDate , recording)
+                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
-                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), DateTimeRecordDate , recording)
+                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
                 else:
                     database.DatabaseApi.insertChildData(childData)
-                    self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), DateTimeRecordDate , recording)
+                    self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
                 
                 if self.currentDoc_id:
                     informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
                 else:
                     informBox = QtWidgets.QMessageBox.information(self, '通知','新增失敗', QtWidgets.QMessageBox.Ok)
-                caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
+                caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':date}
                 self.procStart.emit(caseIDandDate)
                 self.procID.emit({'_id': self.currentDoc_id})
                 self.btn_update.setEnabled(True)
@@ -923,20 +927,22 @@ class Myform(QtWidgets.QWidget):
     def updateRecord (self):
         if (self.redFrameExamination()):
              #將dateEdit_recordDate變成dateTime型態
-            strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-            DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-            strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-            DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+            # strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
+            # DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+            # strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+            # DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
 
             childData = self.returnChildData()
             recording = self.returnRecording()
+
+            date = self.dateEdit_recordDate.dateTime().toPyDateTime().replace(second=0, microsecond=0)
         
-            if (database.DatabaseApi.canUpdateDoc(self.input_caseID.text(), DateTimeRecordDate , self.currentDoc_id)):
+            if (database.DatabaseApi.canUpdateDoc(self.input_caseID.text(), date, self.currentDoc_id)):
                 if (database.DatabaseApi.findChildData(self.input_caseID.text())):
                     checkChildData = database.DatabaseApi.findChildData(self.input_caseID.text())
                     del checkChildData['_id']
                     if childData == checkChildData :
-                        updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , DateTimeRecordDate , recording)
+                        updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
                     else:
                         questionBox = QtWidgets.QMessageBox.question(self, 
                                     '更新','此個案資料已存在，請問是否要更新個案資料?', 
@@ -949,23 +955,23 @@ class Myform(QtWidgets.QWidget):
                             #     for k in i:
                             #         print('not equal:b[',k,']=',b[k],'and a[',k,']=',a[k])
                             database.DatabaseApi.updateChildData(childData)
-                            updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , DateTimeRecordDate , recording)
+                            updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
-                            updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , DateTimeRecordDate , recording)
+                            updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
                 else :
                     questionBox = QtWidgets.QMessageBox.question(self, 
                                     '更新','此個案資料並不存在，請問是否要新增個案資料?', 
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                     if questionBox == QtWidgets.QMessageBox.Yes :            
                         database.DatabaseApi.insertChildData(childData)
-                        updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , DateTimeRecordDate , recording)
+                        updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
                     else:
                         return
                 if updateSuccess:
                     informBox = QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
                 else:
                     informBox = QtWidgets.QMessageBox.information(self, '通知','更新失敗', QtWidgets.QMessageBox.Ok)
-                caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':DateTimeRecordDate}
+                caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':date}
                 self.procStart.emit(caseIDandDate)
 
             else :
