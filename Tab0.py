@@ -108,7 +108,7 @@ class SearchTab(QtWidgets.QWidget):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.tableWidget.setFont(font)
-        self.tableWidget.setColumnCount(9)
+        self.tableWidget.setColumnCount(8)
         self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         
         self.tableWidget.horizontalHeader().setFont(font)
@@ -128,8 +128,8 @@ class SearchTab(QtWidgets.QWidget):
         self.tableWidget.setHorizontalHeaderItem(6, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(7, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(8, item)
+        # item = QtWidgets.QTableWidgetItem()
+        # self.tableWidget.setHorizontalHeaderItem(8, item)
 
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
@@ -139,7 +139,7 @@ class SearchTab(QtWidgets.QWidget):
         self.tableWidget.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.Stretch)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Stretch)
+        #self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Stretch)
 
         self.layout.addWidget(self.tableWidget)
         self.retranslateUi()
@@ -227,7 +227,7 @@ class SearchTab(QtWidgets.QWidget):
         self.input_Name.setText("")
         self.input_SLP.setText("")
 
-    @QtCore.pyqtSlot()
+    #@QtCore.pyqtSlot()
     # def deleteDoc(self , objID , idx):
     #     warnText = ""
     #     #若已匯入這筆紀錄
