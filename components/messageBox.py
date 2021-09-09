@@ -43,7 +43,15 @@ class Table_MessageBox(QtWidgets.QMessageBox):
         self.tableWidget.setVerticalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem("生日")
         self.tableWidget.setVerticalHeaderItem(2, item)
-        
+
+        ##
+        self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.verticalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.verticalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.verticalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch) 
+
+
         self.layout().addWidget(self.tableWidget, 1, 0 ,1 ,3)
         # if currentClick==0 :
         #     print ('Accept')
