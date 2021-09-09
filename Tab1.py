@@ -11,7 +11,11 @@
 from datetime import datetime
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
+<<<<<<< Updated upstream
 from components.messageBox import Table_MessageBox
+=======
+from pymongo.message import update
+>>>>>>> Stashed changes
 import win32api
 import database.DatabaseApi
 
@@ -569,7 +573,7 @@ class Myform(QtWidgets.QWidget):
         self.horizontalLayout_11.addWidget(self.btn_update)
 
         self.btn_insert.setFont(font)
-        self.btn_insert.clicked.connect(self.insert)
+        self.btn_insert.clicked.connect(self.insertRecord)
         self.btn_insert.setObjectName("btn_insert")
         self.horizontalLayout_11.addWidget(self.btn_insert)
         self.layout.addLayout(self.horizontalLayout_11)
@@ -651,17 +655,9 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_usually.setText(_translate("", "經常 (6~9次)"))
         self.rbtn_always.setText(_translate("", "總是"))
         self.lbl_participation.setText(_translate("", "配合參與度："))
-        # self.lbl_anxietySit.setText(_translate("", "兒童焦慮情形："))
         self.btn_empty.setText(_translate("", "  清空欄位  "))
         self.btn_insert.setText(_translate("", "  新增一筆紀錄  "))
         self.btn_update.setText(_translate("", "  更新紀錄  "))
-
-    # #接收來自Tab2的個案編號和日期並從資料庫查詢資料貼到Tab1
-    # @QtCore.pyqtSlot(dict)
-    # def getCaseIDAndDate(self, CaseIDAndDate) :
-    #     Doc = database.DatabaseApi.findDoc(CaseIDAndDate['caseID'], CaseIDAndDate['date'])
-    #     self.getDoc(Doc)
-    #     self.saveForm = self.returnTab1Data()
 
     #接收來自Tab2的總語句數與有效語句數
     @QtCore.pyqtSlot(dict)
@@ -692,6 +688,14 @@ class Myform(QtWidgets.QWidget):
             informBox = QtWidgets.QMessageBox.information(self, '查詢','查無此個案編號', QtWidgets.QMessageBox.Ok)
         self.saveForm = self.returnTab1Data()
 
+    #將dateEdit_recordDate變成dateTime型態
+    def getDateinDateTime(self) :
+        strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
+        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+        return DateTimeRecordDate
+
     #回傳現在Tab1的所有資料
     def returnTab1Data (self) :
         #判斷是男是女
@@ -704,11 +708,8 @@ class Myform(QtWidgets.QWidget):
         date = str(self.dateEdit_birthday.date().toPyDate())
         birthday = datetime.strptime(date, "%Y-%m-%d")
 
-        #將dateEdit_3變成dateTime型態
-        strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+        #將dateEdit_recordDate變成dateTime型態
+        DateTimeRecordDate = self.getDateinDateTime()
 
         #判斷互動形式   
         interactionType = ''
@@ -770,7 +771,6 @@ class Myform(QtWidgets.QWidget):
             'equipment' :equipment,
             'help' : needhelp,
             'others' : self.input_specialSit.toPlainText(),
-            # 'situation' : self.input_anxietySit.toPlainText()
         }
         return data
 
@@ -790,6 +790,7 @@ class Myform(QtWidgets.QWidget):
         self.input_inducement.setStyleSheet("border: 1px solid initial;")
         self.input_specialSit.setStyleSheet("border: 1px solid initial;")
         self.layoutNeedhelp.setStyleSheet("border: 1px ")
+
     #回傳Tab1中的childData欄位資料
     def returnChildData(self):
         #將dateEdit_birthday變成dateTime型態
@@ -810,20 +811,19 @@ class Myform(QtWidgets.QWidget):
             'birthday' : birthday
         }
         return childData
+        
     #回傳Tab1中的recording欄位資料
     def returnRecording(self) :
         #將dateEdit變成dateTime型態
         date = str(self.dateEdit_birthday.date().toPyDate())
         birthday = datetime.strptime(date, "%Y-%m-%d")
 
-        #將dateEdit_3變成dateTime型態
+        #將dateEdit_recordDate變成dateTime型態
         strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
         DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
     
-        interactionType = ''
         #判斷互動形式
+        interactionType = ''
         if self.rbtn_conversation.isChecked():
             interactionType = '交談'
         if self.rbtn_game.isChecked():
@@ -831,8 +831,8 @@ class Myform(QtWidgets.QWidget):
         if self.rbtn_narrative.isChecked():
             interactionType = '敘事'
 
-        equipment = ''
         #判斷記錄方式
+        equipment = ''
         if self.rbtn_cellphone.isChecked():
             equipment = '手機'
         if self.rbtn_pen.isChecked():
@@ -842,8 +842,8 @@ class Myform(QtWidgets.QWidget):
         if self.rbtn_camera.isChecked():
             equipment = '攝影機'
 
-        needhelp = ''
         #判斷需要引導協助
+        needhelp = ''
         if self.rbtn_always.isChecked():
             needhelp = '總是'
         if self.rbtn_few.isChecked():
@@ -880,15 +880,12 @@ class Myform(QtWidgets.QWidget):
             'age': round((DateTimeDate - birthday).days / 365, 1)
         }
         return recording
-    #新增資料到資料庫 
-    def insert (self, event): 
-        if (self.redFrameExamination()):
-            #將dateEdit_recordDate變成dateTime型態
-            # strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-            # DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-            # strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-            # DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
 
+    #新增資料到資料庫 
+    def insertRecord (self, event): 
+        if (self.redFrameExamination()):
+
+            DateTimeRecordDate = self.getDateinDateTime()
             childData = self.returnChildData()
             recording = self.returnRecording()
 
@@ -901,14 +898,35 @@ class Myform(QtWidgets.QWidget):
                     if checkChildData == childData :
                         self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
                     else :
+                        updateText = "<p style='font-size:12pt;'> 此個案資料已存在<br/>" 
+                        i=[k for k in checkChildData if k in childData if checkChildData[k]!=childData[k]]
+                        if i:
+                          for k in i:
+                                if k == 'name':
+                                    updateText += '確定要將個案姓名從' + checkChildData[k] + '改成' + childData[k] + '?<br/>'
+                                if k == 'gender':
+                                    if checkChildData[k] == 'male':
+                                        oldGender = '男'
+                                        newGender = '女'
+                                    else :
+                                        oldGender = '女'
+                                        newGender = '男'
+                                    updateText += '確定要將個案性別從' + oldGender + '性改成' + newGender + '性?<br/>'
+                                if k == 'birthday':
+                                    oldBirthday = checkChildData[k].date()
+                                    newBirthday = childData[k].date()
+                                    updateText += '確定要將個案生日從' + str(oldBirthday) + '改成' + str(newBirthday) + '?<br/>'
+                        updateText += "</p>"
                         questionBox = QtWidgets.QMessageBox.question(self, 
-                                    '更新','此個案資料已存在，請問是否要更新個案資料?',
+                                    '更新',updateText,
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                         if questionBox == QtWidgets.QMessageBox.Yes :
                             database.DatabaseApi.updateChildData(childData)
                             self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
                             self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
+                        else :
+                            return
                 else:
                     database.DatabaseApi.insertChildData(childData)
                     self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
@@ -927,12 +945,8 @@ class Myform(QtWidgets.QWidget):
     #更新紀錄
     def updateRecord (self):
         if (self.redFrameExamination()):
-             #將dateEdit_recordDate變成dateTime型態
-            # strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-            # DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-            # strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-            # DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
 
+            DateTimeRecordDate = self.getDateinDateTime()
             childData = self.returnChildData()
             recording = self.returnRecording()
 
@@ -944,21 +958,36 @@ class Myform(QtWidgets.QWidget):
                     del checkChildData['_id']
                     if childData == checkChildData :
                         updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
-                    else:
+                    else: 
+                        updateText = "<p style='font-size:12pt;'> 此個案資料已存在<br/>" 
+                        i=[k for k in checkChildData if k in childData if checkChildData[k]!=childData[k]]
+                        if i:
+                          for k in i:
+                                if k == 'name':
+                                    updateText += '確定要將個案姓名從' + checkChildData[k] + '改成' + childData[k] + '?<br/>'
+                                if k == 'gender':
+                                    if checkChildData[k] == 'male':
+                                        oldGender = '男'
+                                        newGender = '女'
+                                    else :
+                                        oldGender = '女'
+                                        newGender = '男'
+                                    updateText += '確定要將個案性別從' + oldGender + '性改成' + newGender + '性?<br/>'
+                                if k == 'birthday':
+                                    oldBirthday = checkChildData[k].date()
+                                    newBirthday = childData[k].date()
+                                    updateText += '確定要將個案生日從' + str(oldBirthday) + '改成' + str(newBirthday) + '?<br/>'
+                        updateText += "</p>"   
                         questionBox = QtWidgets.QMessageBox.question(self, 
-                                    '更新','此個案資料已存在，請問是否要更新個案資料?', 
+                                    '更新',updateText, 
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                         if questionBox == QtWidgets.QMessageBox.Yes :
-                            # a = {'key_1': 1,'key_2': 2, 'key_3': 3}
-                            # b = {'key_1': 1,'key_2': 5}
-                            # i=[k for k in b if k in a if b[k]!=a[k]]
-                            # if i:
-                            #     for k in i:
-                            #         print('not equal:b[',k,']=',b[k],'and a[',k,']=',a[k])
                             database.DatabaseApi.updateChildData(childData)
                             updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
                             updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
+                        else:
+                            return 
                 else :
                     questionBox = QtWidgets.QMessageBox.question(self, 
                                     '更新','此個案資料並不存在，請問是否要新增個案資料?', 
@@ -967,7 +996,7 @@ class Myform(QtWidgets.QWidget):
                         database.DatabaseApi.insertChildData(childData)
                         updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
                     else:
-                        return
+                        return 
                 if updateSuccess:
                     informBox = QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
                 else:
@@ -978,6 +1007,7 @@ class Myform(QtWidgets.QWidget):
             else :
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點個案已經做過治療了，請修正收錄時間或是個案編號', QtWidgets.QMessageBox.Ok)
     
+    #紅框與年齡檢查
     def redFrameExamination(self):
         inputError = 0 
         ageError = 0
@@ -1095,11 +1125,8 @@ class Myform(QtWidgets.QWidget):
         #將dateEdit變成dateTime型態
         date = str(self.dateEdit_birthday.date().toPyDate())
         birthday = datetime.strptime(date, "%Y-%m-%d")
-        #將dateEdit_3變成dateTime型態
-        strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+        #將dateEdit_recordDate變成dateTime型態
+        DateTimeRecordDate = self.getDateinDateTime()
 
         age = DateTimeRecordDate.year - birthday.year - ((DateTimeRecordDate.month, DateTimeRecordDate.day) < (birthday.month, birthday.day))
         if age >= 13:
