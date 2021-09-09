@@ -301,15 +301,36 @@ class chartTab(QtWidgets.QWidget):
         #尚未轉錄過無法生成資料
         self.clearLayout()
         if count == 0:
-            QtWidgets.QMessageBox.information(self, '','尚未轉錄過無法生成資料', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, '','尚未彙整過無法生成資料', QtWidgets.QMessageBox.Ok)
             return
         
         #清除所有Layout
         self.clearLayout()
 
+        #詞性圖
         self.POS_chart = createBarChart_POS(doc.copy(), name)
-        self.MLU_chart = createLineChart("MLU", doc.copy())
-        self.VOCD_chart = createLineChart("VOCD", doc.copy())
+        self.scroll_vbox.addWidget(self.POS_chart)
+
+        #VOCD/MLU圖
+        self.chartLayout = QtWidgets.QHBoxLayout()
+        self.MLU_chart, len_mlu = createLineChart("MLU", doc.copy())
+        self.VOCD_chart, len_vocd, invalid_dates = createLineChart("VOCD", doc.copy())
+        self.chartLayout.addWidget(self.VOCD_chart)
+        self.chartLayout.addWidget(self.MLU_chart)
+        
+        self.scroll_vbox.addLayout(self.chartLayout)
+        self.layout.addWidget(self.scroll)
+
+        if len_mlu > len_vocd and len_vocd == 0:
+            self.VOCD_chart.hide()
+            QtWidgets.QMessageBox.warning(self, "通知","資料過少無法產生VOCD圖表", QtWidgets.QMessageBox.Ok)
+        elif len_mlu > len_vocd and len_vocd > 0:
+            warnText = f"VOCD圖表有{len_mlu-len_vocd}筆紀錄因資料過少無法呈現於圖表"
+            for d in invalid_dates:
+                warnText += f"\n{d}"
+            QtWidgets.QMessageBox.warning(self, "通知", warnText, QtWidgets.QMessageBox.Ok)
+
+
 
         #算年紀
         # today = date.today()
@@ -471,13 +492,3 @@ class chartTab(QtWidgets.QWidget):
         #     self.hintArea.addWidget(self.graph_hint_icon)
         #     self.hintArea.addWidget(self.graph_hint_text)
         #     self.scroll_vbox.addLayout(self.hintArea) 
-
-    
-        self.scroll_vbox.addWidget(self.POS_chart)
-        self.chartLayout = QtWidgets.QGridLayout()
-        self.chartLayout.addWidget(self.VOCD_chart, 0, 0)
-        self.chartLayout.addWidget(self.MLU_chart, 0, 1)
-        self.scroll_vbox.addLayout(self.chartLayout)
-        self.layout.addWidget(self.scroll)
-
-        

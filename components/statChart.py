@@ -262,14 +262,14 @@ def createBarChart_POS(doc, name): #建立詞性的柱狀圖
 def createLineChart(type, documents):
     w = type + '-w'
     c = type + '-c'
-
+    
     title = ""
     if type == "MLU":
         maxValue = 12 #Y Range
-        title = "平均語句長度"
+        title = "平均語句長度(MLU)"
     elif type == "VOCD":
         maxValue = 100
-        title = "詞彙多樣性/字的多樣性"
+        title = "詞彙多樣性/字的多樣性(VOCD)"
 
     #共用字體
     font = QtGui.QFont()
@@ -278,6 +278,7 @@ def createLineChart(type, documents):
     font.setBold(True)
 
     #建立資料series
+    chartType = "line"
     seriesW = QLineSeries()
     seriesW.setName(w)
     seriesC = QLineSeries()
@@ -285,6 +286,7 @@ def createLineChart(type, documents):
 
     #載入資料
     dates = []
+    invalid_dates = [] #無法彙整的日期
     i = 0
     for doc in documents:
         if doc['transcription']['analysis']:
@@ -299,11 +301,13 @@ def createLineChart(type, documents):
                     seriesW.append(i, doc['transcription']['analysis'][w])
                     seriesC.append(i, doc['transcription']['analysis'][c])
                     i += 1
-        else:
-            print("沒彙整過:",doc['date'].year, doc['date'].month, doc['date'].day)
+                else:
+                    invalid_dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
     
 
     if len(seriesC) == 1 and len(seriesW) == 1:
+        #換圖類型
+        chartType = "scatter"
         #暫存原本的資料
         tempW = seriesW.at(0)
         tempC = seriesC.at(0)
@@ -340,6 +344,7 @@ def createLineChart(type, documents):
     ##建立x軸
     axisX = QBarCategoryAxis()
     axisX.append(dates)
+    axisX.setLabelsAngle(-45)
     chart.setAxisX(axisX, seriesW)
     chart.setAxisX(axisX, seriesC)
     #axisX.setRange(dates[0], dates[-1])
@@ -350,7 +355,27 @@ def createLineChart(type, documents):
     chart.setAxisY(axisY, seriesW)
     chart.setAxisY(axisY, seriesC)
 
+    #改變UI
+    if chartType == "line":
+        penW = seriesW.pen()
+        penC = seriesW.pen()
+        penW.setWidth(5)
+        penC.setWidth(5)
+        seriesW.setPen(penW)
+        seriesC.setPen(penC)
+    if type == "MLU":
+        seriesW.setColor(QColor(37, 150, 190))
+        seriesC.setColor(QColor(143, 186, 82))
+    elif type == "VOCD":
+        seriesW.setColor(QColor(246, 166, 38))
+        seriesC.setColor(QColor(191, 90, 63))
+
+
     chartView = QChartView(chart)
-    chartView.setMinimumSize(QSize(400, 400))
+    chartView.setMinimumSize(QSize(400, 500))
     chartView.setRenderHint(QPainter.Antialiasing)
-    return chartView  
+
+    if type == "MLU":
+        return chartView, len(seriesW)
+    elif type == "VOCD":
+         return chartView, len(seriesW), invalid_dates
