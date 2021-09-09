@@ -952,28 +952,7 @@ class Myform(QtWidgets.QWidget):
                 else: #新增
                     return 3
             else : #收錄表的個案資訊與資料庫不相同
-                updateText = "<p style='font-size:12pt;'> 此個案資料已存在<br/>" 
-                i=[k for k in checkChildData if k in childData if checkChildData[k]!=childData[k]]
-                if i:
-                    for k in i:
-                        if k == 'name':
-                            updateText += '確定要將個案姓名從' + checkChildData[k] + '改成' + childData[k] + '?<br/>'
-                        if k == 'gender':
-                            if checkChildData[k] == 'male':
-                                oldGender = '男'
-                                newGender = '女'
-                            else :
-                                oldGender = '女'
-                                newGender = '男'
-                            updateText += '確定要將個案性別從' + oldGender + '性改成' + newGender + '性?<br/>'
-                        if k == 'birthday':
-                            oldBirthday = checkChildData[k].date()
-                            newBirthday = childData[k].date()
-                            updateText += '確定要將個案生日從' + str(oldBirthday) + '改成' + str(newBirthday) + '?<br/>'
-                updateText += "</p>"
-                questionBox = QtWidgets.QMessageBox.question(self, 
-                            '更新',updateText,
-                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+                questionBox = Table_MessageBox(checkChildData ,childData)
                 if questionBox == QtWidgets.QMessageBox.Yes:
                     if type: #更新
                         return 2
