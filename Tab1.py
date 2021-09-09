@@ -884,14 +884,6 @@ class Myform(QtWidgets.QWidget):
     #新增資料到資料庫 
     def insertRecord (self, event): 
         if (self.redFrameExamination()):
-<<<<<<< Updated upstream
-            #將dateEdit_recordDate變成dateTime型態
-            # strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-            # DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-            # strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-            # DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
-=======
->>>>>>> Stashed changes
 
             DateTimeRecordDate = self.getDateinDateTime()
             childData = self.returnChildData()
@@ -932,13 +924,9 @@ class Myform(QtWidgets.QWidget):
                             database.DatabaseApi.updateChildData(childData)
                             self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
-<<<<<<< Updated upstream
                             self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
-=======
-                            self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), DateTimeRecordDate , recording)
-                        else:
+                        else :
                             return
->>>>>>> Stashed changes
                 else:
                     database.DatabaseApi.insertChildData(childData)
                     self.currentDoc_id = database.DatabaseApi.insertRecording(self.input_caseID.text(), date , recording)
@@ -957,14 +945,6 @@ class Myform(QtWidgets.QWidget):
     #更新紀錄
     def updateRecord (self):
         if (self.redFrameExamination()):
-<<<<<<< Updated upstream
-             #將dateEdit_recordDate變成dateTime型態
-            # strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-            # DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-            # strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-            # DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
-=======
->>>>>>> Stashed changes
 
             DateTimeRecordDate = self.getDateinDateTime()
             childData = self.returnChildData()
@@ -977,11 +957,7 @@ class Myform(QtWidgets.QWidget):
                     checkChildData = database.DatabaseApi.findChildData(self.input_caseID.text())
                     del checkChildData['_id']
                     if childData == checkChildData :
-<<<<<<< Updated upstream
                         updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
-                    else:
-=======
-                        updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , DateTimeRecordDate , recording)
                     else: 
                         updateText = "<p style='font-size:12pt;'> 此個案資料已存在<br/>" 
                         i=[k for k in checkChildData if k in childData if checkChildData[k]!=childData[k]]
@@ -1002,7 +978,6 @@ class Myform(QtWidgets.QWidget):
                                     newBirthday = childData[k].date()
                                     updateText += '確定要將個案生日從' + str(oldBirthday) + '改成' + str(newBirthday) + '?<br/>'
                         updateText += "</p>"   
->>>>>>> Stashed changes
                         questionBox = QtWidgets.QMessageBox.question(self, 
                                     '更新',updateText, 
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
@@ -1010,13 +985,9 @@ class Myform(QtWidgets.QWidget):
                             database.DatabaseApi.updateChildData(childData)
                             updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
                         elif questionBox == QtWidgets.QMessageBox.No:
-<<<<<<< Updated upstream
                             updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
-=======
-                            updateSuccess = database.DatabaseApi.updateRecording(self.currentDoc_id , self.input_caseID.text() , DateTimeRecordDate , recording)
                         else:
                             return 
->>>>>>> Stashed changes
                 else :
                     questionBox = QtWidgets.QMessageBox.question(self, 
                                     '更新','此個案資料並不存在，請問是否要新增個案資料?', 
