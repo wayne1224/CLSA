@@ -202,8 +202,9 @@ def upsertChildData(childData , upsert): # insert => child data object ID / Fals
             # 此 child 沒有在資料庫裡了 , return object ID => 可以新增 
             else:
                 return childDataDB.insert_one(childData).inserted_id
-
-        else:
+                
+        # update child data
+        elif upsert == "update":
             query = dict()
             query["caseID"] = childData["caseID"]
 
