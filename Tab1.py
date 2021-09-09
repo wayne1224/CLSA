@@ -11,11 +11,8 @@
 from datetime import datetime
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
-<<<<<<< Updated upstream
 from components.messageBox import Table_MessageBox
-=======
 from pymongo.message import update
->>>>>>> Stashed changes
 import win32api
 import database.DatabaseApi
 
