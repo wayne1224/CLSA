@@ -168,6 +168,14 @@ class NormModifyTab(QtWidgets.QWidget):
         #Validator
         valid = QtGui.QDoubleValidator(0, 10, 2, notation=QtGui.QDoubleValidator.StandardNotation)
 
+        # 提示icon
+        self.mlu_remindIcon = QtWidgets.QLabel()
+        self.mlu_remindIcon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(30, 30)))
+        self.mlu_remindIcon.setMaximumSize(QtCore.QSize(30, 30))
+        self.vocd_remindIcon = QtWidgets.QLabel()
+        self.vocd_remindIcon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(30, 30)))
+        self.vocd_remindIcon.setMaximumSize(QtCore.QSize(30, 30))
+
         #MLU GroupBox layout
         self.mlu_vbox = QtWidgets.QVBoxLayout()
 
@@ -177,7 +185,6 @@ class NormModifyTab(QtWidgets.QWidget):
         self.input_mlu_c = QtWidgets.QLineEdit()
         self.input_mlu_c.setFont(font)
         self.input_mlu_c.setValidator(valid)
-
         self.hbox_1.addWidget(self.label_mlu_c)
         self.hbox_1.addWidget(self.input_mlu_c)
 
@@ -187,12 +194,20 @@ class NormModifyTab(QtWidgets.QWidget):
         self.input_mlu_w = QtWidgets.QLineEdit()
         self.input_mlu_w.setFont(font)
         self.input_mlu_w.setValidator(valid)
-
         self.hbox_2.addWidget(self.label_mlu_w)
         self.hbox_2.addWidget(self.input_mlu_w)
 
+        self.hbox_5 = QtWidgets.QHBoxLayout()
+        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.mlu_remindText = QtWidgets.QLabel("數字輸入上限99.99")
+        self.mlu_remindText.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.hbox_5.addItem(spacerItem3)
+        self.hbox_5.addWidget(self.mlu_remindIcon)
+        self.hbox_5.addWidget(self.mlu_remindText)
+
         self.mlu_vbox.addLayout(self.hbox_1)
         self.mlu_vbox.addLayout(self.hbox_2)
+        self.mlu_vbox.addLayout(self.hbox_5)
 
         self.mlu_box.setLayout(self.mlu_vbox)
         self.mlu_box.setMaximumSize(QtCore.QSize(16777215, 250))
@@ -218,8 +233,17 @@ class NormModifyTab(QtWidgets.QWidget):
         self.hbox_4.addWidget(self.label_vocd_w)
         self.hbox_4.addWidget(self.input_vocd_w)
 
+        self.hbox_6 = QtWidgets.QHBoxLayout()
+        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.vocd_remindText = QtWidgets.QLabel("數字輸入上限99.99")
+        self.vocd_remindText.setMaximumSize(QtCore.QSize(16777215, 40))
+        self.hbox_6.addItem(spacerItem4)
+        self.hbox_6.addWidget(self.vocd_remindIcon)
+        self.hbox_6.addWidget(self.vocd_remindText)
+
         self.vocd_vbox.addLayout(self.hbox_3)
         self.vocd_vbox.addLayout(self.hbox_4)
+        self.vocd_vbox.addLayout(self.hbox_6)
 
         self.vocd_box.setLayout(self.vocd_vbox)
         self.vocd_box.setMaximumSize(QtCore.QSize(16777215, 250))
