@@ -975,11 +975,8 @@ class Myform(QtWidgets.QWidget):
     #更新紀錄
     def updateRecord (self):
         if (self.redFrameExamination()):
-
-            DateTimeRecordDate = self.getDateinDateTime()
             childData = self.returnChildData()
             recording = self.returnRecording()
-
             date = self.dateEdit_recordDate.dateTime().toPyDateTime().replace(second=0, microsecond=0)
         
             if (db.canUpdateDoc(self.input_caseID.text(), date, self.currentDoc_id)):
