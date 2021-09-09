@@ -1,4 +1,4 @@
-import database.DatabaseApi
+import database.DatabaseApi as db
 import sys
 import qtawesome as qta
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -9,7 +9,7 @@ class SearchTab(QtWidgets.QWidget):
     #用來傳Document到各頁
     procDoc = QtCore.pyqtSignal(dict)
     procMain = QtCore.pyqtSignal(int, float)
-    procFind = QtCore.pyqtSignal()
+    procClear = QtCore.pyqtSignal()
 
     def __init__(self):
         super(SearchTab, self).__init__()
@@ -108,7 +108,7 @@ class SearchTab(QtWidgets.QWidget):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.tableWidget.setFont(font)
-        self.tableWidget.setColumnCount(9)
+        self.tableWidget.setColumnCount(8)
         self.tableWidget.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
         
         self.tableWidget.horizontalHeader().setFont(font)
@@ -128,8 +128,8 @@ class SearchTab(QtWidgets.QWidget):
         self.tableWidget.setHorizontalHeaderItem(6, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setHorizontalHeaderItem(7, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(8, item)
+        # item = QtWidgets.QTableWidgetItem()
+        # self.tableWidget.setHorizontalHeaderItem(8, item)
 
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
@@ -139,17 +139,19 @@ class SearchTab(QtWidgets.QWidget):
         self.tableWidget.horizontalHeader().setSectionResizeMode(5, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(6, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(7, QtWidgets.QHeaderView.Stretch)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Stretch)
+        #self.tableWidget.horizontalHeader().setSectionResizeMode(8, QtWidgets.QHeaderView.Stretch)
 
         self.layout.addWidget(self.tableWidget)
         self.retranslateUi()
 
         #QSS
-        # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Tab0.qss", "r").read())
         self.setStyleSheet(open("QSS/Tab0.qss", "r").read())
 
+        #紀錄當下會匯入的objectID
+        self.currentDoc_id = None
+
     def _search(self):
-        cursor = database.DatabaseApi.findDocs(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
+        cursor = db.findDocs(self.input_SLP.text() , self.input_caseID.text() , self.input_Name.text())
 
         # self.tableWidget.clear()
         while self.tableWidget.rowCount() > 0:
@@ -189,25 +191,32 @@ class SearchTab(QtWidgets.QWidget):
                 self.tableWidget.setItem(idx , 6 , item)
         
                 importBtn = QtWidgets.QPushButton('匯入')
-                deleteBtn = QtWidgets.QPushButton('刪除')
                 importBtn.setStyleSheet("QPushButton {background-color: sandybrown;} QPushButton:hover {background-color: rgb(226, 149, 82);}")
-                deleteBtn.setStyleSheet("QPushButton {background-color: rgb(235, 38, 78);} QPushButton:hover {background-color: rgb(219, 26, 65);}")
                 self.tableWidget.setCellWidget(idx,7,importBtn)
-                self.tableWidget.setCellWidget(idx,8,deleteBtn)
                 importBtn.clicked.connect(partial(self.importDoc , doc))
-                deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx)) # 只刪document
+
+                #暫時移除刪除功能
+                # deleteBtn = QtWidgets.QPushButton('刪除')
+                # deleteBtn.setStyleSheet("QPushButton {background-color: rgb(235, 38, 78);} QPushButton:hover {background-color: rgb(219, 26, 65);}")
+                # self.tableWidget.setCellWidget(idx,8,deleteBtn)
+                # deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx)) # 只刪document
 
             if idx == -1:
-                informBox = QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
+                QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
         else:
-            informBox = QtWidgets.QMessageBox.information(self, 'Database','資料庫讀取中', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, 'Database','資料庫讀取中', QtWidgets.QMessageBox.Ok)
 
     @QtCore.pyqtSlot()
     def importDoc(self , obj):
+        #紀錄當下document id
+        self.currentDoc_id = obj['_id']
+
+        #將Document傳到收錄表, 轉錄表, 彙整表
         self.procDoc.emit(obj)
+
         #通知彙整完整
         informBox = QtWidgets.QMessageBox.information(self, '通知','匯入完成', QtWidgets.QMessageBox.Ok)
-        self.procMain.emit(1, 0)
+        self.procMain.emit(1, 0) #切換到收錄表
 
         #清空Table
         while self.tableWidget.rowCount() > 0:
@@ -218,18 +227,36 @@ class SearchTab(QtWidgets.QWidget):
         self.input_Name.setText("")
         self.input_SLP.setText("")
 
-    def deleteDoc(self , objID , idx):
-        delete = QtWidgets.QMessageBox.warning(self,
-                            "CLSA",
-                            '<p style="font-size:13pt; color: red;">確定要刪除此資料嗎?</p>',
-                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel)
-        if delete == QtWidgets.QMessageBox.Yes:
-            if database.DatabaseApi.deleteDoc(objID):
-                self.tableWidget.removeRow(idx)
-                informBox = QtWidgets.QMessageBox.information(self, '成功','成功刪除個案', QtWidgets.QMessageBox.Ok)
-            else:
-                informBox = QtWidgets.QMessageBox.critical(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
+    #@QtCore.pyqtSlot()
+    # def deleteDoc(self , objID , idx):
+    #     warnText = ""
+    #     #若已匯入這筆紀錄
+    #     if objID == self.currentDoc_id:
+    #         warnText = "<p style='font-size:13pt; color: red;'>您正在修改這筆紀錄<br/>確定要刪除嗎?</p> \
+    #                         <p style='font-size:10pt; color: #f25f5c;'>刪除後就永遠無法回復</p>"
+    #     else:
+    #         warnText = "<p style='font-size:13pt; color: red;'>確定要刪除此資料嗎?</p> \
+    #                         <p style='font-size:10pt; color: #f25f5c;'>刪除後就永遠無法回復</p>"
+
+    #     delete = QtWidgets.QMessageBox.question(self,
+    #                         "CLSA",
+    #                         warnText,
+    #                         QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+    #     if delete == QtWidgets.QMessageBox.Yes:
+    #         if db.deleteDoc(objID):
+    #             self.tableWidget.removeRow(idx)
+    #             QtWidgets.QMessageBox.information(self, '成功','成功刪除個案', QtWidgets.QMessageBox.Ok)
+    #         else:
+    #             QtWidgets.QMessageBox.critical(self, '失敗','刪除個案失敗', QtWidgets.QMessageBox.Ok)
+
+    #     if objID == self.currentDoc_id:
+    #         self.currentDoc_id = None
+    #         self.procClear.emit()
     
+    @QtCore.pyqtSlot(dict) 
+    def getDocID(self, key):
+        self.currentDoc_id = key['_id']
+
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         # Form.setWindowTitle(_translate("Form", "Form"))

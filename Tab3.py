@@ -270,9 +270,9 @@ class AnalysisTab(QtWidgets.QWidget):
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.tableWidget.setItem(i, 3, item)
         
-        #Class內變數宣告
-        self.caseID = None
-        self.date = None
+        # #Class內變數宣告
+        # self.caseID = None
+        # self.date = None
         self.isEdit = False
 
     @QtCore.pyqtSlot()
@@ -282,24 +282,24 @@ class AnalysisTab(QtWidgets.QWidget):
     def getEdit(self):
         return self.isEdit
 
-    @QtCore.pyqtSlot(dict)
-    def getDoc(self, key):
+    @QtCore.pyqtSlot(dict) 
+    def getDoc(self, key): 
         if key != None:
-            if '_id' in key: #若傳入整個document
+            if "recording" in key: #從Tab0收到整個Document
                 self.clearContent()
-                self.caseID = key['caseID']
-                self.date = key['date']
-                self.caseID_label.setText(str(self.caseID))
-                date_time = self.date.strftime("%Y-%m-%d %H:%M")
-                self.date_label.setText(date_time)
+                # self.caseID = key['caseID']
+                # self.date = key['date']
+                self.caseID_label.setText(key['caseID'])
+                self.date_label.setText(key['date'].strftime("%Y-%m-%d %H:%M"))
                 if key['transcription']['analysis']:
                     self.setContent(key['transcription']['analysis'])
-            else:
-                self.caseID = key['caseID']
-                self.date = key['date']
-                self.caseID_label.setText(str(self.caseID))
-                date_time = self.date.strftime("%Y-%m-%d %H:%M")
-                self.date_label.setText(date_time)
+                self.currentDoc_id = key['_id']
+            else: #從Tab2收到無analysis的document
+                #self.caseID = key['caseID']
+                #self.date = key['date']
+                self.caseID_label.setText(key['caseID'])
+                self.date_label.setText(key['date'].strftime("%Y-%m-%d %H:%M"))
+                self.currentDoc_id = key['_id']
 
                 #呼叫過去的Analysis
                 # analysis = db.findAnalysis(self.caseID,self.date)
@@ -378,12 +378,12 @@ class AnalysisTab(QtWidgets.QWidget):
         #開始進行斷詞
         tagger = DistilTag.DistilTag()
         tagged = tagger.tag(utterStr)
-        print(tagged)
+        #print(tagged)
         wordCount = [0]*len(tagged) #統計每句詞數
         charCount = [len(i) + 1 for i in tagged]
         i = 0 #每句話的index
         for sent in tagged:
-            print(i)
+            #print(i)
             #charArray.extend(utterance[i])
             for pair in sent:
                 wordCount[i] += 1 #統計每句詞數
@@ -449,7 +449,7 @@ class AnalysisTab(QtWidgets.QWidget):
         #呼叫資料庫
         print('caseID:',self.caseID)
         print('Date:',type(self.date))
-        db.updateAnalysis(self.caseID, self.date, Analysis)
+        db.updateAnalysis(self.currentDoc_id, Analysis)
 
         #通知彙整完整
         #informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)

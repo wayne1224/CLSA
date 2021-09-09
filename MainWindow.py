@@ -12,7 +12,7 @@ import DistilTag
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.resize(1400, 700)
+        # self.resize(1400, 700)
         self.setWindowTitle("CLSA")
         self.mainTab = MainTabWidget()
         self.mainTab.tabBar().setDocumentMode(True)
@@ -48,7 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thread_DB.finished.connect(self.thread_DB.deleteLater)
 
         #讀取資料並產生圖表
-        self.thread_DB.finished.connect(self.mainTab.tab4.tab1.lineChart)
+        self.thread_DB.finished.connect(self.mainTab.tab4.tab1.createBarCharts)
 
         #讀取NORM
         self.thread_DB.finished.connect(self.mainTab.tab4.tab2.getNorms)
@@ -86,7 +86,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
 
     def closeEvent(self, event):
-        checkTab1 = self.mainTab.tab1.saveExamination()
+        checkTab1 = self.mainTab.tab1.isEdit()
         checkTab2 = self.mainTab.tab2.isEdit()
         if checkTab2 == "NoAdultID":
             event.ignore()

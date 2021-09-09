@@ -1,4 +1,7 @@
 import pymongo
+import datetime
+import time
+import calendar
 
 # CLSA
 #     childData
@@ -46,7 +49,7 @@ def findDocs(SLP , caseID , name):
         result = documentDB.aggregate([
             {
                 '$lookup': {
-                    'from': 'cildDhata', 
+                    'from': 'childData', 
                     'localField': 'caseID', 
                     'foreignField': 'caseID', 
                     'as': 'childData'
@@ -99,183 +102,89 @@ def deleteDoc(objID): # 只刪除document 不刪除childData
         print(e) 
 
 # 收錄表 api
-def findChildData(caseID): # return child Data or False
+def findChildData(caseID):
     try:
         query = dict()
         query["caseID"] = caseID
-        
-        # 找不到 child data , return False
+
         if childDataDB.count_documents(query) == 0:
-            print("can not find this Child Data")
+            print("Can not find this Child Data")
             return False
 
-        # 找到 child data , return child data
-        else:
-            data = childDataDB.find_one(query)
-            del data['_id']
-            return data
-
+        return childDataDB.find_one(query)
     except Exception as e:
-        print("The error of function findChildData() !!")
         print(e)
         return False
 
-def findDocument(caseID , date): # return boolean
+def findDoc(caseID , date):
     try:
-        query = dict()
-        query["caseID"] = caseID
-        query["date"] = date
+        query2ChildData = dict()
+        query2Document = dict()
 
-        # 找不到 document , return False
-        if documentDB.count_documents(query) == 0:
-            print("can not find this Child Data")
+        query2ChildData["caseID"] = caseID
+        query2Document["caseID"] = caseID
+        query2Document["date"] = date
+
+        if childDataDB.count_documents(query2ChildData) == 0:
+            print("Can not find this Child Data")
             return False
 
-        # 找到 document , return True
-        else:
-            return True
+        if documentDB.count_documents(query2Document) == 0:
+            print("Can not find this Recording")
+            return False
 
+        childData = childDataDB.find_one(query2ChildData)
+        document = documentDB.find_one(query2Document)
+
+        result = {
+            'childData' : childData,
+            'document' : document
+        }
+
+        return result
+        
     except Exception as e:
-        print("The error of function findDocument() !!")
         print(e)
         return False
 
-def canInsertDoc(caseID , date): # return boolean , if error return None
-    # check caseID and date
-    try:
-        query = dict()
-        query["caseID"] = caseID
-        query["date"] = date
-
-        # 有找到 代表有重複 doc , return False => 不能新增
-        if documentDB.count_documents(query) != 0:
-            return False
-
-        # 沒找到 代表無重複 doc , return True => 可以新增
-        else:
-            return True
-             
-    except Exception as e:
-        print("The error of function canInsertDoc() !!")
-        print(e)
-        return None
-
-def canUpdateDoc(caseID , date , documentID): # return boolean , if error return None
-    # check caseID , date and document ID
-    try:
-        query = dict()
-        query["caseID"] = caseID
-        query["date"] = date
-
-        # 有找到 代表有重複 doc
-        if documentDB.count_documents(query) != 0:
-            data = documentDB.find_one(query)
-
-            # 是同一個 doc => 可以更新
-            if data["_id"] == documentID:
-                return True
-            
-            # 不同的 doc => 不能更新
-            else:
-                return False
-
-        # 沒找到 代表無重複 doc , return True => 可以更新
-        else:
-            return True
-             
-    except Exception as e:
-        print("The error of function canUpdateDoc() !!")
-        print(e)
-        return None
-
-
-## insert update 合併
-def upsertChildData(childData , upsert): # insert => child data object ID / False , update => boolean
-    try:
-        # insert child data
-        if upsert == "insert":
-            # 此 child 已經在資料庫裡了 , return False => 不能新增 
-            if findChildData(childData["caseID"]):
-                print("This case ID already exists and can not insert to database !!")
-                return False
-
-            # 此 child 沒有在資料庫裡了 , return object ID => 可以新增 
-            else:
-                return childDataDB.insert_one(childData).inserted_id
-
-        else:
-            query = dict()
-            query["caseID"] = childData["caseID"]
-
-            # 在 child data 裡，找不到這個個案 , return False 
-            if documentDB.count_documents(query) == 0:
-                print("can not find this child data !!")
-                return False
-            
-            # 在 child data 裡，找到這個個案，並且更改 , return True
-            else:
-                childDataDB.update_many(query , {"$set" : {                                                       
-                                                            "name" : childData["name"],
-                                                            "gender" : childData["gender"],
-                                                            "birthday" : childData["birthday"]
-                                                            }})
-
-                return True
-
-    except Exception as e:
-        print("The error of function upsertChildData() !!")
-        print(e)     
-        return False
-
-def insertChildData(childData): # return object ID or False
-    try:
-        # 此 child 已經在資料庫裡了 , return False => 不能新增 
-        if findChildData(childData["caseID"]):
-            print("This case ID already exists and can not insert to database !!")
-            return False
-
-        # 此 child 沒有在資料庫裡了 , return object ID => 可以新增 
-        else:
-            return childDataDB.insert_one(childData).inserted_id
-
-    except Exception as e:
-        print("The error of function insertChildData() !!")
-        print(e)     
-        return False
-
-def updateChildData(childData): # return boolean
+def upsertChildData(childData):
     try:
         query = dict()
         query["caseID"] = childData["caseID"]
+        result = ["" , True]
 
-        # 在 child data 裡，找不到這個個案 , return False 
-        if documentDB.count_documents(query) == 0:
-            print("can not find this child data !!")
-            return False
-        
-        # 在 child data 裡，找到這個個案，並且更改 , return True
-        else:
-            childDataDB.update_many(query , {"$set" : {                                                       
+        # insert
+        if childDataDB.count_documents(query) == 0:
+            result[0] = "insert"
+            childDataDB.insert_one(childData)
+            
+        # update
+        else: 
+            result[0] = "update"
+            childDataDB.update_many(query , {"$set" : {
+                                                        "caseID" : childData["caseID"],
                                                         "name" : childData["name"],
                                                         "gender" : childData["gender"],
                                                         "birthday" : childData["birthday"]
                                                         }})
-
-            return True
+        
+        return result
     except Exception as e:
-        print("The error of function updateChildData() !!")
+        result[1] = False
         print(e) 
-        return False
+        return result
 
-def insertRecording(caseID , date , recording): #0 return boolean
+def upsertRecording(caseID , date , recording):
     try:
-        # 此 document 已經在資料庫裡了 , return False => 不能新增 
-        if findDocument(caseID , date):
-            print("This case ID and date already exists and can not insert to database !!")
-            return False
+        query = dict()
+        query["caseID"] = caseID
+        query["date"] = date
+        result = ["" , True]
 
-        # 此 document 沒有在資料庫裡了 , return object ID => 可以新增 
-        else:
+        # insert
+        if documentDB.count_documents(query) == 0:
+            result[0] = "insert"
+
             data = {
                 "caseID" : caseID, 
                 "date" : date,
@@ -288,45 +197,44 @@ def insertRecording(caseID , date , recording): #0 return boolean
                 } 
             }
             
-            return documentDB.insert_one(data).inserted_id
-
-    except Exception as e:
-        print("The error of function insertRecording() !!")
-        print(e)
-        return False
-
-def updateRecording(documentID , caseID , date , recording): # return boolean 
-    try:
-        query = dict()
-        query["_id"] = documentID
-
-        # 在 document 裡，找不到這個個案 , return False => 不能更新
-        if documentDB.count_documents(query) == 0:
-            print("can not find this document!!")
-            return False
-        
-        # 在 document 裡，找到這個個案 , return True => 可以更新
+            documentDB.insert_one(data)
+        # update
         else:
-            documentDB.update_one(query , {"$set" : {
-                                                        "caseID" : caseID,
-                                                        "date" : date,
-                                                        "recording" : recording
-                                                        }})
+            result[0] = "update"
+            documentDB.update_one(query , {"$set" : {"recording" : recording}})
 
-            return True
+        return result
     except Exception as e:
-        print("The error of function updateRecording() !!")
-        print(e)   
-        return False
+        result[1] = False
+        print(e)
+        return result
+
+def upsertChildDataAndRecording(caseID , date , recording , childData):
+    result = ["" , True]
+    result1 = upsertChildData(childData)
+    result2 = upsertRecording(caseID , date , recording)
+
+    result[0] = result2[0]
+    
+    if result1[1] == result2[1]:
+        if result2[1] == True:
+            result[1] = True
+        else:
+            result[1] = False
+    else:
+        result[1] = False
+    
+    return result
 
 # 轉錄表 api
-def findContent(documentID): # return transcription or False
+def findContent(caseID , date):
     try:
         query = dict()
-        query["_id"] = documentID
+        query["caseID"] = caseID
+        query["date"] = date
 
         if documentDB.count_documents(query) == 0:
-            print("Can not find this content")
+            print("can not find this content")
             return False
         
         data = documentDB.find_one(query)["transcription"]
@@ -340,51 +248,62 @@ def findContent(documentID): # return transcription or False
     except Exception as e:
         print(e)
 
-def updateContent(documentID , transcriber , content , totalUtterance , validUtterance): # return boolean
+def updateContent(caseID , date , transcriber , content , totalUtterance , validUtterance):
     try:
         query = dict()
-        query["_id"] = documentID
+        query["caseID"] = caseID
+        query["date"] = date
 
-        # 找不到 doc , return False => 無法更新 content 
         if documentDB.count_documents(query) == 0:
-            print("can not find this document")
+            print("can not find this caseID or date")
             return False
-
-        # 找到 doc , return True => 可以更新 content 
-        else:
+        
+        try:
             documentDB.update_one(query , {"$set" : {
-                                            "transcription.transcriber" : transcriber, 
-                                            "transcription.content" : content, 
-                                            "transcription.totalUtterance" : totalUtterance, 
-                                            "transcription.validUtterance" : validUtterance
-                                            }})
-
-         return True
-
-
+                                            "transcription.transcriber" : transcriber , 
+                                            "transcription.content" : content , 
+                                            "transcription.totalUtterance" : totalUtterance , 
+                                            "transcription.validUtterance" : validUtterance}})
+            return True
+        except pymongo.errors.PyMongoError as e:
+            return False
     except Exception as e:
-        print("The error of function updateContent() !!")
         print(e)
         return False
 
 # 彙錄表 api
-def updateAnalysis(documentID , analysis): # return boolean
+def findAnalysis(caseID , date):
     try:
         query = dict()
-        query["_id"] = documentID
+        query["caseID"] = caseID
+        query["date"] = date
 
-        # 找不到 doc , return False => 無法更新 analysis
         if documentDB.count_documents(query) == 0:
-            print("can not find this document")
+            print("can not find this analysis")
+            return False
+        
+        return documentDB.find_one(query)["transcription"]["analysis"]
+    except Exception as e:
+        print(e)
+        return False
+
+def updateAnalysis(caseID , date , analysis):
+    try:
+        query = dict()
+        query["caseID"] = caseID
+        query["date"] = date
+
+        if documentDB.count_documents(query) == 0:
+            print("can not find this caseID or date")
             return False
 
-        # 找不到 doc , return False => 無法更新 analysis
-        else:
+        try:
             documentDB.update_one(query , {"$set" : {"transcription.analysis" : analysis}})
             return True
-    
+        except pymongo.errors.PyMongoError as e:
+            return False
+
     except Exception as e:
-        print("The error of function updateAnalysis() !!")
         print(e)
         return False
 
