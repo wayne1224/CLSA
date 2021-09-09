@@ -883,64 +883,6 @@ class Myform(QtWidgets.QWidget):
         }
         return recording
 
-    #新增資料到資料庫 
-    def insertRecord (self, event): 
-        if (self.redFrameExamination()):
-            childData = self.returnChildData()
-            recording = self.returnRecording()
-            date = self.dateEdit_recordDate.dateTime().toPyDateTime().replace(second=0, microsecond=0)
-        
-            if (db.canInsertDoc(self.input_caseID.text() , date)):
-                if (db.findChildData(self.input_caseID.text())):
-                    checkChildData = db.findChildData(self.input_caseID.text())
-                    if checkChildData == childData :
-                        self.currentDoc_id = db.insertRecording(self.input_caseID.text(), date , recording)
-                    else :
-                        updateText = "<p style='font-size:12pt;'> 此個案資料已存在<br/>" 
-                        i=[k for k in checkChildData if k in childData if checkChildData[k]!=childData[k]]
-                        if i:
-                          for k in i:
-                                if k == 'name':
-                                    updateText += '確定要將個案姓名從' + checkChildData[k] + '改成' + childData[k] + '?<br/>'
-                                if k == 'gender':
-                                    if checkChildData[k] == 'male':
-                                        oldGender = '男'
-                                        newGender = '女'
-                                    else :
-                                        oldGender = '女'
-                                        newGender = '男'
-                                    updateText += '確定要將個案性別從' + oldGender + '性改成' + newGender + '性?<br/>'
-                                if k == 'birthday':
-                                    oldBirthday = checkChildData[k].date()
-                                    newBirthday = childData[k].date()
-                                    updateText += '確定要將個案生日從' + str(oldBirthday) + '改成' + str(newBirthday) + '?<br/>'
-                        updateText += "</p>"
-                        questionBox = QtWidgets.QMessageBox.question(self, 
-                                    '更新',updateText,
-                                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-                        if questionBox == QtWidgets.QMessageBox.Yes :
-                            db.updateChildData(childData)
-                            self.currentDoc_id = db.insertRecording(self.input_caseID.text(), date , recording)
-                        elif questionBox == QtWidgets.QMessageBox.No:
-                            self.currentDoc_id = db.insertRecording(self.input_caseID.text(), date , recording)
-                        else :
-                            return
-                else:
-                    db.insertChildData(childData)
-                    self.currentDoc_id = db.insertRecording(self.input_caseID.text(), date , recording)
-                
-                if self.currentDoc_id:
-                    informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
-                else:
-                    informBox = QtWidgets.QMessageBox.information(self, '通知','新增失敗', QtWidgets.QMessageBox.Ok)
-                caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':date}
-                self.procStart.emit(caseIDandDate)
-                self.procID.emit({'_id': self.currentDoc_id})
-                self.btn_update.setEnabled(True)
-                self.btn_insert.setEnabled(False)
-            else :
-                informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點個案已經做過治療了，請修正收錄時間或是個案編號', QtWidgets.QMessageBox.Ok)
-    
     #type = 1 更新, type = 0 新增
     def accessDB(self, type) :
         childData = self.returnChildData()
@@ -952,13 +894,15 @@ class Myform(QtWidgets.QWidget):
                 else: #新增
                     return 3
             else : #收錄表的個案資訊與資料庫不相同
-                questionBox = Table_MessageBox(checkChildData ,childData)
-                if questionBox == QtWidgets.QMessageBox.Yes:
+                questionBox = Table_MessageBox(checkChildData ,childData).exec_()
+                if questionBox == 0:
+                    print(questionBox)
                     if type: #更新
                         return 2
                     else: #新增
                         return 1
                 else:
+                    print(questionBox)
                     return 0
         else: #child ID不存在
             if type: #更新
@@ -966,11 +910,36 @@ class Myform(QtWidgets.QWidget):
                                     '更新','此個案資料並不存在，請問是否要新增個案資料?', 
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 if questionBox == QtWidgets.QMessageBox.Yes:
+                    print(questionBox)
                     return 2
                 else :
                     return 0
             else: #新增
                 return 1
+
+    #新增資料到資料庫 
+    def insertRecord (self, event): 
+        if (self.redFrameExamination()):
+            childData = self.returnChildData()
+            recording = self.returnRecording()
+            date = self.dateEdit_recordDate.dateTime().toPyDateTime().replace(second=0, microsecond=0)
+            self.saveForm = self.returnTab1Data()
+            if (db.canInsertDoc(self.input_caseID.text() , date)):
+                result = self.accessDB(1)
+                if result == 1:
+                    db.upsertChildData(childData, 'insert') 
+                    db.insertRecording(self.input_caseID.text() , date , recording)
+                if result == 3:
+                    db.insertRecording(self.input_caseID.text() , date , recording)
+                if result > 0:
+                    informBox = QtWidgets.QMessageBox.information(self, '通知','新增成功', QtWidgets.QMessageBox.Ok)
+                    caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':date}
+                    self.procStart.emit(caseIDandDate)
+                    self.procID.emit({'_id': self.currentDoc_id})
+                    self.btn_update.setEnabled(True)
+                    self.btn_insert.setEnabled(False)
+            else :
+                informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點個案已經做過治療了，請修正收錄時間或是個案編號', QtWidgets.QMessageBox.Ok)
 
     #更新紀錄
     def updateRecord (self):
@@ -978,61 +947,17 @@ class Myform(QtWidgets.QWidget):
             childData = self.returnChildData()
             recording = self.returnRecording()
             date = self.dateEdit_recordDate.dateTime().toPyDateTime().replace(second=0, microsecond=0)
-        
+            self.saveForm = self.returnTab1Data()
             if (db.canUpdateDoc(self.input_caseID.text(), date, self.currentDoc_id)):
-                if (db.findChildData(self.input_caseID.text())):
-                    checkChildData = db.findChildData(self.input_caseID.text())
-                    if childData == checkChildData :
-                        updateSuccess = db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
-                    else: 
-                        updateText = "<p style='font-size:12pt;'> 此個案資料已存在<br/>" 
-                        i=[k for k in checkChildData if k in childData if checkChildData[k]!=childData[k]]
-                        if i:
-                          for k in i:
-                                if k == 'name':
-                                    updateText += '確定要將個案姓名從' + checkChildData[k] + '改成' + childData[k] + '?<br/>'
-                                if k == 'gender':
-                                    if checkChildData[k] == 'male':
-                                        oldGender = '男'
-                                        newGender = '女'
-                                    else :
-                                        oldGender = '女'
-                                        newGender = '男'
-                                    updateText += '確定要將個案性別從' + oldGender + '性改成' + newGender + '性?<br/>'
-                                if k == 'birthday':
-                                    oldBirthday = checkChildData[k].date()
-                                    newBirthday = childData[k].date()
-                                    updateText += '確定要將個案生日從' + str(oldBirthday) + '改成' + str(newBirthday) + '?<br/>'
-                        updateText += "</p>"   
-                        questionBox = QtWidgets.QMessageBox.question(self, 
-                                    '更新',updateText, 
-                                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-                        if questionBox == QtWidgets.QMessageBox.Yes :
-                            print(questionBox, 123)
-                            db.updateChildData(childData)
-                            updateSuccess = db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
-                        elif questionBox == QtWidgets.QMessageBox.No:
-                            print(questionBox, 12)
-                            updateSuccess = db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
-                        else:
-                            print(questionBox, 1)
-                            return
-                else :
-                    questionBox = QtWidgets.QMessageBox.question(self, 
-                                    '更新','此個案資料並不存在，請問是否要新增個案資料?', 
-                                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-                    if questionBox == QtWidgets.QMessageBox.Yes :            
-                        db.insertChildData(childData)
-                        updateSuccess = db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
-                    else:
-                        return 
-                if updateSuccess:
-                    informBox = QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
-                else:
-                    informBox = QtWidgets.QMessageBox.information(self, '通知','更新失敗', QtWidgets.QMessageBox.Ok)
-                caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':date}
-                self.procStart.emit(caseIDandDate)
-
+                result = self.accessDB(1)
+                if (result == 2):
+                    db.upsertChildData(childData, 'update')
+                    db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
+                elif (result == 4):
+                    db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
+                if result > 0:
+                    QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
+                    self.procID.emit({'_id': self.currentDoc_id})
             else :
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','這個時間點個案已經做過治療了，請修正收錄時間或是個案編號', QtWidgets.QMessageBox.Ok)
     
