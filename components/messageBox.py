@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
+from datetime import datetime
 
 class Table_MessageBox(QtWidgets.QMessageBox):
     def __init__(self, before=None, after=None): #Before, After: Dict型態
@@ -54,20 +55,25 @@ class Table_MessageBox(QtWidgets.QMessageBox):
             item = QtWidgets.QTableWidgetItem()
             item.setText(before['name'])
             self.tableWidget.setItem(0, 0, item)
+
             item = QtWidgets.QTableWidgetItem()
-            item.setText(before['gender'])
+            item.setText("男" if before['gender'] == "male" else "女")
             self.tableWidget.setItem(1, 0, item)
+
             item = QtWidgets.QTableWidgetItem()
-            item.setText(before['birthday'])
+            item.setText(datetime.strptime(before["birthday"], "%Y-%m-%d"))
             self.tableWidget.setItem(2, 0, item)
+
             item = QtWidgets.QTableWidgetItem()
             item.setText(after['name'])
             self.tableWidget.setItem(0, 1, item)
+
             item = QtWidgets.QTableWidgetItem()
-            item.setText(after['gender'])
+            item.setText("男" if before['gender'] == "male" else "女")
             self.tableWidget.setItem(1, 1, item)
+
             item = QtWidgets.QTableWidgetItem()
-            item.setText(after['birthday'])
+            item.setText(datetime.strptime(after["birthday"], "%Y-%m-%d"))
             self.tableWidget.setItem(2, 1, item)
 
         self.exec_()
