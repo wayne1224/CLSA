@@ -6,7 +6,7 @@ class Table_MessageBox(QtWidgets.QMessageBox):
         QtWidgets.QMessageBox.__init__(self)
         #self.setSizeGripEnabled (True)
 
-        a = "00757001"
+        a = before['caseID']
         self.setWindowTitle("是否變更個案資料")
         # self.setIcon(self.Critical)
         # print(type(self.icon().))
@@ -61,7 +61,7 @@ class Table_MessageBox(QtWidgets.QMessageBox):
             self.tableWidget.setItem(1, 0, item)
 
             item = QtWidgets.QTableWidgetItem()
-            item.setText(datetime.strptime(before["birthday"], "%Y-%m-%d"))
+            item.setText(before["birthday"].strftime( "%Y-%m-%d"))
             self.tableWidget.setItem(2, 0, item)
 
             item = QtWidgets.QTableWidgetItem()
@@ -69,14 +69,14 @@ class Table_MessageBox(QtWidgets.QMessageBox):
             self.tableWidget.setItem(0, 1, item)
 
             item = QtWidgets.QTableWidgetItem()
-            item.setText("男" if before['gender'] == "male" else "女")
+            item.setText("男" if after['gender'] == "male" else "女")
             self.tableWidget.setItem(1, 1, item)
 
             item = QtWidgets.QTableWidgetItem()
-            item.setText(datetime.strptime(after["birthday"], "%Y-%m-%d"))
+            item.setText(after["birthday"].strftime( "%Y-%m-%d"))
             self.tableWidget.setItem(2, 1, item)
 
-        self.exec_()
+        # self.exec_()
 
     def event(self, e):
         result = QtWidgets.QMessageBox.event(self, e)
