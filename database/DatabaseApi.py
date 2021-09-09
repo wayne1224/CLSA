@@ -46,7 +46,7 @@ def findDocs(SLP , caseID , name):
         result = documentDB.aggregate([
             {
                 '$lookup': {
-                    'from': 'childData', 
+                    'from': 'cildDhata', 
                     'localField': 'caseID', 
                     'foreignField': 'caseID', 
                     'as': 'childData'
@@ -359,7 +359,8 @@ def updateContent(documentID , transcriber , content , totalUtterance , validUtt
                                             "transcription.validUtterance" : validUtterance
                                             }})
 
-            return True
+         return True
+
 
     except Exception as e:
         print("The error of function updateContent() !!")
