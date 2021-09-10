@@ -5,7 +5,7 @@ from datetime import datetime
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtChart import QChart, QBarSeries, QChartView, QBarSet, QBarCategoryAxis, QValueAxis, QAbstractBarSeries, QLineSeries, QScatterSeries
 from PyQt5.QtGui import QPainter, QColor
-from PyQt5.QtCore import Qt, QSize, QDateTime, QDate
+from PyQt5.QtCore import Qt, QSize, QMargins
 
 
 class statChartTab(QtWidgets.QWidget):
@@ -72,8 +72,6 @@ class statChartTab(QtWidgets.QWidget):
                 if doc['transcription']['analysis'][w] != "樣本數不足":
                     sum_W[age] += doc['transcription']['analysis'][w]
                     nums_W[age] += 1
-
-                if doc['transcription']['analysis'][c] != "樣本數不足":
                     sum_C[age] += doc['transcription']['analysis'][c]
                     nums_C[age] += 1
 
@@ -158,10 +156,15 @@ class statChartTab(QtWidgets.QWidget):
         ##建立y軸
         axisY = QValueAxis()
         axisY.setRange(0, maxValue)
+        axisY.setLabelsFont(font)
+        axisY.setLabelFormat("%d");
         chart.addAxis(axisY, Qt.AlignLeft)
         series.attachAxis(axisY)
-
         
+        if type == "MLU":
+            axisY.setTitleText("詞彙/字(數)")
+            axisY.setTitleFont(font)
+            
         if type == "MLU":
             self.mlu_barChart = QChartView(chart)
             self.mlu_barChart.setMinimumSize(QSize(400, 400))
@@ -329,6 +332,7 @@ def createLineChart(type, documents):
     chart.legend().setAlignment(Qt.AlignBottom)
     chart.legend().setFont(font)
     chart.layout().setContentsMargins(0, 0, 0, 0)
+    #chart.setMargins(QMargins(0,0,0,0))
     chart.setTitle(title)
     #設定title字體
     tfont = QtGui.QFont()
@@ -352,6 +356,8 @@ def createLineChart(type, documents):
     ##建立y軸
     axisY = QValueAxis()
     axisY.setRange(0, maxValue)
+    axisY.setLabelsFont(font)
+    axisY.setLabelFormat("%d");
     chart.setAxisY(axisY, seriesW)
     chart.setAxisY(axisY, seriesC)
 
@@ -363,9 +369,12 @@ def createLineChart(type, documents):
         penC.setWidth(5)
         seriesW.setPen(penW)
         seriesC.setPen(penC)
+    
     if type == "MLU":
         seriesW.setColor(QColor(37, 150, 190))
         seriesC.setColor(QColor(143, 186, 82))
+        axisY.setTitleText("詞彙/字(數)")
+        axisY.setTitleFont(font)
     elif type == "VOCD":
         seriesW.setColor(QColor(246, 166, 38))
         seriesC.setColor(QColor(191, 90, 63))

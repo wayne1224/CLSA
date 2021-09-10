@@ -160,7 +160,7 @@ class searchForm(QtWidgets.QWidget):
         self.search_btn.setSizePolicy(sizePolicy)
         self.search_btn.setMaximumSize(QtCore.QSize(16777215, 50))
         font = QtGui.QFont()
-        font.setFamily("Agency FB")
+        font.setFamily("微軟正黑體")
         font.setPointSize(14)
         self.search_btn.setFont(font)
         self.search_btn.setObjectName("search_btn")
@@ -216,15 +216,6 @@ class chartTab(QtWidgets.QWidget):
         self.scroll.setWidgetResizable(True)
         self.scroll.setWidget(self.virtualWidget)
         
-        # Hint Widget Under Graphs
-        self.graph_hint_icon = QtWidgets.QLabel()
-        self.graph_hint_icon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(25, 25)))
-        self.graph_hint_icon.setMaximumSize(QtCore.QSize(25, 25))
-        self.graph_hint_text = QtWidgets.QLabel("樣本數不足無法產生圖表")
-        self.graph_hint_text.setMaximumSize(QtCore.QSize(16777215, 25))
-        
-        
-
     def search(self):
         #移除提示
         self.form.remindText.setHidden(True)
@@ -278,17 +269,19 @@ class chartTab(QtWidgets.QWidget):
             self.VOCD_chart.hide()
             self.MLU_chart.hide()
             #self.hintArea.hide()
-
-        for i in reversed(range(self.scroll_vbox.count())):
-            #print(self.scroll_vbox.itemAt(i))
-            #self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
-            if self.scroll_vbox.itemAt(i).layout():
-                self.scroll_vbox.itemAt(i).layout().deleteLater()
-                self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
-                
-            elif self.scroll_vbox.itemAt(i).widget():
-                self.scroll_vbox.itemAt(i).widget().deleteLater()
-                self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+        try:
+            for i in reversed(range(self.scroll_vbox.count())):
+                #print(self.scroll_vbox.itemAt(i))
+                #self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+                if self.scroll_vbox.itemAt(i).layout():
+                    self.scroll_vbox.itemAt(i).layout().deleteLater()
+                    self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+                    
+                elif self.scroll_vbox.itemAt(i).widget():
+                    self.scroll_vbox.itemAt(i).widget().deleteLater()
+                    self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+        except Exception as e:
+            print(e)
 
     def create_linebarchart(self, doc, name, birthday):
         #檢查是否轉錄過
@@ -312,6 +305,7 @@ class chartTab(QtWidgets.QWidget):
         self.scroll_vbox.addWidget(self.POS_chart)
 
         #VOCD/MLU圖
+        
         self.chartLayout = QtWidgets.QHBoxLayout()
         self.MLU_chart, len_mlu = createLineChart("MLU", doc.copy())
         self.VOCD_chart, len_vocd, invalid_dates = createLineChart("VOCD", doc.copy())
@@ -323,172 +317,39 @@ class chartTab(QtWidgets.QWidget):
 
         if len_mlu > len_vocd and len_vocd == 0:
             self.VOCD_chart.hide()
-            QtWidgets.QMessageBox.warning(self, "通知","資料過少無法產生VOCD圖表", QtWidgets.QMessageBox.Ok)
+            warnText = "資料過少無法產生VOCD圖表"
+            self.createWarnLabel(warnText,two_graph=False)
+            QtWidgets.QMessageBox.warning(self, "通知",warnText, QtWidgets.QMessageBox.Ok)
         elif len_mlu > len_vocd and len_vocd > 0:
             warnText = f"VOCD圖表有{len_mlu-len_vocd}筆紀錄因資料過少無法呈現於圖表"
+            self.createWarnLabel(warnText)
             for d in invalid_dates:
                 warnText += f"\n{d}"
             QtWidgets.QMessageBox.warning(self, "通知", warnText, QtWidgets.QMessageBox.Ok)
-
-
-
-        #算年紀
-        # today = date.today()
-        # ageNum = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
-        # if birthday.month >= 6:
-        #     ageNum += 0.5
-        # norm = db.findClosestNorm(ageNum) 
-
         
-        # if Doc['transcription']['analysis'] == None: #是否已分析過
-        #     return
-        
-        # caseDocs = db.findDocsByCaseID(caseID) #查詢個案紀錄
-        
-       
-        # #VOCD
-        # self.chart2 =  QChart()
-        # self.chart2.setTitle("詞彙多樣性/字的多樣性")
-        # self.chart2.setTitleFont(font)
 
-        # axisX2 = QBarCategoryAxis()
-        # axisY2 = QValueAxis()
-        # self.chart2.addAxis(axisY2, Qt.AlignLeft)
-        # # axisY2.setRange(0.0, 100.0)
-        # biggestValue2 = 100.0
+    def createWarnLabel(self, warnText, two_graph=True):
+        #Font
+        font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(10)
 
-        # categories2 = []
-        # lineSeriesAverageVOCD_w = QLineSeries(self)
-        # lineSeriesAverageVOCD_w.setName('VOCD-w('+ norm['age'] + ')')
-        # lineSeriesVOCD_w = QLineSeries(self)
-        # lineSeriesVOCD_w.setName("VOCD-w")
-        # lineSeriesVOCD_c = QLineSeries(self)
-        # lineSeriesVOCD_c.setName("VOCD-c")
-        # analysisFail = 0
-        # # print(norm['data']['vocd-w'])
-        # for i, index in enumerate(caseDocs):
-        #     if index['transcription']['analysis'] != None:
-        #         if (index['transcription']['analysis']['VOCD-w'] != '樣本數不足') :
-        #             strDate = index['date'].strftime("%Y-%m-%d %H:%M")
-        #             categories2.append(strDate)
-        #             lineSeriesAverageVOCD_w.append(QPoint(i - analysisFail, float(norm['data']['vocd-w'])))
-        #             lineSeriesVOCD_w.append(QPoint(i - analysisFail, index['transcription']['analysis']['VOCD-w']))
-        #             lineSeriesVOCD_c.append(QPoint(i - analysisFail, index['transcription']['analysis']['VOCD-c']))
-        #             while (index['transcription']['analysis']['VOCD-w'] > biggestValue2 or\
-        #                    index['transcription']['analysis']['VOCD-c'] > biggestValue2) :
-        #                 biggestValue2 += 20
-        #         else: 
-        #             analysisFail += 1
+        # Hint Widget Under Graphs
+        graph_hint_icon = QtWidgets.QLabel()
+        graph_hint_icon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(25, 25)))
+        graph_hint_icon.setMaximumSize(QtCore.QSize(30, 30))
+        graph_hint_text = QtWidgets.QLabel(warnText) #"樣本數不足無法產生圖表"
+        graph_hint_text.setMaximumSize(QtCore.QSize(16777215, 30))
+        graph_hint_text.setFont(font)
+        spacer = QtWidgets.QSpacerItem(40,20, QtWidgets.QSizePolicy.Expanding)
 
-        # axisY2.setRange(0.0, biggestValue2)
-        # axisX2.append(categories2)
-        # self.chart2.addAxis(axisX2, Qt.AlignBottom)
-        # if len(categories2) - 1 > 0 :
-        #     axisX2.setRange(categories2[0], categories2[len(categories2) - 1])
-        
-        # self.chart2.addSeries(lineSeriesVOCD_w)
-        # self.chart2.addSeries(lineSeriesVOCD_c)
-        # self.chart2.addSeries(lineSeriesAverageVOCD_w)
-        # lineSeriesAverageVOCD_w.attachAxis(axisX2)
-        # lineSeriesAverageVOCD_w.attachAxis(axisY2)
-        # lineSeriesVOCD_w.attachAxis(axisX2)
-        # lineSeriesVOCD_w.attachAxis(axisY2)
-        # lineSeriesVOCD_c.attachAxis(axisX2)
-        # lineSeriesVOCD_c.attachAxis(axisY2)
-        # #設線的寬度
-        # penAverageVOCD_w = lineSeriesVOCD_w.pen()
-        # penVOCD_w = lineSeriesVOCD_w.pen()
-        # penVOCD_c = lineSeriesVOCD_c.pen()
-        # penAverageVOCD_w.setWidth(5)
-        # penVOCD_w.setWidth(5)
-        # penVOCD_c.setWidth(5)
-        # lineSeriesAverageVOCD_w.setPen(penAverageVOCD_w)
-        # lineSeriesVOCD_w.setPen(penVOCD_w)
-        # lineSeriesVOCD_c.setPen(penVOCD_c)
-        # #虛線
-        # lineSeriesAverageVOCD_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
-        # #axisX2.setLabelsFont(labelFont)
-        # axisY2.setLabelsFont(labelFont)
+        self.remindHbox = QtWidgets.QHBoxLayout() #最外層HBOX
+        #self.remindHbox.addItem(spacer)
+        self.remindHbox.addWidget(graph_hint_icon)
+        self.remindHbox.addWidget(graph_hint_text)
+        #self.remindHbox.addItem(spacer)
 
-        # self.chart2.legend().setFont(barFont)
-        # self.chart2.legend().setVisible(True)
-        # self.chart2.legend().setAlignment(Qt.AlignBottom)
+        #if two_graph:
+            #self.remindHbox.addItem(spacer)
 
-        # self.chartView2 = QChartView(self.chart2)
-        # self.chartView2.setRenderHint(QPainter.Antialiasing)
-        # self.chartView2.setMinimumSize(500, 500)
-
-        # #MLU
-        # self.chart3 =  QChart()
-        # self.chart3.setTitle("平均語句長度")
-        # self.chart3.setTitleFont(font)
-
-        # axisX3 = QBarCategoryAxis()
-        # axisY3 = QValueAxis()
-        # self.chart3.addAxis(axisY3, Qt.AlignLeft)
-        # biggestValue3 = 20.0
-
-        # categories3 = []
-        # lineSeriesAverageMLU_w = QLineSeries(self)
-        # lineSeriesAverageMLU_w.setName('MLU-w('+ norm['age'] + ')')
-        # lineSeriesMLU_w = QLineSeries(self)
-        # lineSeriesMLU_w.setName("MLU-w")
-        # lineSeriesMLU_c = QLineSeries(self)
-        # lineSeriesMLU_c.setName("MLU-c")
-        # for i, index in enumerate(caseDocs):
-        #     if index['transcription']['analysis'] != None:
-        #         strDate = index['date'].strftime("%Y-%m-%d %H:%M")
-        #         categories3.append(strDate)
-        #         lineSeriesAverageMLU_w.append(QPoint(i, float(norm['data']['mlu-w'])))
-        #         lineSeriesMLU_w.append(QPoint(i, index['transcription']['analysis']['MLU-w']))
-        #         lineSeriesMLU_c.append(QPoint(i, index['transcription']['analysis']['MLU-c']))
-        #         while (index['transcription']['analysis']['MLU-w'] > biggestValue3 or\
-        #                 index['transcription']['analysis']['MLU-c'] > biggestValue3) :
-        #             biggestValue3 += 10
-        # axisY3.setRange(0.0, biggestValue3)
-        # axisX3.append(categories3)
-        # self.chart3.addAxis(axisX3, Qt.AlignBottom)
-        # if len(categories3) - 1 > 0 :
-        #     axisX3.setRange(categories3[0], categories3[len(categories3) - 1])
-        
-        # self.chart3.addSeries(lineSeriesMLU_w)
-        # self.chart3.addSeries(lineSeriesMLU_c)
-        # self.chart3.addSeries(lineSeriesAverageMLU_w)
-        # lineSeriesAverageMLU_w.attachAxis(axisX3)
-        # lineSeriesAverageMLU_w.attachAxis(axisY3)
-
-        # lineSeriesMLU_w.attachAxis(axisX3)
-        # lineSeriesMLU_w.attachAxis(axisY3)
-        # lineSeriesMLU_c.attachAxis(axisX3)
-        # lineSeriesMLU_c.attachAxis(axisY3)
-        # #設線的寬度
-        # penAverageMLU_w = lineSeriesMLU_w.pen()
-        # penMLU_w = lineSeriesMLU_w.pen()
-        # penMLU_c = lineSeriesMLU_c.pen()
-        # penAverageMLU_w.setWidth(5)
-        # penMLU_w.setWidth(5)
-        # penMLU_c.setWidth(5)
-        # lineSeriesAverageMLU_w.setPen(penAverageMLU_w)
-        # lineSeriesMLU_w.setPen(penMLU_w)
-        # lineSeriesMLU_c.setPen(penMLU_c)
-        # #虛線
-        # lineSeriesAverageMLU_w.setPen(QPen(Qt.red, 3, Qt.DashLine,  Qt.RoundCap, Qt.RoundJoin))
-        # axisX3.setLabelsFont(labelFont)
-        # axisY3.setLabelsFont(labelFont)
-
-        # self.chart3.legend().setFont(barFont)
-        # self.chart3.legend().setVisible(True)
-        # self.chart3.legend().setAlignment(Qt.AlignBottom)
-
-        # self.chartView3 = QChartView(self.chart3)
-        # self.chartView3.setRenderHint(QPainter.Antialiasing)
-        # self.chartView3.setMinimumSize(500, 500)
-
-        # #self.layout.addWidget(chartView)
-        
-        # #如果樣本數不足，則須提示
-        # if analysisFail != 0:
-        #     self.hintArea = QtWidgets.QHBoxLayout()
-        #     self.hintArea.addWidget(self.graph_hint_icon)
-        #     self.hintArea.addWidget(self.graph_hint_text)
-        #     self.scroll_vbox.addLayout(self.hintArea) 
+        self.scroll_vbox.addLayout(self.remindHbox)

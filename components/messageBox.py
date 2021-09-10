@@ -27,7 +27,7 @@ class Table_MessageBox(QtWidgets.QMessageBox):
         #Table
         self.tableWidget = QtWidgets.QTableWidget()
         self.tableWidget.setColumnCount(2)
-        self.tableWidget.setRowCount(3)
+        #self.tableWidget.setRowCount(3)
         self.tableWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         #self.tableWidget.move(30,80)
         self.tableWidget.resize(0, 0)
@@ -36,21 +36,6 @@ class Table_MessageBox(QtWidgets.QMessageBox):
         self.tableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem("更改後")
         self.tableWidget.setHorizontalHeaderItem(1, item)
-        ##Vertical headers
-        item = QtWidgets.QTableWidgetItem("姓名")
-        self.tableWidget.setVerticalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem("性別")
-        self.tableWidget.setVerticalHeaderItem(1, item)
-        item = QtWidgets.QTableWidgetItem("生日")
-        self.tableWidget.setVerticalHeaderItem(2, item)
-
-        ##
-        self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        self.tableWidget.verticalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        self.tableWidget.verticalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        self.tableWidget.verticalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch) 
-
 
         self.layout().addWidget(self.tableWidget, 1, 0 ,1 ,3)
         # if currentClick==0 :
@@ -59,30 +44,54 @@ class Table_MessageBox(QtWidgets.QMessageBox):
         #     print ('Reject')
 
         #載入資料
+        rowCount = 0
         if before and after:
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(before['name'])
-            self.tableWidget.setItem(0, 0, item)
+            if before['name'] != after['name']:
+                self.tableWidget.insertRow(rowCount)
+                item = QtWidgets.QTableWidgetItem("姓名")
+                self.tableWidget.setVerticalHeaderItem(rowCount, item)
 
-            item = QtWidgets.QTableWidgetItem()
-            item.setText("男" if before['gender'] == "male" else "女")
-            self.tableWidget.setItem(1, 0, item)
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(before['name'])
+                self.tableWidget.setItem(rowCount, 0, item)
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(after['name'])
+                self.tableWidget.setItem(rowCount, 1, item)
+                rowCount += 1
 
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(before["birthday"].strftime( "%Y-%m-%d"))
-            self.tableWidget.setItem(2, 0, item)
+            if before['gender'] != after['gender']:
+                self.tableWidget.insertRow(rowCount)
+                item = QtWidgets.QTableWidgetItem("性別")
+                self.tableWidget.setVerticalHeaderItem(rowCount, item)
 
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(after['name'])
-            self.tableWidget.setItem(0, 1, item)
+                item = QtWidgets.QTableWidgetItem()
+                item.setText("男" if before['gender'] == "male" else "女")
+                self.tableWidget.setItem(rowCount, 0, item)
+                item = QtWidgets.QTableWidgetItem()
+                item.setText("男" if after['gender'] == "male" else "女")
+                self.tableWidget.setItem(rowCount, 1, item)
+                rowCount += 1
 
-            item = QtWidgets.QTableWidgetItem()
-            item.setText("男" if after['gender'] == "male" else "女")
-            self.tableWidget.setItem(1, 1, item)
+            if before['birthday'] != after['birthday']:
+                self.tableWidget.insertRow(rowCount)
+                item = QtWidgets.QTableWidgetItem("生日")
+                self.tableWidget.setVerticalHeaderItem(rowCount, item)
 
-            item = QtWidgets.QTableWidgetItem()
-            item.setText(after["birthday"].strftime( "%Y-%m-%d"))
-            self.tableWidget.setItem(2, 1, item)
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(before["birthday"].strftime( "%Y-%m-%d"))
+                self.tableWidget.setItem(rowCount, 0, item)
+                item = QtWidgets.QTableWidgetItem()
+                item.setText(after["birthday"].strftime( "%Y-%m-%d"))
+                self.tableWidget.setItem(rowCount, 1, item)
+                rowCount += 1
+
+        ##調整Table大小
+        self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        for i in range(rowCount):
+            self.tableWidget.verticalHeader().setSectionResizeMode(i, QtWidgets.QHeaderView.Stretch)
+        self.tableWidget.setMinimumSize(QtCore.QSize(350, 40*(rowCount + 1)))
+
 
         # self.exec_()
 
@@ -92,6 +101,6 @@ class Table_MessageBox(QtWidgets.QMessageBox):
         self.setMaximumWidth(500)
         self.setMinimumHeight(0)
         self.setMaximumHeight(1000)
-        self.resize(390, 300)
+       # self.resize(390, 100)
         return result
 
