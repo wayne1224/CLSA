@@ -255,7 +255,7 @@ class chartTab(QtWidgets.QWidget):
                 importBtn = QtWidgets.QPushButton('顯示圖表')
                 importBtn.setStyleSheet("QPushButton {background-color: cornflowerblue;} QPushButton:hover{background-color: rgb(90, 138, 226);}")
                 self.form.tableWidget.setCellWidget(idx, 4,importBtn)
-                importBtn.clicked.connect(partial(self.create_linebarchart , child['document'], child['name'], child['birthday']))
+                importBtn.clicked.connect(partial(self.create_linebarchart , child['document'], child['name']))
             if idx == -1:
                 QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
 
@@ -263,27 +263,45 @@ class chartTab(QtWidgets.QWidget):
             QtWidgets.QMessageBox.information(self, 'Database','資料庫讀取中', QtWidgets.QMessageBox.Ok)
 
     # #清除原本layout裡的Widget
-    def clearLayout(self):
-        if self.scroll_vbox.count() > 0:
-            self.POS_chart.hide()
-            self.VOCD_chart.hide()
-            self.MLU_chart.hide()
-            #self.hintArea.hide()
-        try:
-            for i in reversed(range(self.scroll_vbox.count())):
-                #print(self.scroll_vbox.itemAt(i))
-                #self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
-                if self.scroll_vbox.itemAt(i).layout():
-                    self.scroll_vbox.itemAt(i).layout().deleteLater()
-                    self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+    # def clearLayout(self):
+    #     if self.scroll_vbox.count() > 0:
+    #         self.POS_chart.hide()
+    #         self.VOCD_chart.hide()
+    #         self.MLU_chart.hide()
+    #         #self.hintArea.hide()
+    #     try:
+    #         for i in reversed(range(self.scroll_vbox.count())):
+    #             #print(self.scroll_vbox.itemAt(i))
+    #             #self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+    #             if self.scroll_vbox.itemAt(i).layout():
+    #                 for x in reversed(range(self.scroll_vbox.itemAt(i).layout().count())):
+    #                     if self.scroll_vbox.itemAt(i).layout().itemAt(x).layout():
+    #                         self.scroll_vbox.itemAt(i).layout().itemAt(x).layout().deleteLater()
+    #                         self.scroll_vbox.itemAt(i).layout().removeItem(self.scroll_vbox.itemAt(i).layout().itemAt(x))
+
+    #                 self.scroll_vbox.itemAt(i).layout().deleteLater()
+    #                 self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
                     
-                elif self.scroll_vbox.itemAt(i).widget():
-                    self.scroll_vbox.itemAt(i).widget().deleteLater()
-                    self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+    #             elif self.scroll_vbox.itemAt(i).widget():
+    #                 self.scroll_vbox.itemAt(i).widget().deleteLater()
+    #                 self.scroll_vbox.removeItem(self.scroll_vbox.itemAt(i))
+    #     except Exception as e:
+    #         print(e)
+    def clearLayout(self, layout):
+        try:
+            while(layout.count() > 0):
+                child = layout.takeAt(0)
+                print(child)
+                if child.layout():
+                    self.clearLayout(child)
+                elif isinstance(child, QtWidgets.QSpacerItem):
+                    pass
+                elif isinstance(child, QtWidgets.QWidgetItem):
+                    child.widget().deleteLater()
         except Exception as e:
             print(e)
 
-    def create_linebarchart(self, doc, name, birthday):
+    def create_linebarchart(self, doc, name):
         #檢查是否轉錄過
         count = 0
         tempDoc = doc.copy()
@@ -292,13 +310,13 @@ class chartTab(QtWidgets.QWidget):
                 count += 1
 
         #尚未轉錄過無法生成資料
-        self.clearLayout()
+        #self.clearLayout()
         if count == 0:
             QtWidgets.QMessageBox.information(self, '','尚未彙整過無法生成資料', QtWidgets.QMessageBox.Ok)
-            return
+            return None
         
-        #清除所有Layout
-        self.clearLayout()
+        # #清除所有Layout
+        self.clearLayout(self.scroll_vbox)
 
         #詞性圖
         self.POS_chart = createBarChart_POS(doc.copy(), name)
@@ -311,10 +329,8 @@ class chartTab(QtWidgets.QWidget):
         self.VOCD_chart, len_vocd, invalid_dates = createLineChart("VOCD", doc.copy())
         self.chartLayout.addWidget(self.VOCD_chart)
         self.chartLayout.addWidget(self.MLU_chart)
-        
         self.scroll_vbox.addLayout(self.chartLayout)
-        self.layout.addWidget(self.scroll)
-
+        
         if len_mlu > len_vocd and len_vocd == 0:
             self.VOCD_chart.hide()
             warnText = "資料過少無法產生VOCD圖表"
@@ -326,6 +342,8 @@ class chartTab(QtWidgets.QWidget):
             for d in invalid_dates:
                 warnText += f"\n{d}"
             QtWidgets.QMessageBox.warning(self, "通知", warnText, QtWidgets.QMessageBox.Ok)
+
+        self.layout.addWidget(self.scroll)
         
 
     def createWarnLabel(self, warnText, two_graph=True):
@@ -344,12 +362,20 @@ class chartTab(QtWidgets.QWidget):
         spacer = QtWidgets.QSpacerItem(40,20, QtWidgets.QSizePolicy.Expanding)
 
         self.remindHbox = QtWidgets.QHBoxLayout() #最外層HBOX
-        #self.remindHbox.addItem(spacer)
-        self.remindHbox.addWidget(graph_hint_icon)
-        self.remindHbox.addWidget(graph_hint_text)
+        leftHbox = QtWidgets.QHBoxLayout()
+        leftHbox.addWidget(QtWidgets.QLabel(""))
+        leftHbox.addWidget(graph_hint_icon)
+        leftHbox.addWidget(graph_hint_text)
+        leftHbox.addWidget(QtWidgets.QLabel(""))
+        self.remindHbox.addLayout(leftHbox)
+
+        
+        #self.remindHbox.addWidget(QtWidgets.QLabel())
         #self.remindHbox.addItem(spacer)
 
-        #if two_graph:
-            #self.remindHbox.addItem(spacer)
+        if two_graph:
+            rightHbox = QtWidgets.QHBoxLayout()
+            rightHbox.addWidget(QtWidgets.QLabel(" "))
+            self.remindHbox.addLayout(rightHbox)
 
         self.scroll_vbox.addLayout(self.remindHbox)
