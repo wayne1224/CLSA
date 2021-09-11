@@ -202,8 +202,9 @@ def upsertChildData(childData , upsert): # insert => child data object ID / Fals
             # 此 child 沒有在資料庫裡了 , return object ID => 可以新增 
             else:
                 return childDataDB.insert_one(childData).inserted_id
-
-        else:
+                
+        # update child data
+        elif upsert == "update":
             query = dict()
             query["caseID"] = childData["caseID"]
 
@@ -445,6 +446,23 @@ def findChildren(caseID , name):
                         '$push': '$document'
                     }
                 }
+            },
+            {
+                '$project': {
+                    'name': 1, 
+                    'caseID': 1, 
+                    'gender': 1, 
+                    'birthday': 1, 
+                    'document': 1, 
+                    'length': {
+                        '$size': '$document'
+                    }
+                }
+            }, 
+            {
+                '$sort': {
+                    'length': -1
+                }
             }
         ])
 
@@ -532,6 +550,50 @@ def findClosestNorm(ageNum): ## 往前找最近的年齡檔案
                 return False
 
     except Exception as e:
+        print(e)
+        return False
+
+def findVOCD(ageNum): # ageNum = list()
+    try:
+        data = normDB.find().sort("ageNum")
+        data = list(data)
+        result = list()
+
+        for age in ageNum:
+            for norm in data:
+                if norm["ageNum"] == age:
+                    tmp = dict()
+                    tmp["vocd-c"] = norm["data"]["vocd-c"]
+                    tmp["vocd-w"] = norm["data"]["vocd-w"]
+                    result.append(tmp)
+                    break
+        
+        return result
+
+    except Exception as e:
+        print("The error of function findVOCD() !!")
+        print(e)
+        return False
+
+def findMLU(ageNum): # ageNum = list()
+    try:
+        data = normDB.find().sort("ageNum")
+        data = list(data)
+        result = list()
+
+        for age in ageNum:
+            for norm in data:
+                if norm["ageNum"] == age:
+                    tmp = dict()
+                    tmp["mlu-c"] = norm["data"]["mlu-c"]
+                    tmp["mlu-w"] = norm["data"]["mlu-w"]
+                    result.append(tmp)
+                    break
+        
+        return result
+
+    except Exception as e:
+        print("The error of function findMLU() !!")
         print(e)
         return False
 

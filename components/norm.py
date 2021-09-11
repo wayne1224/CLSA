@@ -175,6 +175,10 @@ class NormModifyTab(QtWidgets.QWidget):
         self.vocd_remindIcon = QtWidgets.QLabel()
         self.vocd_remindIcon.setPixmap(qta.icon('fa.info-circle',color='#eed202').pixmap(QtCore.QSize(30, 30)))
         self.vocd_remindIcon.setMaximumSize(QtCore.QSize(30, 30))
+        # 提示字體
+        remindTextFont = QtGui.QFont()
+        remindTextFont.setFamily("微軟正黑體")
+        remindTextFont.setPointSize(10)
 
         #MLU GroupBox layout
         self.mlu_vbox = QtWidgets.QVBoxLayout()
@@ -200,6 +204,7 @@ class NormModifyTab(QtWidgets.QWidget):
         self.hbox_5 = QtWidgets.QHBoxLayout()
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.mlu_remindText = QtWidgets.QLabel("數字輸入上限99.99")
+        self.mlu_remindText.setFont(remindTextFont)
         self.mlu_remindText.setMaximumSize(QtCore.QSize(16777215, 40))
         self.hbox_5.addItem(spacerItem3)
         self.hbox_5.addWidget(self.mlu_remindIcon)
@@ -236,6 +241,7 @@ class NormModifyTab(QtWidgets.QWidget):
         self.hbox_6 = QtWidgets.QHBoxLayout()
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.vocd_remindText = QtWidgets.QLabel("數字輸入上限99.99")
+        self.vocd_remindText.setFont(remindTextFont)
         self.vocd_remindText.setMaximumSize(QtCore.QSize(16777215, 40))
         self.hbox_6.addItem(spacerItem4)
         self.hbox_6.addWidget(self.vocd_remindIcon)

@@ -447,8 +447,8 @@ class AnalysisTab(QtWidgets.QWidget):
         print(charArray)
 
         #呼叫資料庫
-        print('caseID:',self.caseID)
-        print('Date:',type(self.date))
+        # print('caseID:',self.caseID)
+        # print('Date:',type(self.date))
         db.updateAnalysis(self.currentDoc_id, Analysis)
 
         #通知彙整完整
@@ -492,10 +492,10 @@ class AnalysisTab(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot()
     def clearContent(self):
-        self.caseID = None
-        self.date = None
-        self.caseID_label.setText('')
-        self.date_label.setText('')
+        # self.caseID = None
+        # self.date = None
+        # self.caseID_label.setText('')
+        # self.date_label.setText('')
         
         self.tableWidget.item(1,3).setText('') 
         self.tableWidget.item(2,3).setText('') 

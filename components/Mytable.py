@@ -1,4 +1,4 @@
-#把第一第二格綁在一起
+# 把第一第二格綁在一起
 from typing import Collection, List
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
@@ -50,27 +50,27 @@ class Mytable(QtWidgets.QWidget):
         self.tableWidget.horizontalHeader().setFont(font)
         self.tableWidget.setFont(font)
 
-        #column size
+        # column size
         self.tableWidget.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
         self.tableWidget.horizontalHeader().setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
 
-        #轉碼
+        # 轉碼
         self.retranslateUi()
 
-        #設成人編號
+        # 設成人編號
         self.tableWidget.cellClicked['int','int'].connect(self._setAdultID)
         
-        #防違法動作
+        # 防違法動作
         self.tableWidget.cellClicked['int','int'].connect(self._checkAll)
 
-        #trigger mouse event
+        # trigger mouse event
         self.tableWidget.viewport().installEventFilter(self)
         self.tableWidget.customContextMenuRequested.connect(self.generateMenu)
 
-        #紀錄上次編輯的格子
+        # 紀錄上次編輯的格子
         self.id_x = -1
         self.last_x = -1
         self.edit = True
@@ -95,13 +95,13 @@ class Mytable(QtWidgets.QWidget):
         item = self.tableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "兒童語句"))
 
-    #從Tab2接收AdultID
+    # 從Tab2接收AdultID
     @QtCore.pyqtSlot(dict)
     def getAdultID(self, adultID):
         self.adultID = adultID
         sorted(self.adultID)
 
-    #傳兒童、成人編號給Tab2
+    # 傳兒童、成人編號給Tab2
     @QtCore.pyqtSlot()
     def emitAllID(self, IDDict):
         self.procAllID.emit(IDDict)
@@ -186,7 +186,7 @@ class Mytable(QtWidgets.QWidget):
         x = selected[0].row()
         y = selected[0].column()
 
-        #將ComboBox編號存成一般儲存格
+        # 將ComboBox編號存成一般儲存格
         if self.id_x != -1 and self.tableWidget.cellWidget(self.id_x,0) != None:
             num = self.tableWidget.cellWidget(self.id_x,0).currentText()
             self.tableWidget.removeCellWidget(self.id_x,0)
@@ -196,16 +196,16 @@ class Mytable(QtWidgets.QWidget):
             self.id_x = -1
             self.procInsertRow_editAdultID_setColor.emit()
 
-        #設成人編號的Dict
+        # 設成人編號的Dict
         idDict = self.adultID
 
-        #初始化ComboBox
+        # 初始化ComboBox
         if y == 0:
             # if self.edit:
             idBox = QtWidgets.QComboBox()
             idBox.setEditable(True)
 
-            #若成人語句不採計，無法設成人編號
+            # 若成人語句不採計，無法設成人編號
             if self.tableWidget.item(x,1) and self.tableWidget.item(x,1).font().bold():
                 idBox.setEnabled(False)
 
@@ -213,14 +213,14 @@ class Mytable(QtWidgets.QWidget):
             idBox.addItems(opts)
             idBox.clearEditText()
 
-            #檢查原格中是否有字
+            # 檢查原格中是否有字
             if self.tableWidget.item(x,0) and self.tableWidget.item(x,0).text() != '':
                 t = self.tableWidget.item(x,0).text()
                 idBox.setCurrentText(t)
                 
             self.tableWidget.setCellWidget(x, y, idBox)
             self.id_x = x
-            #self.last_x = x
+            # self.last_x = x
 
     def checkAllID(self):
         checkChildID = 0
@@ -233,7 +233,7 @@ class Mytable(QtWidgets.QWidget):
             childID = self.tableWidget.item(rowIndex,3)
             childUtter = self.tableWidget.item(rowIndex,4)
 
-            #阻擋使用者強行輸入
+            # 阻擋使用者強行輸入
             if((childID != None and childID.text() != '' and childUtter != None and childUtter.text() != '') or
                 childUtter.font().bold()):
                 adultID.setText('')
@@ -243,7 +243,7 @@ class Mytable(QtWidgets.QWidget):
                 childID.setText('')
                 childUtter.setText('')
 
-            #成人語句
+            # 成人語句
             if adultUtter != None and adultUtter.text() != '' and not adultUtter.font().bold():
                 if adultID == None:
                     self.tableWidget.setItem(rowIndex, 0, empty)
@@ -261,7 +261,7 @@ class Mytable(QtWidgets.QWidget):
                     except Exception as e:
                         informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
                         self.tableWidget.setItem(rowIndex,0,empty)
-            #兒童語句
+            # 兒童語句
             if childUtter != None and childUtter.text() != '' and not childUtter.font().bold():
                 checkChildID += 1
                 if childID == None:
@@ -284,7 +284,7 @@ class Mytable(QtWidgets.QWidget):
                     if item is not None:
                         self.menu = QtWidgets.QMenu(self)
 
-                        #插入選項
+                        # 插入選項
                         self.insert = QtWidgets.QMenu('插入', self)
                         self.insertUp = QtWidgets.QAction('向上插入一列')
                         self.insertUp.triggered.connect(partial(self.insertRow,index,'up'))
@@ -295,7 +295,7 @@ class Mytable(QtWidgets.QWidget):
                         self.menu.addMenu(self.insert)
 
                         if item.text():
-                            #是否採計
+                            # 是否採計
                             f = item.font()
                             if index.column() != 2:
                                 if f.bold():
@@ -309,46 +309,46 @@ class Mytable(QtWidgets.QWidget):
                                     self.setNotValid.triggered.connect(partial(self.toNotValid,f,item,index))
                                     self.menu.addAction(self.setNotValid)
                             
-                            #兒童、成人語句轉換
+                            # 兒童、成人語句轉換
                             if index.column() == 1:
                                 self.toChild = QtWidgets.QAction('轉成兒童語句')
                                 self.toChild.setObjectName("toChild")
-                                if f.bold():    #不採計的語句轉換
+                                if f.bold():    # 不採計的語句轉換
                                     self.toChild.triggered.connect(partial(self.changeRole,item,index,None,False))
-                                else:           #採計的語句轉換
+                                else:           # 採計的語句轉換
                                     self.toChild.triggered.connect(partial(self.changeRole,item,index,None,True))
                                 self.menu.addAction(self.toChild)
                             elif index.column() == 4:
-                                if f.bold():    #不採計的語句轉換
+                                if f.bold():    # 不採計的語句轉換
                                     self.toAdultNotValid = QtWidgets.QAction('轉成成人語句')
                                     self.toAdultNotValid.setObjectName("toAdultNotValid")
                                     self.toAdultNotValid.triggered.connect(partial(self.changeRole,item,index,'',False))
                                     self.menu.addAction(self.toAdultNotValid)
-                                else:           #採計的語句轉換
+                                else:           # 採計的語句轉換
                                     self.toAdult = QtWidgets.QMenu('轉成成人語句', self)
                                     self.toAdult.setObjectName("toAdult")
-                                    #已有的成人編號
+                                    # 已有的成人編號
                                     self.oldID = []
                                     for ID in self.adultID.keys():
                                         self.temp = QtWidgets.QAction(ID)
                                         self.oldID.append(self.temp)
                                         self.oldID[len(self.oldID)-1].triggered.connect(partial(self.changeRole,item,index,ID,True))
                                         self.toAdult.addAction(self.oldID[len(self.oldID)-1])
-                                    #新增編號輸入欄
+                                    # 新增編號輸入欄
                                     self.inputID = QtWidgets.QLineEdit()
                                     self.inputID.setPlaceholderText('新增編號')
                                     self.inputID.setMaximumWidth(70)
                                     self.addID = QtWidgets.QWidgetAction(self)
                                     self.addID.setDefaultWidget(self.inputID)
                                     self.toAdult.addAction(self.addID)
-                                    #確認按鈕
+                                    # 確認按鈕
                                     self.btnConfirmID = QtWidgets.QPushButton('確認')
                                     self.btnConfirmID.setMaximumWidth(70)
                                     self.btnConfirmID.clicked.connect(partial(self.addNewID,item,index))
                                     self.confirmID = QtWidgets.QWidgetAction(self)
                                     self.confirmID.setDefaultWidget(self.btnConfirmID)
                                     self.toAdult.addAction(self.confirmID)
-                                    #將子menu加入原本的menu裡
+                                    # 將子menu加入原本的menu裡
                                     self.menu.addMenu(self.toAdult)
 
                         self.menu.exec_(event.globalPos())
@@ -384,7 +384,7 @@ class Mytable(QtWidgets.QWidget):
         for columnIndex in range(5):
             if self.tableWidget.item(row, columnIndex) == None:
                 self.tableWidget.setItem(row, columnIndex, QtWidgets.QTableWidgetItem(''))
-        #Tab2加上顏色
+        # Tab2加上顏色
         self.procInsertRow_editAdultID_setColor.emit()
 
     def addNewID(self, item, index):
@@ -401,20 +401,22 @@ class Mytable(QtWidgets.QWidget):
                 informBox = QtWidgets.QMessageBox.warning(self, '警告','編號只能輸入英文', QtWidgets.QMessageBox.Ok)
 
     def changeRole(self, item, index, ID, isValid):
-        text = item.text()
-        item.setText("")
-        itemCopy = QtWidgets.QTableWidgetItem(text)
-        #如果轉換的語句不採計
+        itemCopy = QtWidgets.QTableWidgetItem(item.text())
+        item.setText('')
+        tempFont = QtGui.QFont()
+        tempFont.setBold(False)
+        item.setFont(tempFont)
+        # 如果轉換的語句不採計
         if not isValid:
             f = QtGui.QFont()
             f.setBold(True)
             itemCopy.setFont(f)
-        #toChild
+        # toChild
         if ID == None:
             self.tableWidget.setItem(index.row(), 4, itemCopy)
             if self.tableWidget.item(index.row(), 0) != None:
                 self.tableWidget.item(index.row(), 0).setText("")
-        #toAdult
+        # toAdult
         else:
             self.tableWidget.setItem(index.row(), 1, itemCopy)
             if self.tableWidget.item(index.row(), 3) != None:
@@ -424,7 +426,7 @@ class Mytable(QtWidgets.QWidget):
             else:
                 self.tableWidget.item(index.row(), 0).setText(ID)
         self.checkAllID()
-        #Tab2同時更新
+        # Tab2同時更新
         self.procChange.emit()
 
     def generateMenu(self, pos):
