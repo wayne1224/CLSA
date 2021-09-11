@@ -926,7 +926,7 @@ class Myform(QtWidgets.QWidget):
             date = self.dateEdit_recordDate.dateTime().toPyDateTime().replace(second=0, microsecond=0)
             self.saveForm = self.returnTab1Data()
             if (db.canInsertDoc(self.input_caseID.text() , date)):
-                result = self.accessDB(1)
+                result = self.accessDB(0)
                 if result == 1:
                     db.upsertChildData(childData, 'insert') 
                     db.insertRecording(self.input_caseID.text() , date , recording)
