@@ -285,20 +285,21 @@ class AnalysisTab(QtWidgets.QWidget):
     @QtCore.pyqtSlot(dict) 
     def getDoc(self, key): 
         if key != None:
-            self.caseID_label.setText(key['caseID'])
-            self.date_label.setText(key['date'].strftime("%Y-%m-%d %H:%M"))
-            self.currentDoc_id = key['_id']
-
-            if key["transcription"]["analysis"] != None: #從Tab0收到整個Document
+            if "recording" in key: #從Tab0收到整個Document
                 self.clearContent()
+                # self.caseID = key['caseID']
+                # self.date = key['date']
+                self.caseID_label.setText(key['caseID'])
+                self.date_label.setText(key['date'].strftime("%Y-%m-%d %H:%M"))
                 if key['transcription']['analysis']:
                     self.setContent(key['transcription']['analysis'])
-            # else: #從Tab2收到無analysis的document
-            #     #self.caseID = key['caseID']
-            #     #self.date = key['date']
-            #     self.caseID_label.setText(key['caseID'])
-            #     self.date_label.setText(key['date'].strftime("%Y-%m-%d %H:%M"))
-               
+                self.currentDoc_id = key['_id']
+            else: #從Tab2收到無analysis的document
+                #self.caseID = key['caseID']
+                #self.date = key['date']
+                self.caseID_label.setText(key['caseID'])
+                self.date_label.setText(key['date'].strftime("%Y-%m-%d %H:%M"))
+                self.currentDoc_id = key['_id']
 
                 #呼叫過去的Analysis
                 # analysis = db.findAnalysis(self.caseID,self.date)
