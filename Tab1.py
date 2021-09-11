@@ -615,6 +615,7 @@ class Myform(QtWidgets.QWidget):
         #用signal來設定日期不能超過現在時間
         self.dateEdit_recordDate.dateTimeChanged.connect(self.checkRecordDate)
         self.dateEdit_birthday.dateChanged.connect(self.checkBirthday)
+        self.table_messageBox = Table_MessageBox()
 
         self.setStyleSheet(open("QSS/Tab1.qss", "r").read())
 
@@ -894,7 +895,7 @@ class Myform(QtWidgets.QWidget):
                 else: #新增
                     return 3
             else : #收錄表的個案資訊與資料庫不相同
-                questionBox = Table_MessageBox(checkChildData ,childData).exec_()
+                questionBox = self.table_messageBox.execute(checkChildData ,childData)
                 if questionBox == 0:
                     print(questionBox)
                     if type: #更新
