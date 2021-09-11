@@ -286,43 +286,69 @@ def createLineChart(type, documents):
     seriesW.setName(w)
     seriesC = QLineSeries()
     seriesC.setName(c)
+    series_norm = QLineSeries()
+    series_norm.setName(w + "(常模)")
 
     #載入資料
-    dates = []
+    dates = [] # X軸
+    ages = [] #常模年紀
     invalid_dates = [] #無法彙整的日期
     i = 0
     for doc in documents:
         if doc['transcription']['analysis']:
+            #取常模年紀
+            age = round(math.modf(doc['recording']['age'])[1]) #統計用的年齡標準，先取整歲
+            if math.modf(doc['recording']['age'])[0] >= 0.5: #取小數點後一位
+                age += 0.5
             if type == "MLU":
                 dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
+                ages.append(age)
                 seriesW.append(i, doc['transcription']['analysis'][w])
                 seriesC.append(i, doc['transcription']['analysis'][c])
                 i += 1
             elif type == "VOCD":
                 if doc['transcription']['analysis'][w] != "樣本數不足":
                     dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
+                    ages.append(age)
                     seriesW.append(i, doc['transcription']['analysis'][w])
                     seriesC.append(i, doc['transcription']['analysis'][c])
                     i += 1
                 else:
                     invalid_dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
     
-
+    #載入常模資料
+    print(ages)
+    if type == "MLU":
+        norms = db.findMLU(ages)
+    if type == "VOCD":
+        norms = db.findVOCD(ages)
+    
+    for i, n in enumerate(norms):
+        #print(n[w.lower()])
+        series_norm.append(i, float(n[w.lower()]))
+    
     if len(seriesC) == 1 and len(seriesW) == 1:
         #換圖類型
         chartType = "scatter"
         #暫存原本的資料
         tempW = seriesW.at(0)
         tempC = seriesC.at(0)
+        tempN = series_norm.at(0)
         #並改用QScatter
         seriesW = QScatterSeries()
         seriesW.setName(w)
         seriesC = QScatterSeries()
         seriesC.setName(c)
+        series_norm = QScatterSeries()
+        series_norm.setName(w + "(常模)")
+
         seriesW.setMarkerShape(QScatterSeries.MarkerShapeCircle)
         seriesC.setMarkerShape(QScatterSeries.MarkerShapeCircle)
+        series_norm.setMarkerShape(QScatterSeries.MarkerShapeCircle)
+
         seriesW.append(tempW)
         seriesC.append(tempC)
+        series_norm.append(tempN)
        
     
     #宣告Chart
@@ -344,6 +370,7 @@ def createLineChart(type, documents):
     #加入資料集
     chart.addSeries(seriesW)
     chart.addSeries(seriesC)
+    chart.addSeries(series_norm)
 
     ##建立x軸
     axisX = QBarCategoryAxis()
@@ -351,6 +378,7 @@ def createLineChart(type, documents):
     axisX.setLabelsAngle(-45)
     chart.setAxisX(axisX, seriesW)
     chart.setAxisX(axisX, seriesC)
+    chart.setAxisX(axisX, series_norm)
     #axisX.setRange(dates[0], dates[-1])
     
     ##建立y軸
@@ -360,24 +388,34 @@ def createLineChart(type, documents):
     axisY.setLabelFormat("%d");
     chart.setAxisY(axisY, seriesW)
     chart.setAxisY(axisY, seriesC)
+    chart.setAxisY(axisY, series_norm)
 
     #改變UI
     if chartType == "line":
         penW = seriesW.pen()
         penC = seriesW.pen()
+        penN = series_norm.pen()
+
         penW.setWidth(5)
         penC.setWidth(5)
+        penN.setWidth(5)
+        penN.setStyle(Qt.DashLine)
+
         seriesW.setPen(penW)
         seriesC.setPen(penC)
+        series_norm.setPen(penN)
     
     if type == "MLU":
         seriesW.setColor(QColor(37, 150, 190))
         seriesC.setColor(QColor(143, 186, 82))
+        series_norm.setColor(QColor(167, 201, 214))
+
         axisY.setTitleText("詞彙/字(數)")
         axisY.setTitleFont(font)
     elif type == "VOCD":
         seriesW.setColor(QColor(246, 166, 38))
         seriesC.setColor(QColor(191, 90, 63))
+        series_norm.setColor(QColor(245, 202, 135))
 
 
     chartView = QChartView(chart)

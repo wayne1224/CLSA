@@ -291,7 +291,6 @@ class chartTab(QtWidgets.QWidget):
         try:
             while(layout.count() > 0):
                 child = layout.takeAt(0)
-                print(child)
                 if child.layout():
                     self.clearLayout(child)
                 elif isinstance(child, QtWidgets.QSpacerItem):
