@@ -553,6 +553,50 @@ def findClosestNorm(ageNum): ## 往前找最近的年齡檔案
         print(e)
         return False
 
+def findVOCD(ageNum): # ageNum = list()
+    try:
+        data = normDB.find().sort("ageNum")
+        data = list(data)
+        result = list()
+
+        for age in ageNum:
+            for norm in data:
+                if norm["ageNum"] == age:
+                    tmp = dict()
+                    tmp["vocd-c"] = norm["data"]["vocd-c"]
+                    tmp["vocd-w"] = norm["data"]["vocd-w"]
+                    result.append(tmp)
+                    break
+        
+        return result
+
+    except Exception as e:
+        print("The error of function findVOCD() !!")
+        print(e)
+        return False
+
+def findMLU(ageNum): # ageNum = list()
+    try:
+        data = normDB.find().sort("ageNum")
+        data = list(data)
+        result = list()
+
+        for age in ageNum:
+            for norm in data:
+                if norm["ageNum"] == age:
+                    tmp = dict()
+                    tmp["mlu-c"] = norm["data"]["mlu-c"]
+                    tmp["mlu-w"] = norm["data"]["mlu-w"]
+                    result.append(tmp)
+                    break
+        
+        return result
+
+    except Exception as e:
+        print("The error of function findMLU() !!")
+        print(e)
+        return False
+
 def getNormAges():
     try:
         return normDB.find().sort("ageNum")
