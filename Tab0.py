@@ -255,6 +255,16 @@ class SearchTab(QtWidgets.QWidget):
     
     @QtCore.pyqtSlot(dict) 
     def getDocID(self, key):
+        #清空Table
+        while self.tableWidget.rowCount() > 0:
+            self.tableWidget.removeRow(self.tableWidget.rowCount()-1)
+
+        #清空所有input欄
+        self.input_caseID.setText("")
+        self.input_Name.setText("")
+        self.input_SLP.setText("")
+
+        #暫存_ID
         self.currentDoc_id = key['_id']
 
     def retranslateUi(self):
