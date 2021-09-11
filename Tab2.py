@@ -496,18 +496,18 @@ class Tab2(QtWidgets.QWidget):
         self.childID = 0
         self.adultIDs = {}
         self.childUtterance = []
-        self.caseDate = None
         self.cmb_role.clear()
         self.cmb_role.addItem("兒童")
         self.cmb_role.addItem("語境")
         self.tableWidget.tableWidget.setRowCount(0)
-        self.lbl_caseDate.setVisible(False)
 
         if isAllClear:
             self.caseID = ''
             self.transcriber = ''
+            self.caseDate = None
             self.input_trans.clear()
             self.lbl_impCaseID.clear()
+            self.lbl_caseDate.setVisible(False)
 
         # 讓Tab3也clear
         self.procClear.emit()
