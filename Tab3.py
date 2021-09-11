@@ -447,8 +447,8 @@ class AnalysisTab(QtWidgets.QWidget):
         print(charArray)
 
         #呼叫資料庫
-        print('caseID:',self.caseID)
-        print('Date:',type(self.date))
+        # print('caseID:',self.caseID)
+        # print('Date:',type(self.date))
         db.updateAnalysis(self.currentDoc_id, Analysis)
 
         #通知彙整完整
