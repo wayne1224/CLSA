@@ -578,18 +578,6 @@ class Myform(QtWidgets.QWidget):
 
         self.retranslateUi()
         self.saveForm = self.returnTab1Data()
-        # self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
-        # self.test = QtWidgets.QGroupBox()
-        # self.test.setLayout(self.horizontalLayout_8)
-        # self.test.setStyleSheet("border: 1px solid red;")
-        # self.layout.addWidget(self.test)
-        # self.redWidget = QtGui.QFrame()
-        # self.redWidget.setStyleSheet("#myWidget {background-color:red;}")
-        # self.eraseWidget.setStyleSheet("#myWidget {background-color:red;}")  
-        # self.eraseWidget = QtGui.QVBoxLayout()
-
-        # testWidget.setLayout(testLayout)
-        # self.saveForm = self.returnTab1Data()
         
         #用來清除radioButton
         self.group_interaction = QtWidgets.QButtonGroup()
@@ -670,16 +658,10 @@ class Myform(QtWidgets.QWidget):
         self.lbl_showTotalUtterNum.setText(str(utterance['totalUtterance']))
         self.lbl_showValidUtterNum.setText(str(utterance['validUtterance']))
         self.saveForm = self.returnTab1Data()
-
-    #傳個案編號到Tab2
-    @QtCore.pyqtSlot() 
-    def sendCaseID(self, caseIDandDate):
-        self.procStart.emit(caseIDandDate)
     
     #查詢個案編號並把個案資料貼到Tab1
     def searchCaseID(self): 
         caseData = db.findChildData(self.input_caseID.text())
-        # print (caseData)
         if caseData:
             self.input_caseName.setText(caseData['name'])
             if caseData['gender'] == 'male':
@@ -690,14 +672,6 @@ class Myform(QtWidgets.QWidget):
         else :
             QtWidgets.QMessageBox.information(self, '查詢',"<p style='font-size:12pt;'>查無此個案編號</p>", QtWidgets.QMessageBox.Ok)
         self.saveForm = self.returnTab1Data()
-
-    #將dateEdit_recordDate變成dateTime型態
-    def getDateinDateTime(self) :
-        strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
-        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
-        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
-        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
-        return DateTimeRecordDate
 
     #回傳現在Tab1的所有資料
     def returnTab1Data (self) :
@@ -908,7 +882,7 @@ class Myform(QtWidgets.QWidget):
         else: #child ID不存在
             if type == 'update': #更新
                 questionBox = QtWidgets.QMessageBox.question(self, 
-                                    '更新',"<p style='font-size:12pt;'>此個案資料並不存在，請問是否要新增個案資料?</p>", 
+                                    '新增',"<p style='font-size:12pt;'>此個案資料並不存在，請問是否要新增個案資料?</p>", 
                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 if questionBox == QtWidgets.QMessageBox.Yes:
                     print(questionBox)
@@ -935,8 +909,10 @@ class Myform(QtWidgets.QWidget):
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
                 if self.currentDoc_id and insertChildData:
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>新增成功</p>", QtWidgets.QMessageBox.Ok)
+                    #傳個案編號到Tab2
                     caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':date}
                     self.procStart.emit(caseIDandDate)
+                    #傳currentDoc_id到Tab0
                     self.procID.emit({'_id': self.currentDoc_id})
                     self.btn_update.setEnabled(True)
                     self.btn_insert.setEnabled(False)
@@ -1097,7 +1073,6 @@ class Myform(QtWidgets.QWidget):
         else:
             self.dateEdit_birthday.setStyleSheet("border: 1px solid initial;")
             self.dateEdit_recordDate.setStyleSheet("border: 1px solid initial;")
-
 
         #如果有必填欄位沒填跳提示視窗
         if  inputError > 0 or otherError > 0 or ageError > 0: 
