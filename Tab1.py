@@ -929,7 +929,7 @@ class Myform(QtWidgets.QWidget):
                 result = self.accessDB('insert')
                 insertChildData = True
                 if result == 1:
-                    insertChildData = db.upsertChildData(childData, 'insert') 
+                    insertChildData = db.upsertChildData(childData) 
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
                 if result == 3:
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
@@ -954,7 +954,7 @@ class Myform(QtWidgets.QWidget):
                 result = self.accessDB('update')
                 updateChildData = True
                 if (result == 2):
-                    updateChildData = db.upsertChildData(childData, 'update')
+                    updateChildData = db.upsertChildData(childData)
                     updateRecording =  db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
                 elif (result == 4):
                     updateRecording = db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)        
