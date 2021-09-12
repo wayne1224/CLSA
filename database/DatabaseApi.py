@@ -188,40 +188,55 @@ def canUpdateDoc(caseID , date , documentID): # return boolean , if error return
         print(e)
         return None
 
-
 ## insert update 合併
-def upsertChildData(childData , upsert): # insert => child data object ID / False , update => boolean
+def upsertChildData(childData): # insert => child data object ID / update => boolean
     try:
-        # insert child data
-        if upsert == "insert":
-            # 此 child 已經在資料庫裡了 , return False => 不能新增 
-            if findChildData(childData["caseID"]):
-                print("This case ID already exists and can not insert to database !!")
-                return False
-
-            # 此 child 沒有在資料庫裡了 , return object ID => 可以新增 
-            else:
-                return childDataDB.insert_one(childData).inserted_id
-                
         # update child data
-        elif upsert == "update":
+        if findChildData(childData["caseID"]):
             query = dict()
             query["caseID"] = childData["caseID"]
 
-            # 在 child data 裡，找不到這個個案 , return False 
-            if documentDB.count_documents(query) == 0:
-                print("can not find this child data !!")
-                return False
-            
-            # 在 child data 裡，找到這個個案，並且更改 , return True
-            else:
-                childDataDB.update_many(query , {"$set" : {                                                       
+            childDataDB.update_many(query , {"$set" : {                                                       
                                                             "name" : childData["name"],
                                                             "gender" : childData["gender"],
                                                             "birthday" : childData["birthday"]
                                                             }})
 
-                return True
+            return True
+        # insert child data
+        else:
+            return childDataDB.insert_one(childData).inserted_id
+
+        # # insert child data
+        # if upsert == "insert":
+        #     # 此 child 已經在資料庫裡了 , return False => 不能新增 
+        #     if findChildData(childData["caseID"]):
+        #         print("This case ID already exists and can not insert to database !!")
+        #         return False
+
+        #     # 此 child 沒有在資料庫裡了 , return object ID => 可以新增 
+        #     else:
+        #         return childDataDB.insert_one(childData).inserted_id
+                
+        # # update child data
+        # elif upsert == "update":
+        #     query = dict()
+        #     query["caseID"] = childData["caseID"]
+
+        #     # 在 child data 裡，找不到這個個案 , return False 
+        #     if documentDB.count_documents(query) == 0:
+        #         print("can not find this child data !!")
+        #         return False
+            
+        #     # 在 child data 裡，找到這個個案，並且更改 , return True
+        #     else:
+        #         childDataDB.update_many(query , {"$set" : {                                                       
+        #                                                     "name" : childData["name"],
+        #                                                     "gender" : childData["gender"],
+        #                                                     "birthday" : childData["birthday"]
+        #                                                     }})
+
+        #         return True
 
     except Exception as e:
         print("The error of function upsertChildData() !!")
