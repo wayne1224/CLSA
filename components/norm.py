@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from decimal import Decimal
 import qtawesome as qta
 import database.DatabaseApi as db
 
@@ -279,8 +280,8 @@ class NormModifyTab(QtWidgets.QWidget):
     def getCurrentNorm(self):
         #check if change value didn't store
         if self.comboBox.currentIndex() != self.lastIndex:
-            if (self.mluC != self.input_mlu_c.text()) or (self.mluW != self.input_mlu_w.text()) or (self.vocdC != self.input_vocd_c.text()) or (self.vocdW != self.input_vocd_w.text()):
-                warnText = f'<p style="font-size:13pt; color: #3778bf;">要儲存 {self.comboBox.itemText(self.lastIndex)} 的變更嗎?</p>\n'
+            if (str(self.mluC) != self.input_mlu_c.text()) or (str(self.mluW) != self.input_mlu_w.text()) or (str(self.vocdC) != self.input_vocd_c.text()) or (str(self.vocdW) != self.input_vocd_w.text()):
+                warnText = f'<p style="font-size:12pt; color: #3778bf;">要儲存 {self.comboBox.itemText(self.lastIndex)} 的變更嗎?</p>\n'
                 close = QtWidgets.QMessageBox.warning(self,
                                 "CLSA",
                                 warnText,
@@ -314,24 +315,24 @@ class NormModifyTab(QtWidgets.QWidget):
     
     def storeValue(self, n):  #將值存在格子和變數中
         
-        self.input_mlu_c.setText(n['data']['mlu-c'])
+        self.input_mlu_c.setText(str(n['data']['mlu-c']))
         self.mluC = n['data']['mlu-c']
     
-        self.input_mlu_w.setText(n['data']['mlu-w'])
+        self.input_mlu_w.setText(str(n['data']['mlu-w']))
         self.mluW = n['data']['mlu-w']
     
-        self.input_vocd_c.setText(n['data']['vocd-c'])
+        self.input_vocd_c.setText(str(n['data']['vocd-c']))
         self.vocdC = n['data']['vocd-c']
     
-        self.input_vocd_w.setText(n['data']['vocd-w'])
+        self.input_vocd_w.setText(str(n['data']['vocd-w']))
         self.vocdW = n['data']['vocd-w']
     
     def save(self):
         data = {
-            "mlu-c": self.input_mlu_c.text(),
-            "mlu-w": self.input_mlu_w.text(),
-            "vocd-c": self.input_vocd_c.text(),
-            "vocd-w": self.input_vocd_w.text()
+            "mlu-c": round(float(self.input_mlu_c.text()),2) if self.input_mlu_c.text() != '' else 0.0,
+            "mlu-w": round(float(self.input_mlu_w.text()),2) if self.input_mlu_w.text() != '' else 0.0,
+            "vocd-c": round(float(self.input_vocd_c.text()),2) if self.input_vocd_c.text() != '' else 0.0,
+            "vocd-w": round(float(self.input_vocd_w.text()),2) if self.input_vocd_w.text() != '' else 0.0
         }
 
         #更新暫存值
@@ -343,7 +344,7 @@ class NormModifyTab(QtWidgets.QWidget):
         age = self.comboBox.itemText(self.lastIndex)
 
         db.upsertNorm(age, self.chineseToNum(age), data)
-        QtWidgets.QMessageBox.information(self, '通知','更新成功', QtWidgets.QMessageBox.Ok)
+        QtWidgets.QMessageBox.information(self, '通知','<p style="font-size:12pt;">更新成功</p>', QtWidgets.QMessageBox.Ok)
 
     # def addAge(self):
     #     newAge = ''
