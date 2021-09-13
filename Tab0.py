@@ -202,9 +202,9 @@ class SearchTab(QtWidgets.QWidget):
                 # deleteBtn.clicked.connect(partial(self.deleteDoc , doc['_id'] , idx)) # 只刪document
 
             if idx == -1:
-                QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
+                QtWidgets.QMessageBox.information(self, '查詢',"<p style='font-size:12pt;'>查無資料</p>", QtWidgets.QMessageBox.Ok)
         else:
-            QtWidgets.QMessageBox.information(self, 'Database','資料庫讀取中', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, 'Database',"<p style='font-size:12pt;'>資料庫讀取中</p>", QtWidgets.QMessageBox.Ok)
 
     @QtCore.pyqtSlot()
     def importDoc(self , obj):
@@ -215,7 +215,7 @@ class SearchTab(QtWidgets.QWidget):
         self.procDoc.emit(obj)
 
         #通知彙整完整
-        informBox = QtWidgets.QMessageBox.information(self, '通知','匯入完成', QtWidgets.QMessageBox.Ok)
+        informBox = QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>匯入完成</p>", QtWidgets.QMessageBox.Ok)
         self.procMain.emit(1, 0) #切換到收錄表
 
         #清空Table

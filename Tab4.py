@@ -257,10 +257,10 @@ class chartTab(QtWidgets.QWidget):
                 self.form.tableWidget.setCellWidget(idx, 4,importBtn)
                 importBtn.clicked.connect(partial(self.create_linebarchart , child['document'], child['name']))
             if idx == -1:
-                QtWidgets.QMessageBox.information(self, '查詢','查無資料', QtWidgets.QMessageBox.Ok)
+                QtWidgets.QMessageBox.information(self, '查詢','<p style="font-size:12pt;">查無資料</p>', QtWidgets.QMessageBox.Ok)
 
         else:
-            QtWidgets.QMessageBox.information(self, 'Database','資料庫讀取中', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, 'Database','<p style="font-size:12pt;">資料庫讀取中</p>', QtWidgets.QMessageBox.Ok)
 
     # #清除原本layout裡的Widget
     # def clearLayout(self):
@@ -311,7 +311,7 @@ class chartTab(QtWidgets.QWidget):
         #尚未轉錄過無法生成資料
         #self.clearLayout()
         if count == 0:
-            QtWidgets.QMessageBox.information(self, '','尚未彙整過無法生成資料', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, '警告','<p style="font-size:12pt;">尚未彙整過無法生成資料</p>', QtWidgets.QMessageBox.Ok)
             return None
         
         # #清除所有Layout
@@ -332,11 +332,11 @@ class chartTab(QtWidgets.QWidget):
         
         if len_mlu > len_vocd and len_vocd == 0:
             self.VOCD_chart.hide()
-            warnText = "資料過少無法產生VOCD圖表"
+            warnText = "<p style='font-size:12pt;'>資料過少無法產生VOCD圖表</p>"
             self.createWarnLabel(warnText,two_graph=False)
             QtWidgets.QMessageBox.warning(self, "通知",warnText, QtWidgets.QMessageBox.Ok)
         elif len_mlu > len_vocd and len_vocd > 0:
-            warnText = f"VOCD圖表有{len_mlu-len_vocd}筆紀錄因資料過少無法呈現於圖表"
+            warnText = f"<p style='font-size:12pt;'>VOCD圖表有{len_mlu-len_vocd}筆紀錄因資料過少無法呈現於圖表</p>"
             self.createWarnLabel(warnText)
             for d in invalid_dates:
                 warnText += f"\n{d}"
