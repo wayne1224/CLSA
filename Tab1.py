@@ -911,7 +911,6 @@ class Myform(QtWidgets.QWidget):
             if (db.canInsertDoc(self.input_caseID.text() , date)):
                 result = self.accessDB('insert')
                 insertChildData = True
-                db.insertRecording = False
                 if result == 1:
                     insertChildData = db.upsertChildData(childData) 
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
