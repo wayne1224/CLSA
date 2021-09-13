@@ -325,7 +325,7 @@ def createLineChart(type, documents):
     
     for i, n in enumerate(norms):
         #print(n[w.lower()])
-        series_norm.append(i, float(n[w.lower()]))
+        series_norm.append(i, n[w.lower()])
     
     if len(seriesC) == 1 and len(seriesW) == 1:
         #換圖類型
