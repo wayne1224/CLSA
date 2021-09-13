@@ -554,7 +554,7 @@ class Myform(QtWidgets.QWidget):
         self.btn_empty.clicked.connect(self.clearContent)
         self.horizontalLayout_11.addWidget(self.btn_empty)
         self.btn_insert = QtWidgets.QPushButton()
-        self.btn_insert.setToolTip('欲新增一筆紀錄，請先按下清空欄位')
+        # self.btn_insert.setToolTip('欲新增一筆紀錄，請先按下清空欄位')
         self.btn_insert.setObjectName("btn_insert")
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -924,6 +924,7 @@ class Myform(QtWidgets.QWidget):
                     #傳currentDoc_id到Tab0
                     self.procID.emit({'_id': self.currentDoc_id})
                     self.btn_update.setEnabled(True)
+                    self.btn_insert.setToolTip('欲新增一筆紀錄，請先按下清空欄位')
                     self.btn_insert.setEnabled(False)
             else :
                 QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正 \
@@ -1119,6 +1120,7 @@ class Myform(QtWidgets.QWidget):
     def getDoc(self, Doc):
         self.currentDoc_id = Doc['_id']
         self.btn_update.setEnabled(True)
+        self.btn_insert.setToolTip('欲新增一筆紀錄，請先按下清空欄位')
         self.btn_insert.setEnabled(False)
         #設定childData
         if Doc == None:
@@ -1190,6 +1192,7 @@ class Myform(QtWidgets.QWidget):
         self.clearRedFrame()
         self.currentDoc_id = None
         self.btn_update.setEnabled(False)
+        self.btn_insert.setToolTip(None)
         self.btn_insert.setEnabled(True)
         self.input_caseID.setText('')
         self.input_caseName.setText('')
