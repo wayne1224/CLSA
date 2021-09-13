@@ -70,17 +70,17 @@ class MainWindow(QtWidgets.QMainWindow):
         elif key == 3:
             self.load.stopAnimation()
             self.mainTab.setCurrentIndex(3)
-            QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>資料彙整並儲存成功</p>", QtWidgets.QMessageBox.Ok)
         elif key == 4:
             self.load.stopAnimation()
-            QtWidgets.QMessageBox.warning(self, '警告','資料不足無法彙整', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>資料不足無法彙整</p>", QtWidgets.QMessageBox.Ok)
         
         #key(5~7) Tab2 使用
         elif key == 5:
             self.load2.wait(time)   
         elif key == 6:
             self.load2.stop()
-            QtWidgets.QMessageBox.information(self, '通知','轉錄成功', QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>轉錄成功</p>", QtWidgets.QMessageBox.Ok)
         elif key == 7:
             self.load2.start()
         
@@ -92,7 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
             event.ignore()
         else:
             if checkTab1 or checkTab2:
-                warnText = '<p style="font-size:13pt; color: #3778bf;">要儲存對下列頁面的變更嗎?</p>\n'
+                warnText = '<p style="font-size:12pt; color: #3778bf;">要儲存對下列頁面的變更嗎?</p>\n'
                 if checkTab1:
                     warnText += '收錄表\n'
                 if checkTab2:
