@@ -1,12 +1,10 @@
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 from datetime import datetime
 
 class Table_MessageBox(QtWidgets.QMessageBox):
     def __init__(self): #Before, After: Dict型態
         QtWidgets.QMessageBox.__init__(self)
         #self.setSizeGripEnabled (True)
-
-       
         self.setWindowTitle("是否變更個案資料")
         # self.setIcon(self.Critical)
         # print(type(self.icon().))
@@ -24,9 +22,14 @@ class Table_MessageBox(QtWidgets.QMessageBox):
         # spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         # self.layout().addItem(spacerItem, 2, 0)
 
+        font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
+        font.setPixelSize(20)
+
         #Table
         self.tableWidget = QtWidgets.QTableWidget()
         self.tableWidget.setColumnCount(2)
+        self.tableWidget.setFont(font)
         #self.tableWidget.setRowCount(3)
         self.tableWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         #self.tableWidget.move(30,80)
@@ -61,7 +64,7 @@ class Table_MessageBox(QtWidgets.QMessageBox):
 
         #載入資料
         a = before['caseID']
-        self.setText(f'個案編號: {a}')
+        self.setText(f"<b style='font-size:12pt'>個案編號: {a}</b>")
         
         rowCount = 0
         if before and after:
