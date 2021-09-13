@@ -926,7 +926,8 @@ class Myform(QtWidgets.QWidget):
                     self.btn_update.setEnabled(True)
                     self.btn_insert.setEnabled(False)
             else :
-                QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正[收錄時間]或是[個案編號]</p>", QtWidgets.QMessageBox.Ok)
+                QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正 \
+                    <b style = 'color: red;'>[收錄時間]</b>或是<b style = 'color: red;'>[個案編號]</b></p>", QtWidgets.QMessageBox.Ok)
 
     #更新紀錄
     def updateRecord (self):
@@ -948,7 +949,8 @@ class Myform(QtWidgets.QWidget):
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>更新成功</p>", QtWidgets.QMessageBox.Ok)
                     self.procID.emit({'_id': self.currentDoc_id})
             else :
-                QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正[收錄時間]或是[個案編號]</p>", QtWidgets.QMessageBox.Ok)
+                QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正\
+                    <b style = 'color: red;'>[收錄時間]</b>或是<b style = 'color: red;'>[個案編號]</b></p>", QtWidgets.QMessageBox.Ok)
     
     #紅框與年齡檢查
     def redFrameExamination(self):
@@ -1089,15 +1091,15 @@ class Myform(QtWidgets.QWidget):
             self.saveForm = self.returnTab1Data()
             warnText = "<p style='font-size:12pt;'>"
             if inputError > 0:
-                warnText += '紅色框為必填欄位<br/>'
+                warnText += "紅色框為必填欄位<br/>"
             if ageError ==1:
-                warnText += '請確認[生日日期]與[收錄日期]是否正確(經計算個案年齡已超過13歲)<br/>'
+                warnText += "請確認<b style = 'color: red;'>[生日日期]</b>與<b style = 'color: red;'>[收錄日期]</b>是否正確<br/>(經計算個案年齡已超過13歲)<br/>"
             if ageError ==2:
-                warnText += '請確認[生日日期]與[收錄日期]是否正確(經計算個案年齡小於2歲)<br/>'
+                warnText += "請確認<b style = 'color: red;'>[生日日期]</b>與<b style = 'color: red;'>[收錄日期]</b>是否正確<br/>(經計算個案年齡小於2歲)<br/>"
             if otherError == 1:
-                warnText += '其他欄位有勾選但未填值<br/>'
+                warnText += "其他欄位有勾選但未填值<br/>"
             if otherError == 2:
-                warnText += '其他欄位有填值但未勾選'
+                warnText += "其他欄位有填值但未勾選"
             warnText += "</p>"
             QtWidgets.QMessageBox.warning(self, '警告',warnText, QtWidgets.QMessageBox.Ok)
             return False
