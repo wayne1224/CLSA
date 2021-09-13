@@ -554,6 +554,7 @@ class Myform(QtWidgets.QWidget):
         self.btn_empty.clicked.connect(self.clearContent)
         self.horizontalLayout_11.addWidget(self.btn_empty)
         self.btn_insert = QtWidgets.QPushButton()
+        self.btn_insert.setToolTip('欲新增一筆紀錄，請先按下清空欄位')
         self.btn_insert.setObjectName("btn_insert")
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -659,6 +660,14 @@ class Myform(QtWidgets.QWidget):
         self.lbl_showValidUtterNum.setText(str(utterance['validUtterance']))
         self.saveForm = self.returnTab1Data()
     
+    #將dateEdit_recordDate變成dateTime型態
+    def getDateinDateTime(self) :
+        strDate = str(self.dateEdit_recordDate.dateTime().toPyDateTime())
+        DateTimeDate = datetime.strptime(strDate, "%Y-%m-%d %H:%M:%S.%f")
+        strRecordDate = DateTimeDate.strftime("%Y-%m-%d %H:%M:%S")
+        DateTimeRecordDate = datetime.strptime(strRecordDate, "%Y-%m-%d %H:%M:%S")
+        return DateTimeRecordDate
+
     #查詢個案編號並把個案資料貼到Tab1
     def searchCaseID(self): 
         caseData = db.findChildData(self.input_caseID.text())
@@ -902,6 +911,7 @@ class Myform(QtWidgets.QWidget):
             if (db.canInsertDoc(self.input_caseID.text() , date)):
                 result = self.accessDB('insert')
                 insertChildData = True
+                db.insertRecording = False
                 if result == 1:
                     insertChildData = db.upsertChildData(childData) 
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
@@ -917,7 +927,7 @@ class Myform(QtWidgets.QWidget):
                     self.btn_update.setEnabled(True)
                     self.btn_insert.setEnabled(False)
             else :
-                QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正收錄時間或是個案編號</p>", QtWidgets.QMessageBox.Ok)
+                QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正[收錄時間]或是[個案編號]</p>", QtWidgets.QMessageBox.Ok)
 
     #更新紀錄
     def updateRecord (self):
@@ -929,6 +939,7 @@ class Myform(QtWidgets.QWidget):
             if (db.canUpdateDoc(self.input_caseID.text(), date, self.currentDoc_id)):
                 result = self.accessDB('update')
                 updateChildData = True
+                updateRecording = False
                 if (result == 2):
                     updateChildData = db.upsertChildData(childData)
                     updateRecording =  db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
@@ -938,7 +949,7 @@ class Myform(QtWidgets.QWidget):
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>更新成功</p>", QtWidgets.QMessageBox.Ok)
                     self.procID.emit({'_id': self.currentDoc_id})
             else :
-                QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正收錄時間或是個案編號</p>", QtWidgets.QMessageBox.Ok)
+                QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正[收錄時間]或是[個案編號]</p>", QtWidgets.QMessageBox.Ok)
     
     #紅框與年齡檢查
     def redFrameExamination(self):
