@@ -372,44 +372,54 @@ class Tab2(QtWidgets.QWidget):
         self.btn_generateAndSave.setEnabled(False)
 
         # 視窗
+        # 字體
+        msgFont = QtGui.QFont()
+        msgFont.setPointSize(12)
         # 編號不是輸入字母
         self.msg_roleNotAlpha = QtWidgets.QMessageBox()
+        self.msg_roleNotAlpha.setFont(msgFont)
         self.msg_roleNotAlpha.setWindowTitle("提示")
         self.msg_roleNotAlpha.setText("編號只能輸入英文！")
         self.msg_roleNotAlpha.setIcon(QtWidgets.QMessageBox.Warning)
         # self.msg_roleNotAlpha.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
         # 未輸入語句
         self.msg_noInp = QtWidgets.QMessageBox()
+        self.msg_noInp.setFont(msgFont)
         self.msg_noInp.setWindowTitle("提示")
         self.msg_noInp.setText("請輸入語句！")
         self.msg_noInp.setIcon(QtWidgets.QMessageBox.Question)
         # self.msg_noInp.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
         # 未輸入語境
         self.msg_noScenario = QtWidgets.QMessageBox()
+        self.msg_noScenario.setFont(msgFont)
         self.msg_noScenario.setWindowTitle('提示')
         self.msg_noScenario.setText('請輸入語境！')
         self.msg_noScenario.setIcon(QtWidgets.QMessageBox.Question)
         # self.msg_noScenario.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
         # 未輸入轉錄者
         self.msg_noTrans = QtWidgets.QMessageBox()
+        self.msg_noTrans.setFont(msgFont)
         self.msg_noTrans.setWindowTitle('提示')
         self.msg_noTrans.setText('未輸入轉錄者！')
         self.msg_noTrans.setIcon(QtWidgets.QMessageBox.Warning)
         # self.msg_noTrans.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
         # 未選取刪除列
         self.msg_deleteNotSelect = QtWidgets.QMessageBox()
+        self.msg_deleteNotSelect.setFont(msgFont)
         self.msg_deleteNotSelect.setWindowTitle("提示")
         self.msg_deleteNotSelect.setText("請選取至少一整列刪除！")
         self.msg_deleteNotSelect.setIcon(QtWidgets.QMessageBox.Warning)
         # self.msg_deleteNotSelect.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
         # 儲存完成
         self.msg_save = QtWidgets.QMessageBox()
+        self.msg_save.setFont(msgFont)
         self.msg_save.setWindowTitle("提示")
         self.msg_save.setText("儲存完成！")
         self.msg_save.setIcon(QtWidgets.QMessageBox.Information)
         # self.msg_save.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
         # 尚未儲存
         self.msg_notSave = QtWidgets.QMessageBox()
+        self.msg_notSave.setFont(msgFont)
         self.msg_notSave.setWindowTitle("提示")
         self.msg_notSave.setText("更動內容尚未儲存！")
         self.msg_notSave.setInformativeText("要儲存嗎？")
