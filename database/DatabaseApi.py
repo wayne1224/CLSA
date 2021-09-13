@@ -171,11 +171,11 @@ def canUpdateDoc(caseID , date , documentID): # return boolean , if error return
         if documentDB.count_documents(query) != 0:
             data = documentDB.find_one(query)
 
-            # 是同一個 doc => 可以更新
+            # 是同一個 doc , return True => 可以更新
             if data["_id"] == documentID:
                 return True
             
-            # 不同的 doc => 不能更新
+            # 不同的 doc , return False => 不能更新
             else:
                 return False
 
