@@ -10,8 +10,8 @@ class STT(QtCore.QObject):
     procMain = QtCore.pyqtSignal(int, float)
 
     def STT_from_file(self, filePath):
-        speech_key, service_region = "492ba6cf3f004e52b19908ab189514c7", "eastus"
-        speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
+        speech_key, service_region, profanity_option = "492ba6cf3f004e52b19908ab189514c7", "eastus", speechsdk.ProfanityOption.Raw
+        speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region, set_profanity=profanity_option)
         speech_config.speech_recognition_language="zh-TW"
         audio_config = speechsdk.audio.AudioConfig(filename=filePath)
         speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_config)
