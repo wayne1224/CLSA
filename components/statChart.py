@@ -306,6 +306,11 @@ def createLineChart(type, documents):
                 seriesW.append(i, doc['transcription']['analysis'][w])
                 seriesC.append(i, doc['transcription']['analysis'][c])
                 i += 1
+
+                #如果超過原本MaxValue
+                while doc['transcription']['analysis'][c] >= maxValue:
+                    maxValue += 4
+                    
             elif type == "VOCD":
                 if doc['transcription']['analysis'][w] != "樣本數不足":
                     dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
@@ -313,6 +318,10 @@ def createLineChart(type, documents):
                     seriesW.append(i, doc['transcription']['analysis'][w])
                     seriesC.append(i, doc['transcription']['analysis'][c])
                     i += 1
+
+                    #如果超過原本MaxValue
+                    while doc['transcription']['analysis'][c] >= maxValue:
+                        maxValue += 20
                 else:
                     invalid_dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
     
@@ -350,7 +359,6 @@ def createLineChart(type, documents):
         seriesC.append(tempC)
         series_norm.append(tempN)
        
-    
     #宣告Chart
     chart = QChart()
     chart.setFont(font)
