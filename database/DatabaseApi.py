@@ -99,7 +99,7 @@ def deleteDoc(objID): # 只刪除document 不刪除childData
         print(e) 
 
 # 收錄表 api
-def findChildData(caseID): # return child Data or False
+def findChildData(caseID): # return child Data (not include object ID) or False
     try:
         query = dict()
         query["caseID"] = caseID
