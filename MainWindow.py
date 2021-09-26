@@ -4,15 +4,14 @@ import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
 from components.loading import LoadingScreen, LoadingBar, DownloadScreen
-from utils.worker import Worker_DB
+from utils.worker import Worker_DB, Worker
 import database.DatabaseApi
-import DistilTag
 
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        # self.resize(1400, 700)
+        self.resize(1400, 700)
         self.setWindowTitle("CLSA")
         self.mainTab = MainTabWidget()
         self.mainTab.tabBar().setDocumentMode(True)
@@ -46,19 +45,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.worker_DB.finished.connect(self.thread_DB.quit)
         self.worker_DB.finished.connect(self.worker_DB.deleteLater)
         self.thread_DB.finished.connect(self.thread_DB.deleteLater)
-
-        #讀取資料並產生圖表
-        self.thread_DB.finished.connect(self.mainTab.tab4.tab1.createBarCharts)
-
-        #讀取NORM
-        self.thread_DB.finished.connect(self.mainTab.tab4.tab2.getNorms)
-        self.thread_DB.start()
-
+        self.thread_DB.finished.connect(self.mainTab.tab4.tab1.createBarCharts) #讀取資料並產生圖表
+        self.thread_DB.finished.connect(self.mainTab.tab4.tab2.getNorms)  #讀取NORM
+        self.thread_DB.start() #開始跑Thread
+        
+        #讀取CKIP transformers
         self.window = DownloadScreen()
         if os.path.exists(self.get_model_path()) == False:
             self.window.show()
         
-            
+        #讀取 Model Thread
+        self.thread = QtCore.QThread()
+        self.worker = Worker(self.load_model)
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.thread.start()
+
     @QtCore.pyqtSlot(int, float)
     def getAction(self, key, time):
         if key == 1:
@@ -111,23 +116,26 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def get_model_path(self):
         home_dir = os.path.expanduser("~")
-        cache_dir = os.path.join(home_dir, ".cwn_graph")
-        model_path = os.path.join(cache_dir, "tagmodel")
+        cache_dir = os.path.join(home_dir, ".cache")
+        model_path = os.path.join(cache_dir, "huggingface/transformers")
         return model_path
 
-    def download_model(self):
+    def load_model(self):
         import time
         time.sleep(2)
-        DistilTag.download()
+        
+        #Download Tab3 ws_driver, pos_driver
+        self.mainTab.tab3.init_transformers()
+
+        #關閉loading視窗
         self.window.close()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    t = threading.Thread(target=window.download_model)
-    t.start()
     app.exec_()
+    
     
 if __name__ == '__main__':
     main()

@@ -308,14 +308,17 @@ class chartTab(QtWidgets.QWidget):
             if b['transcription']['analysis'] != None:
                 count += 1
 
+       
+
+        ##清除所有Layout
+        self.clearLayout(self.scroll_vbox)
+
         #尚未轉錄過無法生成資料
-        #self.clearLayout()
         if count == 0:
             QtWidgets.QMessageBox.information(self, '警告','<p style="font-size:12pt;">尚未彙整過無法生成資料</p>', QtWidgets.QMessageBox.Ok)
             return None
         
-        # #清除所有Layout
-        self.clearLayout(self.scroll_vbox)
+        
 
         #詞性圖
         self.POS_chart = createBarChart_POS(doc.copy(), name)
@@ -339,7 +342,8 @@ class chartTab(QtWidgets.QWidget):
             warnText = f"<p style='font-size:12pt;'>VOCD圖表有{len_mlu-len_vocd}筆紀錄因資料過少無法呈現於圖表</p>"
             self.createWarnLabel(warnText)
             for d in invalid_dates:
-                warnText += f"\n{d}"
+                warnText += d
+                warnText += "<br/>"
             QtWidgets.QMessageBox.warning(self, "通知", warnText, QtWidgets.QMessageBox.Ok)
 
         self.layout.addWidget(self.scroll)
