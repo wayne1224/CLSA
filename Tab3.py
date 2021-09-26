@@ -4,7 +4,7 @@ import time
 import numpy as np
 import random
 from PyQt5 import QtCore, QtGui, QtWidgets
-import DistilTag  
+from ckip_transformers.nlp import CkipWordSegmenter, CkipPosTagger
 from statistics import mean
 from datetime import datetime
 from sympy import solve, symbols, sqrt, sympify
@@ -22,24 +22,9 @@ class AnalysisTab(QtWidgets.QWidget):
 
         #add Header 
         self.headerLayout = QtWidgets.QHBoxLayout()
-        # self.horizontalLayout = QtWidgets.QHBoxLayout()
-        # self.horizontalLayout.setObjectName("horizontalLayout")
-        # self.label_2 = QtWidgets.QLabel()
+        
         font = QtGui.QFont()
         font.setPointSize(14)
-        # self.label_2.setFont(font)
-        # self.label_2.setObjectName("label_2")
-        # self.horizontalLayout.addWidget(self.label_2)
-        # self.transcriber_label = QtWidgets.QLabel()
-        # font = QtGui.QFont()
-        # font.setPointSize(14)
-        # self.transcriber_label.setFont(font)
-        # self.transcriber_label.setText("")
-        # self.transcriber_label.setObjectName("transcriber_label")
-        # self.horizontalLayout.addWidget(self.transcriber_label)
-        # #self.headerLayout.addLayout(self.horizontalLayout)
-        # spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
-        # self.headerLayout.addItem(spacerItem)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.label_3 = QtWidgets.QLabel()
@@ -93,7 +78,7 @@ class AnalysisTab(QtWidgets.QWidget):
 
         # table font
         tfont = QtGui.QFont()
-        tfont.setFamily("Agency FB")
+        tfont.setFamily("微軟正黑體")
         tfont.setPointSize(12)
 
         self.tableWidget = QtWidgets.QTableWidget(self)
@@ -275,6 +260,11 @@ class AnalysisTab(QtWidgets.QWidget):
         # self.date = None
         self.isEdit = False
 
+    def init_transformers(self):
+        self.ws_driver = CkipWordSegmenter(level=1)
+        self.pos_driver = CkipPosTagger(level=1)
+        print("Model Loaded!!!")
+
     @QtCore.pyqtSlot()
     def setEdit(self):
         self.isEdit = True
@@ -331,15 +321,29 @@ class AnalysisTab(QtWidgets.QWidget):
     def analyze_and_setContent(self,utterance):
         self.isEdit = False
         if not utterance:
-            #傳signal給MainWindow
+            #傳signal給MainWindow，沒utterance不用loading
             self.procMain.emit(4, 0)
             return 
-        #try:
-        print(utterance)
+       
         utterance = list(sorted(utterance, key = len, reverse = True))
-        wordArray = [] #有效詞
-        charArray = [] #有效字
-        utterStr = ""
+        Analysis = self.getAnalysis(utterance)
+        
+        #呼叫資料庫
+        db.updateAnalysis(self.currentDoc_id, Analysis)
+
+        #顯示在Table
+        self.setContent(Analysis)
+
+        #傳signal給MainWindow
+        self.procMain.emit(3, 0)
+
+    def getAnalysis(self, text):
+        wordArray = [] #所有有效詞
+        charArray = [] #所有有效字
+
+        wordCount = [0] * len(text) #每句話的詞數
+        charCount = [0] * len(text) #每句話的字數
+
         Analysis = {
             'charCount':0,
             'wordCount':0,
@@ -367,103 +371,94 @@ class AnalysisTab(QtWidgets.QWidget):
             'MLU-w':0,
             'MLU-c':0,
             'MLU5-w':0,
-            'MLU5-c':0
+            'MLU5-c':0  
         }
+        
 
-        #將句子合併
-        for i in utterance: 
-            utterStr += i
-            utterStr += '。'
+        while hasattr(self, "ws_driver") == False:
+            pass
+        
+        while hasattr(self, "pos_driver") == False:
+            pass
             
-        #開始進行斷詞
-        tagger = DistilTag.DistilTag()
-        tagged = tagger.tag(utterStr)
-        #print(tagged)
-        wordCount = [0]*len(tagged) #統計每句詞數
-        charCount = [len(i) + 1 for i in tagged]
-        i = 0 #每句話的index
-        for sent in tagged:
-            #print(i)
-            #charArray.extend(utterance[i])
-            for pair in sent:
-                wordCount[i] += 1 #統計每句詞數
-                wordArray.append(pair[0]) #收集詞
-                charArray.extend(list(pair[0]))
+        #斷詞API
+        ws = self.ws_driver(text)
+        pos = self.pos_driver(ws)
+
+        for i, (sentence_ws, sentence_pos) in enumerate(zip(ws, pos)):
+            assert len(sentence_ws) == len(sentence_pos)
+            #print(f"第{i}句")
+            for word_ws, word_pos in zip(sentence_ws, sentence_pos):
+                #紀錄有效詞/字
+                #print(word_ws, word_pos)
+                wordArray.append(word_ws)
+                charArray.extend(list(word_ws)) #把詞拆成字
+
+                #紀錄每句話的詞數/字數
+                wordCount[i] += 1
+                charCount[i] += len(word_ws)
+
                 #統計實詞
-                if pair[1] == 'Neu':
+                if word_pos == 'Neu':
                     Analysis['Content']['Neu'] += 1
-                elif pair[1] == 'Nf' or pair[1] == 'Nequ':
+                elif word_pos == 'Nf' or word_pos == 'Neqa' or word_pos == 'Neqb':
                     Analysis['Content']['Nf'] += 1
-                elif pair[1] == 'Nh' or pair[1] == 'Nep':
+                elif word_pos == 'Nh' or word_pos == 'Nep':
                     Analysis['Content']['Nh'] += 1
-                elif pair[1].startswith('N'):
+                elif word_pos.startswith('N'):
                     Analysis['Content']['N'] += 1
-                elif pair[1] == 'VH' or pair[1] == 'A':
+                elif word_pos == 'VH' or word_pos == 'A':
                     Analysis['Content']['VH'] += 1
-                elif pair[1].startswith('V') or pair[1] == 'SHI':
+                elif word_pos.startswith('V') or word_pos == 'SHI':
                     Analysis['Content']['V'] += 1
-                elif pair[1].startswith('D') and pair[1] != 'DASHCATEGORY':
+                elif word_pos.startswith('D') and word_pos != 'DASHCATEGORY':
                     Analysis['Content']['D'] += 1
+
                 #統計虛詞
-                elif pair[1] == 'P':
+                elif word_pos == 'P':
                     Analysis['Function']['P'] += 1
-                elif pair[1].startswith('Ca') or pair[1].startswith('Cb'):
+                elif word_pos.startswith('Ca') or word_pos.startswith('Cb'):
                     Analysis['Function']['C'] += 1
-                elif pair[1].startswith('T'):
+                elif word_pos.startswith('T'):
                     Analysis['Function']['T'] += 1
-                elif pair[1] == 'I':
+                elif word_pos == 'I':
                     Analysis['Function']['I'] += 1
-                else:
-                    wordCount[i] -= 1
-                    charCount[i] -= 1
-                    #去除無效字
+                else: #若有不用紀錄的詞性，則移除
                     wordArray = wordArray[:-1]
-                    charArray = charArray[:-len(pair[0])]
-                    # if ord(charArray[-1]) + 65248 == ord(wordArray.pop()):  #去除無效詞
-                    #     charArray.pop() #去除無效字
-            i += 1
-                    
+                    charArray = charArray[:-len(word_ws)]
+                    wordCount[i] -= 1
+                    charCount[i] -= len(word_ws)
+
         #設Dict值
         Analysis['charCount'] = sum(charCount) #總字數
         Analysis['wordCount'] = sum(wordCount) #總詞數
-        Analysis['Content']['percentage'] = round(sum(Analysis['Content'].values())/sum(wordCount),2) #實詞比例
-        Analysis['Function']['percentage'] = round(sum(Analysis['Function'].values())/sum(wordCount),2) #虛詞比例
+
+        try:
+            Analysis['Content']['percentage'] = round(sum(Analysis['Content'].values())/sum(wordCount),2) #實詞比例
+        except:
+            Analysis['Content']['percentage'] = 0.0 #完全沒有需要紀錄的詞性
+        try:
+            Analysis['Function']['percentage'] = round(sum(Analysis['Function'].values())/sum(wordCount),2) #虛詞比例
+        except:
+            Analysis['Function']['percentage'] = 0
+
         Analysis['Content']['sum'] = int(sum(Analysis['Content'].values())) #總實詞
         Analysis['Function']['sum'] = int(sum(Analysis['Function'].values())) #總虛詞
         Analysis['MLU-w'] = round(mean(wordCount),2)
         Analysis['MLU-c'] = round(mean(charCount),2)
         Analysis['MLU5-w'] = round(mean(wordCount[:5]),2)
         Analysis['MLU5-c'] = round(mean(charCount[:5]),2)
+        
         try:
             Analysis['VOCD-w'] = round(self.getVOCD(wordArray),2)
         except:
-            Analysis['VOCD-w'] = self.getVOCD(wordArray)
+            Analysis['VOCD-w'] = self.getVOCD(wordArray) # 防止回傳 "樣本數不足"
         try:
             Analysis['VOCD-c'] = round(self.getVOCD(charArray),2)
         except:
-            Analysis['VOCD-c'] = self.getVOCD(charArray)
+            Analysis['VOCD-c'] = self.getVOCD(charArray) # 防止回傳 "樣本數不足"
 
-        print(wordArray)
-        print(charArray)
-
-        #呼叫資料庫
-        # print('caseID:',self.caseID)
-        # print('Date:',type(self.date))
-        db.updateAnalysis(self.currentDoc_id, Analysis)
-
-        #通知彙整完整
-        #informBox = QtWidgets.QMessageBox.information(self, '通知','資料彙整並儲存成功', QtWidgets.QMessageBox.Ok)
-
-        #顯示在Table
-        self.setContent(Analysis)
-
-        #傳signal給MainWindow
-        self.procMain.emit(3, 0)
-
-        # except Exception as e:
-        #     #傳signal給MainWindow
-        #     self.procMain.emit(4)
-        #     print(e)
+        return Analysis
 
     def getTTR(self,a):
         return len(set(a)) / len(a)
