@@ -337,14 +337,14 @@ class chartTab(QtWidgets.QWidget):
             self.VOCD_chart.hide()
             warnText = "<p style='font-size:12pt;'>資料過少無法產生VOCD圖表</p>"
             self.createWarnLabel(warnText,two_graph=False)
-            QtWidgets.QMessageBox.warning(self, "通知",warnText, QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.infomation(self, "通知", warnText, QtWidgets.QMessageBox.Ok)
         elif len_mlu > len_vocd and len_vocd > 0:
             warnText = f"<p style='font-size:12pt;'>VOCD圖表有{len_mlu-len_vocd}筆紀錄因資料過少無法呈現於圖表</p>"
             self.createWarnLabel(warnText)
             for d in invalid_dates:
                 warnText += d
                 warnText += "<br/>"
-            QtWidgets.QMessageBox.warning(self, "通知", warnText, QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, "通知", warnText, QtWidgets.QMessageBox.Ok)
 
         self.layout.addWidget(self.scroll)
         
