@@ -202,29 +202,30 @@ def createBarChart_POS(doc, name): #建立詞性的柱狀圖
     chart.addSeries(barSeries)
     for index in caseDocs:
         if index['transcription']['analysis'] != None:
-            strDate = index['date'].strftime("%Y-%m-%d %H:%M")
-            set = QBarSet(strDate)
-            set.setLabelFont(labelFont)
-            # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
-            #     if key != 'percentage':
-            #         if key == 'sum': recordCount += 1
-            #         else : sumContent[key] += value
-            set << index['transcription']['analysis']['Content']['N'] / index['transcription']['analysis']['wordCount'] * 100.0\
-                <<  index['transcription']['analysis']['Content']['V'] / index['transcription']['analysis']['wordCount'] * 100.0\
-                << index['transcription']['analysis']['Content']['VH'] / index['transcription']['analysis']['wordCount'] * 100.0\
-                << index['transcription']['analysis']['Content']['Neu']/ index['transcription']['analysis']['wordCount'] * 100.0\
-                << index['transcription']['analysis']['Content']['Nf']/ index['transcription']['analysis']['wordCount'] * 100.0\
-                << index['transcription']['analysis']['Content']['Nh']/ index['transcription']['analysis']['wordCount'] * 100.0\
-                << index['transcription']['analysis']['Content']['D']/ index['transcription']['analysis']['wordCount']  * 100.0\
-                << index['transcription']['analysis']['Function']['sum']/ index['transcription']['analysis']['wordCount'] * 100.0
-            # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()):
-            #     while(value > biggestValue and key != 'sum') :
-            #         # print(str(i) + str(key)+ str(value)) 
-            #         biggestValue+=10.0
-            for i in set:
-                while(i > biggestValue) :
-                    biggestValue+=25.0
-            barSeries.append(set)
+            if index['transcription']['analysis']['wordCount'] != 0 :
+                strDate = index['date'].strftime("%Y-%m-%d %H:%M")
+                set = QBarSet(strDate)
+                set.setLabelFont(labelFont)
+                # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
+                #     if key != 'percentage':
+                #         if key == 'sum': recordCount += 1
+                #         else : sumContent[key] += value
+                set << index['transcription']['analysis']['Content']['N'] / index['transcription']['analysis']['wordCount'] * 100.0\
+                    <<  index['transcription']['analysis']['Content']['V'] / index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['VH'] / index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['Neu']/ index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['Nf']/ index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['Nh']/ index['transcription']['analysis']['wordCount'] * 100.0\
+                    << index['transcription']['analysis']['Content']['D']/ index['transcription']['analysis']['wordCount']  * 100.0\
+                    << index['transcription']['analysis']['Function']['sum']/ index['transcription']['analysis']['wordCount'] * 100.0
+                # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()):
+                #     while(value > biggestValue and key != 'sum') :
+                #         # print(str(i) + str(key)+ str(value)) 
+                #         biggestValue+=10.0
+                for i in set:
+                    while(i > biggestValue) :
+                        biggestValue+=25.0
+                barSeries.append(set)
     axisY.setRange(0, biggestValue)
     # print('last:' + str(biggestValue))
     barSeries.attachAxis(axisX)
