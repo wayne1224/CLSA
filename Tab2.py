@@ -372,7 +372,7 @@ class Tab2(QtWidgets.QWidget):
         self.btn_generateAndSave.setEnabled(False)
 
         # 視窗
-        # 字體
+        # 視窗字體
         msgFont = QtGui.QFont()
         msgFont.setPointSize(12)
         # 編號不是輸入字母
@@ -449,6 +449,12 @@ class Tab2(QtWidgets.QWidget):
         self.btn_clearTab.setText(_translate("", "全部清空"))
         self.btn_save.setText(_translate("", "儲存"))
         self.btn_generateAndSave.setText(_translate("", "產生彙整表並儲存"))
+
+    # 鍵盤事件
+    def keyPressEvent(self, event):
+        # delete row
+        if event.key() == QtCore.Qt.Key_Delete:
+            self._deleteRow()
 
     # 接收tab0接收查詢的資料
     @QtCore.pyqtSlot(dict)
