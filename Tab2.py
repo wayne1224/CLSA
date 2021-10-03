@@ -454,7 +454,8 @@ class Tab2(QtWidgets.QWidget):
     def keyPressEvent(self, event):
         # delete row
         if event.key() == QtCore.Qt.Key_Delete:
-            self._deleteRow()
+            if self.tableWidget.tableWidget.hasFocus():
+                self._deleteRow()
 
     # 接收tab0接收查詢的資料
     @QtCore.pyqtSlot(dict)
