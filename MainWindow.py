@@ -107,8 +107,13 @@ class MainWindow(QtWidgets.QMainWindow):
                                 "CLSA",
                                 warnText,
                                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
-                if close == QtWidgets.QMessageBox.Yes and self.mainTab.tab1.save():
-                    event.accept()
+                if close == QtWidgets.QMessageBox.Yes :
+                    if self.mainTab.tab1.currentDoc_id:
+                        if (self.mainTab.tab1.updateRecord()):
+                            event.accept()
+                    else :
+                        if (self.mainTab.tab1.insertRecord()):
+                            event.accept()
                 elif close == QtWidgets.QMessageBox.No:
                     event.accept()
                 else:
