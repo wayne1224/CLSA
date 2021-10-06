@@ -902,8 +902,10 @@ class Myform(QtWidgets.QWidget):
                 if result == 1:
                     insertChildData = db.upsertChildData(childData) 
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
+                    return 1
                 if result == 3:
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
+                    return 1
                 if self.currentDoc_id and insertChildData:
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>新增成功</p>", QtWidgets.QMessageBox.Ok)
                     #傳個案編號到Tab2
@@ -914,10 +916,13 @@ class Myform(QtWidgets.QWidget):
                     self.btn_update.setEnabled(True)
                     self.btn_insert.setToolTip('欲新增一筆紀錄，請先按下清空欄位')
                     self.btn_insert.setEnabled(False)
+                    return 1
             else :
                 QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正 \
                     <b style = 'color: red;'>[收錄時間]</b>或是<b style = 'color: red;'>[個案編號]</b></p>", QtWidgets.QMessageBox.Ok)
-
+                return 0
+        else:
+            return 0
     #更新紀錄
     def updateRecord (self):
         if (self.redFrameExamination()):
@@ -932,14 +937,20 @@ class Myform(QtWidgets.QWidget):
                 if (result == 2):
                     updateChildData = db.upsertChildData(childData)
                     updateRecording =  db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
+                    return 1
                 elif (result == 4):
                     updateRecording = db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)        
+                    return 1
                 if (updateChildData) and (updateRecording):
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>更新成功</p>", QtWidgets.QMessageBox.Ok)
                     self.procID.emit({'_id': self.currentDoc_id})
+                    return 1
             else :
                 QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>這個時間點個案已經做過治療了，請修正\
                     <b style = 'color: red;'>[收錄時間]</b>或是<b style = 'color: red;'>[個案編號]</b></p>", QtWidgets.QMessageBox.Ok)
+                return 0
+        else:
+            return 0
     
     #紅框與年齡檢查
     def redFrameExamination(self):
