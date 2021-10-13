@@ -389,6 +389,12 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noInp.setText("請輸入語句！")
         self.msg_noInp.setIcon(QtWidgets.QMessageBox.Question)
         # self.msg_noInp.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
+        # 語境輸入語句
+        self.msg_scenarioOnly = QtWidgets.QMessageBox()
+        self.msg_scenarioOnly.setFont(msgFont)
+        self.msg_scenarioOnly.setWindowTitle('提示')
+        self.msg_scenarioOnly.setText('只能輸入語境！')
+        self.msg_scenarioOnly.setIcon(QtWidgets.QMessageBox.Question)
         # 未輸入語境
         self.msg_noScenario = QtWidgets.QMessageBox()
         self.msg_noScenario.setFont(msgFont)
@@ -570,8 +576,11 @@ class Tab2(QtWidgets.QWidget):
         self.input_utterance.setStyleSheet("border: 1px solid initial;")
         self.input_scenario.setStyleSheet("border: 1px solid initial;")
 
-        if opt == 'NoUtter':
-            self.msg_noInp.exec_()    # 跳出提示視窗
+        if opt == 'NoUtter' or opt == 'ScenarioOnly':
+            if opt == 'NoUtter':
+                self.msg_noInp.exec_()    # 跳出提示視窗
+            if opt == 'ScenarioOnly':
+                self.msg_scenarioOnly.exec_()   # 跳出提示視窗
             self.input_utterance.setStyleSheet("border: 1px solid red;")    # 將語句欄邊框設成紅色
         if opt == 'NoScenario':
             self.msg_noScenario.exec_() # 跳出提示視窗
@@ -772,13 +781,16 @@ class Tab2(QtWidgets.QWidget):
 
         elif self.cmb_role.currentText() == "語境":   # 只新增語境
             if self.input_scenario.text():  # 檢查有輸入語境
-                content = self._getCurrentContent()
-                content.append(data)
-                self._setTable(content) # 更新Table
-                self.tableWidget.tableWidget.scrollToBottom() # 新增完會保持置底
+                if self.input_utterance.text():  # 有輸入語句
+                    self._setInpBorderColorAndJumpMsg('ScenarioOnly')
+                else:
+                    content = self._getCurrentContent()
+                    content.append(data)
+                    self._setTable(content) # 更新Table
+                    self.tableWidget.tableWidget.scrollToBottom() # 新增完會保持置底
 
-                self.clearInput()   # 清空、復原輸入欄
-                self.input_utterance.setFocus()     # focus到語句欄
+                    self.clearInput()   # 清空、復原輸入欄
+                    self.input_utterance.setFocus()     # focus到語句欄
             else:
                 self._setInpBorderColorAndJumpMsg('NoScenario')
 
