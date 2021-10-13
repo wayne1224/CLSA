@@ -902,10 +902,8 @@ class Myform(QtWidgets.QWidget):
                 if result == 1:
                     insertChildData = db.upsertChildData(childData) 
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
-                    return 1
                 if result == 3:
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
-                    return 1
                 if self.currentDoc_id and insertChildData:
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>新增成功</p>", QtWidgets.QMessageBox.Ok)
                     #傳個案編號到Tab2
@@ -937,10 +935,8 @@ class Myform(QtWidgets.QWidget):
                 if (result == 2):
                     updateChildData = db.upsertChildData(childData)
                     updateRecording =  db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)
-                    return 1
                 elif (result == 4):
                     updateRecording = db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)        
-                    return 1
                 if (updateChildData) and (updateRecording):
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>更新成功</p>", QtWidgets.QMessageBox.Ok)
                     self.procID.emit({'_id': self.currentDoc_id})
