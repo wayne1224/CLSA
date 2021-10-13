@@ -525,17 +525,16 @@ class Tab2(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def clearTab(self, isAllClear):
         self.clearInput()
-        self.caseData = {}
-        self.content = []
         self.childID = 0
         self.adultIDs = {}
-        self.childUtterance = []
         self.cmb_role.clear()
         self.cmb_role.addItem("兒童")
         self.cmb_role.addItem("語境")
         self.tableWidget.tableWidget.setRowCount(0)
 
         if isAllClear:
+            self.caseData = {}
+            self.content = []
             self.caseID = ''
             self.transcriber = ''
             self.caseDate = None
@@ -881,6 +880,8 @@ class Tab2(QtWidgets.QWidget):
     def isEdit(self):
         content = self._getCurrentContent()
 
+        if self.transcriber != self.input_trans.text():
+            return True
         if self.content == [] and content == []:
             return False
         elif self.content == content:
