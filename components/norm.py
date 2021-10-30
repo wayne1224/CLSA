@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from decimal import Decimal
+from functools import partial
 import qtawesome as qta
+import math
 import database.DatabaseApi as db
 
 class NormModifyTab(QtWidgets.QWidget):
@@ -43,8 +44,6 @@ class NormModifyTab(QtWidgets.QWidget):
         self.comboBox.setFont(font)
         self.comboBox.setObjectName("comboBox")
         self.horizontalLayout_7.addWidget(self.comboBox)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_7.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
@@ -77,6 +76,15 @@ class NormModifyTab(QtWidgets.QWidget):
         self.updateBtn.setObjectName("updateBtn")
         self.horizontalLayout_8.addWidget(self.updateBtn)
         self.verticalLayout.addLayout(self.horizontalLayout_8)
+
+        ## 新增計算常模區 (根據田野調查)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_7.addItem(spacerItem)
+
+        self.calculate_norm_by_age_btn = QtWidgets.QPushButton()
+        self.calculate_norm_all_age_btn = QtWidgets.QPushButton()
+        self.horizontalLayout_7.addWidget(self.calculate_norm_by_age_btn)
+        self.horizontalLayout_7.addWidget(self.calculate_norm_all_age_btn)
 
         # #新增GroupBox
         # self.newAge_box = QtWidgets.QGroupBox("新增常模年紀選項")
@@ -270,6 +278,9 @@ class NormModifyTab(QtWidgets.QWidget):
         #self.comboBox.currentIndexChanged.connect(self.getCurrentNorm)
         self.comboBox.textActivated.connect(self.getCurrentNorm)
         self.updateBtn.clicked.connect(self.save)
+        self.calculate_norm_by_age_btn.clicked.connect(partial(self.calculate_norm_mode, "current"))
+        self.calculate_norm_all_age_btn.clicked.connect(partial(self.calculate_norm_mode, "all"))
+        #self.calculate_norm_all_age_btn.clicked.connect(self.calcuate_by_age)
         #self.newAgeBtn.clicked.connect(self.addAge)
         #self.deleteAgeBtn.clicked.connect(self.deleteAge)
         #self.input_newAge.textChanged.connect(self.checkLimitAge)
@@ -301,17 +312,19 @@ class NormModifyTab(QtWidgets.QWidget):
         n = db.findNormByAge(key)
         self.storeValue(n)
 
-    def getNorms(self):
+    def getNorms(self, index=0):
         norms = db.getNormAges()
         self.comboBox.clear()
         #self.comboBox_delete.clear()
 
         for idx, n in enumerate(norms):
-            if idx == 0:
+            if idx == index:
                 self.storeValue(n)
 
             self.comboBox.addItem(n['age'])
             #self.comboBox_delete.addItem(n['age'])
+
+        self.comboBox.setCurrentIndex(index)
     
     def storeValue(self, n):  #將值存在格子和變數中
         
@@ -343,7 +356,7 @@ class NormModifyTab(QtWidgets.QWidget):
 
         age = self.comboBox.itemText(self.lastIndex)
 
-        db.upsertNorm(age, self.chineseToNum(age), data)
+        db.updateNorm(self.chineseToNum(age), data)
         QtWidgets.QMessageBox.information(self, '通知','<p style="font-size:12pt;">更新成功</p>', QtWidgets.QMessageBox.Ok)
 
     # def addAge(self):
@@ -392,20 +405,71 @@ class NormModifyTab(QtWidgets.QWidget):
 
 
     def chineseToNum(self, text):
-        numToChinese = {
+        chineseToNum_map = {
             "一": 1,"二": 2,"三": 3,"四": 4,"五": 5,"六": 6,"七": 7,"八": 8,"九": 9,"十": 10
         }
 
         if len(text) == 2: #兩歲, 三歲...十歲
-            return numToChinese[text[0]]
+            return chineseToNum_map[text[0]]
         elif len(text) == 3:  # (1)兩歲半, 三歲半...十歲半 (2) 十一歲, 十二歲...
             if text[2] == '半':
-                return numToChinese[text[0]] + 0.5
+                return chineseToNum_map[text[0]] + 0.5
             elif text[2] == '歲':
-                return 10 + numToChinese[text[1]]
+                return 10 + chineseToNum_map[text[1]]
         elif len(text) == 4:
-                return 10 + numToChinese[text[1]] + 0.5
+                return 10 + chineseToNum_map[text[1]] + 0.5
     
+    def calculate_norm_mode(self, mode):
+        # 如 mode == "all" 計算所有norm, 如 mode == current 計算單一norm
+        caseDocs = list(db.findDocs('','',''))
+
+        if mode == "all":
+            for i in range(self.comboBox.count()):
+                age = self.chineseToNum(self.comboBox.itemText(i))
+                self.calcuate_norm(age, caseDocs.copy())
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>所有年齡常模更新成功</p>", QtWidgets.QMessageBox.Ok)
+        
+        elif mode == "current":
+            age = self.chineseToNum(self.comboBox.currentText())
+            self.calcuate_norm(age, caseDocs.copy())
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>此年齡常模更新成功</p>", QtWidgets.QMessageBox.Ok)
+
+        #更新於畫面上
+        self.getNorms(index=self.comboBox.currentIndex())
+
+    def calcuate_norm(self, current_age, caseDocs):
+        value = {
+            'MLU-c': {'sum': 0.0, 'num': 0},
+            'MLU-w': {'sum': 0.0, 'num': 0},
+            'VOCD-c': {'sum': 0.0, 'num': 0},
+            'VOCD-w': {'sum': 0.0, 'num': 0}
+        }
+
+        #開啟計算
+        for doc in caseDocs: #若有田野調查且有值
+            if doc['recording']['survey'] and doc['transcription']['analysis']:
+                age = round(math.modf(doc['recording']['age'])[1]) #統計用的年齡標準，先取整歲
+                if math.modf(doc['recording']['age'])[0] >= 0.5: #取小數點後一位
+                    age += 0.5
+                
+                #開始算sum
+                if age == current_age:
+                    for key in value: 
+                        if doc['transcription']['analysis'][key] != "樣本數不足":
+                            value[key]['sum'] += doc['transcription']['analysis'][key]
+                            value[key]['num'] += 1
+                        
+        data = {'mlu-c': 0, 'mlu-w':0, 'vocd-c':0, 'vocd-w':0}
+
+
+        for v, d in zip(value, data):
+            if value[v]['num'] == 0: #若沒有任何統計資料
+                data[d] = 0.00
+            else:
+                data[d] = round(value[v]['sum'] / value[v]['num'], 2)
+
+        db.updateNorm(current_age, data)
+
     # def checkLimitAge(self):
     #     if self.input_newAge.text() == '十二':
     #         if self.comboBox_age.count() == 2:
@@ -420,6 +484,8 @@ class NormModifyTab(QtWidgets.QWidget):
         self.mlu_box.setTitle(_translate("", "平均語句長度"))
         self.vocd_box.setTitle(_translate("", "詞彙多樣性"))
         self.updateBtn.setText(_translate("", "    更新    "))
+        self.calculate_norm_by_age_btn.setText(_translate("", "     更新此年齡常模    "))
+        self.calculate_norm_all_age_btn.setText(_translate("", "    更新所有年齡常模    "))
 
 
 if __name__ == "__main__":
