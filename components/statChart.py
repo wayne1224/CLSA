@@ -188,7 +188,7 @@ def createBarChart_POS(doc, name): #建立詞性的柱狀圖
     axisY = QValueAxis()
     chart.addAxis(axisY, Qt.AlignLeft)
     # axisY.setRange(0.0, 20.0)
-    biggestValue = 50.0
+    biggestValue = 40.0
     axisX.setRange("名詞", "虛詞")
     axisY.setTitleText("詞性百分比")
     axisY.setTitleFont(font)
@@ -203,7 +203,7 @@ def createBarChart_POS(doc, name): #建立詞性的柱狀圖
     for index in caseDocs:
         if index['transcription']['analysis'] != None:
             if index['transcription']['analysis']['wordCount'] != 0 :
-                strDate = index['date'].strftime("%Y-%m-%d %H:%M")
+                strDate = index['date'].strftime("%Y-%m-%d")
                 set = QBarSet(strDate)
                 set.setLabelFont(labelFont)
                 # for i, (key, value) in enumerate(index['transcription']['analysis']['Content'].items()) :
@@ -224,7 +224,7 @@ def createBarChart_POS(doc, name): #建立詞性的柱狀圖
                 #         biggestValue+=10.0
                 for i in set:
                     while(i > biggestValue) :
-                        biggestValue+=25.0
+                        biggestValue+=20.0
                 barSeries.append(set)
     axisY.setRange(0, biggestValue)
     # print('last:' + str(biggestValue))
@@ -259,7 +259,7 @@ def createBarChart_POS(doc, name): #建立詞性的柱狀圖
 
     chartView = QChartView(chart)
     chartView.setRenderHint(QPainter.Antialiasing)
-    chartView.setMinimumSize(800, 500)
+    chartView.setMinimumSize(800, 400)
 
     return chartView  
 
@@ -302,7 +302,7 @@ def createLineChart(type, documents):
             if math.modf(doc['recording']['age'])[0] >= 0.5: #取小數點後一位
                 age += 0.5
             if type == "MLU":
-                dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
+                dates.append(doc['date'].strftime("%Y-%m-%d"))
                 ages.append(age)
                 seriesW.append(i, doc['transcription']['analysis'][w])
                 seriesC.append(i, doc['transcription']['analysis'][c])
@@ -314,7 +314,7 @@ def createLineChart(type, documents):
                     
             elif type == "VOCD":
                 if doc['transcription']['analysis'][w] != "樣本數不足":
-                    dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
+                    dates.append(doc['date'].strftime("%Y-%m-%d"))
                     ages.append(age)
                     seriesW.append(i, doc['transcription']['analysis'][w])
                     seriesC.append(i, doc['transcription']['analysis'][c])
@@ -324,7 +324,7 @@ def createLineChart(type, documents):
                     while doc['transcription']['analysis'][c] >= maxValue:
                         maxValue += 20
                 else:
-                    invalid_dates.append(doc['date'].strftime("%Y-%m-%d %H:%M"))
+                    invalid_dates.append(doc['date'].strftime("%Y-%m-%d"))
     
     #載入常模資料
     print(ages)
@@ -384,7 +384,8 @@ def createLineChart(type, documents):
     ##建立x軸
     axisX = QBarCategoryAxis()
     axisX.append(dates)
-    axisX.setLabelsAngle(-45)
+    axisX.setLabelsFont(font)
+    #axisX.setLabelsAngle(-45)
     chart.setAxisX(axisX, seriesW)
     chart.setAxisX(axisX, seriesC)
     chart.setAxisX(axisX, series_norm)
