@@ -491,26 +491,14 @@ def findChildren(caseID , name):
         print(e)
         return False
 
-def upsertNorm(age , ageNum , data):
+def updateNorm(ageNum , data):
     try:
         query = dict()
-        query["age"] = age
-        
-        # insert
-        if normDB.count_documents(query) == 0:
-            normDB.insert_one(
-                {
-                    "age" : age,
-                    "data" : data,
-                    "ageNum" : ageNum,
-                }
-            )
-
-        # update
-        else:
-            normDB.update_one(query , {"$set" : {
-                                                        "data" : data
-                                                    }})
+        query["ageNum"] = ageNum
+    
+        normDB.update_one(query , {"$set" : {
+                                                "data" : data
+                                            }}) 
 
 
         return True
