@@ -49,7 +49,7 @@ class searchForm(QtWidgets.QWidget):
         tfont.setPointSize(10)
 
         self.tableWidget.setSizePolicy(sizePolicy)
-        self.tableWidget.setMaximumSize(QtCore.QSize(16777215, 180))
+        #self.tableWidget.setMaximumSize(QtCore.QSize(16777215, 180))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(5)
         self.tableWidget.setRowCount(0)
@@ -177,7 +177,7 @@ class searchForm(QtWidgets.QWidget):
         self.retranslateUi()
         # self.setStyleSheet(open("C:/Users/HAO/Desktop/Code/Python/CLSA/QSS/Chart.qss", "r").read())
         self.setStyleSheet(open("QSS/Chart.qss", "r").read())
-        
+
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         item = self.tableWidget.horizontalHeaderItem(0)
@@ -203,7 +203,7 @@ class chartTab(QtWidgets.QWidget):
         self.form = searchForm()
 
         #add searchForm
-        self.layout.addWidget(self.form)
+        #self.layout.addWidget(self.form)
         self.form.search_btn.clicked.connect(self.search)
 
         #ScrollArea
@@ -211,10 +211,22 @@ class chartTab(QtWidgets.QWidget):
         self.virtualWidget = QtWidgets.QWidget() #Widget that contains collection of VBOX
         self.scroll_vbox = QtWidgets.QVBoxLayout()
         self.virtualWidget.setLayout(self.scroll_vbox)
+
         ## Properties
         self.scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff) 
         self.scroll.setWidgetResizable(True)
         self.scroll.setWidget(self.virtualWidget)
+
+        #使用Splitter
+        self.splitter = QtWidgets.QSplitter(QtCore.Qt.Vertical)
+        self.splitter.addWidget(self.form)
+        self.splitter.addWidget(self.scroll)
+        self.splitter.setStretchFactor(0, 1)
+        self.splitter.setStretchFactor(1, 20)
+        self.splitter.setCollapsible(0, True)
+
+        self.layout.addWidget(self.splitter)
         
     def search(self):
         #移除提示
@@ -309,7 +321,6 @@ class chartTab(QtWidgets.QWidget):
                 count += 1
 
        
-
         ##清除所有Layout
         self.clearLayout(self.scroll_vbox)
 
@@ -346,7 +357,9 @@ class chartTab(QtWidgets.QWidget):
                 warnText += "<br/>"
             QtWidgets.QMessageBox.information(self, "通知", warnText, QtWidgets.QMessageBox.Ok)
 
-        self.layout.addWidget(self.scroll)
+        #self.layout.addWidget(self.scroll)
+
+        
         
 
     def createWarnLabel(self, warnText, two_graph=True):

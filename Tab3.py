@@ -623,8 +623,3 @@ class AnalysisTab(QtWidgets.QWidget):
         self.label_5.setText(_translate("Form", "收錄日期："))
 
 
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    screen = AnalysisTab()
-    screen.show()
-    sys.exit(app.exec_())
