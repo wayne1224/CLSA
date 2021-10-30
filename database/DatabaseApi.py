@@ -13,6 +13,8 @@ def connectDB():
     global childDataDB 
     global documentDB
     global normDB
+    global settingDB
+
     client = pymongo.MongoClient()
 
     try:
@@ -22,6 +24,7 @@ def connectDB():
         childDataDB = db["childData"] # choose collection
         documentDB = db["document"]   # choose collection   
         normDB = db["norm"]           # choose collection  
+        settingDB = db["setting"]     # choose collection  
         client.server_info()
         return True
 
@@ -604,6 +607,35 @@ def getNormAges():
     try:
         return normDB.find().sort("ageNum")
     except Exception as e:
+        print(e)
+        return False
+
+# setting api
+def findModeState():
+    try:
+        query = dict()
+        query["mode"] = "fieldSurvey"
+
+        return settingDB.find_one(query)["state"]
+
+    except Exception as e:
+        print("The error of function findModeState() !!")
+        print(e)
+        return False
+
+def changeModeState(state):
+    try:
+        query = dict()
+        query["mode"] = "fieldSurvey"
+
+        settingDB.update_one(query , {"$set" : {
+                                                "state" : state
+                                            }}) 
+
+        return True
+
+    except Exception as e:
+        print("The error of function changeModeState() !!")
         print(e)
         return False
 
