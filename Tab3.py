@@ -622,4 +622,3 @@ class AnalysisTab(QtWidgets.QWidget):
         self.label_3.setText(_translate("Form", "個案編號："))
         self.label_5.setText(_translate("Form", "收錄日期："))
 
-
