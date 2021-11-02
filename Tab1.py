@@ -217,6 +217,34 @@ class Myform(QtWidgets.QWidget):
         self.layout.addWidget(self.line)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.horizontalLayout_13 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_13.setObjectName("horizontalLayout_13")
+        self.lbl_norm = QtWidgets.QLabel()
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        font.setBold(True)
+        self.lbl_norm.setFont(font)
+        self.lbl_norm.setObjectName("lbl_norm")
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_norm.sizePolicy().hasHeightForWidth())
+        self.lbl_norm.setSizePolicy(sizePolicy)
+        self.horizontalLayout_13.addWidget(self.lbl_norm)
+        self.ckb_norm = QtWidgets.QCheckBox()
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.ckb_norm.setFont(font)
+        self.ckb_norm.setObjectName("ckb_norm")
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ckb_norm.sizePolicy().hasHeightForWidth())
+        self.ckb_norm.setSizePolicy(sizePolicy)
+        self.horizontalLayout_13.addWidget(self.ckb_norm)
+        spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_13.addItem(spacerItem2)
+        self.layout.addLayout(self.horizontalLayout_13)
         self.verticalLayout_7 = QtWidgets.QVBoxLayout()
         self.verticalLayout_7.setObjectName("verticalLayout_7")
         self.lbl_scenario = QtWidgets.QLabel()
@@ -608,6 +636,7 @@ class Myform(QtWidgets.QWidget):
         self.rbtn_female.setText(_translate("", "女"))
         self.lbl_recordDate.setText(_translate("", "收錄日期："))
         self.lbl_birthday.setText(_translate("", "生日："))
+        self.lbl_norm.setText(_translate("", "此案例列入常模計算："))
         self.lbl_scenario.setText(_translate("", "收錄情境："))
         self.lbl_location.setText(_translate("", "收錄地點："))
         self.lbl_inducement.setText(_translate("", "誘發題材："))
@@ -669,6 +698,13 @@ class Myform(QtWidgets.QWidget):
         else :
             QtWidgets.QMessageBox.information(self, '查詢',"<p style='font-size:12pt;'>查無此個案編號</p>", QtWidgets.QMessageBox.Ok)
         self.saveForm = self.returnTab1Data()
+
+    #設定是否為田野模式
+    def setFieldSurveyMode(self):
+        if db.findModeState() :
+            self.ckb_norm.setChecked(True)
+        else :
+            self.ckb_norm.setChecked(False)
 
     #回傳現在Tab1的所有資料
     def returnTab1Data (self) :
@@ -841,7 +877,9 @@ class Myform(QtWidgets.QWidget):
         if self.ckb_others.isChecked() and self.input_others.text():
             participants.append(self.input_others.text())
         
+
         recording = {
+            'survey' : self.ckb_norm.isChecked(),
             'SLP': self.input_SLP.text(),
             'scenario': self.input_scenario.text(),
             'fileName' : self.input_recordDataName.text(),
@@ -905,6 +943,7 @@ class Myform(QtWidgets.QWidget):
                 if result == 3:
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
                 if self.currentDoc_id and insertChildData:
+                    db.changeModeState(self.ckb_norm.isChecked())
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>新增成功</p>", QtWidgets.QMessageBox.Ok)
                     #傳個案編號到Tab2
                     caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':date}
