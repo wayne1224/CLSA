@@ -699,6 +699,13 @@ class Myform(QtWidgets.QWidget):
             QtWidgets.QMessageBox.information(self, '查詢',"<p style='font-size:12pt;'>查無此個案編號</p>", QtWidgets.QMessageBox.Ok)
         self.saveForm = self.returnTab1Data()
 
+    #設定是否為田野模式
+    def setFieldSurveyMode(self):
+        if db.findModeState() :
+            self.ckb_norm.setChecked(True)
+        else :
+            self.ckb_norm.setChecked(False)
+
     #回傳現在Tab1的所有資料
     def returnTab1Data (self) :
         #判斷是男是女
@@ -870,7 +877,9 @@ class Myform(QtWidgets.QWidget):
         if self.ckb_others.isChecked() and self.input_others.text():
             participants.append(self.input_others.text())
         
+
         recording = {
+            'survey' : self.ckb_norm.isChecked(),
             'SLP': self.input_SLP.text(),
             'scenario': self.input_scenario.text(),
             'fileName' : self.input_recordDataName.text(),
@@ -934,6 +943,7 @@ class Myform(QtWidgets.QWidget):
                 if result == 3:
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
                 if self.currentDoc_id and insertChildData:
+                    db.changeModeState(self.ckb_norm.isChecked())
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>新增成功</p>", QtWidgets.QMessageBox.Ok)
                     #傳個案編號到Tab2
                     caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':date}
