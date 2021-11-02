@@ -10,6 +10,7 @@
 
 from datetime import datetime, date
 import sys
+import configparser
 from PyQt5 import QtCore, QtGui, QtWidgets
 from components.messageBox import Table_MessageBox
 from pymongo.message import update
@@ -241,6 +242,15 @@ class Myform(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.ckb_norm.sizePolicy().hasHeightForWidth())
         self.ckb_norm.setSizePolicy(sizePolicy)
+        
+        #Set Config to Ckb_norm
+        cf = configparser.ConfigParser()
+        cf.read("config.ini") 
+        if cf.getboolean("fieldSurvey", "state") :
+            self.ckb_norm.setChecked(True)
+        else :
+            self.ckb_norm.setChecked(False)
+
         self.horizontalLayout_13.addWidget(self.ckb_norm)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_13.addItem(spacerItem2)
@@ -700,11 +710,13 @@ class Myform(QtWidgets.QWidget):
         self.saveForm = self.returnTab1Data()
 
     #設定是否為田野模式
-    def setFieldSurveyMode(self):
-        if db.findModeState() :
-            self.ckb_norm.setChecked(True)
-        else :
-            self.ckb_norm.setChecked(False)
+    # def setFieldSurveyMode(self):
+    #     cf = configparser.ConfigParser()
+    #     cf.read("config.ini") 
+    #     if cf.getboolean("fieldSurvey", "state") :
+    #         self.ckb_norm.setChecked(True)
+    #     else :
+    #         self.ckb_norm.setChecked(False)
 
     #回傳現在Tab1的所有資料
     def returnTab1Data (self) :
@@ -943,7 +955,15 @@ class Myform(QtWidgets.QWidget):
                 if result == 3:
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
                 if self.currentDoc_id and insertChildData:
-                    db.changeModeState(self.ckb_norm.isChecked())
+                    #db.changeModeState(self.ckb_norm.isChecked())
+                    # Write Config
+                    cf = configparser.ConfigParser()
+                    cf.read("config.ini") 
+                    cf.set("fieldSurvey", "state", "True")
+                    fh = open("config.ini", 'w')
+                    cf.write(fh)  # 把要修改的節點的內容寫到檔案中
+                    fh.close()
+
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>新增成功</p>", QtWidgets.QMessageBox.Ok)
                     #傳個案編號到Tab2
                     caseIDandDate = {'_id': self.currentDoc_id, 'caseID':self.input_caseID.text(), 'date':date}
