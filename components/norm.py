@@ -82,7 +82,17 @@ class NormModifyTab(QtWidgets.QWidget):
         self.horizontalLayout_7.addItem(spacerItem)
 
         self.calculate_norm_by_age_btn = QtWidgets.QPushButton()
+        self.calculate_norm_by_age_btn.setObjectName("calculate_norm_by_age_btn")
+        font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(14)
+        self.calculate_norm_by_age_btn.setFont(font)
         self.calculate_norm_all_age_btn = QtWidgets.QPushButton()
+        self.calculate_norm_all_age_btn.setObjectName("calculate_norm_all_age_btn")
+        font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(14)
+        self.calculate_norm_all_age_btn.setFont(font)
         self.horizontalLayout_7.addWidget(self.calculate_norm_by_age_btn)
         self.horizontalLayout_7.addWidget(self.calculate_norm_all_age_btn)
 

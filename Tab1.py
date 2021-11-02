@@ -242,7 +242,7 @@ class Myform(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.ckb_norm.sizePolicy().hasHeightForWidth())
         self.ckb_norm.setSizePolicy(sizePolicy)
-        
+
         #Set Config to Ckb_norm
         cf = configparser.ConfigParser()
         cf.read("config.ini") 
