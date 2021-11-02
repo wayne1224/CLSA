@@ -3,14 +3,14 @@ QPushButton#updateBtn
     background-color: cornflowerblue;
 }
 
-QPushButton#newAgeBtn
+QPushButton#calculate_norm_by_age_btn
 {
-    background-color: aquamarine;
+    background-color: sandybrown;
 }
 
-QPushButton#deleteAgeBtn
+QPushButton#calculate_norm_all_age_btn
 {
-    background-color: rgb(235, 38, 78);
+    background-color: sandybrown;
 }
 
 QPushButton#updateBtn:hover
@@ -18,12 +18,12 @@ QPushButton#updateBtn:hover
     background-color: rgb(90, 138, 226);
 }
 
-QPushButton#newAgeBtn:hover
+QPushButton#calculate_norm_by_age_btn:hover
 {
-    background-color: rgb(106, 236, 193);
+    background-color: rgb(226, 149, 82);
 }
 
-QPushButton#deleteAgeBtn:hover
+QPushButton#calculate_norm_all_age_btn:hover
 {
-    background-color: rgb(219, 26, 65);
+    background-color: rgb(226, 149, 82);
 }
