@@ -1,12 +1,14 @@
 import pymongo
 
 # CLSA
+#     setting
 #     childData
 #     document
 #          caseID
 #          date      
 #          recording
 #          transcription
+#     norm
 
 # connect to datebase
 def connectDB():
@@ -611,7 +613,7 @@ def getNormAges():
         return False
 
 # setting api
-def findModeState():
+def isFieldSurvey():
     try:
         query = dict()
         query["mode"] = "fieldSurvey"
@@ -619,7 +621,7 @@ def findModeState():
         return settingDB.find_one(query)["state"]
 
     except Exception as e:
-        print("The error of function findModeState() !!")
+        print("The error of function isFieldSurvey() !!")
         print(e)
         return False
 
