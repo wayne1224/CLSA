@@ -1228,10 +1228,7 @@ class Myform(QtWidgets.QWidget):
             self.rbtn_sometimes.setChecked(True)
         self.input_specialSit.setPlainText(Doc['recording']['others'])
 
-        if Doc['recording']['survey'] == 'true' :
-            self.ckb_norm.setChecked(True)
-        if Doc['recording']['survey'] == 'false' :
-            self.ckb_norm.setChecked(False)
+        self.ckb_norm.setChecked(Doc['recording']['survey'])
 
         for i in Doc['recording']['participants'] :
             if i == '爸爸' :
