@@ -45,6 +45,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.worker_DB.finished.connect(self.thread_DB.quit)
         self.worker_DB.finished.connect(self.worker_DB.deleteLater)
         self.thread_DB.finished.connect(self.thread_DB.deleteLater)
+        self.thread_DB.finished.connect(self.mainTab.tab1.setFieldSurveyMode) #設定是否為田野模式
         self.thread_DB.finished.connect(self.mainTab.tab4.tab1.createBarCharts) #讀取資料並產生圖表
         self.thread_DB.finished.connect(self.mainTab.tab4.tab2.getNorms)  #讀取NORM
         self.thread_DB.start() #開始跑Thread
