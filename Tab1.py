@@ -783,6 +783,7 @@ class Myform(QtWidgets.QWidget):
             'gender' : gender,
             'birthday' : birthday,
             'date' : DateTimeRecordDate,
+            'survey' : self.ckb_norm.isChecked(),
             'SLP': self.input_SLP.text(),
             'scenario': self.input_scenario.text(),
             'fileName' : self.input_recordDataName.text(),
@@ -959,7 +960,7 @@ class Myform(QtWidgets.QWidget):
                     # Write Config
                     cf = configparser.ConfigParser()
                     cf.read("config.ini") 
-                    cf.set("fieldSurvey", "state", "True")
+                    cf.set("fieldSurvey", "state", str(self.ckb_norm.isChecked()))
                     fh = open("config.ini", 'w')
                     cf.write(fh)  # 把要修改的節點的內容寫到檔案中
                     fh.close()
@@ -1226,6 +1227,11 @@ class Myform(QtWidgets.QWidget):
         if Doc['recording']['help'] == '有時 (2~5次)':
             self.rbtn_sometimes.setChecked(True)
         self.input_specialSit.setPlainText(Doc['recording']['others'])
+
+        if Doc['recording']['survey'] == 'true' :
+            self.ckb_norm.setChecked(True)
+        if Doc['recording']['survey'] == 'false' :
+            self.ckb_norm.setChecked(False)
 
         for i in Doc['recording']['participants'] :
             if i == '爸爸' :
