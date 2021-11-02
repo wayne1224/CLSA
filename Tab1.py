@@ -701,7 +701,7 @@ class Myform(QtWidgets.QWidget):
 
     #設定是否為田野模式
     def setFieldSurveyMode(self):
-        if db.findModeState() :
+        if db.isFieldSurvey() :
             self.ckb_norm.setChecked(True)
         else :
             self.ckb_norm.setChecked(False)
