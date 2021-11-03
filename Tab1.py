@@ -1036,14 +1036,14 @@ class Myform(QtWidgets.QWidget):
         else:
             self.dateEdit_birthday.setStyleSheet("border: 1px solid initial;")
             self.dateEdit_recordDate.setStyleSheet("border: 1px solid initial;")
-
-        if not(self.ckb_norm.isChecked()): 
-            #收錄者
+        #收錄者
             if not self.input_SLP.text(): 
                 inputError+=1
                 self.input_SLP.setStyleSheet("border: 1px solid red;" )
             else :
                 self.input_SLP.setStyleSheet("border: 1px solid initial;" )
+
+        if not(self.ckb_norm.isChecked()): 
             
             #個案編號
             if not self.input_caseID.text(): 
@@ -1151,9 +1151,11 @@ class Myform(QtWidgets.QWidget):
         if self.ckb_norm.isChecked(): 
             if self.input_caseID.text() == '':
                 self.input_caseID.setText("survey")
-            if ageError > 0 :
+            if ageError > 0 or inputError > 0:
                 self.saveForm = self.returnTab1Data()
                 warnText = "<p style='font-size:12pt;'>"
+                if inputError > 0:  
+                    warnText += "收錄者為必填欄位<br/>"
                 if ageError ==1:
                     warnText += "請確認<b style = 'color: red;'>[生日日期]</b>與<b style = 'color: red;'>[收錄日期]</b>是否正確<br/>(經計算個案年齡已超過13歲)<br/>"
                 if ageError ==2:
