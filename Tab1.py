@@ -702,7 +702,7 @@ class Myform(QtWidgets.QWidget):
             self.input_caseName.setText(caseData['name'])
             if caseData['gender'] == 'male':
                 self.rbtn_male.setChecked(True)
-            else :
+            if caseData['gender'] == 'female':
                 self.rbtn_female.setChecked(True)
             self.dateEdit_birthday.setDate(caseData['birthday'])
         else :
@@ -721,9 +721,10 @@ class Myform(QtWidgets.QWidget):
     #回傳現在Tab1的所有資料
     def returnTab1Data (self) :
         #判斷是男是女
+        gender = ''
         if self.rbtn_male.isChecked():
             gender = 'male'
-        else :
+        if self.rbtn_female.isChecked():
             gender = 'female'
 
         #將dateEdit變成dateTime型態
@@ -825,7 +826,7 @@ class Myform(QtWidgets.QWidget):
         gender = ''
         if self.rbtn_male.isChecked():
             gender = 'male'
-        else :
+        if self.rbtn_female.isChecked():
             gender = 'female'
 
         childData = {
@@ -956,6 +957,7 @@ class Myform(QtWidgets.QWidget):
                 if result == 3:
                     self.currentDoc_id = db.insertRecording(self.input_caseID.text() , date , recording)
                 if self.currentDoc_id and insertChildData:
+                    self.clearRedFrame()
                     #db.changeModeState(self.ckb_norm.isChecked())
                     # Write Config
                     cf = configparser.ConfigParser()
@@ -998,6 +1000,7 @@ class Myform(QtWidgets.QWidget):
                 elif (result == 4):
                     updateRecording = db.updateRecording(self.currentDoc_id , self.input_caseID.text() , date , recording)        
                 if (updateChildData) and (updateRecording):
+                    self.clearRedFrame()
                     QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>更新成功</p>", QtWidgets.QMessageBox.Ok)
                     self.procID.emit({'_id': self.currentDoc_id})
                     return 1
@@ -1010,117 +1013,9 @@ class Myform(QtWidgets.QWidget):
     
     #紅框與年齡檢查
     def redFrameExamination(self):
-        inputError = 0 
-        ageError = 0
-        otherError = 0
-
-        #收錄者
-        if not self.input_SLP.text(): 
-            inputError+=1
-            self.input_SLP.setStyleSheet("border: 1px solid red;" )
-        else :
-            self.input_SLP.setStyleSheet("border: 1px solid initial;" )
-        
-        #個案編號
-        if not self.input_caseID.text(): 
-            inputError+=1
-            self.input_caseID.setStyleSheet("border: 1px solid red;" )
-        else :
-            self.input_caseID.setStyleSheet("border: 1px solid initial;" )
-        
-        #個案姓名
-        if not self.input_caseName.text(): 
-            inputError+=1
-            self.input_caseName.setStyleSheet("border: 1px solid red;")
-        else:
-            self.input_caseName.setStyleSheet("border: 1px solid initial;" )
-        
-        #性別
-        if not (self.rbtn_male.isChecked() or self.rbtn_female.isChecked()): 
-            inputError += 1
-            self.rbtn_male.setStyleSheet("border: 1px solid red;")
-            self.rbtn_female.setStyleSheet("border: 1px solid red;")
-        else:
-            self.rbtn_male.setStyleSheet("border: 1px;")
-            self.rbtn_female.setStyleSheet("border: 1px;")        
-        #收錄地點
-        if not self.input_location.text(): 
-            inputError +=1
-            self.input_location.setStyleSheet("border: 1px solid red;")
-        else:
-            self.input_location.setStyleSheet("border: 1px solid initial;")
-        
-        #收錄情境
-        if not self.input_scenario.text(): 
-            inputError += 1
-            self.input_scenario.setStyleSheet("border: 1px solid red;")
-        else :
-            self.input_scenario.setStyleSheet("border: 1px solid initial;")
-        
-        #互動形式
-        if not (self.rbtn_conversation.isChecked() or self.rbtn_game.isChecked() or self.rbtn_narrative.isChecked()):
-            inputError += 1
-            self.layoutInteraction.setStyleSheet("border: 1px solid red;")
-            self.rbtn_conversation.setStyleSheet("border: 1px;")
-            self.rbtn_game.setStyleSheet("border: 1px;")
-            self.rbtn_narrative.setStyleSheet("border: 1px;")
-            self.lbl_interType.setStyleSheet("border: 1px;")
-        else :
-            self.layoutInteraction.setStyleSheet("border: 1px;")
-        
-        #參與人員
-        if not (self.ckb_dad.isChecked() or self.ckb_mom.isChecked() or self.ckb_teacher.isChecked() or self.ckb_tester.isChecked() or self.ckb_others.isChecked() or self.input_others.text()):
-            inputError +=1
-            self.layoutParticipants.setStyleSheet("border: 1px solid red;")
-            self.lbl_participants.setStyleSheet("border: 1px;")
-            self.ckb_dad.setStyleSheet("border: 1px;")
-            self.ckb_mom.setStyleSheet("border: 1px;")
-            self.ckb_teacher.setStyleSheet("border: 1px;")
-            self.ckb_tester.setStyleSheet("border: 1px;")
-            self.ckb_others.setStyleSheet("border: 1px;")    
-            self.input_others.setStyleSheet("border: 1px solid initial;")
-        else :
-            if (self.ckb_others.isChecked() and not(self.input_others.text())):
-                otherError = 1 #其他欄位有勾選但未填值
-                self.layoutParticipants.setStyleSheet("border: 1px")
-                self.ckb_others.setStyleSheet("border: 1px;")    
-                self.input_others.setStyleSheet("border: 1px solid red;")
-            elif (not(self.ckb_others.isChecked()) and (self.input_others.text())):
-                otherError = 2 #其他欄位有填值但未勾選
-                self.layoutParticipants.setStyleSheet("border: 1px")
-                self.input_others.setStyleSheet("border: 1px solid initial;")
-                self.ckb_others.setStyleSheet("border: 1px solid red;")
-            else:
-                self.layoutParticipants.setStyleSheet("border: 1px;")
-                self.ckb_others.setStyleSheet("border: 1px;")    
-                self.input_others.setStyleSheet("border: 1px solid initial;")
-
-        #誘發題材
-        if not self.input_inducement.text():
-            inputError += 1
-            self.input_inducement.setStyleSheet("border: 1px solid red;")
-        else :
-            self.input_inducement.setStyleSheet("border: 1px solid initial;")
-
-        
-        #其他特殊情況
-        if not self.input_specialSit.toPlainText():
-            inputError +=1
-            self.input_specialSit.setStyleSheet("border: 1px solid red;")
-        else :
-            self.input_specialSit.setStyleSheet("border: 1px solid initial;")
-
-        #需要引導協助
-        if not (self.rbtn_always.isChecked()  or self.rbtn_usually.isChecked() or self.rbtn_sometimes.isChecked() or self.rbtn_few.isChecked()):
-            inputError +=1
-            self.layoutNeedhelp.setStyleSheet("border: 1px solid red;")
-            self.lbl_help.setStyleSheet("border: 1px;")
-            self.rbtn_always.setStyleSheet("border: 1px;")
-            self.rbtn_usually.setStyleSheet("border: 1px;")
-            self.rbtn_sometimes.setStyleSheet("border: 1px;")
-            self.rbtn_few.setStyleSheet("border: 1px;")
-        else :
-            self.layoutNeedhelp.setStyleSheet("border: 1px;")
+        inputError = 0 #必填欄位錯誤
+        ageError = 0   #年齡欄位錯誤
+        otherError = 0 #其他欄位錯誤
 
         #年齡判定
         #將dateEdit變成dateTime型態
@@ -1142,8 +1037,131 @@ class Myform(QtWidgets.QWidget):
             self.dateEdit_birthday.setStyleSheet("border: 1px solid initial;")
             self.dateEdit_recordDate.setStyleSheet("border: 1px solid initial;")
 
+        if not(self.ckb_norm.isChecked()): 
+            #收錄者
+            if not self.input_SLP.text(): 
+                inputError+=1
+                self.input_SLP.setStyleSheet("border: 1px solid red;" )
+            else :
+                self.input_SLP.setStyleSheet("border: 1px solid initial;" )
+            
+            #個案編號
+            if not self.input_caseID.text(): 
+                inputError+=1
+                self.input_caseID.setStyleSheet("border: 1px solid red;" )
+            else :
+                self.input_caseID.setStyleSheet("border: 1px solid initial;" )
+            
+            #個案姓名
+            if not self.input_caseName.text(): 
+                inputError+=1
+                self.input_caseName.setStyleSheet("border: 1px solid red;")
+            else:
+                self.input_caseName.setStyleSheet("border: 1px solid initial;" )
+            
+            #性別
+            if not (self.rbtn_male.isChecked() or self.rbtn_female.isChecked()): 
+                inputError += 1
+                self.rbtn_male.setStyleSheet("border: 1px solid red;")
+                self.rbtn_female.setStyleSheet("border: 1px solid red;")
+            else:
+                self.rbtn_male.setStyleSheet("border: 1px;")
+                self.rbtn_female.setStyleSheet("border: 1px;")        
+            #收錄地點
+            if not self.input_location.text(): 
+                inputError +=1
+                self.input_location.setStyleSheet("border: 1px solid red;")
+            else:
+                self.input_location.setStyleSheet("border: 1px solid initial;")
+            
+            #收錄情境
+            if not self.input_scenario.text(): 
+                inputError += 1
+                self.input_scenario.setStyleSheet("border: 1px solid red;")
+            else :
+                self.input_scenario.setStyleSheet("border: 1px solid initial;")
+            
+            #互動形式
+            if not (self.rbtn_conversation.isChecked() or self.rbtn_game.isChecked() or self.rbtn_narrative.isChecked()):
+                inputError += 1
+                self.layoutInteraction.setStyleSheet("border: 1px solid red;")
+                self.rbtn_conversation.setStyleSheet("border: 1px;")
+                self.rbtn_game.setStyleSheet("border: 1px;")
+                self.rbtn_narrative.setStyleSheet("border: 1px;")
+                self.lbl_interType.setStyleSheet("border: 1px;")
+            else :
+                self.layoutInteraction.setStyleSheet("border: 1px;")
+            
+            #參與人員
+            if not (self.ckb_dad.isChecked() or self.ckb_mom.isChecked() or self.ckb_teacher.isChecked() or self.ckb_tester.isChecked() or self.ckb_others.isChecked() or self.input_others.text()):
+                inputError +=1
+                self.layoutParticipants.setStyleSheet("border: 1px solid red;")
+                self.lbl_participants.setStyleSheet("border: 1px;")
+                self.ckb_dad.setStyleSheet("border: 1px;")
+                self.ckb_mom.setStyleSheet("border: 1px;")
+                self.ckb_teacher.setStyleSheet("border: 1px;")
+                self.ckb_tester.setStyleSheet("border: 1px;")
+                self.ckb_others.setStyleSheet("border: 1px;")    
+                self.input_others.setStyleSheet("border: 1px solid initial;")
+            else :
+                if (self.ckb_others.isChecked() and not(self.input_others.text())):
+                    otherError = 1 #其他欄位有勾選但未填值
+                    self.layoutParticipants.setStyleSheet("border: 1px")
+                    self.ckb_others.setStyleSheet("border: 1px;")    
+                    self.input_others.setStyleSheet("border: 1px solid red;")
+                elif (not(self.ckb_others.isChecked()) and (self.input_others.text())):
+                    otherError = 2 #其他欄位有填值但未勾選
+                    self.layoutParticipants.setStyleSheet("border: 1px")
+                    self.input_others.setStyleSheet("border: 1px solid initial;")
+                    self.ckb_others.setStyleSheet("border: 1px solid red;")
+                else:
+                    self.layoutParticipants.setStyleSheet("border: 1px;")
+                    self.ckb_others.setStyleSheet("border: 1px;")    
+                    self.input_others.setStyleSheet("border: 1px solid initial;")
+
+            #誘發題材
+            if not self.input_inducement.text():
+                inputError += 1
+                self.input_inducement.setStyleSheet("border: 1px solid red;")
+            else :
+                self.input_inducement.setStyleSheet("border: 1px solid initial;")
+
+            
+            #其他特殊情況
+            if not self.input_specialSit.toPlainText():
+                inputError +=1
+                self.input_specialSit.setStyleSheet("border: 1px solid red;")
+            else :
+                self.input_specialSit.setStyleSheet("border: 1px solid initial;")
+
+            #需要引導協助
+            if not (self.rbtn_always.isChecked()  or self.rbtn_usually.isChecked() or self.rbtn_sometimes.isChecked() or self.rbtn_few.isChecked()):
+                inputError +=1
+                self.layoutNeedhelp.setStyleSheet("border: 1px solid red;")
+                self.lbl_help.setStyleSheet("border: 1px;")
+                self.rbtn_always.setStyleSheet("border: 1px;")
+                self.rbtn_usually.setStyleSheet("border: 1px;")
+                self.rbtn_sometimes.setStyleSheet("border: 1px;")
+                self.rbtn_few.setStyleSheet("border: 1px;")
+            else :
+                self.layoutNeedhelp.setStyleSheet("border: 1px;")
+
         #如果有必填欄位沒填跳提示視窗
-        if  inputError > 0 or otherError > 0 or ageError > 0: 
+        #田野模式
+        if self.ckb_norm.isChecked(): 
+            if ageError > 0 :
+                self.saveForm = self.returnTab1Data()
+                warnText = "<p style='font-size:12pt;'>"
+                if ageError ==1:
+                    warnText += "請確認<b style = 'color: red;'>[生日日期]</b>與<b style = 'color: red;'>[收錄日期]</b>是否正確<br/>(經計算個案年齡已超過13歲)<br/>"
+                if ageError ==2:
+                    warnText += "請確認<b style = 'color: red;'>[生日日期]</b>與<b style = 'color: red;'>[收錄日期]</b>是否正確<br/>(經計算個案年齡小於2歲)<br/>"
+                warnText += "</p>"
+                QtWidgets.QMessageBox.warning(self, '警告',warnText, QtWidgets.QMessageBox.Ok)
+                return False
+            else :
+                return True
+        elif  inputError > 0 or otherError > 0 or ageError > 0: 
             self.saveForm = self.returnTab1Data()
             warnText = "<p style='font-size:12pt;'>"
             if inputError > 0:
@@ -1186,7 +1204,7 @@ class Myform(QtWidgets.QWidget):
         self.input_caseName.setText(Doc['childData']['name'])
         if Doc['childData']['gender'] == 'male':
             self.rbtn_male.setChecked(True)
-        else :
+        if Doc['childData']['gender'] == 'female':
             self.rbtn_female.setChecked(True)
         self.dateEdit_birthday.setDate(Doc['childData']['birthday'])
 
