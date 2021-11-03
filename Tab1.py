@@ -1149,6 +1149,8 @@ class Myform(QtWidgets.QWidget):
         #如果有必填欄位沒填跳提示視窗
         #田野模式
         if self.ckb_norm.isChecked(): 
+            if self.input_caseID.text() == '':
+                self.input_caseID.setText("survey")
             if ageError > 0 :
                 self.saveForm = self.returnTab1Data()
                 warnText = "<p style='font-size:12pt;'>"
