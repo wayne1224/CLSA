@@ -1037,11 +1037,11 @@ class Myform(QtWidgets.QWidget):
             self.dateEdit_birthday.setStyleSheet("border: 1px solid initial;")
             self.dateEdit_recordDate.setStyleSheet("border: 1px solid initial;")
         #收錄者
-            if not self.input_SLP.text(): 
-                inputError+=1
-                self.input_SLP.setStyleSheet("border: 1px solid red;" )
-            else :
-                self.input_SLP.setStyleSheet("border: 1px solid initial;" )
+        if not self.input_SLP.text(): 
+            inputError+=1
+            self.input_SLP.setStyleSheet("border: 1px solid red;" )
+        else :
+            self.input_SLP.setStyleSheet("border: 1px solid initial;" )
 
         if not(self.ckb_norm.isChecked()): 
             
