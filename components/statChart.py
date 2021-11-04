@@ -2,6 +2,7 @@ import database.DatabaseApi as db
 import math
 import time
 from datetime import datetime
+from functools import partial
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtChart import QChart, QBarSeries, QChartView, QBarSet, QBarCategoryAxis, QValueAxis, QAbstractBarSeries, QLineSeries, QScatterSeries
 from PyQt5.QtGui import QPainter, QColor
@@ -11,21 +12,63 @@ from PyQt5.QtCore import Qt, QSize, QMargins
 class statChartTab(QtWidgets.QWidget):
     def __init__(self):
         super(statChartTab, self).__init__()
-        self.layout = QtWidgets.QGridLayout()
+        self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
+
+        #Font
+        font = QtGui.QFont()
+        font.setFamily("微軟正黑體")
+        font.setPointSize(12)
+        font.setBold(True)
+
+        #Title + 下拉式選單
+        self.hbox = QtWidgets.QHBoxLayout()
+    
+        self.title = QtWidgets.QLabel("本系統中各年齡之平均字彙多樣性(VOCD)和平均語句長度(MLU)統計")
+        self.title.setFont(font)
+        self.comboBox = QtWidgets.QComboBox() #選擇呈現什麼資料
+        self.comboBox.addItem("資料庫所有資料")
+        self.comboBox.addItem("醫院病歷")
+        self.comboBox.addItem("常模案例")
+        self.comboBox.textActivated.connect(self.changeBarData)
+
+        self.hbox.addWidget(QtWidgets.QLabel())
+        self.hbox.addWidget(self.title)
+        self.hbox.addWidget(self.comboBox)
+        self.layout.addLayout(self.hbox)
+    
+    #改變呈現資料
+    def changeBarData(self):
+        self.clearLayout()
+        if self.comboBox.currentIndex() == 0:
+            self.createBarCharts(source="all")
+        elif self.comboBox.currentIndex() == 1:
+            self.createBarCharts(source="not_survey")
+        elif self.comboBox.currentIndex() == 2:
+            self.createBarCharts(source="survey")
 
     # #清除原本layout裡的Widget
     def clearLayout(self):
-        for i in reversed(range(self.layout.count())):
-            self.layout.removeItem(self.layout.itemAt(i))
+        # for i in reversed(range(self.layout.count())):
+        #     print(i)
+        #     child = self.layout.takeAt(i)
+        #     #print(child)
+        #     if child.layout():
+        #         pass
+        #     elif isinstance(child, QtWidgets.QWidget):
+        #         print(child)
+        self.vocd_barChart.deleteLater()
+        self.mlu_barChart.deleteLater()
+            
+        
 
-    def createBarCharts(self):
-        self.createBar("VOCD", title=True)
-        self.createBar("MLU")
+    def createBarCharts(self, source="all"):
+        self.createBar("VOCD", source)
+        self.createBar("MLU", source)
         self.layout.addWidget(self.vocd_barChart)
         self.layout.addWidget(self.mlu_barChart) 
 
-    def createBar(self, type, title=False):
+    def createBar(self, type, source):
         #給定dict名稱
         w = type + '-w'
         c = type + '-c'
@@ -62,18 +105,45 @@ class statChartTab(QtWidgets.QWidget):
 
         ##開始統計
         for doc in caseDocs:
-            if doc['transcription']['analysis']:
-                age = round(math.modf(doc['recording']['age'])[1]) #統計用的年齡標準，先取整歲
-                if math.modf(doc['recording']['age'])[0] >= 0.5: #取小數點後一位
-                    age += 0.5
-                #print(age,  math.modf(2.5)[0])
+            if source == "all":
+                if doc['transcription']['analysis']:
+                    age = round(math.modf(doc['recording']['age'])[1]) #統計用的年齡標準，先取整歲
+                    if math.modf(doc['recording']['age'])[0] >= 0.5: #取小數點後一位
+                        age += 0.5
 
-                #開始算sum
-                if doc['transcription']['analysis'][w] != "樣本數不足":
-                    sum_W[age] += doc['transcription']['analysis'][w]
-                    nums_W[age] += 1
-                    sum_C[age] += doc['transcription']['analysis'][c]
-                    nums_C[age] += 1
+                    #開始算sum
+                    if doc['transcription']['analysis'][w] != "樣本數不足":
+                        sum_W[age] += doc['transcription']['analysis'][w]
+                        nums_W[age] += 1
+                        sum_C[age] += doc['transcription']['analysis'][c]
+                        nums_C[age] += 1
+
+            elif source == "not_survey":
+                if doc['transcription']['analysis'] and doc['recording']['survey'] == False:
+                    age = round(math.modf(doc['recording']['age'])[1]) #統計用的年齡標準，先取整歲
+                    if math.modf(doc['recording']['age'])[0] >= 0.5: #取小數點後一位
+                        age += 0.5
+
+                    #開始算sum
+                    if doc['transcription']['analysis'][w] != "樣本數不足":
+                        sum_W[age] += doc['transcription']['analysis'][w]
+                        nums_W[age] += 1
+                        sum_C[age] += doc['transcription']['analysis'][c]
+                        nums_C[age] += 1
+            
+            elif source == "survey":
+                if doc['transcription']['analysis'] and doc['recording']['survey']:
+                    age = round(math.modf(doc['recording']['age'])[1]) #統計用的年齡標準，先取整歲
+                    if math.modf(doc['recording']['age'])[0] >= 0.5: #取小數點後一位
+                        age += 0.5
+
+                    #開始算sum
+                    if doc['transcription']['analysis'][w] != "樣本數不足":
+                        sum_W[age] += doc['transcription']['analysis'][w]
+                        nums_W[age] += 1
+                        sum_C[age] += doc['transcription']['analysis'][c]
+                        nums_C[age] += 1
+
 
         list_W = []
         remove_W = []
@@ -136,8 +206,8 @@ class statChartTab(QtWidgets.QWidget):
         tfont.setBold(True)
         chart.setTitleFont(tfont)
 
-        if title:
-            chart.setTitle('本系統中各年齡之平均字彙多樣性(VOCD)和平均語句長度(MLU)統計')
+        # if title:
+        #     chart.setTitle("本系統中各年齡之平均字彙多樣性(VOCD)和平均語句長度(MLU)統計")
 
 
         ##建立x軸
