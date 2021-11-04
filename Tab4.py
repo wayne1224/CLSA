@@ -200,14 +200,17 @@ class chartTab(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setAlignment(QtCore.Qt.AlignTop)
         self.setLayout(self.layout)
-        self.form = searchForm()
+        
 
         #add searchForm
         #self.layout.addWidget(self.form)
+        self.form = searchForm()
+        self.form.setMinimumSize(QtCore.QSize(1, 200)) #設定查詢區塊 最小高度
         self.form.search_btn.clicked.connect(self.search)
 
-        #ScrollArea
+        #ScrollArea 圖表區塊
         self.scroll = QtWidgets.QScrollArea()
+        self.scroll.setMinimumSize(QtCore.QSize(1, 300))
         self.virtualWidget = QtWidgets.QWidget() #Widget that contains collection of VBOX
         self.scroll_vbox = QtWidgets.QVBoxLayout()
         self.virtualWidget.setLayout(self.scroll_vbox)
@@ -224,8 +227,8 @@ class chartTab(QtWidgets.QWidget):
         self.splitter.addWidget(self.scroll)
         self.splitter.setStretchFactor(0, 1)
         self.splitter.setStretchFactor(1, 20)
-        self.splitter.setCollapsible(0, True)
-
+        self.splitter.setCollapsible(0, False)
+        self.splitter.setCollapsible(1, False)
         self.layout.addWidget(self.splitter)
         
     def search(self):
