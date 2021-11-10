@@ -66,8 +66,8 @@ class statChartTab(QtWidgets.QWidget):
         self.createBar("VOCD", source)
         self.createBar("MLU", source)
         self.layout.addWidget(self.vocd_barChart)
-        self.layout.addWidget(self.mlu_barChart) 
-
+        self.layout.addWidget(self.mlu_barChart)
+        
     def createBar(self, type, source):
         #給定dict名稱
         w = type + '-w'
@@ -84,8 +84,11 @@ class statChartTab(QtWidgets.QWidget):
             
 
         #讀取所有documents
-        caseDocs = db.findDocs('','','')
+        caseDocs = list(db.findDocs('','',''))
         norms = list(db.getNormAges())
+
+        # if not caseDocs and not norms: #若 DB 空白，則 return
+        #     return
 
         #共用字體
         font = QtGui.QFont()
@@ -214,7 +217,7 @@ class statChartTab(QtWidgets.QWidget):
         ##建立x軸
         axisX = QBarCategoryAxis()
         categories = []
-        for i, n in enumerate(norms): ##TODO: 判斷有c沒w的情境
+        for i, n in enumerate(norms):
             if i not in remove_C:
                 categories.append(str(n['ageNum']))
 
