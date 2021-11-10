@@ -165,8 +165,9 @@ class statChartTab(QtWidgets.QWidget):
                 remove_C.append(idx)
         
         if type == "MLU":
-            while round(max(list_C + list_W)) >= maxValue:
-                maxValue += 4
+            if list_C and list_W: #避免 null 程式壞掉
+                while round(max(list_C + list_W)) >= maxValue:
+                    maxValue += 4
        
         #載入barset資料
         set_W.append(list_W)
