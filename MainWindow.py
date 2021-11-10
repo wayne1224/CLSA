@@ -1,6 +1,7 @@
 import sys
 import os
 import threading
+import configparser
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
 from components.loading import LoadingScreen, LoadingBar, DownloadScreen
@@ -38,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load2 = LoadingBar()
 
         # 資料庫連接失敗 直接關閉程式
-        db.initialDB()
+        self.check_init_DB()
         self.thread_DB = QtCore.QThread()
         self.worker_DB = Worker_DB(db.connectDB)
         self.worker_DB.moveToThread(self.thread_DB)
@@ -66,6 +67,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thread.finished.connect(self.thread.deleteLater)
         self.thread.start()
 
+    def check_init_DB(self):
+        cf = configparser.ConfigParser()
+        cf.read("config.ini") 
+        if cf.getboolean("Database", "init") == False:
+            db.initialDB()
+
+            #Init後 寫入config
+            cf = configparser.ConfigParser()
+            cf.read("config.ini") 
+            cf.set("Database", "init", "True")
+            fh = open("config.ini", 'w')
+            cf.write(fh)  
+            fh.close()
+    
     @QtCore.pyqtSlot(int, float)
     def getAction(self, key, time):
         if key == 1:
