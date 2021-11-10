@@ -1024,6 +1024,7 @@ class Myform(QtWidgets.QWidget):
         #將dateEdit_recordDate變成dateTime型態
         DateTimeRecordDate = self.getDateinDateTime()
 
+        #田野調查
         age = DateTimeRecordDate.year - birthday.year - ((DateTimeRecordDate.month, DateTimeRecordDate.day) < (birthday.month, birthday.day))
         if age >= 13:
             self.dateEdit_birthday.setStyleSheet("border: 1px solid red;")
@@ -1043,30 +1044,32 @@ class Myform(QtWidgets.QWidget):
         else :
             self.input_SLP.setStyleSheet("border: 1px solid initial;" )
 
+        #個案編號
+        if not self.input_caseID.text(): 
+            inputError+=1
+            self.input_caseID.setStyleSheet("border: 1px solid red;" )
+        else :
+            self.input_caseID.setStyleSheet("border: 1px solid initial;" )
+        
+        #個案姓名
+        if not self.input_caseName.text(): 
+            inputError+=1
+            self.input_caseName.setStyleSheet("border: 1px solid red;")
+        else:
+            self.input_caseName.setStyleSheet("border: 1px solid initial;" )
+        
+        #性別
+        if not (self.rbtn_male.isChecked() or self.rbtn_female.isChecked()): 
+            inputError += 1
+            self.rbtn_male.setStyleSheet("border: 1px solid red;")
+            self.rbtn_female.setStyleSheet("border: 1px solid red;")
+        else:
+            self.rbtn_male.setStyleSheet("border: 1px;")
+            self.rbtn_female.setStyleSheet("border: 1px;")        
+        
+        #非田野模式
         if not(self.ckb_norm.isChecked()): 
             
-            #個案編號
-            if not self.input_caseID.text(): 
-                inputError+=1
-                self.input_caseID.setStyleSheet("border: 1px solid red;" )
-            else :
-                self.input_caseID.setStyleSheet("border: 1px solid initial;" )
-            
-            #個案姓名
-            if not self.input_caseName.text(): 
-                inputError+=1
-                self.input_caseName.setStyleSheet("border: 1px solid red;")
-            else:
-                self.input_caseName.setStyleSheet("border: 1px solid initial;" )
-            
-            #性別
-            if not (self.rbtn_male.isChecked() or self.rbtn_female.isChecked()): 
-                inputError += 1
-                self.rbtn_male.setStyleSheet("border: 1px solid red;")
-                self.rbtn_female.setStyleSheet("border: 1px solid red;")
-            else:
-                self.rbtn_male.setStyleSheet("border: 1px;")
-                self.rbtn_female.setStyleSheet("border: 1px;")        
             #收錄地點
             if not self.input_location.text(): 
                 inputError +=1
