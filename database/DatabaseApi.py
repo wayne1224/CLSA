@@ -1,5 +1,5 @@
 import pymongo
-
+import subprocess
 # CLSA
 #     setting
 #     childData
@@ -17,11 +17,9 @@ def connectDB():
     global normDB
     global settingDB
 
-    client = pymongo.MongoClient()
-
     try:
-        host = "mongodb://wayne1224:wayne1224@sandbox-shard-00-00.qjd2q.mongodb.net:27017,sandbox-shard-00-01.qjd2q.mongodb.net:27017,sandbox-shard-00-02.qjd2q.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-bu8995-shard-0&authSource=admin&retryWrites=true&w=majority"
-        client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000, ssl=True, ssl_cert_reqs='CERT_NONE') # Timeout 10s
+        subprocess.Popen("C:/Program Files/MongoDB/Server/5.0/bin/mongod.exe")
+        client = pymongo.MongoClient('localhost', 27017)  # Timeout 10s
         db = client["CLSA"]           # choose database
         childDataDB = db["childData"] # choose collection
         documentDB = db["document"]   # choose collection   
