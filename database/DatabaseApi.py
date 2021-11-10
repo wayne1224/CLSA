@@ -10,6 +10,22 @@ import subprocess
 #          transcription
 #     norm
 
+# 第一次開啟軟體時，MongoDB 內尚無 database 和 collection，所以需要此 function 做 initial，創建 database 和 collection
+def intialDB():
+    host = "mongodb://wayne1224:wayne1224@sandbox-shard-00-00.qjd2q.mongodb.net:27017,sandbox-shard-00-01.qjd2q.mongodb.net:27017,sandbox-shard-00-02.qjd2q.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-bu8995-shard-0&authSource=admin&retryWrites=true&w=majority"
+    client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000, ssl=True, ssl_cert_reqs='CERT_NONE') # Timeout 10s 
+      
+    db = client["CLSA"]  
+    childDataDB = db['childData']
+    documentDB = db['document']
+    normDB = db['norm']
+    settingDB = db['setting']
+
+    childDataDB.insert_one({"for initial" : True})
+    documentDB.insert_one({"for initial" : True})
+    normDB.insert_one({"for initial" : True})
+    settingDB.insert_one({"for initial" : True})
+
 # connect to datebase
 def connectDB():
     global childDataDB 
