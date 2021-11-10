@@ -26,6 +26,11 @@ def intialDB():
     normDB.insert_one({"for initial" : True})
     settingDB.insert_one({"for initial" : True})
 
+    childDataDB.delete_one({"for initial" : True})
+    documentDB.delete_one({"for initial" : True})
+    normDB.delete_one({"for initial" : True})
+    settingDB.delete_one({"for initial" : True})
+
 # connect to datebase
 def connectDB():
     global childDataDB 
