@@ -5,7 +5,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from MainTabWidget import MainTabWidget
 from components.loading import LoadingScreen, LoadingBar, DownloadScreen
 from utils.worker import Worker_DB, Worker
-import database.DatabaseApi
+import database.DatabaseApi as db
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -38,8 +38,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load2 = LoadingBar()
 
         # 資料庫連接失敗 直接關閉程式
+        db.initialDB()
         self.thread_DB = QtCore.QThread()
-        self.worker_DB = Worker_DB(database.DatabaseApi.connectDB)
+        self.worker_DB = Worker_DB(db.connectDB)
         self.worker_DB.moveToThread(self.thread_DB)
         self.thread_DB.started.connect(self.worker_DB.run)
         self.worker_DB.finished.connect(self.thread_DB.quit)

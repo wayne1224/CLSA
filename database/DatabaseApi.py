@@ -11,11 +11,11 @@ import subprocess
 #     norm
 
 # 第一次開啟軟體時，MongoDB 內尚無 database 和 collection，所以需要此 function 做 initial，創建 database 和 collection
-def intialDB():
-    host = "mongodb://wayne1224:wayne1224@sandbox-shard-00-00.qjd2q.mongodb.net:27017,sandbox-shard-00-01.qjd2q.mongodb.net:27017,sandbox-shard-00-02.qjd2q.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-bu8995-shard-0&authSource=admin&retryWrites=true&w=majority"
-    client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000, ssl=True, ssl_cert_reqs='CERT_NONE') # Timeout 10s 
+def initialDB():
+    process = subprocess.Popen("C:/Program Files/MongoDB/Server/5.0/bin/mongod.exe")
+    client = pymongo.MongoClient('localhost', 27017) # Timeout 10s 
       
-    db = client["CLSA"]  
+    db = client["CLSA"] 
     childDataDB = db['childData']
     documentDB = db['document']
     normDB = db['norm']
@@ -30,6 +30,9 @@ def intialDB():
     documentDB.delete_one({"for initial" : True})
     normDB.delete_one({"for initial" : True})
     settingDB.delete_one({"for initial" : True})
+
+    client.close()
+    process.kill()
 
 # connect to datebase
 def connectDB():
