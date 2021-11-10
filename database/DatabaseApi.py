@@ -14,6 +14,8 @@ import subprocess
 def initialDB():
     process = subprocess.Popen("C:/Program Files/MongoDB/Server/5.0/bin/mongod.exe")
     client = pymongo.MongoClient('localhost', 27017) # Timeout 10s 
+    # host = "mongodb://wayne1224:wayne1224@sandbox-shard-00-00.qjd2q.mongodb.net:27017,sandbox-shard-00-01.qjd2q.mongodb.net:27017,sandbox-shard-00-02.qjd2q.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-bu8995-shard-0&authSource=admin&retryWrites=true&w=majority"
+    # client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000, ssl=True, ssl_cert_reqs='CERT_NONE') # Timeout 10s 
       
     db = client["CLSA"] 
     childDataDB = db['childData']
@@ -33,6 +35,21 @@ def initialDB():
 
     client.close()
     process.kill()
+
+    ageCh = ["二歲" , "二歲半" , "三歲" , "三歲半" , "四歲" , "四歲半" , "五歲" , "五歲半" , "六歲" , "六歲半" , "七歲" , "七歲半" , "八歲" , "八歲半" , "九歲" , "九歲半" , "十歲" , "十歲半" , "十一歲" , "十一歲半" , "十二歲"]
+    ageNum = [2 , 2.5 , 3 , 3.5 , 4 , 4.5 , 5 , 5.5 , 6 , 6.5 , 7 , 7.5 , 8 , 8.5 , 9 , 9.5 , 10 , 10.5 , 11 , 11.5 , 12]
+
+    for i in range(len(ageCh)):
+        normDB.insert_one({
+            "age" : ageCh[i],
+            "ageNum" : ageNum[i],
+            "data" : {
+                "mlu-c" : 0.0,
+                "mlu-w" : 0.0,
+                "vocd-c" : 0.0,
+                "vocd-w" : 0.0
+            }
+        })
 
 # connect to datebase
 def connectDB():
