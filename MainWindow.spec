@@ -1,16 +1,30 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
+from PyInstaller.utils.hooks import copy_metadata
 block_cipher = None
 
+# Transformers metadatas
+datas = copy_metadata('tqdm')
+datas += copy_metadata('regex')
+datas += copy_metadata('requests')
+datas += copy_metadata('sacremoses')
+datas += copy_metadata('packaging')
+datas += copy_metadata('filelock')
+datas += copy_metadata('numpy')
+datas += copy_metadata('tokenizers')
+
+# Other stuffs
+datas.append(('config.ini', '.' ))
+datas.append(('C:\\ffmpeg\\bin\\ffmpeg.exe', '.' ))
+datas.append(('C:\\ffmpeg\\bin\\ffplay.exe', '.' ))
+datas.append(('C:\\ffmpeg\\bin\\ffprobe.exe', '.' ))
 
 a = Analysis(['MainWindow.py'],
-             pathex=['C:\\Users\\hungj\\Anaconda3\\Lib\\site-packages\\PyQt5\\Qt5\\bin', 'C:\\Users\\hungj\\Desktop\\專題\\CLSA'],
-             binaries=[('C:\\ffmpeg\\bin\\ffmpeg.exe','ffmpeg.exe'),
-                       ('C:\\ffmpeg\\bin\\ffplay.exe','ffplay.exe'),
-                       ('C:\\ffmpeg\\bin\\ffprobe.exe','ffprobe.exe')],
-             datas=[],
-             hiddenimports=['dns'],
+             pathex=['C:\\Users\\hungj\\Anaconda3\\Lib\\site-packages\\PyQt5\\Qt5\\bin',
+                     'C:\\Users\\hungj\\Desktop\\專題\\CLSA',],
+             binaries=[],
+             datas=datas,
+             hiddenimports=[],
              hookspath=[],
              hooksconfig={},
              runtime_hooks=[],
@@ -19,6 +33,7 @@ a = Analysis(['MainWindow.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
