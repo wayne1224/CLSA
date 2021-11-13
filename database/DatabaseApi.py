@@ -526,10 +526,7 @@ def findChildren(caseID , name):
         ])
 
         result = list(result)
-           
-        if len(result) == 0:
-            return False
-                 
+                           
         return result
     except Exception as e:
         print(e)
