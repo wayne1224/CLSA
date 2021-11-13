@@ -24,9 +24,11 @@ def initialDB():
 
     childDataDB.insert_one({"for initial" : True})
     documentDB.insert_one({"for initial" : True})
+    normDB.insert_one({"for initial" : True})
     
     childDataDB.delete_one({"for initial" : True})
     documentDB.delete_one({"for initial" : True})
+    normDB.delete_one({"for initial" : True})
    
 
     ageCh = ["二歲" , "二歲半" , "三歲" , "三歲半" , "四歲" , "四歲半" , "五歲" , "五歲半" , "六歲" , "六歲半" , "七歲" , "七歲半" , "八歲" , "八歲半" , "九歲" , "九歲半" , "十歲" , "十歲半" , "十一歲" , "十一歲半" , "十二歲"]
@@ -49,7 +51,8 @@ def initialDB():
     normDB.insert_many(data)
 
     client.close()
-    process.kill()
+    # client.close()
+    # process.kill()
 
 # connect to datebase
 def connectDB():
