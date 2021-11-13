@@ -77,7 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
             cf = configparser.ConfigParser()
             cf.read("config.ini") 
             cf.set("Database", "init", "True")
-            fh = open("config.ini", 'w')
+            fh = open(r"config.ini", 'w')
             cf.write(fh)  
             fh.close()
     
