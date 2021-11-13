@@ -25,16 +25,11 @@ def initialDB():
 
     childDataDB.insert_one({"for initial" : True})
     documentDB.insert_one({"for initial" : True})
-    normDB.insert_one({"for initial" : True})
     settingDB.insert_one({"for initial" : True})
 
     childDataDB.delete_one({"for initial" : True})
     documentDB.delete_one({"for initial" : True})
-    normDB.delete_one({"for initial" : True})
     settingDB.delete_one({"for initial" : True})
-
-    client.close()
-    process.kill()
 
     ageCh = ["二歲" , "二歲半" , "三歲" , "三歲半" , "四歲" , "四歲半" , "五歲" , "五歲半" , "六歲" , "六歲半" , "七歲" , "七歲半" , "八歲" , "八歲半" , "九歲" , "九歲半" , "十歲" , "十歲半" , "十一歲" , "十一歲半" , "十二歲"]
     ageNum = [2 , 2.5 , 3 , 3.5 , 4 , 4.5 , 5 , 5.5 , 6 , 6.5 , 7 , 7.5 , 8 , 8.5 , 9 , 9.5 , 10 , 10.5 , 11 , 11.5 , 12]
@@ -50,6 +45,9 @@ def initialDB():
                 "vocd-w" : 0.0
             }
         })
+
+    client.close()
+    process.kill()
 
 # connect to datebase
 def connectDB():

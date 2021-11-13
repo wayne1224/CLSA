@@ -12,12 +12,17 @@ datas += copy_metadata('packaging')
 datas += copy_metadata('filelock')
 datas += copy_metadata('numpy')
 datas += copy_metadata('tokenizers')
+datas.append(('C:\\Users\\hungj\\Desktop\\env_win2\\Lib\\site-packages\\ckip_transformers','ckip_transformers'))
+datas.append(('C:\\Users\\hungj\\Desktop\\env_win2\\Lib\\site-packages\\transformers','transformers'))
 
 # Other stuffs
 datas.append(('config.ini', '.' ))
 datas.append(('C:\\ffmpeg\\bin\\ffmpeg.exe', '.' ))
 datas.append(('C:\\ffmpeg\\bin\\ffplay.exe', '.' ))
 datas.append(('C:\\ffmpeg\\bin\\ffprobe.exe', '.' ))
+datas.append(('image','image'))
+datas.append(('QSS','QSS'))
+
 
 a = Analysis(['MainWindow.py'],
              pathex=['C:\\Users\\hungj\\Anaconda3\\Lib\\site-packages\\PyQt5\\Qt5\\bin',
