@@ -50,7 +50,6 @@ def initialDB():
         
     normDB.insert_many(data)
 
-    client.close()
     # client.close()
     # process.kill()
 
