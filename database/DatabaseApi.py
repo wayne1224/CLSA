@@ -485,9 +485,7 @@ def findChildren(caseID , name):
                 }
             }
         ])
-
-        result = list(result)
-                           
+                          
         return result
     except Exception as e:
         print(e)
