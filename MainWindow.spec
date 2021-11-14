@@ -1,6 +1,9 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 from PyInstaller.utils.hooks import copy_metadata
+
+import sys
+sys.setrecursionlimit(5000)
 block_cipher = None
 
 # Transformers metadatas
@@ -12,8 +15,8 @@ datas += copy_metadata('packaging')
 datas += copy_metadata('filelock')
 datas += copy_metadata('numpy')
 datas += copy_metadata('tokenizers')
-datas.append(('C:\\Users\\hungj\\Desktop\\env_win2\\Lib\\site-packages\\ckip_transformers','ckip_transformers'))
-datas.append(('C:\\Users\\hungj\\Desktop\\env_win2\\Lib\\site-packages\\transformers','transformers'))
+datas.append(('C:\\Users\\hungj\\Desktop\\env_win\\Lib\\site-packages\\ckip_transformers','ckip_transformers'))
+datas.append(('C:\\Users\\hungj\\Desktop\\env_win\\Lib\\site-packages\\transformers','transformers'))
 
 # Other stuffs
 datas.append(('config.ini', '.' ))
