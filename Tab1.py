@@ -243,13 +243,14 @@ class Myform(QtWidgets.QWidget):
         sizePolicy.setHeightForWidth(self.ckb_norm.sizePolicy().hasHeightForWidth())
         self.ckb_norm.setSizePolicy(sizePolicy)
 
-        #Set Config to Ckb_norm
-        cf = configparser.ConfigParser()
-        cf.read("config.ini") 
-        if cf.getboolean("fieldSurvey", "state") :
-            self.ckb_norm.setChecked(True)
-        else :
-            self.ckb_norm.setChecked(False)
+        # #Set Config to Ckb_norm
+        # cf = configparser.ConfigParser()
+        # cf.read("config.ini") 
+        # if cf.getboolean("fieldSurvey", "state") :
+        #     self.ckb_norm.setChecked(True)
+        # else :
+        #     self.ckb_norm.setChecked(False)
+        self.readConfig()
 
         self.horizontalLayout_13.addWidget(self.ckb_norm)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -816,6 +817,16 @@ class Myform(QtWidgets.QWidget):
         self.input_specialSit.setStyleSheet("border: 1px solid initial;")
         self.layoutNeedhelp.setStyleSheet("border: 1px ")
 
+    #讀取config並勾選
+    def readConfig(self):
+        #Set Config to Ckb_norm
+        cf = configparser.ConfigParser()
+        cf.read("config.ini") 
+        if cf.getboolean("fieldSurvey", "state") :
+            self.ckb_norm.setChecked(True)
+        else :
+            self.ckb_norm.setChecked(False)
+
     #回傳Tab1中的childData欄位資料
     def returnChildData(self):
         #將dateEdit_birthday變成dateTime型態
@@ -1272,6 +1283,7 @@ class Myform(QtWidgets.QWidget):
     @QtCore.pyqtSlot()
     def clearContent(self) :
         self.clearRedFrame()
+        self.readConfig()
         self.currentDoc_id = None
         self.btn_update.setEnabled(False)
         self.btn_insert.setToolTip(None)
