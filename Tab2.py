@@ -353,7 +353,7 @@ class Tab2(QtWidgets.QWidget):
         self.transcriber = ''   # 轉錄者
         self.childID = 0   # 兒童編號
         self.adultIDs = {}  # 成人編號
-        self.childUtterance = []    # 兒童語句
+        self.childValidUtterance = []    # 兒童語句
         self.caseDate = None     # 目前記錄日期
         self.cwd = os.getcwd() # 目前檔案位置
         self.audio = STT()
@@ -927,23 +927,23 @@ class Tab2(QtWidgets.QWidget):
             
             self.transcriber = self.input_trans.text()
             content = self._getCurrentContent()    # 對話內容
-            childUtterance = [] # 兒童語句
+            childValidUtterance = [] # 兒童語句
             totalUtterance = 0  # 總語句數
-            validUtterance = 0  # 採計語句數
+            validUtteranceNum = 0  # 採計語句數
 
             for rowIndex in range(self.tableWidget.tableWidget.rowCount()):
                 # child
                 if self.tableWidget.tableWidget.item(rowIndex, 4) and not self.tableWidget.tableWidget.item(rowIndex, 4).text() == '':
                     if not self.tableWidget.tableWidget.item(rowIndex, 3).text() == '':    # 採計語句
-                        validUtterance += 1
+                        validUtteranceNum += 1
+                        childValidUtterance.append(self.tableWidget.tableWidget.item(rowIndex, 4).text()) # 傳給Tab3
                     totalUtterance += 1
-                    childUtterance.append(self.tableWidget.tableWidget.item(rowIndex, 4).text()) # 傳給Tab3
 
-            database.DatabaseApi.updateContent(self._id, self.transcriber, content, totalUtterance, validUtterance)
-            utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtterance}
+            database.DatabaseApi.updateContent(self._id, self.transcriber, content, totalUtterance, validUtteranceNum)
+            utteranceNum = {'totalUtterance':totalUtterance, 'validUtterance':validUtteranceNum}
             self.emitUtterNum(utteranceNum)
             self.content = content    # 更新內容
-            self.childUtterance = childUtterance
+            self.childValidUtterance = childValidUtterance
 
             self.clearInput()  # 清空、復原輸入欄
 
@@ -966,7 +966,7 @@ class Tab2(QtWidgets.QWidget):
                     'caseID':self.caseID,
                     'date':self.caseDate }
             self.emitKey(key)
-            self.emitChildUtter(self.childUtterance)
+            self.emitChildUtter(self.childValidUtterance)
         else:   # 未輸入轉錄者
             self._setInpBorderColorAndJumpMsg('NoTrans')
 
