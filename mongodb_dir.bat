@@ -1,0 +1,1 @@
+mkdir C:\data\db

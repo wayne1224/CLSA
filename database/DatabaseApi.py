@@ -1,5 +1,6 @@
 import pymongo
 import subprocess
+import os
 # CLSA
 #     setting
 #     childData
@@ -12,46 +13,43 @@ import subprocess
 
 # 第一次開啟軟體時，MongoDB 內尚無 database 和 collection，所以需要此 function 做 initial，創建 database 和 collection
 def initialDB():
-    process = subprocess.Popen("C:/Program Files/MongoDB/Server/5.0/bin/mongod.exe")
-    client = pymongo.MongoClient('localhost', 27017) # Timeout 10s 
-    # host = "mongodb://wayne1224:wayne1224@sandbox-shard-00-00.qjd2q.mongodb.net:27017,sandbox-shard-00-01.qjd2q.mongodb.net:27017,sandbox-shard-00-02.qjd2q.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-bu8995-shard-0&authSource=admin&retryWrites=true&w=majority"
-    # client = pymongo.MongoClient(host , serverSelectionTimeoutMS = 10000, ssl=True, ssl_cert_reqs='CERT_NONE') # Timeout 10s 
-      
-    db = client["CLSA"] 
-    childDataDB = db['childData']
-    documentDB = db['document']
-    normDB = db['norm']
-
-    childDataDB.insert_one({"for initial" : True})
-    documentDB.insert_one({"for initial" : True})
-    normDB.insert_one({"for initial" : True})
+    # Check collections exist
     
-    childDataDB.delete_one({"for initial" : True})
-    documentDB.delete_one({"for initial" : True})
-    normDB.delete_one({"for initial" : True})
-   
-
-    ageCh = ["二歲" , "二歲半" , "三歲" , "三歲半" , "四歲" , "四歲半" , "五歲" , "五歲半" , "六歲" , "六歲半" , "七歲" , "七歲半" , "八歲" , "八歲半" , "九歲" , "九歲半" , "十歲" , "十歲半" , "十一歲" , "十一歲半" , "十二歲"]
-    ageNum = [2 , 2.5 , 3 , 3.5 , 4 , 4.5 , 5 , 5.5 , 6 , 6.5 , 7 , 7.5 , 8 , 8.5 , 9 , 9.5 , 10 , 10.5 , 11 , 11.5 , 12]
+    db = client["CLSA"]
     
-    data = list()
+    if "norm" not in db.list_collection_names():
+        normDB = db['norm']
+        ageCh = ["二歲" , "二歲半" , "三歲" , "三歲半" , "四歲" , "四歲半" , "五歲" , "五歲半" , "六歲" , "六歲半" , "七歲" , "七歲半" , "八歲" , "八歲半" , "九歲" , "九歲半" , "十歲" , "十歲半" , "十一歲" , "十一歲半" , "十二歲"]
+        ageNum = [2 , 2.5 , 3 , 3.5 , 4 , 4.5 , 5 , 5.5 , 6 , 6.5 , 7 , 7.5 , 8 , 8.5 , 9 , 9.5 , 10 , 10.5 , 11 , 11.5 , 12]
 
-    for i in range(len(ageCh)):
-        data.append({
-            "age" : ageCh[i],
-            "ageNum" : ageNum[i],
-            "data" : {
-                "mlu-c" : 0.0,
-                "mlu-w" : 0.0,
-                "vocd-c" : 0.0,
-                "vocd-w" : 0.0
-            }
-        })
-        
-    normDB.insert_many(data)
+        data = list()
 
-    # client.close()
-    # process.kill()
+        for i in range(len(ageCh)):
+            data.append({
+                "age" : ageCh[i],
+                "ageNum" : ageNum[i],
+                "data" : {
+                    "mlu-c" : 0.0,
+                    "mlu-w" : 0.0,
+                    "vocd-c" : 0.0,
+                    "vocd-w" : 0.0
+                }
+            })
+            
+        result = normDB.insert_many(data)
+        while result.acknowledged != True: #防止沒寫進就crash
+            continue
+    
+    if "childData" not in db.list_collection_names():
+        childDataDB = db['childData']
+        childDataDB.insert_one({"for initial" : True})
+        childDataDB.delete_one({"for initial" : True})
+
+    if "document" not in db.list_collection_names():
+        documentDB = db['document']
+        documentDB.insert_one({"for initial" : True})
+        documentDB.delete_one({"for initial" : True})
+
 
 # connect to datebase
 def connectDB():
@@ -59,10 +57,21 @@ def connectDB():
     global documentDB
     global normDB
     global settingDB
+    global client
+    global server
 
-    try:
-        subprocess.Popen("C:/Program Files/MongoDB/Server/5.0/bin/mongod.exe")
-        client = pymongo.MongoClient('localhost', 27017)  # Timeout 10s
+    try: 
+        subprocess.call(["mongodb_dir.bat"])
+        # Check Database path exists
+        path = "C:/data/db"
+        if not os.path.isdir(path):
+            os.makedirs(path)
+
+        server = subprocess.Popen("C:/Program Files/MongoDB/Server/5.0/bin/mongod.exe")
+        client = pymongo.MongoClient('localhost', 27017) 
+        initialDB()
+        #mongoDB_server = subprocess.Popen("C:/Program Files/MongoDB/Server/5.0/bin/mongod.exe")
+         # Timeout 10s
         db = client["CLSA"]           # choose database
         childDataDB = db["childData"] # choose collection
         documentDB = db["document"]   # choose collection   
@@ -75,6 +84,9 @@ def connectDB():
         print(e)
         client.close()
         return False
+
+def close_mongodb():
+    server.kill()
 
 # 查詢頁 api
 def findDocs(SLP , caseID , name):

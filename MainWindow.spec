@@ -25,6 +25,7 @@ datas.append(('C:\\ffmpeg\\bin\\ffplay.exe', '.' ))
 datas.append(('C:\\ffmpeg\\bin\\ffprobe.exe', '.' ))
 datas.append(('image','image'))
 datas.append(('QSS','QSS'))
+datas.append(('mongodb_dir.bat','.'))
 
 
 a = Analysis(['MainWindow.py'],

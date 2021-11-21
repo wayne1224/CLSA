@@ -974,7 +974,7 @@ class Myform(QtWidgets.QWidget):
                     cf = configparser.ConfigParser()
                     cf.read("config.ini") 
                     cf.set("fieldSurvey", "state", str(self.ckb_norm.isChecked()))
-                    fh = open("config.ini", 'w')
+                    fh = open("config.ini", 'w', encoding="utf8")
                     cf.write(fh)  # 把要修改的節點的內容寫到檔案中
                     fh.close()
 

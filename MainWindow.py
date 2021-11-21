@@ -39,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.load2 = LoadingBar()
 
         # 資料庫連接失敗 直接關閉程式
-        self.check_init_DB()
+        #self.check_init_DB()
         self.thread_DB = QtCore.QThread()
         self.worker_DB = Worker_DB(db.connectDB)
         self.worker_DB.moveToThread(self.thread_DB)
@@ -67,19 +67,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thread.finished.connect(self.thread.deleteLater)
         self.thread.start()
 
-    def check_init_DB(self):
-        cf = configparser.ConfigParser()
-        cf.read("config.ini") 
-        if cf.getboolean("Database", "init") == False:
-            db.initialDB()
+    # def check_init_DB(self):
+    #     cf = configparser.ConfigParser()
+    #     cf.read("config.ini") 
+    #     if cf.getboolean("Database", "init") == False:
+    #         db.initialDB()
 
-            #Init後 寫入config
-            cf = configparser.ConfigParser()
-            cf.read("config.ini") 
-            cf.set("Database", "init", "True")
-            fh = open(r"config.ini", 'w')
-            cf.write(fh)  
-            fh.close()
+    #         #Init後 寫入config
+    #         cf = configparser.ConfigParser()
+    #         cf.read("config.ini") 
+    #         cf.set("Database", "init", "True")
+    #         fh = open(r"config.ini", 'w', encoding="utf8")
+    #         cf.write(fh)  
+    #         fh.close()
     
     @QtCore.pyqtSlot(int, float)
     def getAction(self, key, time):
@@ -132,6 +132,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         if (self.mainTab.tab1.insertRecord()):
                             event.accept()
                 elif close == QtWidgets.QMessageBox.No:
+                    db.close_mongodb()
                     event.accept()
                 else:
                     event.ignore()
@@ -151,6 +152,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #關閉loading視窗
         self.window.close()
+
+    def closeEvent(self, event):
+        close = QtWidgets.QMessageBox.question(self,
+                                        "關閉",
+                                        "確定要離開嗎?",
+                                        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        if close == QtWidgets.QMessageBox.Yes:
+            db.close_mongodb()
+            event.accept()
+        else:
+            event.ignore()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
