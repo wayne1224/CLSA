@@ -8,6 +8,18 @@ QPushButton#btn_importAudio
     background-color: sandybrown;
 }
 
+QPushButton#btn_importTextFile
+{
+    background-color: darkseagreen;
+    height: 40;
+}
+
+QPushButton#btn_outputTextFile
+{
+    background-color: darkseagreen;
+    height: 40;
+}
+
 QPushButton#btn_delete
 {
     background-color: rgb(235, 38, 78);
@@ -36,6 +48,16 @@ QPushButton#btn_add:hover
 QPushButton#btn_importAudio:hover
 {
     background-color: rgb(226, 149, 82);
+}
+
+QPushButton#btn_importTextFile:hover
+{
+    background-color: rgb(122, 168, 122);
+}
+
+QPushButton#btn_outputTextFile:hover
+{
+    background-color: rgb(122, 168, 122);
 }
 
 QPushButton#btn_delete:hover
