@@ -19,6 +19,7 @@ from utils.audio import STT
 from utils.worker import Worker
 from collections import OrderedDict
 import qtawesome as qta
+import csv
 
 
 class Tab2(QtWidgets.QWidget):
@@ -269,6 +270,21 @@ class Tab2(QtWidgets.QWidget):
         self.btn_importAudio.setObjectName("btn_importAudio")
         self.horizontalLayout_7.addWidget(self.btn_importAudio)
         self.verticalLayout_4.addLayout(self.horizontalLayout_7)
+        self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_10.setObjectName("horizontalLayout_10")
+        self.btn_importTextFile = QtWidgets.QPushButton()
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.btn_importTextFile.setFont(font)
+        self.btn_importTextFile.setObjectName("btn_importTextFile")
+        self.horizontalLayout_10.addWidget(self.btn_importTextFile)
+        self.btn_outputTextFile = QtWidgets.QPushButton()
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.btn_outputTextFile.setFont(font)
+        self.btn_outputTextFile.setObjectName("btn_outputTextFile")
+        self.horizontalLayout_10.addWidget(self.btn_outputTextFile)
+        self.verticalLayout_4.addLayout(self.horizontalLayout_10)
         self.horizontalLayout_2.addLayout(self.verticalLayout_4)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.tableWidget = Mytable()
@@ -332,6 +348,8 @@ class Tab2(QtWidgets.QWidget):
         # 事件
         self.btn_add.clicked.connect(self._addRow)
         self.btn_importAudio.clicked.connect(self._tranferAudio)
+        self.btn_importTextFile.clicked.connect(partial(self._textFileIO, 'import'))
+        self.btn_outputTextFile.clicked.connect(partial(self._textFileIO, 'output'))
         self.input_utterance.returnPressed.connect(self._addRow)
         self.input_scenario.returnPressed.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
@@ -366,6 +384,8 @@ class Tab2(QtWidgets.QWidget):
         self.cbx_notCount.setEnabled(False)
         self.btn_add.setEnabled(False)
         self.btn_importAudio.setEnabled(False)
+        self.btn_importTextFile.setEnabled(False)
+        self.btn_outputTextFile.setEnabled(False)
         self.btn_delete.setEnabled(False)
         self.btn_clearTab.setEnabled(False)
         self.btn_save.setEnabled(False)
@@ -451,6 +471,8 @@ class Tab2(QtWidgets.QWidget):
         self.notCountPrompt.setText(_translate("", "粗體字為不採計句"))
         self.btn_add.setText(_translate("", "新增"))
         self.btn_importAudio.setText(_translate("", "匯入錄音檔"))
+        self.btn_importTextFile.setText(_translate("", "匯入文字檔"))
+        self.btn_outputTextFile.setText(_translate("", "匯出文字檔"))
         self.btn_delete.setText(_translate("", "刪除列"))
         self.btn_clearTab.setText(_translate("", "全部清空"))
         self.btn_save.setText(_translate("", "儲存"))
@@ -556,6 +578,8 @@ class Tab2(QtWidgets.QWidget):
         self.cbx_notCount.setEnabled(opt)
         self.btn_add.setEnabled(opt)
         self.btn_importAudio.setEnabled(opt)
+        self.btn_importTextFile.setEnabled(opt)
+        self.btn_outputTextFile.setEnabled(opt)
         self.btn_delete.setEnabled(opt)
         self.btn_clearTab.setEnabled(opt)
         self.btn_save.setEnabled(opt)
@@ -696,6 +720,7 @@ class Tab2(QtWidgets.QWidget):
         self.tableWidget.checkAllID()
         self._setColumnColor()
         self._setTableChildIDUneditable()
+        self.content = self._getCurrentContent()
 
     # 設置表格顏色
     def _setColumnColor(self):
@@ -754,6 +779,25 @@ class Tab2(QtWidgets.QWidget):
 
         # 傳signal給MainWindow: 關閉Loading頁
         self.procMain.emit(6, 0)
+
+    # 匯入、匯出文字檔
+    def _textFileIO(self, opt):
+        if opt == 'import':
+            print('i')
+        if opt == 'output':
+            with open(self.caseID + '_' + self.caseDate.date().__str__() + '.csv', 'w', newline='') as csvfile:
+                # 定義欄位
+                fieldnames = ['ID', '角色', '語句', '語境']
+
+                # 將 dictionary 寫入 CSV 檔
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+                # 寫入第一列的欄位名稱
+                writer.writeheader()
+
+                # 寫入資料
+                for i in range(self.content.__len__()):
+                    writer.writerow({'ID': self.content[i]['ID'], '角色': self.content[i]['role'], '語句': self.content[i]['utterance'], '語境': self.content[i]['scenario']})
 
     # 新增列
     def _addRow(self):
