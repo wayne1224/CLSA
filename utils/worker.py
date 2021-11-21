@@ -22,7 +22,9 @@ class Worker_DB(QtCore.QObject):
         self.func = fn
 
     def run(self):
-        if not self.func():
+        if self.func() == True:
+            self.finished.emit()
+        else:
             print("Database Failed")
-            sys.quit()  
-        self.finished.emit()
+            quit()
+        
