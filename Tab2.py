@@ -764,6 +764,11 @@ class Tab2(QtWidgets.QWidget):
     def _importAudio(self, filePath):
         text = self.audio.importAudio(filePath)
 
+        if text == False:
+            # 傳signal給MainWindow: 關閉Loading頁
+            self.procMain.emit(8, 0)
+            return
+
         content = []
         if text:
             for i in range(len(text)):
