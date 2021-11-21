@@ -1,6 +1,8 @@
 import time
 import os
 import re
+import requests
+import configparser
 from PyQt5 import QtCore
 from azure.cognitiveservices.speech import languageconfig
 from pydub import AudioSegment
@@ -11,7 +13,18 @@ class STT(QtCore.QObject):
     procMain = QtCore.pyqtSignal(int, float)
 
     def STT_from_file(self, filePath):
-        speech_key, service_region, language = "492ba6cf3f004e52b19908ab189514c7", "eastus", "zh-TW"
+        cf = configparser.ConfigParser()
+        cf.read("config.ini") 
+        key = cf.get("STT", "key")
+
+        # 先檢查Key是否有效
+        url = "https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken"
+        headers = {'Ocp-Apim-Subscription-Key': key, 'Content-type': 'application/x-www-form-urlencoded', 'Content-Length': '0'}
+        r = requests.post(url, headers=headers)
+        if r.status_code != 200:
+            return False
+
+        speech_key, service_region, language = "e77eb3ba23844bb69f8244eb606f1a1d", "eastus", "zh-TW"
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region, speech_recognition_language=language)
         speech_config.set_profanity(speechsdk.ProfanityOption.Raw)
         
@@ -46,10 +59,13 @@ class STT(QtCore.QObject):
         speech_recognizer.session_stopped.connect(stop_cb)
         speech_recognizer.canceled.connect(stop_cb)
 
-        speech_recognizer.start_continuous_recognition()
+        # 開始轉錄
+        speech_recognizer.start_continuous_recognition() 
+
+        #讓程式等待轉錄，直到收到訊號
         while not done:
             time.sleep(.5)
-
+        
         
         return all_results #List
 
