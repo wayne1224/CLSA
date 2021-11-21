@@ -19,6 +19,7 @@ from utils.audio import STT
 from utils.worker import Worker
 from collections import OrderedDict
 import qtawesome as qta
+import csv
 
 
 class Tab2(QtWidgets.QWidget):
@@ -347,6 +348,8 @@ class Tab2(QtWidgets.QWidget):
         # 事件
         self.btn_add.clicked.connect(self._addRow)
         self.btn_importAudio.clicked.connect(self._tranferAudio)
+        self.btn_importTextFile.clicked.connect(partial(self._textFileIO, 'import'))
+        self.btn_outputTextFile.clicked.connect(partial(self._textFileIO, 'output'))
         self.input_utterance.returnPressed.connect(self._addRow)
         self.input_scenario.returnPressed.connect(self._addRow)
         self.btn_delete.clicked.connect(self._deleteRow)
@@ -717,6 +720,7 @@ class Tab2(QtWidgets.QWidget):
         self.tableWidget.checkAllID()
         self._setColumnColor()
         self._setTableChildIDUneditable()
+        self.content = self._getCurrentContent()
 
     # 設置表格顏色
     def _setColumnColor(self):
@@ -775,6 +779,25 @@ class Tab2(QtWidgets.QWidget):
 
         # 傳signal給MainWindow: 關閉Loading頁
         self.procMain.emit(6, 0)
+
+    # 匯入、匯出文字檔
+    def _textFileIO(self, opt):
+        if opt == 'import':
+            print('i')
+        if opt == 'output':
+            with open(self.caseID + '_' + self.caseDate.date().__str__() + '.csv', 'w', newline='') as csvfile:
+                # 定義欄位
+                fieldnames = ['ID', '角色', '語句', '語境']
+
+                # 將 dictionary 寫入 CSV 檔
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+                # 寫入第一列的欄位名稱
+                writer.writeheader()
+
+                # 寫入資料
+                for i in range(self.content.__len__()):
+                    writer.writerow({'ID': self.content[i]['ID'], '角色': self.content[i]['role'], '語句': self.content[i]['utterance'], '語境': self.content[i]['scenario']})
 
     # 新增列
     def _addRow(self):
