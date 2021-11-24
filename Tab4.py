@@ -3,24 +3,22 @@ import qtawesome as qta
 from datetime import date
 from functools import partial
 from datetime import datetime
-from PyQt5 import QtCore, QtGui, QtWidgets, QtChart
+from PyQt5 import QtCore, QtGui, QtWidgets
 from components.statChart import statChartTab, createBarChart_POS, createLineChart
-from components.norm import NormModifyTab
-from components.setting import SettingTab
 
-class Tab4(QtWidgets.QTabWidget):
+class GraphTab(QtWidgets.QTabWidget):
     def __init__(self):
-        super(Tab4, self).__init__()
+        super(GraphTab, self).__init__()
         self.tab0 = chartTab()
         self.tab1 = statChartTab()
-        self.tab2 = NormModifyTab()
-        self.tab3 = SettingTab()
+        # self.tab2 = NormModifyTab()
+        # self.tab3 = SettingTab()
 
         self.addTab(self.tab0, "個案分析圖表")
         self.addTab(self.tab1, "各年齡層分析圖表")
-        tab3 = self.addTab(self.tab2, "常模設定頁面")
-        self.setTabIcon(tab3, qta.icon('fa.gear'))
-        self.addTab(self.tab3, "其他設定頁面")
+        # tab3 = self.addTab(self.tab2, "常模設定頁面")
+        # self.setTabIcon(tab3, qta.icon('fa.gear'))
+        # self.addTab(self.tab3, "其他設定頁面")
 
         #self.tab0.procCaseDocs.connect(self.tab1.lineChart)
         self.setStyleSheet(open("QSS/Tab4.qss", "r").read())
