@@ -1,5 +1,7 @@
+import database.DatabaseApi as db
 import configparser
 import requests
+import json
 import os
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -233,12 +235,15 @@ class SettingTab(QtWidgets.QWidget):
         name, extension = os.path.splitext(filePath)
     
     def download_db(self):
-        # 選檔案
+        # 選存檔位置
         filePath, _ = QtWidgets.QFileDialog.getSaveFileName(None,
                                         "開啟檔案",
-                                        "",
+                                        "db.json",
                                         "json files(*.json)")
-        name, extension = os.path.splitext(filePath)
+        output = db.exportCLSA()
+        with open(f'{filePath}', 'w', encoding='utf8') as json_file:
+            json.dump(output, json_file, ensure_ascii=False, indent=2)
+
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
