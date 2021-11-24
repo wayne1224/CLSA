@@ -607,35 +607,46 @@ def getNormAges():
         print(e)
         return False
 
-# setting api
-def isFieldSurvey():
+## 輸入輸出資料
+def importCLSA(childData , document , norm):
     try:
-        query = dict()
-        query["mode"] = "fieldSurvey"
+        # insert childData
+        for c in childData:
+            insertChildData(c)
+        
+        # insert document
+        for d in document:
+            pass
 
-        return settingDB.find_one(query)["state"]
+        # insert norm
 
     except Exception as e:
-        print("The error of function isFieldSurvey() !!")
         print(e)
         return False
 
-def changeModeState(state):
+def exportCLSA():
     try:
-        query = dict()
-        query["mode"] = "fieldSurvey"
+        childData = list(childDataDB.aggregate([{'$project': {'_id': 0}}]))
+        document = list(documentDB.aggregate([{'$project': {'_id': 0}}]))
+        norm = list(normDB.aggregate([{'$project': {'_id': 0}}]))
 
-        settingDB.update_one(query , {"$set" : {
-                                                "state" : state
-                                            }}) 
+        for i in range(len(childData)):
+            childData[i]["birthday"] =  childData[i]["birthday"].strftime("%Y-%m-%d %H:%M:%S")
+        
+        for i in range(len(document)):
+            document[i]["date"] =  document[i]["date"].strftime("%Y-%m-%d %H:%M:%S")
 
-        return True
+        result = {
+            "childData" : childData,
+            "document" : document,
+            "norm" : norm
+        }
+
+        return result
 
     except Exception as e:
-        print("The error of function changeModeState() !!")
         print(e)
         return False
-
 
 # childData = {   "caseID" : "00757025",
 #                 "name" : "Wayne",
