@@ -771,6 +771,7 @@ class Tab2(QtWidgets.QWidget):
 
         content = []
         if text:
+            # 預設為兒童語句
             for i in range(len(text)):
                 data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
                 self.childID += 1
@@ -785,14 +786,47 @@ class Tab2(QtWidgets.QWidget):
         # 傳signal給MainWindow: 關閉Loading頁
         self.procMain.emit(6, 0)
 
-    # 匯入、匯出文字檔
+    # 匯入txt檔或csv檔(csv格式需固定)
+    def _importTxtOrCsv(self, filePath, extension):
+        content = []
+
+        if extension == '.txt':
+            f = open(filePath, 'r', encoding='utf-8')
+            utterances = f.read().splitlines()
+            f.close()
+
+            if utterances:
+                for i in range(len(utterances)):
+                    data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
+                    self.childID += 1
+                    data["ID"] = str(i+1)
+                    data["role"] = "child"
+                    data["utterance"] = utterances[i]
+                    content.append(data)
+            
+        if extension == '.csv':
+            f = open(filePath, newline='')
+            dict_reader = csv.DictReader(f)
+            for row in dict_reader:
+                content.append(row)
+        
+        self.content = content
+        self._setTable(self.content)
+
+    # 匯入、匯出轉錄表內容成文字檔
     def _textFileIO(self, opt):
         if opt == 'import':
-            print('i')
+            filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
+                                        "開啟",
+                                        "",
+                                        "txt files(*.txt);;csv files(*.csv)")
+            name, extension = os.path.splitext(filePath)
+            self._importTxtOrCsv(filePath, extension)
+            
         if opt == 'output':
             with open(self.caseID + '_' + self.caseDate.date().__str__() + '.csv', 'w', newline='') as csvfile:
                 # 定義欄位
-                fieldnames = ['ID', '角色', '語句', '語境']
+                fieldnames = ['ID', 'role', 'utterance', 'scenario']
 
                 # 將 dictionary 寫入 CSV 檔
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -802,7 +836,10 @@ class Tab2(QtWidgets.QWidget):
 
                 # 寫入資料
                 for i in range(self.content.__len__()):
-                    writer.writerow({'ID': self.content[i]['ID'], '角色': self.content[i]['role'], '語句': self.content[i]['utterance'], '語境': self.content[i]['scenario']})
+                    writer.writerow({'ID': self.content[i]['ID'],
+                                    'role': self.content[i]['role'],
+                                    'utterance': self.content[i]['utterance'],
+                                    'scenario': self.content[i]['scenario']})
 
     # 新增列
     def _addRow(self):
