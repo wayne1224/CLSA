@@ -5,7 +5,8 @@ from Tab0 import SearchTab
 from Tab2 import Tab2
 from Tab1 import Myform
 from Tab3 import AnalysisTab
-from Tab4 import Tab4
+from Tab4 import GraphTab
+from Tab5 import GeneralTab
 
 class MainTabWidget(QtWidgets.QTabWidget):
     def __init__(self,parent=None):
@@ -17,7 +18,8 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.tab1 = Myform()
         self.tab2 = Tab2()
         self.tab3 = AnalysisTab()
-        self.tab4 = Tab4()
+        self.tab4 = GraphTab()
+        self.tab5 = GeneralTab()
 
 
         #模糊特效
@@ -29,6 +31,7 @@ class MainTabWidget(QtWidgets.QTabWidget):
         self.addTab(self.tab2, "轉錄表")
         self.addTab(self.tab3, "彙整表")
         self.addTab(self.tab4, "圖表")
+        self.addTab(self.tab5, "設定頁面")
 
         #設定tab的css
         self.setStyleSheet(open("QSS/MainTabWidget.qss", "r").read())
