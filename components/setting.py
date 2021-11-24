@@ -1,5 +1,6 @@
 import configparser
 import requests
+import os
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class SettingTab(QtWidgets.QWidget):
@@ -60,14 +61,22 @@ class SettingTab(QtWidgets.QWidget):
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.horizontalLayout.addWidget(self.lineEdit)
+
+        # Azure Buttons
         self.updateBtn = QtWidgets.QPushButton()
         self.updateBtn.setMaximumSize(QtCore.QSize(16777215, 100))
         font = QtGui.QFont()
         font.setFamily("微軟正黑體")
         font.setPointSize(14)
         self.updateBtn.setFont(font)
-        self.updateBtn.setObjectName("pushButton")
+        self.updateBtn.setObjectName("updateBtn")
         self.horizontalLayout.addWidget(self.updateBtn)
+
+        self.deleteBtn = QtWidgets.QPushButton()
+        self.deleteBtn.setMaximumSize(QtCore.QSize(16777215, 100))
+        self.deleteBtn.setFont(font)
+        self.deleteBtn.setObjectName("deleteBtn")
+        self.horizontalLayout.addWidget(self.deleteBtn)
        
         self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
@@ -112,20 +121,20 @@ class SettingTab(QtWidgets.QWidget):
         self.label_5.setFont(font)
         self.label_5.setObjectName("label_5")
         self.horizontalLayout_4.addWidget(self.label_5)
-        self.pushButton_4 = QtWidgets.QPushButton()
+        self.upload_db_btn = QtWidgets.QPushButton()
         font = QtGui.QFont()
         font.setFamily("微軟正黑體")
         font.setPointSize(14)
-        self.pushButton_4.setFont(font)
-        self.pushButton_4.setObjectName("pushButton_4")
-        self.horizontalLayout_4.addWidget(self.pushButton_4)
-        self.pushButton_5 = QtWidgets.QPushButton()
+        self.upload_db_btn.setFont(font)
+        self.upload_db_btn.setObjectName("upload_db_btn")
+        self.horizontalLayout_4.addWidget(self.upload_db_btn)
+        self.download_db_btn = QtWidgets.QPushButton()
         font = QtGui.QFont()
         font.setFamily("微軟正黑體")
         font.setPointSize(14)
-        self.pushButton_5.setFont(font)
-        self.pushButton_5.setObjectName("pushButton_5")
-        self.horizontalLayout_4.addWidget(self.pushButton_5)
+        self.download_db_btn.setFont(font)
+        self.download_db_btn.setObjectName("download_db_btn")
+        self.horizontalLayout_4.addWidget(self.download_db_btn)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem2)
         self.verticalLayout_4.addLayout(self.horizontalLayout_4)
@@ -163,10 +172,14 @@ class SettingTab(QtWidgets.QWidget):
         spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem5)
 
-        #Signal
+        #Signal deleteBtn
         self.updateBtn.clicked.connect(self.update_STT_key)
+        self.deleteBtn.clicked.connect(self.delete_STT_key)
+        #self.upload_db_btn.clicked.connect(self.upload_db)
+        self.download_db_btn.clicked.connect(self.download_db)
 
         self.retranslateUi()
+        self.setStyleSheet(open("./QSS/setting.qss", "r").read())
 
     def get_STT_key(self):
         cf = configparser.ConfigParser()
@@ -182,6 +195,7 @@ class SettingTab(QtWidgets.QWidget):
         r = requests.post(url, headers=headers)
         if r.status_code != 200:
             QtWidgets.QMessageBox.warning(self, '警告',"<p style='font-size:12pt;'>金鑰無效<br\>請重新輸入</p>", QtWidgets.QMessageBox.Ok)
+            self.get_STT_key()
             return
 
         cf = configparser.ConfigParser()
@@ -193,15 +207,49 @@ class SettingTab(QtWidgets.QWidget):
 
         QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>更新成功</p>", QtWidgets.QMessageBox.Ok)
 
+    def delete_STT_key(self):
+        close = QtWidgets.QMessageBox.question(self,
+                        "金鑰",
+                        '<p style="font-size:12pt; color: #3778bf;">確定要刪除嗎?</p>\n',
+                        QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+
+        if close == QtWidgets.QMessageBox.Yes :
+            cf = configparser.ConfigParser()
+            cf.read("config.ini") 
+            cf.set("STT", "key", "")
+            fh = open("config.ini", 'w')
+            cf.write(fh)  # 把要修改的節點的內容寫到檔案中
+            fh.close()
+
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>刪除成功</p>", QtWidgets.QMessageBox.Ok)
+            self.get_STT_key()
+    
+    def upload_db(self):
+        # 選檔案
+        filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
+                                        "開啟檔案",
+                                        "",
+                                        "json files(*.json)")
+        name, extension = os.path.splitext(filePath)
+    
+    def download_db(self):
+        # 選檔案
+        filePath, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                        "開啟檔案",
+                                        "",
+                                        "json files(*.json)")
+        name, extension = os.path.splitext(filePath)
+
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
         self.label_azure.setText(_translate("", "語音轉文字服務"))
-        self.label_2.setText(_translate("", "金鑰: "))
+        self.label_2.setText(_translate("", "  金鑰: "))
         self.updateBtn.setText(_translate("", "    更改    "))
+        self.deleteBtn.setText(_translate("", "    刪除    "))
         self.label_db.setText(_translate("", "資料管理"))
-        self.label_5.setText(_translate("", "本系統資料: "))
-        self.pushButton_4.setText(_translate("", "    上傳    "))
-        self.pushButton_5.setText(_translate("", "    下載    "))
+        self.label_5.setText(_translate("", "  本系統資料: "))
+        self.upload_db_btn.setText(_translate("", "    上傳    "))
+        self.download_db_btn.setText(_translate("", "    下載    "))
         #self.label_4.setText(_translate("", "孩童資料: "))
         # self.pushButton_3.setText(_translate("", "    上傳    "))
         # self.pushButton_2.setText(_translate("", "    下載    "))
