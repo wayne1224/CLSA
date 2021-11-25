@@ -92,7 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.load2.start()
         elif key == 8:
             self.load2.stop()
-            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>轉錄失敗<br\>(1)請檢查金鑰是否正確<br\>(2)請檢查網路是否連線</p>", QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>轉錄失敗<br/>(1)請檢查金鑰是否正確<br/>(2)請檢查網路是否連線</p>", QtWidgets.QMessageBox.Ok)
         
 
     def closeEvent(self, event):
