@@ -11,13 +11,11 @@ QPushButton#btn_importAudio
 QPushButton#btn_importTextFile
 {
     background-color: darkseagreen;
-    height: 40;
 }
 
 QPushButton#btn_outputTextFile
 {
     background-color: darkseagreen;
-    height: 40;
 }
 
 QPushButton#btn_delete
