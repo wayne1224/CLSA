@@ -1,7 +1,6 @@
 import pymongo
 
 # CLSA
-#     setting
 #     childData
 #     document
 #          caseID
@@ -607,20 +606,64 @@ def getNormAges():
         print(e)
         return False
 
-## 輸入輸出資料
-def importCLSA(childData , document , norm):
+# 輸入輸出資料
+# caseID 重複加數字 ex : 00757025 => 00757025(1)
+# norm 直接取代
+def importCLSA(childData , document , norm):  
     try:
-        # insert childData
+        # import childData
         for c in childData:
-            insertChildData(c)
-        
-        # insert document
-        for d in document:
-            pass
+            try:
+                # 此 child 已經在資料庫裡了 
+                if childDataDB.find_one({"caseID" : c["caseID"]}):
+                    # caseID + (數字) => ex: 00757025 , 00757025(1) , 00757025(2) , 00757025(3) ,,,
+                    copy = 1
+                    
+                    while(childDataDB.find_one({"caseID" : c["caseID"] + "({})".format(copy)})):
+                        copy = copy + 1
+                    
+                    childDataDB.insert_one({
+                        "caseID" : c["caseID"] + "({})".format(copy),
+                        "name" : c["name"],
+                        "gender" : c["gender"],
+                        "birthday" : c["birthday"]
+                    })
 
-        # insert norm
+                    # 將 document 的 caseID 做更改 => ex : 原本 caseID = 00757025 , 但經過上方的程式變成 00757025(1) , document 裡的 caseID 也要更改
+                    for i in range(len(document)):
+                        if document[i]["caseID"] == c["caseID"]:
+                            document[i]["caseID"] = c["caseID"] + "({})".format(copy)
+                    
+                # 此 child 沒有在資料庫裡了
+                else:
+                    childDataDB.insert_one(c)
+
+            except Exception as e:
+                print("The error of function importCLSA.importChildData !!")   
+                print(e)
+                return False  
+
+        # import document
+        for d in document:
+            try:
+                documentDB.insert_one(d)
+            except Exception as e:
+                print("The error of function importCLSA.importDocument !!")   
+                print(e)
+                return False 
+
+        # import norm
+        for n in norm:
+            try:
+                query = {"age" : n["age"]}
+                normDB.update_one(query , {"$set" : {"data" : n["data"]}})
+            except Exception as e:
+                print("The error of function importCLSA.importNorm !!")   
+                print(e)
+                return False 
 
     except Exception as e:
+        print("The error of function importCLSA !!")   
         print(e)
         return False
 
@@ -648,90 +691,4 @@ def exportCLSA():
         print(e)
         return False
 
-# childData = {   "caseID" : "00757025",
-#                 "name" : "Wayne",
-#                 "gender" : "male",
-#                 "birthday" : datetime.datetime.strptime("1999-12-24", "%Y-%m-%d")}
-
-# data = {
-#     "VOCD-a" : 123,
-#     "VOCD-b" : 456
-# }
-
 # connectDB()
-# upsertNorm("2" , data)
-
-# print(result)
-# for i in result:
-#     print(i)
-
-# findDocs return
-# [
-#     {
-#         '_id': ObjectId('60f3f8cbefb5822f048b2bac'), 
-#         'caseID': '00757045', 
-#         'date': datetime.datetime(2021, 7, 18, 17, 42, 24), 
-#         'recording': {
-#             'date': datetime.datetime(2021, 7, 18, 17, 42, 24), 
-#             'SLP': '丁信志', 
-#             'scenario': '下午', 
-#             'fileName': 'sun in 7', 
-#             'location': '虎尾', 
-#             'interactionType': '自由遊戲', 
-#             'inducement': 'NBA', 
-#             'participants': ['兒童', '爸 爸', '媽媽'], 
-#             'equipment': '錄音筆', 
-#             'help': '有時 (2~5次)', 
-#             'others': '無', 
-#             'situation': '無'
-#             }, 
-#         'transcription': {
-#             'transcriber': None, 
-#             'content': None, 
-#             'analysis': None, 
-#             'totalUtterance': None, 
-#             'validUtterance': None}, 
-#         'childData': {
-#             '_id': ObjectId('60f3f8cbefb5822f048b2bab'), 
-#             'caseID': '00757045', 
-#             'name': 'Kenneth', 
-#             'gender': 'male', 
-#             'birthday': datetime.datetime(2000, 1, 5, 0, 0)
-#         }
-#     }
-# ]
-
-# findDoc return
-# {'childData': {
-#     '_id': ObjectId('60f0079855497c379424380c'), 
-#     'caseID': '00757025', 
-#     'name': 'Wayne', 
-#     'gender': 'male', 
-#     'birthday': datetime.datetime(1999, 12, 24, 0, 0)
-#     }, 
-# 'document': {
-#     '_id': ObjectId('60f2a9308cf2f71f708dc0d6'), 
-#     'caseID': '00757025', 
-#     'date': datetime.datetime(2021, 7, 15, 0, 0), 
-#     'recording': {
-#         'date': datetime.datetime(2021, 5, 10, 19, 11, 47), 
-#         'SLP': '何文子', 
-#         'scenario': '晚上', 
-#         'fileName': 'CC', 
-#         'location': '海大', 
-#         'interactionType': '自由遊戲', 
-#         'inducement': '健身咖', 
-#         'participants': ['兒童', '老師', 'test'], 
-#         'equipment': '攝影機', 'help': '經常 (6~9次)', 
-#         'others': '健身', 
-#         'situation': ''}, 
-#     'transcription': {
-#         'transcriber': None, 
-#         'content': None, 
-#         'analysis': None, 
-#         'totalUtterance': None, 
-#         'validUtterance': None}
-#         }
-# }
-
-
