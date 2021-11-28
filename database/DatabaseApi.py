@@ -662,18 +662,21 @@ def importCLSA(childData , document , norm):
         print("The error of function importCLSA.importNorm !!")   
         print(e)
         return False 
+    
+    return True
 
 def importNorm(norm):
     try:
         for n in norm:
             query = {"age" : n["age"]}
             normDB.update_one(query , {"$set" : {"data" : n["data"] , "base" : n["base"]}})
-
     except Exception as e:
         print("The error of function importCLSA.importNorm !!")   
         print(e)
-        return False 
-    
+        return False
+       
+    return True
+     
 def exportCLSA():
     try:
         childData = list(childDataDB.aggregate([{'$project': {'_id': 0}}]))
@@ -701,7 +704,7 @@ def exportCLSA():
 def exportNorm():
     try:
         return list(normDB.aggregate([{'$project': {'_id': 0}}]))
-        
+
     except Exception as e:
         print(e)
         return False
