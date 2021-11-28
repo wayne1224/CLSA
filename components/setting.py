@@ -232,18 +232,36 @@ class SettingTab(QtWidgets.QWidget):
                                         "開啟檔案",
                                         "",
                                         "json files(*.json)")
-        name, extension = os.path.splitext(filePath)
+
+        with open(filePath, 'r', encoding='utf8') as json_file:
+            data = json.load(json_file)
+
+        #匯入資料庫                    
+        result = db.importCLSA(data['childData'], data['document'], data['norm'])
+
+        if result:
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>上傳成功</p>", QtWidgets.QMessageBox.Ok)
+        else:
+            QtWidgets.QMessageBox.warning(self, '通知',"<p style='font-size:12pt;'>上傳失敗<br/>格式錯誤，請重新選擇檔案</p>", QtWidgets.QMessageBox.Ok)
     
     def download_db(self):
         # 選存檔位置
-        filePath, _ = QtWidgets.QFileDialog.getSaveFileName(None,
-                                        "開啟檔案",
-                                        "db.json",
-                                        "json files(*.json)")
-        output = db.exportCLSA()
-        with open(f'{filePath}', 'w', encoding='utf8') as json_file:
-            json.dump(output, json_file, ensure_ascii=False, indent=2)
+        try:
+            filePath, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                            "開啟檔案",
+                                            "db.json",
+                                            "json files(*.json)")
+        except:
+            pass
 
+        output = db.exportCLSA()
+
+        try:
+            with open(f'{filePath}', 'w', encoding='utf8') as json_file:
+                json.dump(output, json_file, ensure_ascii=False, indent=2)
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>下載成功</p>", QtWidgets.QMessageBox.Ok)
+        except:
+            QtWidgets.QMessageBox.warning(self, '通知',"<p style='font-size:12pt;'>下載失敗<br/>請再試一次</p>", QtWidgets.QMessageBox.Ok)
 
     def retranslateUi(self, ):
         _translate = QtCore.QCoreApplication.translate
