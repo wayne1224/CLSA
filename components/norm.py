@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from functools import partial
 import qtawesome as qta
 import math
+import json
 import database.DatabaseApi as db
 
 class NormModifyTab(QtWidgets.QWidget):
@@ -11,7 +12,7 @@ class NormModifyTab(QtWidgets.QWidget):
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
         self.setLayout(self.verticalLayout)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         #Title
         self.hbox_title = QtWidgets.QHBoxLayout()
@@ -44,6 +45,19 @@ class NormModifyTab(QtWidgets.QWidget):
         self.comboBox.setFont(font)
         self.comboBox.setObjectName("comboBox")
         self.horizontalLayout_7.addWidget(self.comboBox)
+
+        #新增輸出輸入區塊
+        self.importBtn = QtWidgets.QPushButton()
+        self.importBtn.setFont(font)
+        self.importBtn.setObjectName("importBtn")
+        self.exportBtn = QtWidgets.QPushButton()
+        self.exportBtn.setFont(font)
+        self.exportBtn.setObjectName("exportBtn")
+        
+        self.horizontalLayout_7.addItem(spacerItem)
+        self.horizontalLayout_7.addWidget(self.importBtn)
+        self.horizontalLayout_7.addWidget(self.exportBtn)
+    
         self.verticalLayout.addLayout(self.horizontalLayout_7)
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
@@ -104,8 +118,8 @@ class NormModifyTab(QtWidgets.QWidget):
         self.verticalLayout.addLayout(self.horizontalLayout_10)
         
 
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_7.addItem(spacerItem)
+        # spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        # self.horizontalLayout_7.addItem(spacerItem)
 
         ## 新增計算常模區 (根據田野調查)
         # self.calculate_norm_by_age_btn = QtWidgets.QPushButton()
@@ -213,6 +227,7 @@ class NormModifyTab(QtWidgets.QWidget):
 
         #Validator
         valid = QtGui.QDoubleValidator(0, 10, 2, notation=QtGui.QDoubleValidator.StandardNotation)
+        valid_base = QtGui.QIntValidator()
 
         # 提示icon
         self.mlu_remindIcon = QtWidgets.QLabel()
@@ -256,8 +271,21 @@ class NormModifyTab(QtWidgets.QWidget):
         self.hbox_5.addWidget(self.mlu_remindIcon)
         self.hbox_5.addWidget(self.mlu_remindText)
 
+        # MLU base 
+        self.label_mlu_base = QtWidgets.QLabel("人數:   ")
+        self.label_mlu_base.setFont(font)
+        self.input_mlu_base = QtWidgets.QLabel()
+        self.input_mlu_base.setFont(font)
+        self.input_mlu_base.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+
+        self.hbox_mlu_base = QtWidgets.QHBoxLayout()
+        self.hbox_mlu_base.addWidget(self.label_mlu_base)
+        self.hbox_mlu_base.addWidget(self.input_mlu_base)
+        self.hbox_mlu_base.addItem(spacerItem3)
+
         self.mlu_vbox.addLayout(self.hbox_1)
         self.mlu_vbox.addLayout(self.hbox_2)
+        self.mlu_vbox.addLayout(self.hbox_mlu_base)
         self.mlu_vbox.addLayout(self.hbox_5)
 
         self.mlu_box.setLayout(self.mlu_vbox)
@@ -293,8 +321,22 @@ class NormModifyTab(QtWidgets.QWidget):
         self.hbox_6.addWidget(self.vocd_remindIcon)
         self.hbox_6.addWidget(self.vocd_remindText)
 
+        # VOCD base 
+        self.label_vocd_base = QtWidgets.QLabel("人數:   ")
+        self.label_vocd_base.setFont(font)
+        self.input_vocd_base = QtWidgets.QLabel()
+        self.input_vocd_base.setFont(font)
+        self.input_vocd_base.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        #self.input_vocd_base.setValidator(valid_base)
+
+        self.hbox_vocd_base = QtWidgets.QHBoxLayout()
+        self.hbox_vocd_base.addWidget(self.label_vocd_base)
+        self.hbox_vocd_base.addWidget(self.input_vocd_base)
+        self.hbox_vocd_base.addItem(spacerItem3)
+
         self.vocd_vbox.addLayout(self.hbox_3)
         self.vocd_vbox.addLayout(self.hbox_4)
+        self.vocd_vbox.addLayout(self.hbox_vocd_base)
         self.vocd_vbox.addLayout(self.hbox_6)
 
         self.vocd_box.setLayout(self.vocd_vbox)
@@ -317,6 +359,8 @@ class NormModifyTab(QtWidgets.QWidget):
         self.updateBtn.clicked.connect(self.save)
         self.calculate_norm_by_age_btn.clicked.connect(partial(self.calculate_norm_mode, "current"))
         self.calculate_norm_all_age_btn.clicked.connect(partial(self.calculate_norm_mode, "all"))
+        self.importBtn.clicked.connect(self.upload_norm)
+        self.exportBtn.clicked.connect(self.download_norm)
         #self.calculate_norm_all_age_btn.clicked.connect(self.calcuate_by_age)
         #self.newAgeBtn.clicked.connect(self.addAge)
         #self.deleteAgeBtn.clicked.connect(self.deleteAge)
@@ -376,6 +420,9 @@ class NormModifyTab(QtWidgets.QWidget):
     
         self.input_vocd_w.setText(str(n['data']['vocd-w']))
         self.vocdW = n['data']['vocd-w']
+
+        self.input_mlu_base.setText(str(n['base']['mlu']))
+        self.input_vocd_base.setText(str(n['base']['vocd']))
     
     def save(self):
         data = {
@@ -482,6 +529,11 @@ class NormModifyTab(QtWidgets.QWidget):
             'VOCD-w': {'sum': 0.0, 'num': 0}
         }
 
+        value = {
+            'mlu': {'c':0.0, 'w': 0.0, 'num': 0}, # MLU[c] = MLU-c的總和  MLU[w] = MLU-w的總和
+            'vocd': {'c':0.0, 'w': 0.0, 'num': 0} # VOCD[c] = VOCD-c的總和  VOCD[w] = VOCD-w的總和
+        }
+
         #開啟計算
         for doc in caseDocs: #若有田野調查且有值
             if doc['recording']['survey'] and doc['transcription']['analysis']:
@@ -491,21 +543,37 @@ class NormModifyTab(QtWidgets.QWidget):
                 
                 #開始算sum
                 if age == current_age:
-                    for key in value: 
-                        if doc['transcription']['analysis'][key] != "樣本數不足":
-                            value[key]['sum'] += doc['transcription']['analysis'][key]
+                    for key in value: # 確保 vocd-c 和 vocd-w 人數一樣
+                        if doc['transcription']['analysis'][key.upper() + '-w'] != "樣本數不足":
+                            value[key]['c'] += doc['transcription']['analysis'][key.upper() + '-c']
+                            value[key]['w'] += doc['transcription']['analysis'][key.upper() + '-w']
                             value[key]['num'] += 1
                         
         data = {'mlu-c': 0, 'mlu-w':0, 'vocd-c':0, 'vocd-w':0}
+        base = {'mlu': 0, 'vocd':0}
 
 
-        for v, d in zip(value, data):
-            if value[v]['num'] == 0: #若沒有任何統計資料
-                data[d] = 0.00
+        for key in data:
+            head = key.split('-')[0]
+            tail = key.split('-')[1]
+
+            if value[head]['num'] == 0: #若沒有任何統計資料
+                data[key] = 0
             else:
-                data[d] = round(value[v]['sum'] / value[v]['num'], 2)
+                data[key] = round(value[head][tail] / value[head]['num'], 2)
 
-        db.updateNorm(current_age, data)
+        base['mlu'] = value['mlu']['num']
+        base['vocd'] = value['vocd']['num']
+
+        # for v, d in zip(value, data):
+        #     if value[v]['num'] == 0: #若沒有任何統計資料
+        #         data[d] = 0.00
+        #         base[d] = 0
+        #     else:
+        #         data[d] = round(value[v]['sum'] / value[v]['num'], 2)
+        #         base[d] = value[v]['num']
+
+        db.updateNorm(current_age, data, base)
 
     # def checkLimitAge(self):
     #     if self.input_newAge.text() == '十二':
@@ -514,6 +582,41 @@ class NormModifyTab(QtWidgets.QWidget):
     #     else:
     #         if self.comboBox_age.count() == 1:
     #             self.comboBox_age.addItem('半')
+    def upload_norm(self):
+        # 選檔案
+        try:
+            filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
+                                            "開啟檔案",
+                                            "",
+                                            "json files(*.json)")
+            with open(filePath, 'r', encoding='utf8') as json_file:
+                data = json.load(json_file)
+        except:
+            return
+
+        #匯入資料庫                    
+        result = db.importNorm(data)
+
+        if result:
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>上傳成功</p>", QtWidgets.QMessageBox.Ok)
+        else:
+            QtWidgets.QMessageBox.warning(self, '通知',"<p style='font-size:12pt;'>上傳失敗<br/>格式錯誤，請重新選擇檔案</p>", QtWidgets.QMessageBox.Ok)
+    
+    def download_norm(self):
+        # 選存檔位置
+        filePath, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                        "開啟檔案",
+                                        "norm.json",
+                                        "json files(*.json)")
+        output = db.exportNorm()
+
+        try:
+            with open(f'{filePath}', 'w', encoding='utf8') as json_file:
+                json.dump(output, json_file, ensure_ascii=False, indent=2)
+                QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>下載成功</p>", QtWidgets.QMessageBox.Ok)
+        except:
+            QtWidgets.QMessageBox.warning(self, '通知',"<p style='font-size:12pt;'>下載失敗<br/>請再試一次</p>", QtWidgets.QMessageBox.Ok)
+        
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -521,6 +624,8 @@ class NormModifyTab(QtWidgets.QWidget):
         self.mlu_box.setTitle(_translate("", "平均語句長度"))
         self.vocd_box.setTitle(_translate("", "詞彙多樣性"))
         self.updateBtn.setText(_translate("", "    手動輸入更新    "))
+        self.importBtn.setText(_translate("", "    上傳常模    "))
+        self.exportBtn.setText(_translate("", "    下載常模    "))
         self.label.setText(_translate("", "根據田野調查結果: "))
         self.calculate_norm_by_age_btn.setText(_translate("", "     計算此年齡常模    "))
         self.calculate_norm_all_age_btn.setText(_translate("", "    計算所有年齡常模    "))

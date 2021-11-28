@@ -490,13 +490,14 @@ def findChildren(caseID , name):
         print(e)
         return False
 
-def updateNorm(ageNum , data):
+def updateNorm(ageNum , data , base):
     try:
         query = dict()
         query["ageNum"] = ageNum
     
         normDB.update_one(query , {"$set" : {
-                                                "data" : data
+                                                "data" : data,
+                                                "base" : base
                                             }}) 
 
 
@@ -610,63 +611,72 @@ def getNormAges():
 # caseID 重複加數字 ex : 00757025 => 00757025(1)
 # norm 直接取代
 def importCLSA(childData , document , norm):  
+    # import childData
     try:
-        # import childData
         for c in childData:
-            try:
-                # 此 child 已經在資料庫裡了 
-                if childDataDB.find_one({"caseID" : c["caseID"]}):
-                    # caseID + (數字) => ex: 00757025 , 00757025(1) , 00757025(2) , 00757025(3) ,,,
-                    copy = 1
-                    
-                    while(childDataDB.find_one({"caseID" : c["caseID"] + "({})".format(copy)})):
-                        copy = copy + 1
-                    
-                    childDataDB.insert_one({
-                        "caseID" : c["caseID"] + "({})".format(copy),
-                        "name" : c["name"],
-                        "gender" : c["gender"],
-                        "birthday" : c["birthday"]
-                    })
+            # 此 child 已經在資料庫裡了 
+            if childDataDB.find_one({"caseID" : c["caseID"]}):
+                # caseID + (數字) => ex: 00757025 , 00757025(1) , 00757025(2) , 00757025(3) ,,,
+                copy = 1
+                
+                while(childDataDB.find_one({"caseID" : c["caseID"] + "({})".format(copy)})):
+                    copy = copy + 1
+                
+                childDataDB.insert_one({
+                    "caseID" : c["caseID"] + "({})".format(copy),
+                    "name" : c["name"],
+                    "gender" : c["gender"],
+                    "birthday" : c["birthday"]
+                })
 
-                    # 將 document 的 caseID 做更改 => ex : 原本 caseID = 00757025 , 但經過上方的程式變成 00757025(1) , document 裡的 caseID 也要更改
-                    for i in range(len(document)):
-                        if document[i]["caseID"] == c["caseID"]:
-                            document[i]["caseID"] = c["caseID"] + "({})".format(copy)
-                    
-                # 此 child 沒有在資料庫裡了
-                else:
-                    childDataDB.insert_one(c)
-
-            except Exception as e:
-                print("The error of function importCLSA.importChildData !!")   
-                print(e)
-                return False  
-
-        # import document
-        for d in document:
-            try:
-                documentDB.insert_one(d)
-            except Exception as e:
-                print("The error of function importCLSA.importDocument !!")   
-                print(e)
-                return False 
-
-        # import norm
-        for n in norm:
-            try:
-                query = {"age" : n["age"]}
-                normDB.update_one(query , {"$set" : {"data" : n["data"]}})
-            except Exception as e:
-                print("The error of function importCLSA.importNorm !!")   
-                print(e)
-                return False 
+                # 將 document 的 caseID 做更改 => ex : 原本 caseID = 00757025 , 但經過上方的程式變成 00757025(1) , document 裡的 caseID 也要更改
+                for i in range(len(document)):
+                    if document[i]["caseID"] == c["caseID"]:
+                        document[i]["caseID"] = c["caseID"] + "({})".format(copy)
+                
+            # 此 child 沒有在資料庫裡了
+            else:
+                childDataDB.insert_one(c)
 
     except Exception as e:
-        print("The error of function importCLSA !!")   
+        print("The error of function importCLSA.importChildData !!")   
+        print(e)
+        return False  
+
+    # import document
+    try:
+        for d in document:
+            documentDB.insert_one(d)
+    except Exception as e:
+        print("The error of function importCLSA.importDocument !!")   
+        print(e)
+        return False 
+
+    # import norm
+    try:
+        for n in norm:
+            query = {"age" : n["age"]}
+            normDB.update_one(query , {"$set" : {"data" : n["data"] , "base" : n["base"]}})
+
+    except Exception as e:
+        print("The error of function importCLSA.importNorm !!")   
+        print(e)
+        return False 
+    
+    return True
+
+def importNorm(norm):
+    try:
+        for n in norm:
+            query = {"age" : n["age"]}
+            normDB.update_one(query , {"$set" : {"data" : n["data"] , "base" : n["base"]}})
+    except Exception as e:
+        print("The error of function importCLSA.importNorm !!")   
         print(e)
         return False
-
+       
+    return True
+     
 def exportCLSA():
     try:
         childData = list(childDataDB.aggregate([{'$project': {'_id': 0}}]))
@@ -686,6 +696,14 @@ def exportCLSA():
         }
 
         return result
+
+    except Exception as e:
+        print(e)
+        return False
+
+def exportNorm():
+    try:
+        return list(normDB.aggregate([{'$project': {'_id': 0}}]))
 
     except Exception as e:
         print(e)
