@@ -698,4 +698,12 @@ def exportCLSA():
         print(e)
         return False
 
+def exportNorm():
+    try:
+        return list(normDB.aggregate([{'$project': {'_id': 0}}]))
+        
+    except Exception as e:
+        print(e)
+        return False
+
 # connectDB()
