@@ -439,8 +439,9 @@ class NormModifyTab(QtWidgets.QWidget):
         self.vocdW = data['vocd-w']
 
         age = self.comboBox.itemText(self.lastIndex)
-
-        db.updateNorm(self.chineseToNum(age), data)
+        
+        base = {'mlu': 0, 'vocd':0}
+        db.updateNorm(self.chineseToNum(age), data, base)
         QtWidgets.QMessageBox.information(self, '通知','<p style="font-size:12pt;">更新成功</p>', QtWidgets.QMessageBox.Ok)
 
     # def addAge(self):
@@ -549,7 +550,7 @@ class NormModifyTab(QtWidgets.QWidget):
                             value[key]['w'] += doc['transcription']['analysis'][key.upper() + '-w']
                             value[key]['num'] += 1
                         
-        data = {'mlu-c': 0, 'mlu-w':0, 'vocd-c':0, 'vocd-w':0}
+        data = {'mlu-c': 0.0, 'mlu-w':0.0, 'vocd-c':0.0, 'vocd-w':0.0}
         base = {'mlu': 0, 'vocd':0}
 
 
@@ -558,7 +559,7 @@ class NormModifyTab(QtWidgets.QWidget):
             tail = key.split('-')[1]
 
             if value[head]['num'] == 0: #若沒有任何統計資料
-                data[key] = 0
+                data[key] = 0.0
             else:
                 data[key] = round(value[head][tail] / value[head]['num'], 2)
 
