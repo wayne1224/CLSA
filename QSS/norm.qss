@@ -13,6 +13,16 @@ QPushButton#calculate_norm_all_age_btn
     background-color: sandybrown;
 }
 
+QPushButton#importBtn
+{
+    background-color: darkseagreen;
+}
+
+QPushButton#exportBtn
+{
+    background-color: darkseagreen;
+}
+
 QPushButton#updateBtn:hover
 {
     background-color: rgb(90, 138, 226);
@@ -26,4 +36,14 @@ QPushButton#calculate_norm_by_age_btn:hover
 QPushButton#calculate_norm_all_age_btn:hover
 {
     background-color: rgb(226, 149, 82);
+}
+
+QPushButton#importBtn:hover
+{
+    background-color: rgb(122, 168, 122);
+}
+
+QPushButton#exportBtn:hover
+{
+    background-color: rgb(122, 168, 122);
 }

@@ -273,12 +273,16 @@ class Tab2(QtWidgets.QWidget):
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.btn_importTextFile = QtWidgets.QPushButton()
+        self.btn_importTextFile.setMinimumSize(QtCore.QSize(150, 40))
+        self.btn_importTextFile.setMaximumSize(QtCore.QSize(150, 40))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.btn_importTextFile.setFont(font)
         self.btn_importTextFile.setObjectName("btn_importTextFile")
         self.horizontalLayout_10.addWidget(self.btn_importTextFile)
         self.btn_outputTextFile = QtWidgets.QPushButton()
+        self.btn_outputTextFile.setMinimumSize(QtCore.QSize(150, 40))
+        self.btn_outputTextFile.setMaximumSize(QtCore.QSize(150, 40))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.btn_outputTextFile.setFont(font)
@@ -422,6 +426,24 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noScenario.setText('請輸入語境！')
         self.msg_noScenario.setIcon(QtWidgets.QMessageBox.Question)
         # self.msg_noScenario.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
+        # 匯入文字檔完成
+        self.msg_importText = QtWidgets.QMessageBox()
+        self.msg_importText.setFont(msgFont)
+        self.msg_importText.setWindowTitle('提示')
+        self.msg_importText.setText('匯入完成！')
+        self.msg_importText.setIcon(QtWidgets.QMessageBox.Information)
+        # 匯入文字檔失敗
+        self.msg_importTextFail = QtWidgets.QMessageBox()
+        self.msg_importTextFail.setFont(msgFont)
+        self.msg_importTextFail.setWindowTitle('提示')
+        self.msg_importTextFail.setText('匯入失敗！\n請檢查檔案內容格式是否正確！')
+        self.msg_importTextFail.setIcon(QtWidgets.QMessageBox.Warning)
+        # 匯出文字檔完成
+        self.msg_outputText = QtWidgets.QMessageBox()
+        self.msg_outputText.setFont(msgFont)
+        self.msg_outputText.setWindowTitle('提示')
+        self.msg_outputText.setText('匯出完成！')
+        self.msg_outputText.setIcon(QtWidgets.QMessageBox.Information)
         # 未輸入轉錄者
         self.msg_noTrans = QtWidgets.QMessageBox()
         self.msg_noTrans.setFont(msgFont)
@@ -627,6 +649,13 @@ class Tab2(QtWidgets.QWidget):
             return True
         return False
 
+    # 檢查content是否符合格式
+    def _checkContent(self, content):
+        for i in range(len(content)):
+            if 'ID' not in content[i] or 'role' not in content[i] or 'utterance' not in content[i] or 'scenario' not in content[i]:
+                return False
+        return True
+
     # 取得目前content
     def _getCurrentContent(self):
         content = []
@@ -771,6 +800,7 @@ class Tab2(QtWidgets.QWidget):
 
         content = []
         if text:
+            # 預設為兒童語句
             for i in range(len(text)):
                 data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
                 self.childID += 1
@@ -785,14 +815,51 @@ class Tab2(QtWidgets.QWidget):
         # 傳signal給MainWindow: 關閉Loading頁
         self.procMain.emit(6, 0)
 
-    # 匯入、匯出文字檔
+    # 匯入txt檔或csv檔(csv格式需固定)
+    def _importTxtOrCsv(self, filePath, extension):
+        content = []
+
+        if extension == '.txt':
+            f = open(filePath, 'r', encoding='utf-8')
+            utterances = f.read().splitlines()
+            f.close()
+
+            if utterances:
+                for i in range(len(utterances)):
+                    data = {'ID': '', 'role': '', 'utterance': '', 'scenario': ''}
+                    self.childID += 1
+                    data["ID"] = str(i+1)
+                    data["role"] = "child"
+                    data["utterance"] = utterances[i]
+                    content.append(data)
+            
+        if extension == '.csv':
+            f = open(filePath, newline='')
+            dict_reader = csv.DictReader(f)
+            for row in dict_reader:
+                content.append(row)
+        
+        if self._checkContent(content):
+            self._setTable(content)
+            self.msg_importText.exec_()
+        else:
+            self.msg_importTextFail.exec_()
+
+    # 匯入、匯出轉錄表內容成文字檔
     def _textFileIO(self, opt):
         if opt == 'import':
-            print('i')
+            filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
+                                        "開啟",
+                                        "",
+                                        "Import Files(*.txt *.csv)")
+            if filePath:
+                name, extension = os.path.splitext(filePath)
+                self._importTxtOrCsv(filePath, extension)
+            
         if opt == 'output':
             with open(self.caseID + '_' + self.caseDate.date().__str__() + '.csv', 'w', newline='') as csvfile:
                 # 定義欄位
-                fieldnames = ['ID', '角色', '語句', '語境']
+                fieldnames = ['ID', 'role', 'utterance', 'scenario']
 
                 # 將 dictionary 寫入 CSV 檔
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -802,7 +869,12 @@ class Tab2(QtWidgets.QWidget):
 
                 # 寫入資料
                 for i in range(self.content.__len__()):
-                    writer.writerow({'ID': self.content[i]['ID'], '角色': self.content[i]['role'], '語句': self.content[i]['utterance'], '語境': self.content[i]['scenario']})
+                    writer.writerow({'ID': self.content[i]['ID'],
+                                    'role': self.content[i]['role'],
+                                    'utterance': self.content[i]['utterance'],
+                                    'scenario': self.content[i]['scenario']})
+                
+                self.msg_outputText.exec_()
 
     # 新增列
     def _addRow(self):

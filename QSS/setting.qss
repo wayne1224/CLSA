@@ -1,0 +1,39 @@
+QPushButton#updateBtn
+{
+    background-color: cornflowerblue;
+}
+
+QPushButton#deleteBtn
+{
+    background-color: rgb(235, 38, 78);
+}
+
+QPushButton#upload_db_btn
+{
+    background-color: darkseagreen;
+}
+
+QPushButton#download_db_btn
+{
+    background-color: darkseagreen;
+}
+
+QPushButton#updateBtn:hover
+{
+    background-color: rgb(90, 138, 226);
+}
+
+QPushButton#deleteBtn:hover
+{
+    background-color: rgb(219, 26, 65);
+}
+
+QPushButton#upload_db_btn:hover
+{
+    background-color: rgb(122, 168, 122);
+}
+
+QPushButton#download_db_btn:hover
+{
+    background-color: rgb(122, 168, 122);
+}

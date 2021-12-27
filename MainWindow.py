@@ -49,8 +49,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thread_DB.finished.connect(self.thread_DB.deleteLater)
         #self.thread_DB.finished.connect(self.mainTab.tab1.setFieldSurveyMode) #設定是否為田野模式
         self.thread_DB.finished.connect(self.mainTab.tab4.tab1.createBarCharts) #讀取資料並產生圖表
-        self.thread_DB.finished.connect(self.mainTab.tab4.tab2.getNorms)  #讀取NORM
-        self.thread_DB.finished.connect(self.mainTab.tab4.tab3.get_STT_key)
+        self.thread_DB.finished.connect(self.mainTab.tab5.tab0.getNorms)  #讀取NORM
+        self.thread_DB.finished.connect(self.mainTab.tab5.tab1.get_STT_key)
         self.thread_DB.start() #開始跑Thread
         
         #讀取CKIP transformers
@@ -108,7 +108,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.load2.start()
         elif key == 8:
             self.load2.stop()
-            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>轉錄失敗<br\>(1)請檢查金鑰是否正確<br\>(2)請檢查網路是否連線</p>", QtWidgets.QMessageBox.Ok)
+            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>轉錄失敗<br/>(1)請檢查金鑰是否正確<br/>(2)請檢查網路是否連線</p>", QtWidgets.QMessageBox.Ok)
         
 
     def closeEvent(self, event):
