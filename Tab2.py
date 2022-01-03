@@ -426,6 +426,12 @@ class Tab2(QtWidgets.QWidget):
         self.msg_noScenario.setText('請輸入語境！')
         self.msg_noScenario.setIcon(QtWidgets.QMessageBox.Question)
         # self.msg_noScenario.setStyleSheet("QMessageBox {background-color: white;} QPushButton {border: 2px outset #CCCCCC; border-radius: 10px; width: 70; background-color: white;} QPushButton:pressed {border: 2px inset #CCCCCC;}")
+        # 確認刪除
+        self.msg_deleteCheck = QtWidgets.QMessageBox()
+        self.msg_deleteCheck.setFont(msgFont)
+        self.msg_deleteCheck.setWindowTitle("提示")
+        self.msg_deleteCheck.setText("刪除便無法復原，？")
+        self.msg_deleteCheck.setIcon(QtWidgets.QMessageBox.Warning)
         # 匯入文字檔完成
         self.msg_importText = QtWidgets.QMessageBox()
         self.msg_importText.setFont(msgFont)
@@ -568,15 +574,14 @@ class Tab2(QtWidgets.QWidget):
     # 全部清空
     @QtCore.pyqtSlot()
     def clearTab(self, isAllClear):
-        self.clearInput()
-        self.childID = 0
-        self.adultIDs = {}
-        self.cmb_role.clear()
-        self.cmb_role.addItem("兒童")
-        self.cmb_role.addItem("語境")
-        self.tableWidget.tableWidget.setRowCount(0)
-
         if isAllClear:
+            self.clearInput()
+            self.childID = 0
+            self.adultIDs = {}
+            self.cmb_role.clear()
+            self.cmb_role.addItem("兒童")
+            self.cmb_role.addItem("語境")
+            self.tableWidget.tableWidget.setRowCount(0)
             self.caseData = {}
             self.content = []
             self.caseID = ''
@@ -585,6 +590,15 @@ class Tab2(QtWidgets.QWidget):
             self.input_trans.clear()
             self.lbl_impCaseID.clear()
             self.lbl_caseDate.setVisible(False)
+        else:
+            if self._deleteCheck():
+                self.clearInput()
+                self.childID = 0
+                self.adultIDs = {}
+                self.cmb_role.clear()
+                self.cmb_role.addItem("兒童")
+                self.cmb_role.addItem("語境")
+                self.tableWidget.tableWidget.setRowCount(0)
 
         # 讓Tab3也clear
         self.procClear.emit()
@@ -941,32 +955,45 @@ class Tab2(QtWidgets.QWidget):
 
     # 刪除列
     def _deleteRow(self):
-        self.clearInput()  # 清空、復原輸入欄
+        if self._deleteCheck():
+            self.clearInput()  # 清空、復原輸入欄
 
-        indexes = self.tableWidget.tableWidget.selectionModel().selectedRows()
-        if indexes:
-            for index in sorted(indexes, reverse = True):
-                adultUtter = self.tableWidget.tableWidget.item(index.row(), 1)
-                childUtter = self.tableWidget.tableWidget.item(index.row(), 4)
+            indexes = self.tableWidget.tableWidget.selectionModel().selectedRows()
+            if indexes:
+                for index in sorted(indexes, reverse = True):
+                    adultUtter = self.tableWidget.tableWidget.item(index.row(), 1)
+                    childUtter = self.tableWidget.tableWidget.item(index.row(), 4)
 
-                # 刪除成人語句
-                if adultUtter != None and adultUtter.text() != '':
-                    try:
-                        pattern = r"[a-zA-Z]+"
-                        key = re.search(pattern,self.tableWidget.tableWidget.item(index.row(), 0).text()).group()
-                        self.adultIDs[key] -= 1   # 成人編號-1
-                        if self.adultIDs[key] == 0:
-                            self.cmb_role.removeItem(self.cmb_role.findText(key))
-                    except:
-                        print('刪除成人不採計')
-                # 刪除兒童語句
-                if childUtter and childUtter.text() != '':
-                    self.childID -= 1  # 兒童編號-1
-                self.tableWidget.tableWidget.removeRow(index.row())
-            self.tableWidget.checkAllID()
-            self._syncTableCmbRoleNum()
+                    # 刪除成人語句
+                    if adultUtter != None and adultUtter.text() != '':
+                        try:
+                            pattern = r"[a-zA-Z]+"
+                            key = re.search(pattern,self.tableWidget.tableWidget.item(index.row(), 0).text()).group()
+                            self.adultIDs[key] -= 1   # 成人編號-1
+                            if self.adultIDs[key] == 0:
+                                self.cmb_role.removeItem(self.cmb_role.findText(key))
+                        except:
+                            print('刪除成人不採計')
+                    # 刪除兒童語句
+                    if childUtter and childUtter.text() != '':
+                        self.childID -= 1  # 兒童編號-1
+                    self.tableWidget.tableWidget.removeRow(index.row())
+                self.tableWidget.checkAllID()
+                self._syncTableCmbRoleNum()
+            else:
+                self.msg_deleteNotSelect.exec_()
+
+    # 確認刪除
+    def _deleteCheck(self):
+        checkText = '<p style="font-size:12pt; color: #3778bf;">刪除便無法復原<br/>確定要刪除嗎？</p>'
+        deleteCheck = QtWidgets.QMessageBox.question(self,
+                            "提示",
+                            checkText,
+                            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.Cancel)
+        if deleteCheck == QtWidgets.QMessageBox.Yes:
+            return True
         else:
-            self.msg_deleteNotSelect.exec_()
+            return False
 
     # 更改table時同步更新comboBox編號
     def _syncTableCmbRoleNum(self):
