@@ -32,6 +32,10 @@ def initialDB():
                     "mlu-w" : 0.0,
                     "vocd-c" : 0.0,
                     "vocd-w" : 0.0
+                },
+                "base": {
+                    "mlu": 0,
+                    "vocd": 0
                 }
             })
             

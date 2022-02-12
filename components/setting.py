@@ -177,7 +177,7 @@ class SettingTab(QtWidgets.QWidget):
         #Signal deleteBtn
         self.updateBtn.clicked.connect(self.update_STT_key)
         self.deleteBtn.clicked.connect(self.delete_STT_key)
-        #self.upload_db_btn.clicked.connect(self.upload_db)
+        self.upload_db_btn.clicked.connect(self.upload_db)
         self.download_db_btn.clicked.connect(self.download_db)
 
         self.retranslateUi()
@@ -228,22 +228,28 @@ class SettingTab(QtWidgets.QWidget):
     
     def upload_db(self):
         # 選檔案
-        filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
-                                        "開啟檔案",
-                                        "",
-                                        "json files(*.json)")
+        try:
+            filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
+                                            "開啟檔案",
+                                            "",
+                                            "json files(*.json)")
+        except:
+            pass
 
-        with open(filePath, 'r', encoding='utf8') as json_file:
-            data = json.load(json_file)
+        try:
+            with open(filePath, 'r', encoding='utf8') as json_file:
+                data = json.load(json_file)
 
-        #匯入資料庫                    
-        result = db.importCLSA(data['childData'], data['document'], data['norm'])
+            #匯入資料庫                    
+            result = db.importCLSA(data['childData'], data['document'], data['norm'])
 
-        if result:
-            QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>上傳成功</p>", QtWidgets.QMessageBox.Ok)
-        else:
-            QtWidgets.QMessageBox.warning(self, '通知',"<p style='font-size:12pt;'>上傳失敗<br/>格式錯誤，請重新選擇檔案</p>", QtWidgets.QMessageBox.Ok)
-    
+            if result:
+                QtWidgets.QMessageBox.information(self, '通知',"<p style='font-size:12pt;'>上傳成功</p>", QtWidgets.QMessageBox.Ok)
+            else:
+                QtWidgets.QMessageBox.warning(self, '通知',"<p style='font-size:12pt;'>上傳失敗<br/>格式錯誤，請重新選擇檔案</p>", QtWidgets.QMessageBox.Ok)
+        except:
+            pass
+
     def download_db(self):
         # 選存檔位置
         try:
