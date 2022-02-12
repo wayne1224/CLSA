@@ -24,7 +24,7 @@ class STT(QtCore.QObject):
         if r.status_code != 200:
             return False
 
-        speech_key, service_region, language = "", "eastus", "zh-TW"
+        speech_key, service_region, language = key, "eastus", "zh-TW"
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region, speech_recognition_language=language)
         speech_config.set_profanity(speechsdk.ProfanityOption.Raw)
         
