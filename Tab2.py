@@ -871,24 +871,27 @@ class Tab2(QtWidgets.QWidget):
                 self._importTxtOrCsv(filePath, extension)
             
         if opt == 'output':
-            with open(self.caseID + '_' + self.caseDate.date().__str__() + '.csv', 'w', newline='') as csvfile:
-                # 定義欄位
-                fieldnames = ['ID', 'role', 'utterance', 'scenario']
+            fileName, selectedFilter = QtWidgets.QFileDialog.getSaveFileName(self, "儲存", "", "Excel (*.csv *.xls )")
 
-                # 將 dictionary 寫入 CSV 檔
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            if fileName:
+                with open(fileName, 'w', newline='') as csvfile:
+                    # 定義欄位
+                    fieldnames = ['ID', 'role', 'utterance', 'scenario']
 
-                # 寫入第一列的欄位名稱
-                writer.writeheader()
+                    # 將 dictionary 寫入 CSV 檔
+                    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-                # 寫入資料
-                for i in range(self.content.__len__()):
-                    writer.writerow({'ID': self.content[i]['ID'],
-                                    'role': self.content[i]['role'],
-                                    'utterance': self.content[i]['utterance'],
-                                    'scenario': self.content[i]['scenario']})
-                
-                self.msg_outputText.exec_()
+                    # 寫入第一列的欄位名稱
+                    writer.writeheader()
+
+                    # 寫入資料
+                    for i in range(self.content.__len__()):
+                        writer.writerow({'ID': self.content[i]['ID'],
+                                        'role': self.content[i]['role'],
+                                        'utterance': self.content[i]['utterance'],
+                                        'scenario': self.content[i]['scenario']})
+                    
+                    self.msg_outputText.exec_()
 
     # 新增列
     def _addRow(self):
