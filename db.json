@@ -1,0 +1,2678 @@
+{
+  "childData": [
+    {
+      "caseID": "00757025",
+      "name": "王小明",
+      "gender": "female",
+      "birthday": "2010-12-24 00:00:00"
+    },
+    {
+      "caseID": "00757045",
+      "name": "Kenneth",
+      "gender": "male",
+      "birthday": "2016-01-05 00:00:00"
+    },
+    {
+      "caseID": "00757020",
+      "name": "小女孩",
+      "gender": "female",
+      "birthday": "2013-04-23 00:00:00"
+    },
+    {
+      "caseID": "00757012",
+      "name": "無宏碁",
+      "gender": "female",
+      "birthday": "2010-01-07 00:00:00"
+    },
+    {
+      "caseID": "A151807",
+      "name": "劉俊賢",
+      "gender": "female",
+      "birthday": "2016-08-04 00:00:00"
+    },
+    {
+      "caseID": "sadfadsfasd",
+      "name": "sadfas",
+      "gender": "female",
+      "birthday": "2014-02-02 00:00:00"
+    },
+    {
+      "caseID": "A00757025",
+      "name": "Wayne1224",
+      "gender": "male",
+      "birthday": "2019-01-01 00:00:00"
+    },
+    {
+      "caseID": "00757026",
+      "name": "Hank",
+      "gender": "female",
+      "birthday": "2013-12-24 00:00:00"
+    },
+    {
+      "caseID": "handsome001",
+      "name": "丁大帥",
+      "gender": "female",
+      "birthday": "2016-11-11 00:00:00"
+    },
+    {
+      "caseID": "ewrtewr",
+      "name": "rewtertrew",
+      "gender": "male",
+      "birthday": "2015-01-01 00:00:00"
+    },
+    {
+      "caseID": "00757030",
+      "name": "Ken",
+      "gender": "male",
+      "birthday": "2017-08-01 00:00:00"
+    },
+    {
+      "caseID": "0405",
+      "name": "李丁丁",
+      "gender": "female",
+      "birthday": "2010-10-10 00:00:00"
+    }
+  ],
+  "document": [
+    {
+      "caseID": "00757025",
+      "date": "2017-07-15 00:00:00",
+      "recording": {
+        "survey": false,
+        "SLP": "沈文瑞",
+        "scenario": "交談對話",
+        "fileName": "",
+        "location": "診療室",
+        "interactionType": "交談",
+        "inducement": "教室中的玩具、物品",
+        "participants": [
+          "施測者",
+          "媽媽"
+        ],
+        "equipment": "手機",
+        "help": "經常 (6~9次)",
+        "others": "良好",
+        "age": 6.6
+      },
+      "transcription": {
+        "transcriber": "cc",
+        "content": [
+          {
+            "ID": "A1",
+            "role": "adult",
+            "utterance": "有貓咪啊",
+            "scenario": ""
+          },
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "是啊",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "兩隻他們在*什麼",
+            "scenario": ""
+          },
+          {
+            "ID": "A2",
+            "role": "adult",
+            "utterance": "待太久",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "怕逃跑",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "一直跑",
+            "scenario": ""
+          },
+          {
+            "ID": "A3",
+            "role": "adult",
+            "utterance": "那你有追",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "起來啦",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "真的哦",
+            "scenario": ""
+          },
+          {
+            "ID": "A4",
+            "role": "adult",
+            "utterance": "關起來了哎唷",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "你好",
+            "scenario": ""
+          },
+          {
+            "ID": "8",
+            "role": "child",
+            "utterance": "好可憐嘛",
+            "scenario": ""
+          },
+          {
+            "ID": "9",
+            "role": "child",
+            "utterance": "對",
+            "scenario": ""
+          },
+          {
+            "ID": "10",
+            "role": "child",
+            "utterance": "為神魔",
+            "scenario": ""
+          },
+          {
+            "ID": "11",
+            "role": "child",
+            "utterance": "他們好奇怪",
+            "scenario": ""
+          },
+          {
+            "ID": "12",
+            "role": "child",
+            "utterance": "羞羞臉",
+            "scenario": ""
+          },
+          {
+            "ID": "13",
+            "role": "child",
+            "utterance": "兩隻他們在*什麼",
+            "scenario": ""
+          },
+          {
+            "ID": "14",
+            "role": "child",
+            "utterance": "兩隻他們在*什麼",
+            "scenario": ""
+          },
+          {
+            "ID": "15",
+            "role": "child",
+            "utterance": "兩隻他們在*什麼",
+            "scenario": ""
+          },
+          {
+            "ID": "16",
+            "role": "child",
+            "utterance": "怕逃跑的人",
+            "scenario": ""
+          },
+          {
+            "ID": "17",
+            "role": "child",
+            "utterance": "怕跑調的豬",
+            "scenario": ""
+          },
+          {
+            "ID": "18",
+            "role": "child",
+            "utterance": "神魔之塔",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 74,
+          "wordCount": 53,
+          "Content": {
+            "N": 6,
+            "V": 11,
+            "VH": 2,
+            "Neu": 4,
+            "Nf": 4,
+            "Nh": 10,
+            "D": 7,
+            "percentage": 0.83,
+            "sum": 44
+          },
+          "Function": {
+            "P": 5,
+            "C": 0,
+            "T": 4,
+            "I": 0,
+            "percentage": 0.17,
+            "sum": 9
+          },
+          "VOCD-w": 22.6,
+          "VOCD-c": 24.03,
+          "MLU-w": 2.94,
+          "MLU-c": 4.11,
+          "MLU5-w": 4.4,
+          "MLU5-c": 6.6
+        },
+        "totalUtterance": 18,
+        "validUtterance": 18
+      }
+    },
+    {
+      "caseID": "00757045",
+      "date": "2020-07-18 17:42:00",
+      "recording": {
+        "SLP": "丁信志",
+        "scenario": "下午",
+        "fileName": "sun in 5",
+        "location": "虎尾",
+        "interactionType": "自由遊戲",
+        "inducement": "NBA",
+        "participants": [
+          "爸爸",
+          "老師",
+          "媽媽",
+          "兒童"
+        ],
+        "equipment": "錄音筆",
+        "help": "有時 (2~5次)",
+        "others": "無",
+        "age": 4.5,
+        "survey": true
+      },
+      "transcription": {
+        "transcriber": "JJ",
+        "content": [
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "我今天帶糖果啊嬤嬤嬤嬤你睡醒嗎",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "就來了",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "哎",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "給同學老師嘛",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "對寶寶",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "幫你",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "你想為太陽我我怎麼辦",
+            "scenario": ""
+          },
+          {
+            "ID": "8",
+            "role": "child",
+            "utterance": "我不想在那邊",
+            "scenario": ""
+          },
+          {
+            "ID": "9",
+            "role": "child",
+            "utterance": "不然",
+            "scenario": ""
+          },
+          {
+            "ID": "10",
+            "role": "child",
+            "utterance": "媽媽寶典",
+            "scenario": ""
+          },
+          {
+            "ID": "11",
+            "role": "child",
+            "utterance": "對",
+            "scenario": ""
+          },
+          {
+            "ID": "12",
+            "role": "child",
+            "utterance": "我",
+            "scenario": ""
+          },
+          {
+            "ID": "13",
+            "role": "child",
+            "utterance": "喂",
+            "scenario": ""
+          },
+          {
+            "ID": "14",
+            "role": "child",
+            "utterance": "喂",
+            "scenario": ""
+          },
+          {
+            "ID": "15",
+            "role": "child",
+            "utterance": "喂",
+            "scenario": ""
+          },
+          {
+            "ID": "16",
+            "role": "child",
+            "utterance": "喂",
+            "scenario": ""
+          },
+          {
+            "ID": "17",
+            "role": "child",
+            "utterance": "喂",
+            "scenario": ""
+          },
+          {
+            "ID": "18",
+            "role": "child",
+            "utterance": "喂",
+            "scenario": ""
+          },
+          {
+            "ID": "19",
+            "role": "child",
+            "utterance": "你不用擔心我保護你",
+            "scenario": ""
+          },
+          {
+            "ID": "20",
+            "role": "child",
+            "utterance": "今天我們又會買來的",
+            "scenario": ""
+          },
+          {
+            "ID": "21",
+            "role": "child",
+            "utterance": "我賣船呢",
+            "scenario": ""
+          },
+          {
+            "ID": "22",
+            "role": "child",
+            "utterance": "我們一個未來的夢",
+            "scenario": ""
+          },
+          {
+            "ID": "23",
+            "role": "child",
+            "utterance": "我",
+            "scenario": ""
+          },
+          {
+            "ID": "24",
+            "role": "child",
+            "utterance": "對",
+            "scenario": ""
+          },
+          {
+            "ID": "25",
+            "role": "child",
+            "utterance": "我愛你",
+            "scenario": ""
+          },
+          {
+            "ID": "26",
+            "role": "child",
+            "utterance": "要保護你",
+            "scenario": ""
+          },
+          {
+            "ID": "27",
+            "role": "child",
+            "utterance": "我保護她",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 103,
+          "wordCount": 77,
+          "Content": {
+            "N": 14,
+            "V": 12,
+            "VH": 2,
+            "Neu": 1,
+            "Nf": 1,
+            "Nh": 20,
+            "D": 9,
+            "percentage": 0.77,
+            "sum": 59
+          },
+          "Function": {
+            "P": 6,
+            "C": 1,
+            "T": 4,
+            "I": 7,
+            "percentage": 0.23,
+            "sum": 18
+          },
+          "VOCD-w": 36.81,
+          "VOCD-c": 40.14,
+          "MLU-w": 2.85,
+          "MLU-c": 3.81,
+          "MLU5-w": 6.8,
+          "MLU5-c": 10.2
+        },
+        "totalUtterance": 27,
+        "validUtterance": 27
+      }
+    },
+    {
+      "caseID": "00757025",
+      "date": "2019-01-24 20:09:00",
+      "recording": {
+        "SLP": "沈文瑞",
+        "scenario": "交談對話(居家)",
+        "fileName": "",
+        "location": "診療室",
+        "interactionType": "交談",
+        "inducement": "兒童家中物品、家人照片",
+        "participants": [
+          "爸爸",
+          "施測者",
+          "老師",
+          "媽媽",
+          "test"
+        ],
+        "equipment": "其他錄音設備",
+        "help": "總是",
+        "others": "No",
+        "age": 8.1,
+        "survey": true
+      },
+      "transcription": {
+        "transcriber": "KACOTY",
+        "content": [
+          {
+            "ID": "A1",
+            "role": "adult",
+            "utterance": "你好，我是公主，妳是我市模擬。",
+            "scenario": ""
+          },
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "可是我以為要來找我的是王子",
+            "scenario": ""
+          },
+          {
+            "ID": "A2",
+            "role": "adult",
+            "utterance": "不是王子等一下就到了大概幾分鐘。",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "那你根據天書",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "我要幫你",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "然後要恰好王子上來",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "我對王子挑釁後",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "帶你離開",
+            "scenario": ""
+          },
+          {
+            "ID": "A3",
+            "role": "adult",
+            "utterance": "但是說。",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "對上面寫的。",
+            "scenario": ""
+          },
+          {
+            "ID": "8",
+            "role": "child",
+            "utterance": "我說幾分鐘已經過去了吧",
+            "scenario": ""
+          },
+          {
+            "ID": "9",
+            "role": "child",
+            "utterance": "你有繩子可以借我嗎？",
+            "scenario": ""
+          },
+          {
+            "ID": "A4",
+            "role": "adult",
+            "utterance": "哦，因為我還沒幫你，所以王子還不可以上來",
+            "scenario": ""
+          },
+          {
+            "ID": "A5",
+            "role": "adult",
+            "utterance": "好不過我忘記帶繩子了。",
+            "scenario": ""
+          },
+          {
+            "ID": "A6",
+            "role": "adult",
+            "utterance": "怎麼怪就。",
+            "scenario": ""
+          },
+          {
+            "ID": "10",
+            "role": "child",
+            "utterance": "哦，你們兩個照劇本交談",
+            "scenario": ""
+          },
+          {
+            "ID": "11",
+            "role": "child",
+            "utterance": "可以嗎？",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 81,
+          "wordCount": 59,
+          "Content": {
+            "N": 8,
+            "V": 13,
+            "VH": 1,
+            "Neu": 2,
+            "Nf": 2,
+            "Nh": 11,
+            "D": 11,
+            "percentage": 0.81,
+            "sum": 48
+          },
+          "Function": {
+            "P": 5,
+            "C": 1,
+            "T": 4,
+            "I": 1,
+            "percentage": 0.19,
+            "sum": 11
+          },
+          "VOCD-w": 56.4,
+          "VOCD-c": 57.16,
+          "MLU-w": 5.36,
+          "MLU-c": 7.36,
+          "MLU5-w": 7.4,
+          "MLU5-c": 10.4
+        },
+        "totalUtterance": 11,
+        "validUtterance": 11
+      }
+    },
+    {
+      "caseID": "00757020",
+      "date": "2021-07-22 21:32:00",
+      "recording": {
+        "survey": true,
+        "SLP": "Allen",
+        "scenario": "Town",
+        "fileName": "CITY",
+        "location": "Town",
+        "interactionType": "自由遊戲",
+        "inducement": "Town",
+        "participants": [
+          "兒童"
+        ],
+        "equipment": "錄音筆",
+        "help": "有時 (2~5次)",
+        "others": "No",
+        "age": 8.3
+      },
+      "transcription": {
+        "transcriber": "Jason",
+        "content": [
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "還有回家洗完手",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "哎，他還有他要。",
+            "scenario": ""
+          },
+          {
+            "ID": "A1",
+            "role": "adult",
+            "utterance": "他準備吃飯，可是。",
+            "scenario": ""
+          },
+          {
+            "ID": "B1",
+            "role": "adult",
+            "utterance": "可是他叫爸爸一起。",
+            "scenario": ""
+          },
+          {
+            "ID": "A2",
+            "role": "adult",
+            "utterance": "可是他們全家的時候在吃飯。",
+            "scenario": ""
+          },
+          {
+            "ID": "A3",
+            "role": "adult",
+            "utterance": "爸爸我嗎？",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "還有他們全家人一起吃。",
+            "scenario": ""
+          },
+          {
+            "ID": "A4",
+            "role": "adult",
+            "utterance": "然後沒辦法來玩。",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "然後。",
+            "scenario": ""
+          },
+          {
+            "ID": "A5",
+            "role": "adult",
+            "utterance": "大板根。",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "拿通知臺灣還有塊。",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "然後每幫忙抓桌子。",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "媽媽送來吃快",
+            "scenario": ""
+          },
+          {
+            "ID": "8",
+            "role": "child",
+            "utterance": "他就幫忙換會死",
+            "scenario": ""
+          },
+          {
+            "ID": "9",
+            "role": "child",
+            "utterance": "然後妹妹就去洗手",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 62,
+          "wordCount": 44,
+          "Content": {
+            "N": 6,
+            "V": 16,
+            "VH": 2,
+            "Neu": 0,
+            "Nf": 2,
+            "Nh": 4,
+            "D": 13,
+            "percentage": 0.98,
+            "sum": 43
+          },
+          "Function": {
+            "P": 0,
+            "C": 0,
+            "T": 0,
+            "I": 1,
+            "percentage": 0.02,
+            "sum": 1
+          },
+          "VOCD-w": "樣本數不足",
+          "VOCD-c": 41.15,
+          "MLU-w": 4.89,
+          "MLU-c": 6.89,
+          "MLU5-w": 5.8,
+          "MLU5-c": 8
+        },
+        "totalUtterance": 9,
+        "validUtterance": 9
+      }
+    },
+    {
+      "caseID": "00757020",
+      "date": "2021-07-25 18:51:00",
+      "recording": {
+        "SLP": "沈秉叡",
+        "scenario": "8歲小女孩打電話給拆除公司要求拆掉學校",
+        "fileName": "小女孩1",
+        "location": "學校",
+        "interactionType": "交談",
+        "inducement": "youtube",
+        "participants": [
+          "爸爸",
+          "施測者",
+          "老師",
+          "媽媽",
+          "兒童"
+        ],
+        "equipment": "錄音筆",
+        "help": "總是",
+        "others": "無",
+        "age": 8.3,
+        "survey": true
+      },
+      "transcription": {
+        "transcriber": "沈秉叡",
+        "content": [
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "首先跟大家報告",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "今天的確定病例",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "吼那本土的病歷有32名",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "吼那區隔陽線有13名境外移入的有4名",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "死亡的個案有十二",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 51,
+          "wordCount": 35,
+          "Content": {
+            "N": 9,
+            "V": 9,
+            "VH": 1,
+            "Neu": 4,
+            "Nf": 3,
+            "Nh": 3,
+            "D": 5,
+            "percentage": 0.97,
+            "sum": 34
+          },
+          "Function": {
+            "P": 1,
+            "C": 0,
+            "T": 0,
+            "I": 0,
+            "percentage": 0.03,
+            "sum": 1
+          },
+          "VOCD-w": "樣本數不足",
+          "VOCD-c": 63.39,
+          "MLU-w": 7,
+          "MLU-c": 10.2,
+          "MLU5-w": 7,
+          "MLU5-c": 10.2
+        },
+        "totalUtterance": 5,
+        "validUtterance": 5
+      }
+    },
+    {
+      "caseID": "00757012",
+      "date": "2021-07-26 20:09:07",
+      "recording": {
+        "SLP": "Henry",
+        "scenario": "PC",
+        "fileName": "PC",
+        "location": "Room",
+        "interactionType": "自由遊戲",
+        "inducement": "PC",
+        "participants": [
+          "爸爸",
+          "施測者",
+          "老師",
+          "媽媽"
+        ],
+        "equipment": "攝影機",
+        "help": "總是",
+        "others": "None",
+        "age": 11.6,
+        "survey": true
+      },
+      "transcription": {
+        "transcriber": "Beck",
+        "content": [
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "還有這",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "我我我做事就好",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "少講話了",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "你今天要講一小時的話",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "我們講那個戴口罩",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "因為我印象非常深",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "我們那個跑馬是會被正著的",
+            "scenario": ""
+          },
+          {
+            "ID": "8",
+            "role": "child",
+            "utterance": "那那個時候的跑馬",
+            "scenario": ""
+          },
+          {
+            "ID": "9",
+            "role": "child",
+            "utterance": "我一進公司電梯",
+            "scenario": ""
+          },
+          {
+            "ID": "10",
+            "role": "child",
+            "utterance": "我最意外就是他一直跑健康的人不用戴口罩",
+            "scenario": ""
+          },
+          {
+            "ID": "11",
+            "role": "child",
+            "utterance": "臺北市有很多不一樣處理的決策過程",
+            "scenario": ""
+          },
+          {
+            "ID": "12",
+            "role": "child",
+            "utterance": "呃",
+            "scenario": ""
+          },
+          {
+            "ID": "13",
+            "role": "child",
+            "utterance": "市長",
+            "scenario": ""
+          },
+          {
+            "ID": "14",
+            "role": "child",
+            "utterance": "那時候你的判斷吧",
+            "scenario": ""
+          },
+          {
+            "ID": "15",
+            "role": "child",
+            "utterance": "主要意義是這樣的啊",
+            "scenario": ""
+          },
+          {
+            "ID": "16",
+            "role": "child",
+            "utterance": "1月23號武漢封城嘛",
+            "scenario": ""
+          },
+          {
+            "ID": "17",
+            "role": "child",
+            "utterance": "那我們的專業判斷你知道嗎",
+            "scenario": ""
+          },
+          {
+            "ID": "18",
+            "role": "child",
+            "utterance": "常常是",
+            "scenario": ""
+          },
+          {
+            "ID": "19",
+            "role": "child",
+            "utterance": "對方不會",
+            "scenario": ""
+          },
+          {
+            "ID": "20",
+            "role": "child",
+            "utterance": "沒有沒有理由做一件事情",
+            "scenario": ""
+          },
+          {
+            "ID": "21",
+            "role": "child",
+            "utterance": "而且紅塵是不得了的事",
+            "scenario": ""
+          },
+          {
+            "ID": "22",
+            "role": "child",
+            "utterance": "是那個大概有將近1000萬人口來做這個動作",
+            "scenario": ""
+          },
+          {
+            "ID": "23",
+            "role": "child",
+            "utterance": "一定是出大事嗎",
+            "scenario": ""
+          },
+          {
+            "ID": "24",
+            "role": "child",
+            "utterance": "那臺灣跟大陸這麼密切",
+            "scenario": ""
+          },
+          {
+            "ID": "25",
+            "role": "child",
+            "utterance": "你這樣",
+            "scenario": ""
+          },
+          {
+            "ID": "26",
+            "role": "child",
+            "utterance": "特別是那時候已經是過年了",
+            "scenario": ""
+          },
+          {
+            "ID": "27",
+            "role": "child",
+            "utterance": "那個過年後那臺這種反向",
+            "scenario": ""
+          },
+          {
+            "ID": "28",
+            "role": "child",
+            "utterance": "這種交流頻率更高",
+            "scenario": ""
+          },
+          {
+            "ID": "29",
+            "role": "child",
+            "utterance": "說當時想說特別在敵情不明的時候才用比較高的標準",
+            "scenario": ""
+          },
+          {
+            "ID": "30",
+            "role": "child",
+            "utterance": "我當時**",
+            "scenario": ""
+          },
+          {
+            "ID": "31",
+            "role": "child",
+            "utterance": "我在媒體上還講說大家看我帶口罩就要帶的第一線不明比較戴上去",
+            "scenario": ""
+          },
+          {
+            "ID": "32",
+            "role": "child",
+            "utterance": "特別是我們第一線的公務員也好",
+            "scenario": ""
+          },
+          {
+            "ID": "33",
+            "role": "child",
+            "utterance": "他坐在櫃臺",
+            "scenario": ""
+          },
+          {
+            "ID": "34",
+            "role": "child",
+            "utterance": "他的面對那個不特定人士",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 329,
+          "wordCount": 226,
+          "Content": {
+            "N": 47,
+            "V": 44,
+            "VH": 22,
+            "Neu": 4,
+            "Nf": 12,
+            "Nh": 35,
+            "D": 48,
+            "percentage": 0.94,
+            "sum": 212
+          },
+          "Function": {
+            "P": 6,
+            "C": 2,
+            "T": 6,
+            "I": 0,
+            "percentage": 0.06,
+            "sum": 14
+          },
+          "VOCD-w": 77.37,
+          "VOCD-c": 95.61,
+          "MLU-w": 6.65,
+          "MLU-c": 9.68,
+          "MLU5-w": 14.2,
+          "MLU5-c": 21.6
+        },
+        "totalUtterance": 34,
+        "validUtterance": 34
+      }
+    },
+    {
+      "caseID": "A151807",
+      "date": "2021-08-21 23:38:54",
+      "recording": {
+        "SLP": "吳鴻億",
+        "scenario": "課堂",
+        "fileName": "1111",
+        "location": "大千醫院",
+        "interactionType": "交談",
+        "inducement": "自由對談",
+        "participants": [
+          "爸爸",
+          "施測者",
+          "老師",
+          "媽媽",
+          "兒童"
+        ],
+        "equipment": "其他錄音設備",
+        "help": "總是",
+        "others": "配合度佳",
+        "age": 5.0,
+        "survey": true
+      },
+      "transcription": {
+        "transcriber": null,
+        "content": null,
+        "analysis": null,
+        "totalUtterance": null,
+        "validUtterance": null
+      }
+    },
+    {
+      "caseID": "00757026",
+      "date": "2021-07-16 00:00:00",
+      "recording": {
+        "SLP": "何文豪",
+        "scenario": "晚上",
+        "fileName": "CC",
+        "location": "海大",
+        "interactionType": "自由遊戲",
+        "inducement": "健身咖",
+        "participants": [
+          "爸爸",
+          "施測者",
+          "老師",
+          "媽媽",
+          "test"
+        ],
+        "equipment": "攝影機",
+        "help": "經常 (6~9次)",
+        "others": "健身",
+        "age": 7.6,
+        "survey": true
+      },
+      "transcription": {
+        "transcriber": null,
+        "content": null,
+        "analysis": null,
+        "totalUtterance": null,
+        "validUtterance": null
+      }
+    },
+    {
+      "caseID": "00757026",
+      "date": "2021-07-24 21:32:00",
+      "recording": {
+        "SLP": "Barry",
+        "scenario": "Town",
+        "fileName": "CITYg",
+        "location": "Town",
+        "interactionType": "自由遊戲",
+        "inducement": "Town",
+        "participants": [
+          "老師",
+          "媽媽",
+          "兒童"
+        ],
+        "equipment": "錄音筆",
+        "help": "很少 (幾乎不需要引導)",
+        "others": "No",
+        "age": 7.6,
+        "survey": true
+      },
+      "transcription": {
+        "transcriber": null,
+        "content": null,
+        "analysis": null,
+        "totalUtterance": null,
+        "validUtterance": null
+      }
+    },
+    {
+      "caseID": "00757030",
+      "date": "2021-09-09 13:19:00",
+      "recording": {
+        "SLP": "Jenny",
+        "scenario": "Unknown",
+        "fileName": "",
+        "location": "Room",
+        "interactionType": "自由遊戲",
+        "inducement": "Phone",
+        "participants": [
+          "施測者"
+        ],
+        "equipment": "手機",
+        "help": "很少 (幾乎不需要引導)",
+        "others": "OK!",
+        "age": 4.1,
+        "survey": true
+      },
+      "transcription": {
+        "transcriber": "CLSA本人",
+        "content": [
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "媽媽送來吃快樂",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "還有回家洗完手",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "哎",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "可是他們全家的時候在吃飯",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "還有他們全家人一起吃",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "然後",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "然後每幫忙抓桌子",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 37,
+          "wordCount": 30,
+          "Content": {
+            "N": 7,
+            "V": 10,
+            "VH": 1,
+            "Neu": 0,
+            "Nf": 0,
+            "Nh": 2,
+            "D": 8,
+            "percentage": 0.93,
+            "sum": 28
+          },
+          "Function": {
+            "P": 0,
+            "C": 1,
+            "T": 0,
+            "I": 1,
+            "percentage": 0.07,
+            "sum": 2
+          },
+          "VOCD-w": "樣本數不足",
+          "VOCD-c": "樣本數不足",
+          "MLU-w": 4.29,
+          "MLU-c": 5.29,
+          "MLU5-w": 5.6,
+          "MLU5-c": 6.6
+        },
+        "totalUtterance": 7,
+        "validUtterance": 7
+      }
+    },
+    {
+      "caseID": "00757045",
+      "date": "2021-09-16 22:41:00",
+      "recording": {
+        "survey": true,
+        "SLP": "丁信志",
+        "scenario": "未知情形",
+        "fileName": "錄音",
+        "location": "虎尾",
+        "interactionType": "交談",
+        "inducement": "大野狼",
+        "participants": [
+          "爸爸",
+          "施測者",
+          "老師",
+          "媽媽",
+          "我"
+        ],
+        "equipment": "手機",
+        "help": "很少 (幾乎不需要引導)",
+        "others": "完美",
+        "age": 5.7
+      },
+      "transcription": {
+        "transcriber": "丁信志",
+        "content": [
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "沒有了",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "小紅帽要跟去看",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "那去看那個奶奶",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "生病",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "然後他他走啊走啊",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "有看到一個大野狼在",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "前面",
+            "scenario": ""
+          },
+          {
+            "ID": "8",
+            "role": "child",
+            "utterance": "接著那個大野狼跟小紅帽一起回走欸",
+            "scenario": ""
+          },
+          {
+            "ID": "9",
+            "role": "child",
+            "utterance": "走去小紅帽",
+            "scenario": ""
+          },
+          {
+            "ID": "10",
+            "role": "child",
+            "utterance": "跟小紅帽一起去看",
+            "scenario": ""
+          },
+          {
+            "ID": "11",
+            "role": "child",
+            "utterance": "奶奶",
+            "scenario": ""
+          },
+          {
+            "ID": "12",
+            "role": "child",
+            "utterance": "然後他",
+            "scenario": ""
+          },
+          {
+            "ID": "13",
+            "role": "child",
+            "utterance": "他看到那個",
+            "scenario": ""
+          },
+          {
+            "ID": "14",
+            "role": "child",
+            "utterance": "大野狼在這裡",
+            "scenario": ""
+          },
+          {
+            "ID": "15",
+            "role": "child",
+            "utterance": "春川她媽媽穿媽媽 的衣服",
+            "scenario": ""
+          },
+          {
+            "ID": "16",
+            "role": "child",
+            "utterance": "奶奶的衣服",
+            "scenario": ""
+          },
+          {
+            "ID": "17",
+            "role": "child",
+            "utterance": "然後她在床上睡覺",
+            "scenario": ""
+          },
+          {
+            "ID": "18",
+            "role": "child",
+            "utterance": "然後穿奶奶的衣服",
+            "scenario": ""
+          },
+          {
+            "ID": "19",
+            "role": "child",
+            "utterance": "然後他看到大野狼說",
+            "scenario": ""
+          },
+          {
+            "ID": "20",
+            "role": "child",
+            "utterance": "欸你幹嘛說我媽媽 的房間呢",
+            "scenario": ""
+          },
+          {
+            "ID": "21",
+            "role": "child",
+            "utterance": "然後大也能說",
+            "scenario": ""
+          },
+          {
+            "ID": "22",
+            "role": "child",
+            "utterance": "我想說我的老奶奶的房間",
+            "scenario": ""
+          },
+          {
+            "ID": "23",
+            "role": "child",
+            "utterance": "這是他",
+            "scenario": ""
+          },
+          {
+            "ID": "24",
+            "role": "child",
+            "utterance": "他不是",
+            "scenario": ""
+          },
+          {
+            "ID": "25",
+            "role": "child",
+            "utterance": "這不是他的老奶奶的房間",
+            "scenario": ""
+          },
+          {
+            "ID": "26",
+            "role": "child",
+            "utterance": "這是這是小紅帽的老奶奶的房間",
+            "scenario": ""
+          },
+          {
+            "ID": "27",
+            "role": "child",
+            "utterance": "然後",
+            "scenario": ""
+          },
+          {
+            "ID": "28",
+            "role": "child",
+            "utterance": "然後那大也能說",
+            "scenario": ""
+          },
+          {
+            "ID": "29",
+            "role": "child",
+            "utterance": "怎麼可以說老奶奶的房間",
+            "scenario": ""
+          },
+          {
+            "ID": "30",
+            "role": "child",
+            "utterance": "然後就這樣子了",
+            "scenario": ""
+          },
+          {
+            "ID": "31",
+            "role": "child",
+            "utterance": "接著大野狼把它吃掉",
+            "scenario": ""
+          },
+          {
+            "ID": "32",
+            "role": "child",
+            "utterance": "它把它吃",
+            "scenario": ""
+          },
+          {
+            "ID": "33",
+            "role": "child",
+            "utterance": "我自己講",
+            "scenario": ""
+          },
+          {
+            "ID": "34",
+            "role": "child",
+            "utterance": "然後這個大野狼把那個肚子吃到他的身體",
+            "scenario": ""
+          },
+          {
+            "ID": "35",
+            "role": "child",
+            "utterance": "他把小紅帽的嬤嬤",
+            "scenario": ""
+          },
+          {
+            "ID": "36",
+            "role": "child",
+            "utterance": "把那個",
+            "scenario": ""
+          },
+          {
+            "ID": "37",
+            "role": "child",
+            "utterance": "這個次弄到他的大野狼的身體",
+            "scenario": ""
+          },
+          {
+            "ID": "38",
+            "role": "child",
+            "utterance": "哎唷",
+            "scenario": ""
+          },
+          {
+            "ID": "39",
+            "role": "child",
+            "utterance": "好痛哦",
+            "scenario": ""
+          },
+          {
+            "ID": "40",
+            "role": "child",
+            "utterance": "他就這樣子",
+            "scenario": ""
+          },
+          {
+            "ID": "41",
+            "role": "child",
+            "utterance": "然後",
+            "scenario": ""
+          },
+          {
+            "ID": "42",
+            "role": "child",
+            "utterance": "然後他就掉到水裡了",
+            "scenario": ""
+          },
+          {
+            "ID": "43",
+            "role": "child",
+            "utterance": "因為他喝不到水就掉到水裡了",
+            "scenario": ""
+          },
+          {
+            "ID": "44",
+            "role": "child",
+            "utterance": "說",
+            "scenario": ""
+          },
+          {
+            "ID": "45",
+            "role": "child",
+            "utterance": "哎唷",
+            "scenario": ""
+          },
+          {
+            "ID": "46",
+            "role": "child",
+            "utterance": "我掉到水裡了",
+            "scenario": ""
+          },
+          {
+            "ID": "47",
+            "role": "child",
+            "utterance": "好痛哦",
+            "scenario": ""
+          },
+          {
+            "ID": "48",
+            "role": "child",
+            "utterance": "他就這樣子",
+            "scenario": ""
+          },
+          {
+            "ID": "49",
+            "role": "child",
+            "utterance": "不客氣",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 288,
+          "wordCount": 239,
+          "Content": {
+            "N": 49,
+            "V": 41,
+            "VH": 31,
+            "Neu": 1,
+            "Nf": 7,
+            "Nh": 39,
+            "D": 52,
+            "percentage": 0.92,
+            "sum": 220
+          },
+          "Function": {
+            "P": 8,
+            "C": 1,
+            "T": 10,
+            "I": 0,
+            "percentage": 0.08,
+            "sum": 19
+          },
+          "VOCD-w": 39.3,
+          "VOCD-c": 40.59,
+          "MLU-w": 4.88,
+          "MLU-c": 5.88,
+          "MLU5-w": 10.8,
+          "MLU5-c": 11.8
+        },
+        "totalUtterance": 49,
+        "validUtterance": 49
+      }
+    },
+    {
+      "caseID": "0405",
+      "date": "2021-09-29 15:39:00",
+      "recording": {
+        "SLP": "黃小玲",
+        "scenario": "剛吃完午餐的中午",
+        "fileName": "語言樣本0405-4",
+        "location": "家裡客廳",
+        "interactionType": "自由遊戲",
+        "inducement": "客廳抱枕和椅子",
+        "participants": [
+          "施測者",
+          "媽媽"
+        ],
+        "equipment": "攝影機",
+        "help": "有時 (2~5次)",
+        "others": "兒童騎腳踏車後就不想錄音了，只好中斷收錄",
+        "age": 11.0,
+        "survey": true
+      },
+      "transcription": {
+        "transcriber": null,
+        "content": null,
+        "analysis": null,
+        "totalUtterance": null,
+        "validUtterance": null
+      }
+    },
+    {
+      "caseID": "00757025",
+      "date": "2018-01-26 13:00:00",
+      "recording": {
+        "survey": false,
+        "SLP": "吳鴻文",
+        "scenario": "<小紅帽>故事重述",
+        "fileName": "",
+        "location": "診療室",
+        "interactionType": "敘事",
+        "inducement": "使用繪本誘導",
+        "participants": [
+          "爸爸",
+          "施測者",
+          "老師",
+          "媽媽",
+          "test"
+        ],
+        "equipment": "攝影機",
+        "help": "經常 (6~9次)",
+        "others": "尚無任何可寫",
+        "age": 7.1
+      },
+      "transcription": {
+        "transcriber": "吳鴻文",
+        "content": [
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "小紅帽要跟去看去看那個奶奶",
+            "scenario": ""
+          },
+          {
+            "ID": "A1",
+            "role": "adult",
+            "utterance": "奶奶怎麼了",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "生病",
+            "scenario": ""
+          },
+          {
+            "ID": "A2",
+            "role": "adult",
+            "utterance": "然後呢",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "然後他他走啊走啊",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "有看到一個大野狼在前面",
+            "scenario": ""
+          },
+          {
+            "ID": "A3",
+            "role": "adult",
+            "utterance": "然後哩",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "接著那個大野狼跟小紅帽一起回走耶",
+            "scenario": ""
+          },
+          {
+            "ID": "A4",
+            "role": "adult",
+            "utterance": "走去哪裡",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "走去看小紅帽",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "跟小紅帽一起去看",
+            "scenario": ""
+          },
+          {
+            "ID": "8",
+            "role": "child",
+            "utterance": "奶奶",
+            "scenario": ""
+          },
+          {
+            "ID": "9",
+            "role": "child",
+            "utterance": "然後他他看到那個大野狼在這裡",
+            "scenario": ""
+          },
+          {
+            "ID": "10",
+            "role": "child",
+            "utterance": "穿穿他媽媽穿媽媽的衣服",
+            "scenario": ""
+          },
+          {
+            "ID": "11",
+            "role": "child",
+            "utterance": "奶奶的衣服",
+            "scenario": ""
+          },
+          {
+            "ID": "12",
+            "role": "child",
+            "utterance": "然後她在床上睡覺",
+            "scenario": ""
+          },
+          {
+            "ID": "13",
+            "role": "child",
+            "utterance": "然後穿奶奶的衣服在床上睡覺",
+            "scenario": ""
+          },
+          {
+            "ID": "14",
+            "role": "child",
+            "utterance": "然後他看到大野狼說",
+            "scenario": ""
+          },
+          {
+            "ID": "15",
+            "role": "child",
+            "utterance": "你幹嘛睡我媽媽的房間呢",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 137,
+          "wordCount": 96,
+          "Content": {
+            "N": 26,
+            "V": 19,
+            "VH": 8,
+            "Neu": 1,
+            "Nf": 4,
+            "Nh": 12,
+            "D": 15,
+            "percentage": 0.89,
+            "sum": 85
+          },
+          "Function": {
+            "P": 7,
+            "C": 0,
+            "T": 4,
+            "I": 0,
+            "percentage": 0.11,
+            "sum": 11
+          },
+          "VOCD-w": 36.25,
+          "VOCD-c": 29.41,
+          "MLU-w": 6.4,
+          "MLU-c": 9.13,
+          "MLU5-w": 9.6,
+          "MLU5-c": 13.4
+        },
+        "totalUtterance": 15,
+        "validUtterance": 15
+      }
+    },
+    {
+      "caseID": "00757025",
+      "date": "2020-12-02 23:21:00",
+      "recording": {
+        "survey": true,
+        "SLP": "何文豪",
+        "scenario": "參訪動物園",
+        "fileName": "sample_talk",
+        "location": "大千醫院",
+        "interactionType": "交談",
+        "inducement": "動物",
+        "participants": [
+          "施測者",
+          "媽媽"
+        ],
+        "equipment": "手機",
+        "help": "有時 (2~5次)",
+        "others": "孩童積極餐與，且對於問題相當感興趣",
+        "age": 9.9
+      },
+      "transcription": {
+        "transcriber": "丁信志",
+        "content": [
+          {
+            "ID": "A1",
+            "role": "adult",
+            "utterance": "媽媽送來吃快樂",
+            "scenario": ""
+          },
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "然後妹妹就去洗手",
+            "scenario": ""
+          },
+          {
+            "ID": "A2",
+            "role": "adult",
+            "utterance": "還有回家洗完手",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "他就幫忙換會死",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "哎",
+            "scenario": ""
+          },
+          {
+            "ID": "A3",
+            "role": "adult",
+            "utterance": "他還有他要",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "他準備吃飯",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "可是",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "可是他叫爸爸一起",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "可是他們全家的時候在吃飯",
+            "scenario": ""
+          },
+          {
+            "ID": "8",
+            "role": "child",
+            "utterance": "爸爸我嗎",
+            "scenario": ""
+          },
+          {
+            "ID": "9",
+            "role": "child",
+            "utterance": "還有他們全家人一起吃",
+            "scenario": ""
+          },
+          {
+            "ID": "10",
+            "role": "child",
+            "utterance": "然後沒辦法來玩",
+            "scenario": ""
+          },
+          {
+            "ID": "11",
+            "role": "child",
+            "utterance": "然後",
+            "scenario": ""
+          },
+          {
+            "ID": "12",
+            "role": "child",
+            "utterance": "大板根",
+            "scenario": ""
+          },
+          {
+            "ID": "A4",
+            "role": "adult",
+            "utterance": "拿通知臺灣還有塊",
+            "scenario": ""
+          },
+          {
+            "ID": "13",
+            "role": "child",
+            "utterance": "然後每幫忙抓桌子",
+            "scenario": ""
+          }
+        ],
+        "analysis": {
+          "charCount": 77,
+          "wordCount": 51,
+          "Content": {
+            "N": 9,
+            "V": 13,
+            "VH": 1,
+            "Neu": 0,
+            "Nf": 2,
+            "Nh": 6,
+            "D": 14,
+            "percentage": 0.88,
+            "sum": 45
+          },
+          "Function": {
+            "P": 1,
+            "C": 3,
+            "T": 1,
+            "I": 1,
+            "percentage": 0.12,
+            "sum": 6
+          },
+          "VOCD-w": 51.63,
+          "VOCD-c": 46.56,
+          "MLU-w": 3.92,
+          "MLU-c": 5.92,
+          "MLU5-w": 6,
+          "MLU5-c": 9.2
+        },
+        "totalUtterance": 13,
+        "validUtterance": 13
+      }
+    },
+    {
+      "caseID": "00757025",
+      "date": "2021-12-05 23:35:00",
+      "recording": {
+        "survey": true,
+        "SLP": "何文豪",
+        "scenario": "參訪動物園",
+        "fileName": "sample_talk",
+        "location": "大千醫院",
+        "interactionType": "交談",
+        "inducement": "動物",
+        "participants": [
+          "施測者"
+        ],
+        "equipment": "手機",
+        "help": "有時 (2~5次)",
+        "others": "孩童積極餐與，且對於問題相當感興趣",
+        "age": 11.0
+      },
+      "transcription": {
+        "transcriber": "丁振",
+        "content": [
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "開始",
+            "scenario": ""
+          },
+          {
+            "ID": "",
+            "role": "child",
+            "utterance": "你好",
+            "scenario": ""
+          },
+          {
+            "ID": "A1",
+            "role": "adult",
+            "utterance": "若有一天一天",
+            "scenario": ""
+          },
+          {
+            "ID": "2",
+            "role": "child",
+            "utterance": "鐵",
+            "scenario": ""
+          },
+          {
+            "ID": "3",
+            "role": "child",
+            "utterance": "從奶奶帶對佩佩和條子去去農場危機吃11米",
+            "scenario": ""
+          },
+          {
+            "ID": "B1",
+            "role": "adult",
+            "utterance": "還有呢",
+            "scenario": ""
+          },
+          {
+            "ID": "4",
+            "role": "child",
+            "utterance": "然後還有",
+            "scenario": ""
+          },
+          {
+            "ID": "5",
+            "role": "child",
+            "utterance": "還有狗有狗這裡面嗎",
+            "scenario": ""
+          },
+          {
+            "ID": "6",
+            "role": "child",
+            "utterance": "可是這是雞舍雞舍裡面",
+            "scenario": ""
+          },
+          {
+            "ID": "7",
+            "role": "child",
+            "utterance": "金色的狗即使沒有狗其實沒有狗",
+            "scenario": ""
+          },
+          {
+            "ID": "8",
+            "role": "child",
+            "utterance": "然後外面有狗外面的狗官當起來了",
+            "scenario": ""
+          },
+          {
+            "ID": "9",
+            "role": "child",
+            "utterance": "然後不能追追奇",
+            "scenario": ""
+          },
+          {
+            "ID": "10",
+            "role": "child",
+            "utterance": "為什麼也不能追母雞不能追公雞",
+            "scenario": ""
+          },
+          {
+            "ID": "11",
+            "role": "child",
+            "utterance": "也不能追這個中午奇為什麼也不能追這個",
+            "scenario": ""
+          },
+          {
+            "ID": "12",
+            "role": "child",
+            "utterance": "為什麼不能追他們",
+            "scenario": ""
+          },
+          {
+            "ID": "13",
+            "role": "child",
+            "utterance": "因為也不能追高機",
+            "scenario": ""
+          },
+          {
+            "ID": "14",
+            "role": "child",
+            "utterance": "因為因為因為",
+            "scenario": ""
+          },
+          {
+            "ID": "15",
+            "role": "child",
+            "utterance": "因為他們他們會狗被狗嚇跑",
+            "scenario": ""
+          },
+          {
+            "ID": "16",
+            "role": "child",
+            "utterance": "狗會下他們是不是",
+            "scenario": ""
+          },
+          {
+            "ID": "17",
+            "role": "child",
+            "utterance": "哦",
+            "scenario": ""
+          },
+          {
+            "ID": "18",
+            "role": "child",
+            "utterance": "那最後佩佩跟喬治怎麼回家",
+            "scenario": ""
+          },
+          {
+            "ID": "19",
+            "role": "child",
+            "utterance": "他們會睡覺",
+            "scenario": ""
+          },
+          {
+            "ID": "20",
+            "role": "child",
+            "utterance": "哦",
+            "scenario": ""
+          },
+          {
+            "ID": "21",
+            "role": "child",
+            "utterance": "他們會睡覺",
+            "scenario": ""
+          },
+          {
+            "ID": "22",
+            "role": "child",
+            "utterance": "那他們要怎麼回家",
+            "scenario": ""
+          },
+          {
+            "ID": "23",
+            "role": "child",
+            "utterance": "誰帶他們回家",
+            "scenario": ""
+          },
+          {
+            "ID": "24",
+            "role": "child",
+            "utterance": "你好",
+            "scenario": ""
+          },
+          {
+            "ID": "A2",
+            "role": "adult",
+            "utterance": "底好",
+            "scenario": ""
+          },
+          {
+            "ID": "",
+            "role": "",
+            "utterance": "",
+            "scenario": "你好"
+          }
+        ],
+        "analysis": {
+          "charCount": 196,
+          "wordCount": 130,
+          "Content": {
+            "N": 32,
+            "V": 28,
+            "VH": 2,
+            "Neu": 1,
+            "Nf": 3,
+            "Nh": 14,
+            "D": 34,
+            "percentage": 0.88,
+            "sum": 114
+          },
+          "Function": {
+            "P": 4,
+            "C": 8,
+            "T": 2,
+            "I": 2,
+            "percentage": 0.12,
+            "sum": 16
+          },
+          "VOCD-w": 40.65,
+          "VOCD-c": 46.45,
+          "MLU-w": 5.42,
+          "MLU-c": 8.17,
+          "MLU5-w": 10.6,
+          "MLU5-c": 16.2
+        },
+        "totalUtterance": 25,
+        "validUtterance": 24
+      }
+    },
+    {
+      "caseID": "00757025",
+      "date": "2021-12-08 20:53:00",
+      "recording": {
+        "survey": false,
+        "SLP": "何文豪",
+        "scenario": "參訪動物園",
+        "fileName": "ample_talk.wav",
+        "location": " 大千醫院",
+        "interactionType": "交談",
+        "inducement": "動物",
+        "participants": [
+          "施測者"
+        ],
+        "equipment": "手機",
+        "help": "有時 (2~5次)",
+        "others": "孩童積極參與，且對於問題相當感興趣",
+        "age": 11.0
+      },
+      "transcription": {
+        "transcriber": "何文豪",
+        "content": [
+          {
+            "ID": "1",
+            "role": "child",
+            "utterance": "你好",
+            "scenario": ""
+          },
+          {
+            "ID": "A1",
+            "role": "adult",
+            "utterance": "你好",
+            "scenario": ""
+          },
+          {
+            "ID": "",
+            "role": "",
+            "utterance": "",
+            "scenario": "玩積木"
+          }
+        ],
+        "analysis": {
+          "charCount": 2,
+          "wordCount": 2,
+          "Content": {
+            "N": 0,
+            "V": 0,
+            "VH": 1,
+            "Neu": 0,
+            "Nf": 0,
+            "Nh": 1,
+            "D": 0,
+            "percentage": 1.0,
+            "sum": 3
+          },
+          "Function": {
+            "P": 0,
+            "C": 0,
+            "T": 0,
+            "I": 0,
+            "percentage": 0.0,
+            "sum": 0
+          },
+          "VOCD-w": "樣本數不足",
+          "VOCD-c": "樣本數不足",
+          "MLU-w": 2,
+          "MLU-c": 2,
+          "MLU5-w": 2,
+          "MLU5-c": 2
+        },
+        "totalUtterance": 1,
+        "validUtterance": 1
+      }
+    },
+    {
+      "caseID": "0405",
+      "date": "2022-02-16 21:16:00",
+      "recording": {
+        "survey": true,
+        "SLP": "DFAD",
+        "scenario": "DAG",
+        "fileName": "",
+        "location": "FA",
+        "interactionType": "",
+        "inducement": "AFSD",
+        "participants": [],
+        "equipment": "",
+        "help": "",
+        "others": "",
+        "age": 11.4
+      },
+      "transcription": {
+        "transcriber": null,
+        "content": null,
+        "analysis": null,
+        "totalUtterance": null,
+        "validUtterance": null
+      }
+    }
+  ],
+  "norm": [
+    {
+      "age": "三歲半",
+      "data": {
+        "mlu-c": 6.0,
+        "mlu-w": 4.57,
+        "vocd-c": 21.58,
+        "vocd-w": 19.0
+      },
+      "ageNum": 3.5,
+      "base": {
+        "mlu": 1,
+        "vocd": 1
+      }
+    },
+    {
+      "age": "四歲",
+      "data": {
+        "mlu-c": 5.29,
+        "mlu-w": 4.29,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 4,
+      "base": {
+        "mlu": 1,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "四歲半",
+      "data": {
+        "mlu-c": 2.52,
+        "mlu-w": 1.87,
+        "vocd-c": 40.14,
+        "vocd-w": 36.81
+      },
+      "ageNum": 4.5,
+      "base": {
+        "mlu": 3,
+        "vocd": 1
+      }
+    },
+    {
+      "age": "五歲",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 5,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "五歲半",
+      "data": {
+        "mlu-c": 7.61,
+        "mlu-w": 5.61,
+        "vocd-c": 73.02,
+        "vocd-w": 67.62
+      },
+      "ageNum": 5.5,
+      "base": {
+        "mlu": 2,
+        "vocd": 2
+      }
+    },
+    {
+      "age": "二歲半",
+      "data": {
+        "mlu-c": 7.5,
+        "mlu-w": 5.13,
+        "vocd-c": 45.06,
+        "vocd-w": 40.23
+      },
+      "ageNum": 2.5,
+      "base": {
+        "mlu": 1,
+        "vocd": 1
+      }
+    },
+    {
+      "age": "二歲",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 2,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "三歲",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 3,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "六歲",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 6,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "六歲半",
+      "data": {
+        "mlu-c": 6.01,
+        "mlu-w": 5.1,
+        "vocd-c": 30.2,
+        "vocd-w": 28.8
+      },
+      "ageNum": 6.5,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "七歲半",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 7.5,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "八歲半",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 8.5,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "八歲",
+      "data": {
+        "mlu-c": 8.12,
+        "mlu-w": 5.85,
+        "vocd-c": 50.24,
+        "vocd-w": 45.29
+      },
+      "ageNum": 8,
+      "base": {
+        "mlu": 3,
+        "vocd": 2
+      }
+    },
+    {
+      "age": "七歲",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 7,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "九歲",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 9,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "九歲半",
+      "data": {
+        "mlu-c": 8.1,
+        "mlu-w": 7.56,
+        "vocd-c": 65.1,
+        "vocd-w": 63.2
+      },
+      "ageNum": 9.5,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "十歲",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 10,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "十歲半",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 10.5,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "十一歲",
+      "data": {
+        "mlu-c": 9.4,
+        "mlu-w": 9.12,
+        "vocd-c": 65.4,
+        "vocd-w": 63.8
+      },
+      "ageNum": 11,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    },
+    {
+      "age": "十一歲半",
+      "data": {
+        "mlu-c": 6.75,
+        "mlu-w": 4.74,
+        "vocd-c": 95.61,
+        "vocd-w": 77.37
+      },
+      "ageNum": 11.5,
+      "base": {
+        "mlu": 2,
+        "vocd": 1
+      }
+    },
+    {
+      "age": "十二歲",
+      "data": {
+        "mlu-c": 0.0,
+        "mlu-w": 0.0,
+        "vocd-c": 0.0,
+        "vocd-w": 0.0
+      },
+      "ageNum": 12,
+      "base": {
+        "mlu": 0,
+        "vocd": 0
+      }
+    }
+  ]
+}
