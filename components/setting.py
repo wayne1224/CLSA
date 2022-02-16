@@ -227,7 +227,6 @@ class SettingTab(QtWidgets.QWidget):
             self.get_STT_key()
     
     def upload_db(self):
-        # 選檔案
         try:
             filePath, _ = QtWidgets.QFileDialog.getOpenFileName(None,
                                             "開啟檔案",
@@ -249,7 +248,7 @@ class SettingTab(QtWidgets.QWidget):
                 QtWidgets.QMessageBox.warning(self, '通知',"<p style='font-size:12pt;'>上傳失敗<br/>格式錯誤，請重新選擇檔案</p>", QtWidgets.QMessageBox.Ok)
         except:
             pass
-
+    
     def download_db(self):
         # 選存檔位置
         try:
