@@ -611,10 +611,13 @@ def getNormAges():
 # caseID 重複加數字 ex : 00757025 => 00757025(1)
 # norm 直接取代
 def importCLSA(childData , document , norm):  
-    # import childData
+    from datetime import datetime
+
     try:
         for c in childData:
             # 此 child 已經在資料庫裡了 
+            c["birthday"] = datetime.strptime(c["birthday"] , "%Y-%m-%d %H:%M:%S")
+                   
             if childDataDB.find_one({"caseID" : c["caseID"]}):
                 # caseID + (數字) => ex: 00757025 , 00757025(1) , 00757025(2) , 00757025(3) ,,,
                 copy = 1
@@ -626,7 +629,7 @@ def importCLSA(childData , document , norm):
                     "caseID" : c["caseID"] + "({})".format(copy),
                     "name" : c["name"],
                     "gender" : c["gender"],
-                    "birthday" : c["birthday"]
+                    "birthday" : c["birthday"]  # 2010-01-07 00:00:00
                 })
 
                 # 將 document 的 caseID 做更改 => ex : 原本 caseID = 00757025 , 但經過上方的程式變成 00757025(1) , document 裡的 caseID 也要更改
@@ -646,6 +649,8 @@ def importCLSA(childData , document , norm):
     # import document
     try:
         for d in document:
+            d["date"] = datetime.strptime(d["date"] , "%Y-%m-%d %H:%M:%S")
+            
             documentDB.insert_one(d)
     except Exception as e:
         print("The error of function importCLSA.importDocument !!")   
@@ -709,4 +714,13 @@ def exportNorm():
         print(e)
         return False
 
+def deleteAll():
+    try:
+        childDataDB.delete_many({})
+        documentDB.delete_many({})
+    except Exception as e:
+        print("The error of function deleteAll !!")   
+        print(e)
+
 # connectDB()
+# deleteAll()
