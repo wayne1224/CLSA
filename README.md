@@ -27,6 +27,10 @@ $ pip install -r requirements.txt
    3. 開啟 **Windows 設定** > **進階系統設定** > **環境變數**
    4. 開啟 **變數：Path** > 點選 **新增** > 輸入 **C:\ffmpeg\bin** > 確定
    5. 開啟 **cmd** 輸入 set Path=C:
+   6. 安裝 PyAudio
+   ```
+   $ pip install pyAudio
+   ```
 
 ### Usage
 ```
