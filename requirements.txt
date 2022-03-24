@@ -3,7 +3,6 @@ charset-normalizer
 ckip-transformers    
 FFmpeg
 numpy
-pyaudio
 pydub
 pymongo==3.12.1
 PyQt5                          
