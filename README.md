@@ -27,3 +27,27 @@ $ pip install -r requirements.txt
    3. 開啟 **Windows 設定** > **進階系統設定** > **環境變數**
    4. 開啟 **變數：Path** > 點選 **新增** > 輸入 **C:\ffmpeg\bin** > 確定
    5. 開啟 **cmd** 輸入 set Path=C:
+
+### Usage
+```
+$ cd <github_repo>
+$ python MainWindow.py
+```
+
+### Directory Layout
+```
+├─components              
+├─database
+│  └─ DatabaseApi.py      # PyMongo APIs
+├─QSS                     # PyQT StyleSheets
+├─utils
+│  ├─ audio.py            # Microsoft STT SDK
+│  └─ worker.py           # PyQT QThread Implementation
+├─ MainWindow.py          # 主程式
+├─ Tab0.py                # 查詢頁面
+├─ Tab1.py                # 收錄表
+├─ Tab2.py                # 轉錄表
+├─ Tab3.py                # 彙整表
+├─ Tab4.py                # 圖表頁
+└─ Tab5.py                # 設定頁面
+```
