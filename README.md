@@ -41,7 +41,13 @@ $ python MainWindow.py
 
 ### Directory Layout
 ```
-├─components              
+├─components              # 可重複使用之元件
+|  ├─ Mytable.py          # 轉錄表中的表格
+|  ├─ loading.py          # 讀取視窗
+|  ├─ messageBox.py       # 顯示比對資訊的通知視窗
+│  ├─ norm.py             # 常模設定頁面
+|  ├─ setting.py          # 其他設定頁面
+│  └─ statChart.py        # 圖表生成
 ├─database
 │  └─ DatabaseApi.py      # PyMongo APIs
 ├─QSS                     # PyQT StyleSheets
