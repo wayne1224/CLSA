@@ -17,8 +17,8 @@
 1. Clone repository 
 2. 安裝 dependencies
 ```
-$ cd <github_repo>
-$ pip install -r requirements.txt
+cd <github_repo>
+pip install -r requirements.txt
 ```
 3. 安裝 [MongoDB Community Server](https://www.mongodb.com/try/download/community?tck=docs_server) - Windows <br/>
 4. 安裝 FFmpeg 
@@ -30,14 +30,37 @@ $ pip install -r requirements.txt
    6. 安裝 PyAudio
    
    ```
-   $ pip install pyAudio
+   pip install pyAudio
    ```
 
 ### Usage
 ```
-$ cd <github_repo>
-$ python MainWindow.py
+cd <github_repo>
+python MainWindow.py
 ```
+
+### Package
+1. 建立虛擬環境
+```
+cd <Desktop>
+virtualenv env_win
+```
+2. activate 虛擬環境
+```
+cd env_win\Scripts
+activate
+```
+3. 安裝 dependencies
+```
+cd <github_repo>
+pip install -r requirements.txt
+```
+4. 執行 PyInstaller
+```
+pyinstaller  MainWindow.spec
+```
+生成的 EXE 和相關檔案會存放在 dist 資料夾裡 <br/>
+可以刪除 build 資料夾
 
 ### Directory Layout
 ```
