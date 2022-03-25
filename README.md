@@ -7,10 +7,15 @@
 ### 系統架構
 <img src="https://user-images.githubusercontent.com/58461709/159930055-df6a3388-32fa-4fec-a4a3-bcc71db59438.png" width="500">
 
+### Branch 差異
+主要差異：資料庫
+**main_ver3:** 開發時所使用，透過 MongoDB URI 讀取線上資料庫，以便開發時同步資料庫的內容 <br/>
+**release:** 醫院使用版本，透過本機 MongoDB server 讀取本機資料庫
 
 ## Setup
 
 ### Requirements
+
 * Python 3.7+
 
 ### Installation
@@ -83,5 +88,7 @@ pyinstaller  MainWindow.spec
 ├─ Tab2.py                # 轉錄表
 ├─ Tab3.py                # 彙整表
 ├─ Tab4.py                # 圖表頁
-└─ Tab5.py                # 設定頁面
+├─ Tab5.py                # 設定頁面
+├─ MainWindow.spec        # 紀錄 pyinstaller 打包此系統的指令
+└─ mongodb_dir.bat        # 建立 MongoDB 預設 data directory
 ```
