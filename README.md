@@ -15,6 +15,7 @@
 
 ### Requirements
 
+* Windows
 * Python 3.7+
 
 ### Installation
