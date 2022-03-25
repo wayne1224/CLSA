@@ -18,3 +18,5 @@ requests
 sympy
 torch
 transformers
+pyinstaller
+virtualenv
