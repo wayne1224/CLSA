@@ -28,7 +28,7 @@ pip install -r requirements.txt
 3. 安裝 [MongoDB Community Server](https://www.mongodb.com/try/download/community?tck=docs_server) - Windows <br/>
 4. 安裝 FFmpeg 
    1. 下載 [libav](https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z) & 解壓縮
-   2. 放在 C 槽 (例如 C:\ffmpeg\bin)
+   2. 放在 C 槽 (C:\ffmpeg\bin)
    3. 開啟 **Windows 設定** > **進階系統設定** > **環境變數**
    4. 開啟 **變數：Path** > 點選 **新增** > 輸入 **C:\ffmpeg\bin** > 確定
    5. 開啟 **cmd** 輸入 set Path=C:
