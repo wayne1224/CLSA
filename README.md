@@ -38,13 +38,13 @@ pip install -r requirements.txt
    pip install pyAudio
    ```
 
-### Usage
+## Usage
 ```
 cd <github_repo>
 python MainWindow.py
 ```
 
-### Package
+## Package
 1. 建立虛擬環境
 ```
 cd <Desktop>
@@ -67,7 +67,7 @@ pyinstaller  MainWindow.spec
 生成的 EXE 和相關檔案會存放在 dist 資料夾裡 <br/>
 可以刪除 build 資料夾
 
-### Directory Layout
+## Directory Layout
 ```
 ├─components              # 可重複使用之元件
 |  ├─ Mytable.py          # 轉錄表中的表格
